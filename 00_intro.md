@@ -4,151 +4,88 @@
 
 {{quote {author: "Ellen Ullman", title: "Close to the Machine: Technophilia and its Discontents", chapter: true}
 
-We think we are creating the system for our own purposes. We believe
-we are making it in our own image... But the computer is not really
-like us. It is a projection of a very slim part of ourselves: that
-portion devoted to logic, order, rule, and clarity.
+Suntem convinși că de fapt construim un sistem pentru propriile noastre scopuri. Credem că îl construim ca pe o 
+imagine a noastră... Dar computerul nu este ca și noi. Este o proiecție a unei părți foarte mici din eul nostru: 
+acea parte dedicată logicii, ordinii, regulilor și clarității.
 
 quote}}
 
-{{figure {url: "img/chapter_picture_00.jpg", alt: "Picture of a screwdriver and a circuit board", chapter: "framed"}}}
+{{figure {url: "img/chapter_picture_00.jpg", alt: "Imaginea unei șurubelnițe și a unei plăci integrate", chapter: "framed"}}}
 
-This is a book about instructing ((computer))s. Computers are about as
-common as screwdrivers today, but they are quite a bit more complex,
-and making them do what you want them to do isn't always easy.
+Aceasta este o carte despre instruirea computerelor. Computerele sunt, în zilele noastre, cam la fel de comune 
+ca și șurubelnițele, doar că sunt puțin mai complexe, și a le determina să facă ceea ce dorim noi nu este 
+întotdeauna ușor.
 
-If the task you have for your computer is a common, well-understood
-one, such as showing you your email or acting like a calculator, you
-can open the appropriate ((application)) and get to work. But for
-unique or open-ended tasks, there probably is no application.
+Dacă sarcina pe care vrem să o delegăm computerului este una obișnuită, bine înțeleasă, cum ar fi să ne afișeze
+lista de emailuri sau să acționeze ca și un calculator de birou, putem să deschidem aplicația corespunzătoare
+și să începem lucrul. Dar pentru sarcini de lucru unice sau fără un final clar, probabil că nu vom găsi o aplicație.
 
-That is where ((programming)) may come in. _Programming_ is the act of
-constructing a _program_—a set of precise instructions telling a
-computer what to do. Because computers are dumb, pedantic beasts,
-programming is fundamentally tedious and frustrating.
+Acesta este momentul in care _programarea_ ar putea intra în scenă. _Programarea_ este acțiunea de a construi un 
+_program_ - un set de instrucțiuni precise care să îi spună computerului ce are de făcut. Deoarece computerele
+sunt niște fiare destul de tâmpite dar foarte pedante, programarea este fundamental plictisitoare și frustrantă.
 
 {{index [programming, "joy of"], speed}}
 
-Fortunately, if you can get over that fact, and maybe even enjoy the rigor
-of thinking in terms that dumb machines can deal with, programming can
-be rewarding. It allows you to do things in seconds that would take
-_forever_ by hand. It is a way to make your computer tool
-do things that it couldn't do before. And it provides a wonderful
-exercise in abstract thinking.
+Din fericire, dacă puteți trece peste acest fapt și poate chiar să vă încânte rigoarea necesară pentru a gândi în 
+termenii cu care pot opera niște mașini tâmpite, programarea vă poate da multe satisfacții. Vă permite să finalizați în câteva secunde acțiuni care ar dura foarte mult dacă le-ați executa manual. _Programarea_ este un mod de a determina un 
+computer să efectueze operații pe care nu le putea efectua anterior. Și să nu uităm, este un exercițiu extraordinar pentru
+gândirea abstractă.
 
-Most programming is done with ((programming language))s. A _programming
-language_ is an artificially constructed language used to instruct
-computers. It is interesting that the most effective way we've found
-to communicate with a computer borrows so heavily from the way we
-communicate with each other. Like human languages, computer languages
-allow words and phrases to be combined in new ways, making it possible to
-express ever new concepts.
+Cea mai mare parte a programării se realizează cu ajutorul limbajelor de programare. Un _limbaj de programare_ este un
+limbaj construit artificial care este utilizat pentru instruirea computerului. E interesant că cel mai eficient mod pe care l-am descoperit pentru a comunica cu un computer împrumută atât de multe din modul în care comunicăm între noi. Ca și limbile de comunicare umane, limbajele pentru computere permit combinarea cuvintelor și a frazelor în moduri noi, ceea ce face posibilă exprimarea unor concepte complet noi.
 
 {{index [JavaScript, "availability of"], "casual computing"}}
 
-At one point language-based interfaces, such as the BASIC and DOS
-prompts of the 1980s and 1990s, were the main method of interacting with
-computers. They have largely been replaced with visual interfaces,
-which are easier to learn but offer less freedom. Computer languages
-are still there, if you know where to look. One such language,
-JavaScript, is built into every modern web ((browser)) and is thus
-available on almost every device.
+La un moment dat, interfețele bazate pe limbaj, cum ar fi prompterele BASIC si DOS din anii 1980 și 1990 erau principalele metode de interacțiune cu computerele. Ele au fost înlocuite pe scară largă de către interfețe vizuale, care sunt mai ușor de învățat dar oferă mai puțină libertate. Limbajele pentru computer sunt încă prezente, dacă știți cum să le găsiți. Un asemenea limbaj este JavaScript, prezent în orice browser modern și deci disponibil pe aproape orice dispozitiv.
 
 {{indexsee "web browser", browser}}
 
-This book will try to make you familiar enough with this language to
-do useful and amusing things with it.
-
-## On programming
+Această carte va încerca să vă familiarizeze suficient cu acest limbaj pentru a realiza programe utile și amuzante cu ajutorul său.
+## Despre programare
 
 {{index [programming, "difficulty of"]}}
 
-Besides explaining JavaScript, I will introduce the basic
-principles of programming. Programming, it turns out, is hard. The
-fundamental rules are simple and clear, but programs built on top of
-these rules tend to become complex enough to introduce their own rules
-and complexity. You're building your own maze, in a way, and you might
-just get lost in it.
+Pe lângă a explica JavaScript, voi introduce principiile de bază ale programării. Programarea este dificilă. Regulile fundamentale sunt simple și clare, dar programele construite cu ajutorul acestor reguli tind să devină suficient de complexe pentru a introduce propriile lor reguli și un nou nivel de complexitate. Veți construi propriul dumneavoastră labirint, într-un anume mod, și ați putea cu ușurință să vă pierdeți în interiorul său.
 
 {{index learning}}
 
-There will be times when reading this book feels terribly frustrating.
-If you are new to programming, there will be a lot of new material to
-digest. Much of this material will then be _combined_ in ways that
-require you to make additional connections.
+Vor fi momente în care citirea acestei cărți va fi teribil de frustrantă. Dacă sunteți începător în programare, va exista o mulțime de material nou pe care să îl înțelegeți. Mare parte din acest material va fi apoi _combinat_ in moduri care necesită să realizați conexiuni adiționale.
 
-It is up to you to make the necessary effort. When you are struggling
-to follow the book, do not jump to any conclusions about your own
-capabilities. You are fine—you just need to keep at it. Take a break,
-reread some material, and make sure you read and understand the
-example programs and ((exercises)). Learning is hard work, but
-everything you learn is yours and will make subsequent learning
-easier.
+Depinde de dumneavoastră să depuneți efortul necesar. Când vă luptați să urmăriți acțiunile din carte, nu vă grăbiți să trageți vreo concluzie cu privirile la propriile abilități. Sunteți în regulă, trebuie doar să persistați. Luați o pauză, recitiți anumite părți din material și asigurați-vă că citiți și înțelegeți programele date ca exemplu și exercițiile. Învățarea nu este o activitate ușoară, dar tot ceea ce ați învățat vă aparține și va facilita următorii pași de învățare.
 
 {{quote {author: "Ursula K. Le Guin", title: "The Left Hand of Darkness"}
 
 {{index "Le Guin, Ursula K."}}
 
-When action grows unprofitable, gather information; when information
-grows unprofitable, sleep.
+Când acțiunile devin neprofitabile, strângeți informații; când informațiile devin neprofitabile, dormiți.
 
 quote}}
 
 {{index [program, "nature of"], data}}
 
-A program is many things. It is a piece of text typed by a programmer,
-it is the directing force that makes the computer do what it does, it
-is data in the computer's memory, yet it controls the actions
-performed on this same memory. Analogies that try to compare programs
-to objects we are familiar with tend to fall short. A superficially
-fitting one is that of a machine—lots of separate parts tend to be
-involved, and to make the whole thing tick, we have to consider the
-ways in which these parts interconnect and contribute to the operation
-of the whole.
+Un program înseamnă mai multe lucruri. Este o bucată de text tastată de către un programator, este forța directoare care determină computerul să facă ceea ce face, este un set de date în memoria computerului, dar și controlează acțiunile efectuate asupra aceleiași memorii. Analogiile care încercă să compare programele cu obiecte care ne sunt familiare tind să eșueze rapid. O analogie care reușește să fie potrivită doar la suprafață este cea cu o mașină - multe piese separate par sș fie implicate, și pentru ca să înțelegem cum funcționează întregul, trebuie să înțelegm modurile în care aceste părți se interconectează și contribuie la buna funcționare a întregului.
 
-A ((computer)) is a physical machine that acts as a host for these immaterial
-machines. Computers themselves can do only stupidly straightforward
-things. The reason they are so useful is that they do these things at
-an incredibly high ((speed)). A program can ingeniously combine an
-enormous number of these simple actions to do very
-complicated things.
+Un computer este o mașină fizică al cărei rol este de a găzdui aceste mașini imateriale. Computerele în sine pot să execute doar acțiuni elementare și chiar stupide. Motivul pentru care sunt atât de utile este capacitatea lor de a executa aceste operații elementare la viteze extraordinar de mari. Un program poate combina în mod ingenios un număr enorm de asemenea operații elementare pentru a realiza operații extrem de complicate.
 
 {{index [programming, "joy of"]}}
 
-A program is a building of thought. It is costless to build, it is
-weightless, and it grows easily under our typing hands.
+Un program este rezultatul gândirii. Nu este costisitor să îl construim, nu are greutate și crește ușor sub mâinile noastre în timp ce tastăm.
 
-But without care, a program's size and ((complexity)) will grow out of
-control, confusing even the person who created it. Keeping programs
-under control is the main problem of programming. When a program
-works, it is beautiful. The art of programming is the skill of
-controlling complexity. The great program is subdued—made simple in
-its complexity.
+Dar dacă nu avem grijă, dimensiunea unui program, precum și complexitatea sa, ne vor scăpa de sub control. Menținerea programelor sub control este cea mai mare problemă în programare. Când un program funcționează, totul este foarte frumos. Arta programării este abilitatea de a controla complexitatea. Marele program este subordonat - simplificat din punct de vedere al complexității sale.
 
 {{index "programming style", "best practices"}}
 
-Some programmers believe that this complexity is best managed by using
-only a small set of well-understood techniques in their programs. They
-have composed strict rules ("best practices") prescribing the form
-programs should have and carefully stay within their safe little
-zone.
+Unii programatori cred ca această complexitate este gestionată cel mai bine prin utilizarea unui set restrâns de tehnici bine cunoscute în programele lor. Ei au construit reguli stricte ("best practices") care prescriu forma pe care trebuie să o aibă programele și stau cu mare atenție în mica lor zonă de securitate.
 
 {{index experiment}}
 
-This is not only boring, it is ineffective. New problems often
-require new solutions. The field of programming is young and still
-developing rapidly, and it is varied enough to have room for wildly
-different approaches. There are many terrible mistakes to make in
-program design, and you should go ahead and make them so that you
-understand them. A sense of what a good program looks like is
-developed in practice, not learned from a list of rules.
+Aceasta nu este doar o practică plictisitoare, este și una ineficientă. Probleme noi solicită adesea soluții noi. Domeniul programării este unul tânăr și încă se dezvoltă rapid și este suficient de variat pentru a avea loc pentru abordări complet diferite. Există multe greșeli teribile care pot să apară în conceperea programelor și ar trebui să le faceți pentru a le înțelege cu adevărat. Bunul simț cu privire la cum trebuie să arate un program bun se dezvoltă prin practică, nu prin învățarea unei liste de reguli.
 
-## Why language matters
+## De ce limbajul contează
 
 {{index "programming language", "machine code", "binary data"}}
 
-In the beginning, at the birth of computing, there were no programming
-languages. Programs looked something like this:
+La început, atunci când se năștea "computing"-ul, nu existau limbaje de programare. Programele arătau cam așa:
 
 ```{lang: null}
 00110001 00000000 00000000
@@ -164,77 +101,51 @@ languages. Programs looked something like this:
 
 {{index [programming, "history of"], "punch card", complexity}}
 
-That is a program to add the numbers from 1 to 10 together and print
-out the result: `1 + 2 + ... + 10 = 55`. It could run on a simple,
-hypothetical machine. To program early computers, it was necessary to
-set large arrays of switches in the right position or punch holes in
-strips of cardboard and feed them to the computer. You can probably
-imagine how tedious and error-prone this procedure was. Even writing
-simple programs required much cleverness and discipline. Complex ones
-were nearly inconceivable.
+Acesta este un program care adună numerele de la 1 la 10 și afișează rezultatul: `1 + 2 + ... + 10 = 55`. Ar putea rula pe o mașină simplă, ipotetică. Pentru a programa computerele de la începuturi, era necesar să se seteze în poziția corectă un număr mare de comutatoare sau să se practice goluri în carduri din carton, carduri care apoi urmau să fie încărcate în computer. Cred că vă puteți imagina cât de plictistoare și supusă erorilor era întreaga procedură. Chiar și scrierea unui program simplu necesita multă inteligență și disciplină. Cele complexe erau aproape de neconceput.
 
 {{index bit, "wizard (mighty)"}}
 
-Of course, manually entering these arcane patterns of bits (the ones
-and zeros) did give the programmer a profound sense of being a mighty
-wizard. And that has to be worth something in terms of job
-satisfaction.
+Desigur, introducerea manuală a acestora șabloane ciudate de biți (valori 0 sau 1) îi insufla programatorului un profund sentiment de a fi un vrăjitor atot-puternic. Și asta cu siguranță însemna ceva din punct de vedere al satisfacției la locul de muncă.
 
 {{index memory, instruction}}
 
-Each line of the previous program contains a single instruction. It
-could be written in English like this:
+Fiecare linie a programului anterior conține o singură instrucțiune. Ar putea fi descrisă în limbaj natural astfel:
 
- 1. Store the number 0 in memory location 0.
- 2. Store the number 1 in memory location 1.
- 3. Store the value of memory location 1 in memory location 2.
- 4. Subtract the number 11 from the value in memory location 2.
- 5. If the value in memory location 2 is the number 0,
-    continue with instruction 9.
- 6. Add the value of memory location 1 to memory location 0.
- 7. Add the number 1 to the value of memory location 1.
- 8. Continue with instruction 3.
- 9. Output the value of memory location 0.
+ 1. Memorează numărul 0 în locația 0.
+ 2. Memorează numărul 1 în locația 1.
+ 3. Memorează valoarea din locația de memorie 1 în locația de memorie 2.
+ 4. Scade numărul 11 din valoarea stocată in locația de memorie 2.
+ 5. Dacă valoarea din locația de memorie 2 este numărul 0, continuă cu instrucțiunea 9.
+ 6. Adaugă valoarea din locația de memorie 1 la locația de memorie 0.
+ 7. Adaugă numărul 1 la valoarea din locația de memorie 1.
+ 8. Continuă cu instrucțiunea 3.
+ 9. Afișează valoarea din locația de memorie 0.
 
 {{index readability, naming, binding}}
 
-Although that is already more readable than the soup of bits, it is
-still rather obscure. Using names instead of numbers for the
-instructions and memory locations helps.
+Deși această exprimare este mult mai lizibilă decât "ciorba de biți" inițială, este încă o exprimare destul de obscură. Utilizarea numelor în loc de numere pentru locațiile de memorie, ne ajută și mai mult.
 
 ```{lang: "text/plain"}
- Set “total” to 0.
- Set “count” to 1.
+ Setează “total” la valoarea 0.
+ Setează “count” la valoarea 1.
 [loop]
- Set “compare” to “count”.
- Subtract 11 from “compare”.
- If “compare” is zero, continue at [end].
- Add “count” to “total”.
- Add 1 to “count”.
- Continue at [loop].
+ Setează “compare” la valoarea lui “count”.
+ Scade 11 din “compare”.
+ Dacă “compare” este 0, continuă la eticheta [end].
+ Adaugă “count” la “total”.
+ Adaugă 1 la “count”.
+ Continuă la eticheta [loop].
 [end]
- Output “total”.
+ Afișează “total”.
 ```
 
 {{index loop, jump, "summing example"}}
 
-Can you see how the program works at this point? The first two lines
-give two memory locations their starting values: `total` will be used
-to build up the result of the computation, and `count` will keep track
-of the number that we are currently looking at. The lines using
-`compare` are probably the weirdest ones. The program wants to see
-whether `count` is equal to 11 to decide whether it can stop
-running. Because our hypothetical machine is rather primitive, it can
-only test whether a number is zero and make a decision based
-on that. So it uses the memory location labeled `compare` to compute
-the value of `count - 11` and makes a decision based on that value.
-The next two lines add the value of `count` to the result and
-increment `count` by 1 every time the program has decided that `count`
-is not 11 yet.
+Puteți înțelege acum cum funcționează programul? Primele două instrucțiuni atribuie valorile de inițializare pentru două locații de memorie: `total` va fi utilizat pentru a construi rezultatul calculului, iar `count` va ține evidența numărului curent ce urmează a fi prelucrat. Liniile care utilizează `compare` sunt probabil cele mai ciudate. Programul vrea să verifice dacă `count` este egal cu 11 pentru a decide dacă poate să își încheie execuția. Deoarece mașina noastră ipotetică este destul de primitivă, poate doar să testeze dacă un număr este egal cu zero și să ia o decizie pe această bază. Astfel că utilizăm locația numită `compare` pentru a calcula valoarea expresiei `count-11` și a lua decizii în funcție de această valoare. Următoarele două linii adaugă valoarea lui `count` la rezultatul final și apoi incrementează `count` cu 1 pentru că programul a "decis" că încă nu trebuie să se oprească.
 
-Here is the same program in JavaScript:
+Iată cum arată același program scris in JavaScript:
 
-```
+``` {lang: "javascript"}
 let total = 0, count = 1;
 while (count <= 10) {
   total += count;
@@ -246,27 +157,15 @@ console.log(total);
 
 {{index "while loop", loop, [braces, block]}}
 
-This version gives us a few more improvements. Most important, there
-is no need to specify the way we want the program to jump back and
-forth anymore. The `while` construct takes care of that. It continues
-executing the block (wrapped in braces) below it as long as the
-condition it was given holds. That condition is `count <= 10`, which
-means “_count_ is less than or equal to 10”. We no longer have to
-create a temporary value and compare that to zero, which was just an
-uninteresting detail. Part of the power of programming languages is
-that they can take care of uninteresting details for us.
+Această versiune aduce câteva îmbunătățiri. Cea mai importantă, nu mai avem nevoie să specificăm felul în care vrem să sară programul înainte și înapoi. Construcția `while` are grijă de această repetiție. Se continuă execuția blocului plasat între acolade atâta timp cât condiția precizată rămâne adevărată. Condiția este `count <= 10` care înseamnă "_count_ este mai mic sau egal cu 10". Nu mai avem nevoie să creem o variabilă temporară pe care să o comparăm cu zero, ceea ce era doar un detaliu neinteresant. O parte din puterea limbajelor de programare constă în faptul că pot avea grijă de detaliile neinteresante în locul nostru.
 
 {{index "console.log"}}
 
-At the end of the program, after the `while` construct has finished,
-the `console.log` operation is used to write out the result.
+La sfârșitul programului, după ce s-a terminat execuția construcției `while`, operația `console.log` este utilizată pentru a afișa rezultatul.
 
 {{index "sum function", "range function", abstraction, function}}
 
-Finally, here is what the program could look like if we happened to
-have the convenient operations `range` and `sum` available, which
-respectively create a ((collection)) of numbers within a range and
-compute the sum of a collection of numbers:
+În sfârșit, iată cum am fi putut scrie programul dacă am fi avut la dispoziție operațiile convenabile `range` (care să genereze o colecție de numere între anumite limite) și `sum` care să calculeze suma valorilor dintr-o colecție de numere:
 
 ```{startCode: true}
 console.log(sum(range(1, 10)));
@@ -275,23 +174,13 @@ console.log(sum(range(1, 10)));
 
 {{index readability}}
 
-The moral of this story is that the same program can be expressed in
-both long and short, unreadable and readable ways. The first version of the
-program was extremely obscure, whereas this last one is almost
-English: `log` the `sum` of the `range` of numbers from 1 to 10. (We
-will see in [later chapters](data) how to define operations like `sum`
-and `range`.)
+Morala acestei povestiri este că același program poate fi exprimat în formă lungă sau scurtă, într-un mod neinteligibil sau ușor de citit. Prima versiune a programului a fost extrem de obscură, în timp ce ultima versiune este aproape limbaj natural: `log` `sum` `range` pentru numerele de la 1 la 10. Vom vedea în capitolele următoare cum putem defini operații cum ar fi `sum` și `range`.
 
 {{index ["programming language", "power of"], composability}}
 
-A good programming language helps the programmer by allowing them to
-talk about the actions that the computer has to perform on a higher
-level. It helps omit details, provides convenient building blocks
-(such as `while` and `console.log`), allows you to define your own
-building blocks (such as `sum` and `range`), and makes those blocks
-easy to compose.
+Un limbaj de programare bun ajută programatorului, permimțându-i să se exprime cu privire la acțiunile pe care trebuie să le execute programatorul la un nivel mai înalt. Ajută la omiterea detaliilor, oferă blocuri convenabile de construcție (cum ar fi `while` și `console.log`), permite definirea propriilor blocuri de cosntrucție (cum ar fi `sum` și `range`) și permite compunerea cu ușurință a blocurilor respective.
 
-## What is JavaScript?
+## Ce este JavaScript?
 
 {{index history, Netscape, browser, "web application", JavaScript, [JavaScript, "history of"], "World Wide Web"}}
 
@@ -299,112 +188,48 @@ easy to compose.
 
 {{indexsee Web, "World Wide Web"}}
 
-JavaScript was introduced in 1995 as a way to add programs to web
-pages in the Netscape Navigator browser. The language has since been
-adopted by all other major graphical web browsers. It has made modern
-web applications possible—applications with which you can interact
-directly without doing a page reload for every action. JavaScript is also
-used in more traditional websites to provide various forms of
-interactivity and cleverness.
+JavaScript a fost introdus în 1995 ca o modalitate de a adăuga programe în paginile web, în browserul Netscape Navigator. De atunci, limbajul a fost adoptat de către toate celelalte browsere grafice majore. A făcut posibilă crearea aplicațiilor web moderne - aplicații cu care interacționați direct, fără a fi nevoie să reîncărcați pagina de fiecare dată. JavaScript este utilizat și în site-urile web mai tradiționale pentru a adăuga interactivitate si un comportament mai inteligent al site-ului.
 
 {{index Java, naming}}
 
-It is important to note that JavaScript has almost nothing to do with
-the programming language named Java. The similar name was inspired by
-marketing considerations rather than good judgment. When JavaScript
-was being introduced, the Java language was being heavily marketed and
-was gaining popularity. Someone thought it was a good idea to try to
-ride along on this success. Now we are stuck with the name.
+Este important să menționăm că JavaScript nu are aproape nimic în comun cu limbajul de programare numit Java. Similaritatea numelor a fost inspirată de aspecte legate de marketing și nu de o judecată atentă. Când a fost introdus JavaScript, limbajul Java era promovat intens și câștiga popularitate. Cineva s-a gândit că ar fi o idee bună să profite de acest succes. Și acum am rămas cu această confuzie de nume.
 
 {{index ECMAScript, compatibility}}
 
-After its adoption outside of Netscape, a ((standard)) document was
-written to describe the way the JavaScript language should work so
-that the various pieces of software that claimed to support JavaScript
-were actually talking about the same language. This is called the
-ECMAScript standard, after the Ecma International organization that
-did the standardization. In practice, the terms ECMAScript and
-JavaScript can be used interchangeably—they are two names for the same
-language.
+După adoptarea sa în afara Netscape, a fost elaborat un document standard care să descrie modul în care limbajul JavaScript trebuie să funcționeze astfel încât diversele soft-uri care pretindeau că suporta JavaScript să se refere de fapt la același limbaj.Acesta este standardul ECMAScript, după numele organizației Ecma International care a realizat standardizarea. În practică, denumirile ECMAScript și JavaScript pot fi ambele utilizate - ele sunt două nume diferite ale aceluiași limbaj de programare.
 
 {{index [JavaScript, "weaknesses of"], debugging}}
 
-There are those who will say _terrible_ things about JavaScript. Many
-of these things are true. When I was required to write something in
-JavaScript for the first time, I quickly came to despise it. It would
-accept almost anything I typed but interpret it in a way that was
-completely different from what I meant. This had a lot to do with the
-fact that I did not have a clue what I was doing, of course, but there
-is a real issue here: JavaScript is ridiculously liberal in what it
-allows. The idea behind this design was that it would make programming
-in JavaScript easier for beginners. In actuality, it mostly makes
-finding problems in your programs harder because the system will not
-point them out to you.
+Unii vă vor spune lucruri teribile despre JavaScript. Multe dintre acestea sunt adevărate. Atunci când a trebuit să scriu cod JavaScript pentru prima dată, am ajuns repede să îl desconsider. Accepta aproape orice tastam, dar interpreta într-un mod complet diferit de ceea ce intenționam eu să fac. Însă cu siguranță exista și o legătura cu faptul că nu aveam nici cea mai mică idee despre ceea ce făceam, dar există și o problemă reală aici: JavaScript este extraordinar de tolerant în ceea ce permite. Ideea din spatele acestui design a fost aceea de a face programarea în JavaScript mai ușoară pentru începători. În realitate însă, îngreunează procesul de identificare a problemelor deoarece sistemul nu le va identifica.
 
 {{index [JavaScript, "flexibility of"], flexibility}}
 
-This flexibility also has its advantages, though. It leaves space for
-a lot of techniques that are impossible in more rigid languages, and
-as you will see (for example in [Chapter ?](modules)), it can be used
-to overcome some of JavaScript's shortcomings. After ((learning)) the
-language properly and working with it for a while, I have learned to
-actually _like_ JavaScript.
+Această flexibilitate are și avantaje. Permite spațiu pentru o mulțime de tehnici care sunt imposibil de implementat în alte limbaje mai rigide și, așa cum veți vedea în Capitolul 10, o putem utiliza pentru a depăși unele dintre dezavantajele JavaScript. După ce am invățat în mod corespunzător limbajul și am lucrat cu el pentru o vreme, mi-am dat seama că, de fapt, _îmi place_ JavaScript.
 
 {{index future, [JavaScript, "versions of"], ECMAScript, "ECMAScript 6"}}
 
-There have been several versions of JavaScript. ECMAScript version 3
-was the widely supported version in the time of JavaScript's ascent to
-dominance, roughly between 2000 and 2010. During this time, work was
-underway on an ambitious version 4, which planned a number of radical
-improvements and extensions to the language. Changing a living, widely
-used language in such a radical way turned out to be politically
-difficult, and work on the version 4 was abandoned in 2008, leading to
-a much less ambitious version 5, which made only some uncontroversial
-improvements, coming out in 2009. Then in 2015 version 6 came out, a
-major update that included some of the ideas planned for version 4.
-Since then we've had new, small updates every year.
+Au existat mai multe versiuni ale JavaScript. ECMAScript versiunea 3 era suportat pe larg în perioada de ascensiune a limbajului JavaScript către poziția dominantă de azi (în mare, între 2000 și 2010). În această perioadă, se lucra activ la o ambițioasă versiune 4 care includea în plan un număr de imbunătățiri radicale și extensii ale limbajului. Modificarea unui limbaj utilizat pe scară largă într-o manieră atât de radicală s-a demonstrat a fi politic dificilă și din acest motiv versiunea 4 a fost abandonată în 2008, trecându-se la mult mai puțin ambițioasa versiune 5, care a făcut doar câteva îmbunătățiri necontroversate, versiune publicată în 2009. Apoi, în 2015, a apărut versiunea 6, o actualizare majoră ce includea unele dintre ideile planificate pentru versiunea 4. De atunci, în fiecare an am avut noi actualizări.
 
-The fact that the language is evolving means that browsers have to
-constantly keep up, and if you're using an older browser, it may not
-support every feature. The language designers are careful to not make
-any changes that could break existing programs, so new browsers can
-still run old programs. In this book, I'm using the 2017 version of
-JavaScript.
+Faptul că limbajul evoluează înseamnă că browserele trebuie în permanență să evolueze și ele, iar dacă utilizați un browser mai vechi, s-ar putea să nu suporte fiecare caracteristică. Designerii limbajului au mare grijă să nu introducă modificări care ar putea strica programele mai vechi, astfel încât noile browsere să poată rula programele mai vechi. Această carte folosește versiunea 2017 a limbajului JavaScript.
 
 {{index [JavaScript, "uses of"]}}
 
-Web browsers are not the only platforms on which JavaScript is used.
-Some databases, such as MongoDB and CouchDB, use JavaScript as their
-scripting and query language. Several platforms for desktop and server
-programming, most notably the ((Node.js)) project (the subject of
-[Chapter ?](node)), provide an environment for programming JavaScript
-outside of the browser.
+Browserele web nu sunt singurele platforme în care se utilizează JavaScript. Unele baze de date, cum ar fi MongoDB sau CouchDB utilizează JavaScript ca și limbajul lor de scripting și interogare. Câteva platforme pentru programarea desktop și server, dintre care cel mai notabil este proiectul NodeJS (subiectul Capitolului 20), furnizează un mediu de programare JavaScript în afara browserului.
 
-## Code, and what to do with it
+## Codul și ce să facem cu el
 
 {{index "reading code", "writing code"}}
 
-_Code_ is the text that makes up programs. Most chapters in this book
-contain quite a lot of code. I believe reading code and writing ((code))
-are indispensable parts of ((learning)) to program. Try to not just
-glance over the examples—read them attentively and understand them.
-This may be slow and confusing at first, but I promise that you'll
-quickly get the hang of it. The same goes for the ((exercises)). Don't
-assume you understand them until you've actually written a working
-solution.
+_Codul_ este textul care reprezintă un program. Majoritatea capitolelor din această carte conțin o cantitate destul de mare de code. Cred că citirea și scrierea codului sunt indispensabile pentru a învăța cum să programăm. Încercați nu doar să aruncați o privire asupra exemplelor ci să le citiți atent și să încercați să le înțelegeți. Aceasta va fi o activitate lentă si cu multă confuzie, la început, dar vă promit că în curând o să fiți mult mai comfortabili. Tot la fel stau lucrurile și în privința exercițiilor. Nu presupuneți că le-ați înțeles decât în momentul în care ați reușit să creați o soluție care funcționează.
 
 {{index interpretation}}
 
-I recommend you try your solutions to exercises in an actual
-JavaScript interpreter. That way, you'll get immediate feedback on
-whether what you are doing is working, and, I hope, you'll be tempted
-to ((experiment)) and go beyond the exercises.
+Vă recomand să încercați să rezolvați excercițiile cu ajutorul unui interpretor de JavaScript real. În felul acesta veți primi feedback imediat cu privire la funcționarea codului pe care îl scrieți și, sper, veți fi tentați să experimentați dincolo de ceea ce vă cere exercițiul.
+
 
 {{if interactive
 
-When reading this book in your browser, you can edit (and run) all
-example programs by clicking them.
-
+Când citiți această carte într-un browser, puteți edita și rula toate exemplele. Executați un click pe codul exemplificat.
 if}}
 
 {{if book
@@ -424,58 +249,21 @@ if}}
 
 {{index "developer tools", "JavaScript console"}}
 
-If you want to run the programs defined in this book outside of the
-book's website, some care will be required. Many examples stand on their
-own and should work in any JavaScript environment. But code in later
-chapters is often written for a specific environment (the browser or
-Node.js) and can run only there. In addition, many chapters define
-bigger programs, and the pieces of code that appear in them depend on
-each other or on external files. The
-[sandbox](https://eloquentjavascript.net/code) on the website provides
-links to Zip files containing all the scripts and data files
-necessary to run the code for a given chapter.
+Dacă vreți să rulați programele din această carte în afara website-ului, trebuie să țineți cont de câteva atenționări. Multe exemple sunt complete și ar trebui să funcționeze în orice mediu JavaScript. Dar codul în capitolele care abordează subiecte mai avansate este scris pentru un anume mediu (browserul sau NodeJS) și poate rula doar în acel mediu. În plus, mai multe capitole definesc programe mai mari și bucățile de cod prezentate depind una de alta sau de fișiere externe. [sandbox](https://eloquentjavascript.net/code) din site-ul original conține linkuri către toate scripturile și fișierele de date necesare pentru a rula codul dintr-un anume capitol.
 
-## Overview of this book
+## Prezentare generală a acestei cărți
 
-This book contains roughly three parts. The first 12 chapters discuss
-the JavaScript language. The next seven chapters are about web
-((browsers)) and the way JavaScript is used to program them. Finally,
-two chapters are devoted to ((Node.js)), another environment to
-program JavaScript in.
+Acestă carte conține trei părți. Primele 12 capitole prezintă limbajul JavaScript. Următoarele 7 capitole sunt despre browserele web și modul în care JavaScript poate fi utilizat pentru programarea lor. In final, ultimele două capitole sunt dedicate NodeJS, un alt mediu în care putem realiza programe JavaScript.
 
-Throughout the book, there are five _project chapters_, which describe
-larger example programs to give you a taste of actual programming. In
-order of appearance, we will work through building a [delivery
-robot](robot), a [programming language](language), a [platform
-game](game), a [pixel paint program](paint), and a [dynamic
-website](skillsharing).
+Pe parcursul cărții, veți descoperi 5 _capitole de proiecte_ care vor prezenta programe de dimensiuni mai mari și vă vor da o idee despre programarea reală. În ordinea apariției, vom lucra la construcția unui _robot pentru livrări_, a unui _limbaj de programare_, a unui _joc de platformă_, a unui _program de desenare cu pixeli_ și, în final, a unui _site web dinamic_.
 
-The language part of the book starts with four chapters that introduce
-the basic structure of the JavaScript language. They introduce
-[control structures](program_structure) (such as the `while` word you
-saw in this introduction), [functions](functions) (writing your own
-building blocks), and [data structures](data). After these, you will
-be able to write basic programs. Next, Chapters [?](higher_order) and
-[?](object) introduce techniques to use functions and objects to write
-more _abstract_ code and keep complexity under control.
+Prima parte a cărții începe cu patru capitole care introduc structura de bază a limbajului JavaScript. Ele vă introduc în [structurile de control](program_structure) (cum ar fi `while` despre care ați aflat în această introducere), [funcții](functions) (cum să scrieți propriile blocuri de construcție) și [structuri de date](data). După parcurgerea lor veți fi capabili să scrieți programe simple. Apoi, capitolele [?](higher_order) și [?](object) vă vor introduce tehnici de utilizare a funcțiilor și obiectelor pentru a scrie cod mai _abstract_ și a păstra complexitatea sub control.
 
-After a [first project chapter](robot), the language part of the book
-continues with chapters on [error handling and bug fixing](error),
-[regular expressions](regexp) (an important tool for working with
-text), [modularity](modules) (another defense against complexity), and
-[asynchronous programming](async) (dealing with events that take
-time). The [second project chapter](language) concludes the first part
-of the book.
+După un prim [proiect de capitol](robot), prima parte continuă cu capitole despre [gestiunea erorilor și repararea bugurilor](error), [expresii regulate](regexp) (un instrument important pentru lucrul cu text), [modularitatea](modules) (o altă metodă de apărare împotriva complxității) și [programarea asincronă](async) (gestiunea evenimentelor de lungă durată). [Al doilea proiect de capitol](language) finalizează prima parte a cărții.
 
-The second part, Chapters [?](browser) to [?](paint), describes the
-tools that browser JavaScript has access to. You'll learn to display
-things on the screen (Chapters [?](dom) and [?](canvas)), respond to
-user input ([Chapter ?](event)), and communicate over the network
-([Chapter ?](http)). There are again two project chapters in this
-part.
+In a doua parte a cărții, capitolele de la [?](browser) până la [?](paint) descriu instrumente la care JavaScript are acces în browser. Veți învăța să afișați elemente pe ecran (capitolele [?](dom) și [?](canvas)), să răspundeți la acțiunile utilizatorului ([?](event)) și să comunicați în rețea ([?](http)). Și în această parte există două capitole de proiect.
 
-After that, [Chapter ?](node) describes Node.js, and [Chapter
-?](skillsharing) builds a small website using that tool.
+După aceea, capitolul [?](node) descrie NodeJS și capitolul [?](skillsharing) construiește un mic website cu ajutorul acestui instrument.
 
 {{if commercial
 
@@ -484,14 +272,11 @@ come up when optimizing JavaScript programs for speed.
 
 if}}
 
-## Typographic conventions
+## Convenții tipografice
 
 {{index "factorial function"}}
 
-In this book, text written in a `monospaced` font will represent
-elements of programs—sometimes they are self-sufficient fragments, and
-sometimes they just refer to part of a nearby program. Programs (of
-which you have already seen a few) are written as follows:
+În această carte, textul scris cu font `monospaced` va reprezenta elemente ale unor programe - uneori, sunt fragmente complet funcționale, alteori se referă doar la o anumită parte a unui program. Programele sunt scrise după cum urmează:
 
 ```
 function factorial(n) {
@@ -505,13 +290,11 @@ function factorial(n) {
 
 {{index "console.log"}}
 
-Sometimes, to show the output that a program produces, the
-expected output is written after it, with two slashes and an arrow in
-front.
+Uneori, pentru a afișa ieșirea pe care o produce un program, rezultatul este prezentat la sfârșitul programului, ca în exemplul de mai jos:
 
 ```
 console.log(factorial(8));
 // → 40320
 ```
 
-Good luck!
+Mult succes!
