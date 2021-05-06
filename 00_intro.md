@@ -1,28 +1,20 @@
 {{meta {load_files: ["code/intro.js"]}}}
 
-# Introduction
+# Introducere
 
 {{quote {author: "Ellen Ullman", title: "Close to the Machine: Technophilia and its Discontents", chapter: true}
 
-Suntem convinși că de fapt construim un sistem pentru propriile noastre scopuri. Credem că îl construim ca pe o 
-imagine a noastră... Dar computerul nu este ca și noi. Este o proiecție a unei părți foarte mici din eul nostru: 
-acea parte dedicată logicii, ordinii, regulilor și clarității.
+Suntem convinși că de fapt construim un sistem pentru propriile noastre scopuri. Credem că îl construim ca pe o imagine a noastră... Dar computerul nu este ca și noi. Este o proiecție a unei părți foarte mici din eul nostru: acea parte dedicată logicii, ordinii, regulilor și clarității.
 
 quote}}
 
 {{figure {url: "img/chapter_picture_00.jpg", alt: "Imaginea unei șurubelnițe și a unei plăci integrate", chapter: "framed"}}}
 
-Aceasta este o carte despre instruirea computerelor. Computerele sunt, în zilele noastre, cam la fel de comune 
-ca și șurubelnițele, doar că sunt puțin mai complexe, și a le determina să facă ceea ce dorim noi nu este 
-întotdeauna ușor.
+Aceasta este o carte despre instruirea computerelor. Computerele sunt, în zilele noastre, cam la fel de comune ca și șurubelnițele, doar că sunt puțin mai complexe, și a le determina să facă ceea ce dorim noi nu este întotdeauna ușor.
 
-Dacă sarcina pe care vrem să o delegăm computerului este una obișnuită, bine înțeleasă, cum ar fi să ne afișeze
-lista de emailuri sau să acționeze ca și un calculator de birou, putem să deschidem aplicația corespunzătoare
-și să începem lucrul. Dar pentru sarcini de lucru unice sau fără un final clar, probabil că nu vom găsi o aplicație.
+Dacă sarcina pe care vrem să o delegăm computerului este una obișnuită, bine înțeleasă, cum ar fi să ne afișeze lista de emailuri sau să acționeze ca și un calculator de birou, putem să deschidem aplicația corespunzătoare și să începem lucrul. Dar pentru sarcini de lucru unice sau fără un final clar, probabil că nu vom găsi o aplicație.
 
-Acesta este momentul in care _programarea_ ar putea intra în scenă. _Programarea_ este acțiunea de a construi un 
-_program_ - un set de instrucțiuni precise care să îi spună computerului ce are de făcut. Deoarece computerele
-sunt niște fiare destul de tâmpite dar foarte pedante, programarea este fundamental plictisitoare și frustrantă.
+Acesta este momentul in care _programarea_ ar putea intra în scenă. _Programarea_ este acțiunea de a construi un _program_ - un set de instrucțiuni precise care să îi spună computerului ce are de făcut. Deoarece computerele sunt niște fiare destul de tâmpite dar foarte pedante, programarea este fundamental plictisitoare și frustrantă.
 
 {{index [programming, "joy of"], speed}}
 

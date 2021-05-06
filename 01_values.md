@@ -1,13 +1,10 @@
 {{meta {docid: values}}}
 
-# Values, Types, and Operators
+# Valori, tipuri și operatori
 
 {{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
 
-Below the surface of the machine, the program moves. Without effort,
-it expands and contracts. In great harmony, electrons scatter and
-regroup. The forms on the monitor are but ripples on the water. The
-essence stays invisibly below.
+Dincolo de suprafața mașinii, programul se mișcă. Fără efort, se dilată și se contractă. Într-o armonie perfectă, electronii se împrăștie și se regrupează. Formele de pe monitor sunt doar niște unduiri pe apă. Esența rămâne invizibilă.
 
 quote}}
 
@@ -17,74 +14,42 @@ quote}}
 
 {{index "binary data", data, bit, memory}}
 
-Inside the computer's world, there is only data. You can read data,
-modify data, create new data—but that which isn't data cannot be
-mentioned. All this data is stored as long sequences of bits and is
-thus fundamentally alike.
+În lumea computerului există doar date. Puteți citi date, puteți să le modificați, puteți să creați date noi - dar ceea ce nu reprezintă date nu poate fi menționat. Toate aceste date sunt memorate sub forma unor secvențe lungi de biți și sunt, prin urmare, fundamental identice.
 
 {{index CD, signal}}
 
-_Bits_ are any kind of two-valued things, usually described as zeros and
-ones. Inside the computer, they take forms such as a high or low
-electrical charge, a strong or weak signal, or a shiny or dull spot on
-the surface of a CD. Any piece of discrete information can be reduced
-to a sequence of zeros and ones and thus represented in bits.
+_Biții_ sunt orice obiecte care pot reprezenta două valori. De regulă, sunt descriși cu ajutorul valorilor 0 și 1. În interiorul computerului, ei iau forma unor sarcini electrice ridicate sau scăzute, a unui semnal puternic sau slab, sau a unui punct strălucitor sau mat pe suprafața unui CD/DVD. Orice informație discretă poate fi redusă la o secvență de zero și unu și deci, reprezentată ca o succesiune de biți.
 
 {{index "binary number", radix, "decimal number"}}
 
-For example, we can express the number 13 in bits. It works the same
-way as a decimal number, but instead of 10 different ((digit))s, you
-have only 2, and the weight of each increases by a factor of 2 from
-right to left. Here are the bits that make up the number 13, with the
-weights of the digits shown below them:
+De exemplu, putem reprezenta numărul 13 pe biți. Funcționează ca și în reprezentarea zecimală, doar că în loc de 10 cifre diferite, avem la dispoziție doar două și ponderea fiecărei cifre este o putere a lui 2, crescătoare de la dreapta la stânga. Exemplul de mai jos prezintă valorile fiecăruia dintre primii 8 biți pe care i-am putea folosi pentru reprezentarea numărului 13, precum și puterile lui 2 asociate fiecărui bit (rândul al doilea):
 
 ```{lang: null}
    0   0   0   0   1   1   0   1
  128  64  32  16   8   4   2   1
 ```
 
-So that's the binary number 00001101. Its non-zero digits stand for
-8, 4, and 1, and add up to 13.
+Deci, numărul binar 00001101 are cifre nenule pentru 8, 4 și 1, care adunate ne dau valoarea 13.
 
-## Values
+## Valori
 
 {{index [memory, organization], "volatile data storage", "hard drive"}}
 
-Imagine a sea of bits—an ocean of them. A typical modern computer has
-more than 30 billion bits in its volatile data storage (working
-memory). Nonvolatile storage (the hard disk or equivalent) tends to
-have yet a few orders of magnitude more.
+Imaginați-vă o mare de biți, sau chiar un ocean. Un computer modern are mai mult de 30 miliarde de biți în memoria sa volatilă (memoria de lucru). Memoria de stocare non-volatilă (hard-disk sau echivalentul său) tinde să conțină cu câteva ordine de mărime mai mulți biți.
 
-To be able to work with such quantities of bits without getting lost,
-we must separate them into chunks that represent pieces of
-information. In a JavaScript environment, those chunks are called
-_((value))s_. Though all values are made of bits, they play different
-roles. Every value has a ((type)) that determines its role. Some
-values are numbers, some values are pieces of text, some values are
-functions, and so on.
+Pentru a putea lucra cu un număr atât de mare de biți fără a ne pierde, trebuie să îi separăm în bucăți care reprezintă componente ale informației. Într-un mediu JavaScript, aceste bucăți se numesc _valori_. Deți toate valorile sunt formate din biți, ele au roluri diferite. Fiecare valoare are un _tip_ care îi determină rolul. Unele valori sunt numere, altele sunt texte, altele sunt funcții ...
 
 {{index "garbage collection"}}
 
-To create a value, you must merely invoke its name. This is
-convenient. You don't have to gather building material for your values
-or pay for them. You just call for one, and _whoosh_, you have it. They
-are not really created from thin air, of course. Every value has to be
-stored somewhere, and if you want to use a gigantic amount of them at
-the same time, you might run out of memory. Fortunately, this is a
-problem only if you need them all simultaneously. As soon as you no
-longer use a value, it will dissipate, leaving behind its bits to be
-recycled as building material for the next generation of values.
+Pentru a crea o valoare trebuie doar să îi invocați numele. Ceea ce este foarte convenabil. Nu trebuie să adunați material de construcție pentru valorile de care aveți nevoie și nici să plătiți pentru ele. Doar solicitați una si _boom_, vă este disponibilă. Desigur, ele nu sunt create prin magie. Fiecare valoare trebuie să fie stocată undeva și dacă vă gândiți să utilizați un număr uriaș de valori simultan, s-ar putea să rămâneți fără memorie. Din fericire, aceasta este o problemă doar dacă intenționați să aveți disponibile toate valorile simultan. Imediat ce nu mai aveți nevoie de o valoare, aceasta va dispărea, iar biții care au fost utilizați pentru reprezentarea ei vor fi reciclați ca și material pentru construcția următoarei generații de valori. 
 
-This chapter introduces the atomic elements of JavaScript programs,
-that is, the simple value types and the operators that can act on such
-values.
+Acest capitol vă introduce elementtele atomice ale programelor JavaScript, adică tipurile simple de valori și operatorii care pot acționa asupra acestor valori.
 
-## Numbers
+## Numere
 
 {{index [syntax, number], number, [number, notation]}}
 
-Values of the _number_ type are, unsurprisingly, numeric values. In a
-JavaScript program, they are written as follows:
+Valorile de tip _Number_ sunt valori numerice. Într-un program JavaScript ele sunt scrise după cum urmează:
 
 ```
 13
@@ -92,40 +57,21 @@ JavaScript program, they are written as follows:
 
 {{index "binary number"}}
 
-Use that in a program, and it will cause the bit pattern for the
-number 13 to come into existence inside the computer's memory.
+Prin utilizarea valorii într-un program, va apărea șablonul de biți al numărului 13 în memoria computerului.
 
 {{index [number, representation], bit}}
 
-JavaScript uses a fixed number of bits, 64 of them, to store a
-single number value. There are only so many patterns you can make with
-64 bits, which means that the number of different numbers that can be
-represented is limited. With _N_ decimal ((digit))s, you can represent
-10^N^ numbers. Similarly, given 64 binary
-digits, you can represent 2^64^ different numbers, which is about 18
-quintillion (an 18 with 18 zeros after it). That's a lot.
+JavaScript utilizează un număr fix de biți, 64, pentru a stoca fiecare valoare numerică în memorie. Numărul de șabloane care pot fi construite cu 64 biți, ceea ce înseamnă că numărul de valori care pot fi reprezentate este limitat. Folosind _N_ zecimale (cifre) putem reprezenta 10^N^ numere diferite. Similar, cu 64 de cifre binare putem reprezenta 2^64^ numere diferite, ceea ce reprezintă aproximativ 18 quintilioane (18 urmat de 18 zerouri). Ceea ce este foarte mult.
 
-Computer memory used to be much smaller, and people tended to use
-groups of 8 or 16 bits to represent their numbers. It was easy to
-accidentally _((overflow))_ such small numbers—to end up with a number
-that did not fit into the given number of bits. Today, even computers
-that fit in your pocket have plenty of memory, so you are free to use
-64-bit chunks, and you need to worry about overflow only when dealing
-with truly astronomical numbers.
+Memoria computerelor era mult mai mică și programatorii utilizau grupuri de 8 sau 16 biți pentru a reprezenta numerele. Era relativ ușor să se atingă accidental un _overflow_ cu numere atât de mici - adică să se ajungă la un număr care nu "încape" în numărul dat de biți. Azi, chiar și un computer de buzunar are o cantitate mare de memorie astfel încât putem folosi bucăți de 64 biți și trebuie să ne preocupe eroarea de depășire (_overflow_) doar dacă avem de a face cu valori cu adevărat astronomice.
 
 {{index sign, "floating-point number", "sign bit"}}
 
-Not all whole numbers less than 18 quintillion fit in a JavaScript number,
-though. Those bits also store negative numbers, so one bit indicates
-the sign of the number. A bigger issue is that nonwhole numbers must
-also be represented. To do this, some of the bits are used to store
-the position of the decimal point. The actual maximum whole number
-that can be stored is more in the range of 9 quadrillion (15
-zeros)—which is still pleasantly huge.
+Nu toate numerele mai mici decât 18 quintilioane pot fi reprezentate ca si numere in JavaScript. Biții stochează și numere negative, deci un bit indică semnul numărului. O problemă și mai mare este că trebuie să putem reprezenta și numere reale. Pentru aceasta, o parte dintre biți sunt utilizați pentru a memora poziția punctului zecimal. În realitate, cel mai mare număr întreg care poate fi reprezentat este în jurul valorii de 9 cvadrilioane (15 zerouri) ceea ce încă este foarte mult.
 
 {{index [number, notation], "fractional number"}}
 
-Fractional numbers are written by using a dot.
+Numerele fracționare sunt reprezentate prin folosirea unui punct.
 
 ```
 9.81
@@ -133,35 +79,23 @@ Fractional numbers are written by using a dot.
 
 {{index exponent, "scientific notation", [number, notation]}}
 
-For very big or very small numbers, you may also use scientific
-notation by adding an _e_ (for _exponent_), followed by the exponent
-of the number.
+Pentru numere foarte mari sau foarte mici, putem folosi notația științifică prin adăugarea unui _e_ ( de la _exponent_), urmat de exponentul numărului.
 
 ```
 2.998e8
 ```
 
-That is 2.998 × 10^8^ = 299,800,000.
+Aceasta este valoarea 2.998 × 10^8^ = 299,800,000.
 
 {{index pi, [number, "precision of"], "floating-point number"}}
 
-Calculations with whole numbers (also called _((integer))s_) smaller
-than the aforementioned 9 quadrillion are guaranteed to always be
-precise. Unfortunately, calculations with fractional numbers are
-generally not. Just as π (pi) cannot be precisely expressed by a
-finite number of decimal digits, many numbers lose some precision when
-only 64 bits are available to store them. This is a shame, but it
-causes practical problems only in specific situations. The important
-thing is to be aware of it and treat fractional digital numbers as
-approximations, not as precise values.
+Calculele cu numere întregi (numite și _integers_) mai mici decât valoarea menționată de 9 cvadrilioane sunt garantate a fi întotdeauna exacte. Din păcate, aceeași garanție nu este valabilă pentru numerele fracționare, în general. Așa cum numărul π (pi) nu poate fi scris exact cu un număr finit de zecimale, multe numere pierd din precizie atunci când trebuie să fie reprezentate cu doar 64 biți. Este păcat, dar acesta cauzează probleme practice doar în anumite situații. Ceea ce este important, trebuie să conștientizați această problemă și să tratați numerele fracționare ca și aproximări, nu ca și valori exacte.
 
-### Arithmetic
+### Aritmetica
 
 {{index [syntax, operator], operator, "binary operator", arithmetic, addition, multiplication}}
 
-The main thing to do with numbers is arithmetic. Arithmetic operations
-such as addition or multiplication take two number values and produce
-a new number from them. Here is what they look like in JavaScript:
+Cele mai frecvente operații cu numere sunt operațiile aritmetice. Aceste operații, cum ar fi adunarea sau înmulțirea iau două numere și produc un număr nou din ele. Iată cum se folosesc aceste operații în JavaScript:
 
 ```
 100 + 4 * 11
@@ -169,17 +103,11 @@ a new number from them. Here is what they look like in JavaScript:
 
 {{index [operator, application], asterisk, "plus character", "* operator", "+ operator"}}
 
-The `+` and `*` symbols are called _operators_. The first stands for
-addition, and the second stands for multiplication. Putting an
-operator between two values will apply it to those values and produce
-a new value.
+Simbolurile  `+` și `*` se numesc _operatori_. Primul este folosit pentru adunare iar cel de al doilea pentru înmulțire. Plasarea unui operator între două valori va aplica acel operator asupra celor două valori pentru a produce o nouă valoare.
 
 {{index grouping, parentheses, precedence}}
 
-But does the example mean "add 4 and 100, and multiply the result by 11,"
-or is the multiplication done before the adding? As you might have
-guessed, the multiplication happens first. But as in mathematics, you
-can change this by wrapping the addition in parentheses.
+Oare înseamnă exemplul anterior că "adunăm 4 cu 100 și apoi multiplicăm rezultatul cu 11" sau de fapt se va efectua înmulțirea înainte de adunare? După cum probabil v-ați dat seama, mai întâi se efectuează operația de înmulțire. Dar, ca și în matematică, puteți modifica acest comportament prin utilizarea parantezelor:
 
 ```
 (100 + 4) * 11
@@ -187,60 +115,37 @@ can change this by wrapping the addition in parentheses.
 
 {{index "hyphen character", "slash character", division, subtraction, minus, "- operator", "/ operator"}}
 
-For subtraction, there is the `-` operator, and division can be done
-with the `/` operator.
+Pentru scădere se utilizează operatorul `-` iar împărțirea se poate efectua folosind operatorul `/`.
 
-When operators appear together without parentheses, the order in which
-they are applied is determined by the _((precedence))_ of the
-operators. The example shows that multiplication comes before
-addition. The `/` operator has the same precedence as `*`. Likewise
-for `+` and `-`. When multiple operators with the same precedence
-appear next to each other, as in `1 - 2 + 1`, they are applied left to
-right: `(1 - 2) + 1`.
+Când operatorii apar într-o expresie fără paranteze, ordinea în care aceștia se aplică este determinată de către _precedența_ operatorilor. Exemplul arată că înmulțirea se efectuează înainte de adunare. Operatorul `/` are aceeași precedență ca și operatorul `*`. Similar pentru `+` și `-`. Atunci când mai mulți operatori cu aceeași precedență apar Într-o expresie fără paranteze, cum ar fi `1 - 2 + 1`, aceștia se aplică asupra valorilor de la stânga la dreapta, ca și în: `(1 - 2) + 1`.
 
-These rules of precedence are not something you should worry about.
-When in doubt, just add parentheses.
+Nu trebuie să vă faceți prea multe griji despre regulile de precedență. Când aveți dubii, folosiți parantezele.
 
 {{index "modulo operator", division, "remainder operator", "% operator"}}
 
-There is one more arithmetic operator, which you might not immediately
-recognize. The `%` symbol is used to represent the _remainder_
-operation. `X % Y` is the remainder of dividing `X` by `Y`. For
-example, `314 % 100` produces `14`, and `144 % 12` gives `0`.
-The remainder operator's precedence is the same as that of multiplication and
-division. You'll also often see this operator referred to as _modulo_.
+Mai există încă un operator pe care probabil nu îl veți recunoaște imediat. Simbolul `%` este utilizat pentru a calcula _restul împărțirii a două numere întregi_. `X % Y` reprezintă restul împărțirii lui `X` la `Y`. De exemplu, `314 % 100` are rezultatul `14`, iar `144 % 12` este `0`. Prioritatea acestui operator este aceeași ca și a operatorilor de înmulțire și împărțire. De multe ori acest operator este denumit _modulo_.
 
-### Special numbers
+### Numere speciale
 
 {{index [number, "special values"]}}
 
-There are three special values in JavaScript that are considered
-numbers but don't behave like normal numbers.
+Există trei valori speciale în JavaScript care sunt considerate numere dar nu se comportă ca și numerele normale.
 
 {{index infinity}}
 
-The first two are `Infinity` and `-Infinity`, which represent the
-positive and negative infinities. `Infinity - 1` is still `Infinity`,
-and so on. Don't put too much trust in infinity-based computation,
-though. It isn't mathematically sound, and it will quickly lead to the
-next special number: `NaN`.
+Primele două sunt `Infinity` și `-Infinity`, care reprezintă infinitul pozitiv, respectiv negativ.`Infinity - 1` este tot `Infinity`. Nu vă încredeți prea mult în calcule bazate pe infinit. Nu prea sună bine din punct de vedere al matematicii și vor conduce destul de repede la celălalt număr special: `NaN`.
 
 {{index NaN, "not a number", "division by zero"}}
 
-`NaN` stands for "not a number", even though it _is_ a value of the
-number type. You'll get this result when you, for example, try to
-calculate `0 / 0` (zero divided by zero), `Infinity - Infinity`, or
-any number of other numeric operations that don't yield a meaningful
-result.
+`NaN` reprezintă prescurtarea de la "not a number", deși _este_ o valoare de tip numeric. Veți obține acest rezultat, de exemplu, atunci când încercați să calculați `0 / 0` (zero împărțit la zero), `Infinity - Infinity`, sau orice altă operație numerică ce nu conduce la un rezultat cu sens.
 
-## Strings
+## Stringuri
 
 {{indexsee "grave accent", backtick}}
 
 {{index [syntax, string], text, character, [string, notation], "single-quote character", "double-quote character", "quotation mark", backtick}}
 
-The next basic data type is the _((string))_. Strings are used to
-represent text. They are written by enclosing their content in quotes.
+Următorul tip de date de bază este _String_. Stringurile sunt utilizate pentru a reprezenta text. Ele sunt scrise prin includerea conținutului lor între simboluri de citare:
 
 ```
 `Down on the sea`
@@ -248,46 +153,29 @@ represent text. They are written by enclosing their content in quotes.
 'Float on the ocean'
 ```
 
-You can use single quotes, double quotes, or backticks to mark
-strings, as long as the quotes at the start and the end of the string
-match.
+Puteți utiliza apostroafe, ghilimele sau backticks, cu singura restricție ca simbolul de start și cel de sfârșit să fie aceleași.
 
 {{index "line break", "newline character"}}
 
-Almost anything can be put between quotes, and JavaScript will make a
-string value out of it. But a few characters are more difficult. You
-can imagine how putting quotes between quotes might be hard.
-_Newlines_ (the characters you get when you press [enter]{keyname}) can be
-included without escaping only when the string is quoted with backticks
-(`` ` ``).
+Aproape orice poate fi plasat între simboluri de citare și JavaScript îl va transforma într-un string. Există însă câteva caractere care fac excepție de la regulă. Vă puteți imagina că nu poate fi chiar așa de simplu să plasăm simboluri de citare în interiorul unui string. De asemenea, caracterul _linie nouă_ (cel pe care îl obțineți apăsând tasta Enter) poate fi inclus fără secvență-escape doar atunci când folosim backticks.
 
 {{index [escaping, "in strings"], ["backslash character", "in strings"]}}
 
-To make it possible to include such characters in a string, the
-following notation is used: whenever a backslash (`\`) is found inside
-quoted text, it indicates that the character after it has a special
-meaning. This is called _escaping_ the character. A quote that is
-preceded by a backslash will not end the string but be part of it.
-When an `n` character occurs after a backslash, it is interpreted as a
-newline. Similarly, a `t` after a backslash means a ((tab character)).
-Take the following string:
+Pentru a putea introduce asemenea caractere într-un string, se utilizează următoarea notație: întotdeauna când este prezent un caracter backslash `\` în interiorul unui text, se precizează că după acest simbol urmează un caracter cu semnificație specială. Acestă notație se numește _escaping_. Un simbol de citare precedat de backslash nu are semnificația de terminare a stringului ci va face parte din string. Un caracter `n` dupa backslash este interpretat ca o linie nouă. Similar, un caracter `t` după un backslash reprezintă un caracter "tab". Să considerăm următorul string:
 
 ```
 "This is the first line\nAnd this is the second"
 ```
 
-The actual text contained is this:
+În realitate, acesta conține următorul text:
 
 ```{lang: null}
 This is the first line
 And this is the second
 ```
 
-There are, of course, situations where you want a backslash in a
-string to be just a backslash, not a special code. If two backslashes
-follow each other, they will collapse together, and only one will be
-left in the resulting string value. This is how the string "_A newline
-character is written like `"`\n`"`._" can be expressed:
+Există situații în care un backslash într-un string trebuie să fie doar un backslash, nu un caracter special. Dacă plasăm doua caractere backslash unul după altul, ele vor fi colapsate și doar unul dintre ele rămâne ca și caracter normal în stringul rezultat. Iată cum putem scrie stringul "_A newline
+character is written like `"`\n`"`._":
 
 ```
 "A newline character is written like \"\\n\"."
@@ -297,62 +185,37 @@ character is written like `"`\n`"`._" can be expressed:
 
 {{index [string, representation], Unicode, character}}
 
-Strings, too, have to be modeled as a series of bits to be able to
-exist inside the computer. The way JavaScript does this is based on
-the _((Unicode))_ standard. This standard assigns a number to
-virtually every character you would ever need, including characters
-from Greek, Arabic, Japanese, Armenian, and so on. If we have a number
-for every character, a string can be described by a sequence of
-numbers.
+Și stringurile trebuie modelate ca o succesiune de biți pentru a putea exista în interiorul unui computer. În JavaScript, pentru aceasta se folosește standardul _Unicode_. Acest standard asociază un număr fiecărui caracter de care ați avea nevoie vreodată. Dacă avem câte un număr asociat fiecărui caracter, un string poate fi descris ca o secvență de numere.
 
 {{index "UTF-16", emoji}}
 
-And that's what JavaScript does. But there's a complication:
-JavaScript's representation uses 16 bits per string element, which can
-describe up to 2^16^ different characters. But Unicode defines more
-characters than that—about twice as many, at this point. So some
-characters, such as many emoji, take up two "character positions" in
-JavaScript strings. We'll come back to this in [Chapter
-?](higher_order#code_units).
+Asta se întâmplă în JavaScript. Dar există o complicație: reprezentarea JavaScript utilizează 16 biți pentru fiecare element al unui string, ceea ce înseamnă că pot fi descrise până la 2^16^ caractere. Dar Unicode mai multe caractere, cam de două ori mai multe, în acest moment. Astfel că, unele caractere, cum ar fi multe emoji, folosesc "două caractere" în stringul JavaScript. Vom reveni asupra acestui aspect în capitolul [?](higher_order#code_units).
 
 {{index "+ operator", concatenation}}
 
-Strings cannot be divided, multiplied, or subtracted, but the `+`
-operator _can_ be used on them. It does not add, but it
-_concatenates_—it glues two strings together. The following line will
-produce the string `"concatenate"`:
+Stringurile nu pot fi împărțite, multiplicate sau scăzute, dar operatorul `+` _poate_ fi folosit. Acesta nu adună ci _concatenează_, adică alipește două stringuri. Următoarea linie va produce stringul  `"concatenate"`:
 
 ```
 "con" + "cat" + "e" + "nate"
 ```
 
-String values have a number of associated functions (_methods_) that
-can be used to perform other operations on them. I'll say more about
-these in [Chapter ?](data#methods).
+Valorile de tip string au mai multe funcții asociate (_metode_) care pot fi utilizate pentru efectuarea unor operații. Mai multe despre acestea în capitolul [?](data#methods).
 
 {{index interpolation, backtick}}
 
-Strings written with single or double quotes behave very much the
-same—the only difference is in which type of quote you need to escape
-inside of them. Backtick-quoted strings, usually called _((template
-literals))_, can do a few more tricks. Apart from being able to span
-lines, they can also embed other values.
+Stringurile definite cu apostroafe sau ghilimele se comportă la fel - singura diferență este dată de caracterul pentru care trebuie aplicat "escape" în interiorul lor. Stringurile plasate între backticks, de regulă numite _template literals_, pot să facă și alte lucruri. Pe lângă abilitatea de a se întinde pe mai multe linii, ele pot să includă alte valori.
 
 ```
 `half of 100 is ${100 / 2}`
 ```
 
-When you write something inside `${}` in a template literal, its
-result will be computed, converted to a string, and included at that
-position. The example produces "_half of 100 is 50_".
+Atunci când scriem ceva între `${}` într-un template literal, se va calcula rezultatul acelei expresii, care apoi va fi convertit într-un string și inclus în poziția respectivă. Exemplul va produce stringul "_half of 100 is 50_".
 
-## Unary operators
+## Operatori unari
 
 {{index operator, "typeof operator", type}}
 
-Not all operators are symbols. Some are written as words. One example
-is the `typeof` operator, which produces a string value naming the
-type of the value you give it.
+Nu toți operatorii sunt simboluri. Unii dintre ei se exprimă prin cuvinte. Un exemplu este operatorul `typeof`, care produce o valoare de tip string ce reprezintă tipul valorii primite
 
 ```
 console.log(typeof 4.5)
@@ -365,37 +228,29 @@ console.log(typeof "x")
 
 {{id "console.log"}}
 
-We will use `console.log` in example code to indicate that we want to
-see the result of evaluating something. More about that in the [next
-chapter](program_structure).
+Vom utiliza `console.log` în exemplele de cod pentru a arăta că vrem să afițăm rezultatul evaluării unei anumite expresii. Mai multe despre această intsrucțiune în [capitolul următor](program_structure).
 
 {{index negation, "- operator", "binary operator", "unary operator"}}
 
-The other operators shown all operated on two values, but `typeof`
-takes only one. Operators that use two values are called _binary_
-operators, while those that take one are called _unary_ operators. The
-minus operator can be used both as a binary operator and as a unary
-operator.
+Toți operatorii prezentați anterior operau asupra a două valori, însă `typeof` operează doar asupra unei singure valori. Operatorii care operează asupra a două valori se numesc _operatori binari_, iar cei care acționează asupra unei singure valori se numesc _operatori unari_. Operatorul `-` poate fi utilizat atât ca operator binar cât și ca operator unar.
+
 
 ```
 console.log(- (10 - 2))
 // → -8
 ```
 
-## Boolean values
+## Valori booleene
 
 {{index Boolean, operator, true, false, bit}}
 
-It is often useful to have a value that distinguishes between only two
-possibilities, like "yes" and "no" or "on" and "off". For this
-purpose, JavaScript has a _Boolean_ type, which has just two values,
-true and false, which are written as those words.
+Este util să avem o valoare care dinstinge între doar două posibilități, cum ar fi "da" și "nu" sau "pornit" și "oprit". Pentru acest scop, JavaScript pune la dispoziție tipul _Boolean_, care are doar două valori, `true` și `false`, utilizate exact cum le-am scris.
 
-### Comparison
+### Comparații
 
 {{index comparison}}
 
-Here is one way to produce Boolean values:
+Iată un exemplu de a produce valori booleene:
 
 ```
 console.log(3 > 2)
@@ -406,12 +261,9 @@ console.log(3 < 2)
 
 {{index [comparison, "of numbers"], "> operator", "< operator", "greater than", "less than"}}
 
-The `>` and `<` signs are the traditional symbols for "is greater
-than" and "is less than", respectively. They are binary operators.
-Applying them results in a Boolean value that indicates whether they
-hold true in this case.
+Simbolurile `>` și `<` sunt simbolurile tradiționale pentru "mai mare decât" și "mai mic decât". Aceștia sunt operatori binari. Aplicarea lor conduce la o valoare booleană care, în acest caz precizează daca rezultatul comparației a fost adevărat sau fals.
 
-Strings can be compared in the same way.
+Stringurile pot fi comparate în același mod.
 
 ```
 console.log("Aardvark" < "Zoroaster")
@@ -420,17 +272,11 @@ console.log("Aardvark" < "Zoroaster")
 
 {{index [comparison, "of strings"]}}
 
-The way strings are ordered is roughly alphabetic but not really what
-you'd expect to see in a dictionary: uppercase letters are always
-"less" than lowercase ones, so `"Z" < "a"`, and nonalphabetic
-characters (!, -, and so on) are also included in the ordering. When
-comparing strings, JavaScript goes over the characters from left to
-right, comparing the ((Unicode)) codes one by one.
+Modul în care stringurile sunt ordonate este în principiu alfabetic, dar nu exact ceea ce ați aștepta conform unui dicționar: literele mari sunt întotdeauna "mai mici" decât literele mici, `"Z" < "a"`, iar caracterele non-alfabetice (!, -, ...) sunt și ele incluse în ordonare. Când compară stringuri, JavaScript merge de la stânga la dreapta, caracter cu caracter, comparând codurile Unicode.
 
 {{index equality, ">= operator", "<= operator", "== operator", "!= operator"}}
 
-Other similar operators are `>=` (greater than or equal to), `<=`
-(less than or equal to), `==` (equal to), and `!=` (not equal to).
+Alți operatori similari sunt `>=` (mai mare sau egal), `<=` (mai mic sau egal), `==` (egal cu), `!=` (diferit)
 
 ```
 console.log("Itchy" != "Scratchy")
@@ -441,30 +287,24 @@ console.log("Apple" == "Orange")
 
 {{index [comparison, "of NaN"], NaN}}
 
-There is only one value in JavaScript that is not equal to itself, and
-that is `NaN` ("not a number").
+O singură valoare din JavaScript nu este egală cu ea însăși, și anume `NaN` ("not a number").
 
 ```
 console.log(NaN == NaN)
 // → false
 ```
 
-`NaN` is supposed to denote the result of a nonsensical computation,
-and as such, it isn't equal to the result of any _other_ nonsensical
-computations.
+`NaN` se presupune că simbolizează rezultatul unui calcul fără sens și, prin urmare, nu este egal cu rezultatul nici unui alt calcul fără sens.
 
-### Logical operators
+### Operatori logici
 
 {{index reasoning, "logical operators"}}
 
-There are also some operations that can be applied to Boolean values
-themselves. JavaScript supports three logical operators: _and_, _or_,
-and _not_. These can be used to "reason" about Booleans.
+Există și operații care se pot aplica asupra valorilor Booleene. JavaScript oferă trei operatori logici pentru aceasta: _and_, _or_ și _not_. Aceștia pot fi utilizați pentru logica booleană.
 
 {{index "&& operator", "logical and"}}
 
-The `&&` operator represents logical _and_. It is a binary operator,
-and its result is true only if both the values given to it are true.
+Operatorul `&&` reprezintă _și_ logic. Este un operator binar și rezultatul său este `true` dacă și numai dacă ambele valori asupra cărora operează sunt `true`.
 
 ```
 console.log(true && false)
@@ -475,8 +315,7 @@ console.log(true && true)
 
 {{index "|| operator", "logical or"}}
 
-The `||` operator denotes logical _or_. It produces true if either of
-the values given to it is true.
+Operatorul `||` reprezintă _sau_ logic. Este tot un operator binar și rezultatul său este `true` dacă cel puțin una dintre cele două valori asupra cărora operează este `true`.
 
 ```
 console.log(false || true)
@@ -487,19 +326,12 @@ console.log(false || false)
 
 {{index negation, "! operator"}}
 
-_Not_ is written as an exclamation mark (`!`). It is a unary operator
-that flips the value given to it—`!true` produces `false`, and `!false`
-gives `true`.
+_Negația_ se scrie sub forma unui semn de exclamare (`!`). Este un operator unar care schimbă valoarea asupra căreia acționează - `!true` produce `false`, și `!false`
+este `true`.
 
 {{index precedence}}
 
-When mixing these Boolean operators with arithmetic and other
-operators, it is not always obvious when parentheses are needed. In
-practice, you can usually get by with knowing that of the operators we
-have seen so far, `||` has the lowest precedence, then comes `&&`,
-then the comparison operators (`>`, `==`, and so on), and then the
-rest. This order has been chosen such that, in typical expressions
-like the following one, as few parentheses as possible are necessary:
+Atunci când combinăm acești operatori booleeni cu operatori aritmetici și de alte tipuri, nu este întotdeauna evident dacă trebuie sau nu să utilizăm paranteze. În practică, de regulă este suficient să știți că, dintre operatorii prezentați până acum, `||` are cea mai mică prioritate, urmat de `&&`, apoi de operatorii de comparare și apoi ceilalți operatori. Această ordine de prioritate a fost aleasă astfel încât în expresiile cel mai frecvent scrise, cum ar fi cea din exemplul de mai jos, să fie posibilă utilizarea unui număr cât mai mic de paranteze.
 
 ```
 1 + 1 == 2 && 10 * 10 > 50
@@ -507,9 +339,7 @@ like the following one, as few parentheses as possible are necessary:
 
 {{index "conditional execution", "ternary operator", "?: operator", "conditional operator", "colon character", "question mark"}}
 
-The last logical operator I will discuss is not unary, not binary, but
-_ternary_, operating on three values. It is written with a question
-mark and a colon, like this:
+Ultimul operator logic despre care vom discuta nu este nici unar, nici binar, ci este un operator _ternar_, ce operează asupra a trei valori. Este scris astfel:
 
 ```
 console.log(true ? 1 : 2);
@@ -518,36 +348,23 @@ console.log(false ? 1 : 2);
 // → 2
 ```
 
-This one is called the _conditional_ operator (or sometimes just
-the _ternary_ operator since it is the only such operator in the
-language). The value on the left of the question mark "picks" which of
-the other two values will come out. When it is true, it chooses the
-middle value, and when it is false, it chooses the value on the right.
+Acesta este numit operator _condițional_ (și uneori pur și simplu operator _ternar_ deoarece este singurul de acest fel al limbajului JavaScript). Valoarea din stânga simbolului `?` alege care dintre celelalte două valori va fi returnată ca și rezultat. Atunci când prima valoare este `true`, cea de a doua valoare va fi returnată, iar atunci când prima valoare este `false` se va returna cea de a treia valoare.
 
-## Empty values
+## Valori "empty"
 
 {{index undefined, null}}
 
-There are two special values, written `null` and `undefined`, that are
-used to denote the absence of a _meaningful_ value. They are
-themselves values, but they carry no information.
+JavaScript definește două valori speciale, scrise `null` și `undefined`, care sunt utilizate pentru a menționa absența unei valori _semnificative_. Ele sunt valori, dar nu transportă informație.
 
-Many operations in the language that don't produce a meaningful value
-(you'll see some later) yield `undefined` simply because they have to
-yield _some_ value.
+Multe operații ale limbajului care nu produc o valoare semnificativă returnează `undefined` deoarece trebuie să returneze o valoare.
 
-The difference in meaning between `undefined` and `null` is an accident
-of JavaScript's design, and it doesn't matter most of the time. In cases
-where you actually have to concern yourself with these values, I
-recommend treating them as mostly interchangeable.
+Diferența de semnificație între `undefined` și `null` este un accident de design al JavaScript și de cele mai multe ori, este irelevantă. În cazurile în care trebuie să vă preocupe aceste valori, vă recomand să le tratați ca fiind interschimbabile (echivalente).
 
-## Automatic type conversion
+## Conversia automată a tipului
 
 {{index NaN, "type coercion"}}
 
-In the Introduction, I mentioned that JavaScript goes out of its way
-to accept almost any program you give it, even programs that do odd
-things. This is nicely demonstrated by the following expressions:
+În Introducere, am menționat că JavaScript face tot posibilul pentru a accepta aproape orice program pe care trebuie să îl interpreteze, chiar și programele care fac operații neobișnuite. Pentru a demonstra această afirmația, analizați exemplele de mai jos:
 
 ```
 console.log(8 * null)
@@ -564,33 +381,15 @@ console.log(false == 0)
 
 {{index "+ operator", arithmetic, "* operator", "- operator"}}
 
-When an operator is applied to the "wrong" type of value, JavaScript
-will quietly convert that value to the type it needs, using a set of
-rules that often aren't what you want or expect. This is called
-_((type coercion))_. The `null` in the first expression becomes `0`,
-and the `"5"` in the second expression becomes `5` (from string to
-number). Yet in the third expression, `+` tries string concatenation
-before numeric addition, so the `1` is converted to `"1"` (from number
-to string).
+Când un operator se aplică asupra tipului "greșit" de valoare, JavaScript va încerca să convertească acea valoare la tipul de care are nevoie, utilizând un set de reguli care de cele mai multe ori nu sunt ceea ce vă doriți. Această operație se numește _type coercion_. Valoarea `null` din prima expresie devine `0`, iar `"5"` din a doua expresie devine `5` (din string în număr). Totuși, n cea de a treia expresie, `+` încercă mai întâi concatenarea stringurilor, nu adunarea numerică, astfel încât `1` este convertit în `"1"` (din număr în string).
 
 {{index "type coercion", [number, "conversion to"]}}
 
-When something that doesn't map to a number in an obvious way (such as
-`"five"` or `undefined`) is converted to a number, you get the value
-`NaN`. Further arithmetic operations on `NaN` keep producing `NaN`, so
-if you find yourself getting one of those in an unexpected place, look
-for accidental type conversions.
+Atunci când o valoare care nu se potrivește cu un număr intr-un mod evident (cum ar fi `"five"` sau `undefined`) este convertită la un număr, veți obține rezultatul `NaN`. Operațiile aritmetice asupra `NaN` produc în continuare `NaN`. Dacă se returnează această valoare într-o instrucțiune la care nu vă așteptați să producă acest rezultat, căutați o conversie accidentală a tipului în expresia respectivă.
 
 {{index null, undefined, [comparison, "of undefined values"], "== operator"}}
 
-When comparing values of the same type using `==`, the outcome is easy
-to predict: you should get true when both values are the same, except
-in the case of `NaN`. But when the types differ, JavaScript uses a
-complicated and confusing set of rules to determine what to do. In
-most cases, it just tries to convert one of the values to the other
-value's type. However, when `null` or `undefined` occurs on either
-side of the operator, it produces true only if both sides are one of
-`null` or `undefined`.
+Când comparați valori de același tip utilizând `==`, rezultatul este predictibil: veți obține `true` când cele două valori sunt aceleași, cu excepția cazului `NaN`. Dar când tipurile celor două valori diferă, JavaScript utilizează un set complicat și confuz de reguli pentru a determina ceea ce are de făcut. În cele mai multe cazuri, încearcă să convertească una dintre valori la tipul celeilalte valori. Totuși, atunci când una dintre părți produce `null` sau `undefined`, rezultatul va fi true numai dacă și cealaltă parte produce `null` sau `undefined`.
 
 ```
 console.log(null == undefined);
@@ -599,41 +398,23 @@ console.log(null == 0);
 // → false
 ```
 
-That behavior is often useful. When you want to test whether a value
-has a real value instead of `null` or `undefined`, you can compare it
-to `null` with the `==` (or `!=`) operator.
+Acest comportament este de multe ori util. Când intenționați să testați dacă o valoare este cu adevărat o valoare și nu `null` sau `undefined`, puteți compara acea valoare cu `null` (folosind operatorul `==` sau `!=`).
 
 {{index "type coercion", [Boolean, "conversion to"], "=== operator", "!== operator", comparison}}
 
-But what if you want to test whether something refers to the precise
-value `false`? Expressions like `0 == false` and `"" == false` are
-also true because of automatic type conversion. When you do _not_ want
-any type conversions to happen, there are two additional operators:
-`===` and `!==`. The first tests whether a value is _precisely_ equal
-to the other, and the second tests whether it is not precisely equal.
-So `"" === false` is false as expected.
+Dar dacă intenționați să testați dacă o valoare se referă exact la valoarea `false`? Expresii cum ar fi `0 == false` și `"" == false` sunt adevărate ca urmare a conversiei automate a tipului. Atunci când vreți să nu se efectueze conversiile automate ale tipului, JavaScript vă pune la dispoziție alți doi operatori: `===` și `!==`. Primul testează dacă cele două valori sunt _exact_ egale iar cel de-al doilea testează dacă sunt diferite, fără a efectua conversii de tip. Prin urmare, `"" === false` este `false`, așa cum ne așteptam.
 
-I recommend using the three-character comparison operators defensively to
-prevent unexpected type conversions from tripping you up. But when you're
-certain the types on both sides will be the same, there is no problem with
-using the shorter operators.
+Vă recomand să utilizași acești operatori de comparare defensiv, pentru a preveni conversii de tip neașteptate care să vă producă bătăi de cap. Dar atunci când sunteți siguri că cele două valori comparate au același tip, nu e nici o diferență dacă utilizați operatorii de comparare mai puțin stricți (`==` și `!=`).
 
-### Short-circuiting of logical operators
+### Evaluarea de scurt-circuit a operatorilor logici
 
 {{index "type coercion", [Boolean, "conversion to"], operator}}
 
-The logical operators `&&` and `||` handle values of different types
-in a peculiar way. They will convert the value on their left side to
-Boolean type in order to decide what to do, but depending on the
-operator and the result of that conversion, they will return either the
-_original_ left-hand value or the right-hand value.
+Operatorii logici `&&` și `||` gestionează valorile de tipuri diferite într-un mod ciudat. Ei vor converti valoarea din partea stângă la tipul boolean pentru a decide ce trebuie să facă, dar în funcție de operator și de rezultatul acestei conversii, vor returna fie valoarea din stânga (left-hand value) fie valoarea din dreapta (right-hand value).
 
 {{index "|| operator"}}
 
-The `||` operator, for example, will return the value to its left when
-that can be converted to true and will return the value on its right
-otherwise. This has the expected effect when the values are Boolean
-and does something analogous for values of other types.
+Operatorul `||`, de exemplu, va returna valoarea din stânga imediat ce aceasta poate fi convertită la `true` și va returna valoarea din dreapta în caz contrar. Aceasta evaluare are efectul așteptat când valorile sunt Booleene și efectueză operații similare pentru alte tipuri de valori.
 
 ```
 console.log(null || "user")
@@ -644,47 +425,22 @@ console.log("Agnes" || "user")
 
 {{index "default value"}}
 
-We can use this functionality as a way to fall back on a default
-value. If you have a value that might be empty, you can put `||` after
-it with a replacement value. If the initial value can be converted to
-false, you'll get the replacement instead. The rules for converting
-strings and numbers to Boolean values state that `0`, `NaN`, and the
-empty string (`""`) count as `false`, while all the other values count
-as `true`. So `0 || -1` produces `-1`, and `"" || "!?"` yields `"!?"`.
+Putem utiliza această funcționalitate pentru a seta valori implicite. Dacă aveți o valoare care ar putea fi "empty", puteți folosi după aceasta `||` și apoi să precizați valoarea implicită. Regulile de conversie a stringurilor și numerelor în valori Booleene stabilesc că `0`, `NaN`, și stringul gol (`""`) sunt considerate `false`, în timp ce toate celelalte valori sunt `true`. Astfel, `0 || -1` produce `-1`, iar `"" || "!?"` returnează `"!?"`.
 
 {{index "&& operator"}}
 
-The `&&` operator works similarly but the other way around. When the
-value to its left is something that converts to false, it returns that
-value, and otherwise it returns the value on its right.
+Operatorul `&&` funcționează similar, dar pentru valoarea `false`. Când valoarea din stânga are semnificația de `false` returnează acea valoarea, iar în caz contrar returnează valoarea din dreapta.
 
-Another important property of these two operators is that the part to
-their right is evaluated only when necessary. In the case of `true ||
-X`, no matter what `X` is—even if it's a piece of program that does
-something _terrible_—the result will be true, and `X` is never
-evaluated. The same goes for `false && X`, which is false and will
-ignore `X`. This is called _((short-circuit evaluation))_.
+O altă proprietate importantă a acestor operatori este că partea dreaptă se evaluează numai dacă este necesar. În momentul în care evaluarea ajunge la situația `true || X`, indiferent de valoarea lui `X`, rezultatul va fi `true` și `X` nu va fi evaluat. Similar, pentru `false && X`, rezultatul este `false` și `X` va fi ignorat. Aceasta este _evaluarea de scurt-circuit_.
 
 {{index "ternary operator", "?: operator", "conditional operator"}}
 
-The conditional operator works in a similar way. Of the second and
-third values, only the one that is selected is evaluated.
+Operatorul condițional funcționează similar. Dintre cea de a doua si cea de a treia valoare, doar cea selectată va fi evaluată.
 
-## Summary
+## Rezumat
 
-We looked at four types of JavaScript values in this chapter: numbers,
-strings, Booleans, and undefined values.
+În acest capitol am analizat patru tipuri de valori în JavaScript: numere, stringuri, booleene si valori nedefinite.
 
-Such values are created by typing in their name (`true`, `null`) or
-value (`13`, `"abc"`). You can combine and transform values with
-operators. We saw binary operators for arithmetic (`+`, `-`, `*`, `/`,
-and `%`), string concatenation (`+`), comparison (`==`, `!=`, `===`,
-`!==`, `<`, `>`, `<=`, `>=`), and logic (`&&`, `||`), as well as
-several unary operators (`-` to negate a number, `!` to negate
-logically, and `typeof` to find a value's type) and a ternary operator
-(`?:`) to pick one of two values based on a third value.
+Asemenea valori sunt create prin tastarea numelui lor (`true`, `null`) sau a valorii (`13`, `"abc"`). Puteți combina și transforma valorile cu ajutorul operatorilor. Am venit în contact cu câțiva dintre ei: operatori binari pentru operații aritmetice (`+`, `-`, `*`, `/` și `%`), concatenarea stringurilor (`+`), comparare (`==`, `!=`, `===`, `!==`, `<`, `>`, `<=`, `>=`), si logică (`&&`, `||`), precum și câțiva operatori unari (`-` pentru a schimba semnul valorii unui număr, `!` pentru a nega valorile logice) și `typeof` pentru a determina tipul unei valori), precum și singurul operator ternar al limbajului JavaScript (`?:`) utilizt pentru selectarea condiționată a uneia dintre cele două valori.
 
-This gives you enough information to use JavaScript as a pocket
-calculator but not much more. The [next
-chapter](program_structure) will start tying
-these expressions together into basic programs.
+Ceea ce am studiat până acum vă oferă suficiente informații pentru a utiliza JavaScript ca și cum ar fi un calculator de buzunar, dar nu mult mai mult de atât. Următorul [capitol](program_structure) va începe să adune aceste cunoștințe împreună, în programe de bază.
