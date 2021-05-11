@@ -1,94 +1,48 @@
-# Program Structure
-
-{{quote {author: "_why", title: "Why's (Poignant) Guide to Ruby", chapter: true}
-
-And my heart glows bright red under my filmy, translucent skin and
-they have to administer 10cc of JavaScript to get me to come back. (I
-respond well to toxins in the blood.) Man, that stuff will kick the
-peaches right out your gills!
-
-quote}}
-
-{{index why, "Poignant Guide"}}
+# Structura programelor
 
 {{figure {url: "img/chapter_picture_2.jpg", alt: "Picture of tentacles holding objects", chapter: framed}}}
 
-In this chapter, we will start to do things that can actually be called
-_programming_. We will expand our command of the JavaScript language
-beyond the nouns and sentence fragments we've seen so far, to the
-point where we can express meaningful prose.
+În acest capitol vom începe să realizăm lucruri care se pot numi _programare_. Ne vom extinde cunoștințele despre limbajul JavaScript dincolo de denumirile si fragmentele de propoziții cu care am venit în contact până acum, până în punctul în care vom putea scrie proză cu semnificație.
 
-## Expressions and statements
+## Expresii și instrucțiuni
 
 {{index grammar, [syntax, expression], [code, "structure of"], grammar, [JavaScript, syntax]}}
 
-In [Chapter ?](values), we made values and applied operators to them
-to get new values. Creating values like this is the main substance of
-any JavaScript program. But that substance has to be framed in a
-larger structure to be useful. So that's what we'll cover next.
+În capitolul [?](values), am creat valori și am aplicat operatori asupra lor pentru a crea noi valori. Crearea valorilor în acest mod este principala activitate în orice program JavaScript. Dar această activitate trebuie să fie plasată într-un context mai larg pentru a fi cu adevărat utilă. Aceste aspecte le vom acoperi în cele ce urmează.
 
 {{index "literal expression", [parentheses, expression]}}
 
-A fragment of code that produces a value is called an
-_((expression))_. Every value that is written literally (such as `22`
-or `"psychoanalysis"`) is an expression. An expression between
-parentheses is also an expression, as is a ((binary operator))
-applied to two expressions or a ((unary operator)) applied to one.
+Un fragment de cod care produce o valoare se numește _expresie_. Orice valoare scrisă (cum ar fi `22` sau `"psihoanaliză"`) este o expresie. O expresie plasată între paranteze este tot o expresie, așa cum tot expresie este și o construcție în care un operator binar se aplică asupra a două expresii sau un operator unar se aplică asupra unei singure expresii.
 
 {{index [nesting, "of expressions"], "human language"}}
 
-This shows part of the beauty of a language-based interface.
-Expressions can contain other expressions in a way similar to how subsentences in human languages are nested—a subsentence can
-contain its own subsentences, and so on. This allows us to build
-expressions that describe arbitrarily complex computations.
+Aceasta ilustrează o parte din frumusețea unei interfețe bazate pe limbaj. Expresiile pot conține alte expresii într-un mod similar cu modul în care în limbile de comunicare umane frazele conțin propoziții. Aceasta ne permite să construim calcule oricât de complexe.
 
 {{index statement, semicolon, program}}
 
-If an expression corresponds to a sentence fragment, a JavaScript
-_statement_ corresponds to a full sentence. A program is a list of
-statements.
+Dacă o expresie corespunde unui fragment dintr-o propoziție, o _instrucțiune_ JavaScript corespunde unei propoziții complete. Un program este o listă de instrucțiuni.
 
 {{index [syntax, statement]}}
 
-The simplest kind of statement is an expression with a semicolon after
-it. This is a program:
+Cea mai simplă instrucțiune este o expresie urmată de `;`. Acesta este un program:
 
 ```
 1;
 !false;
 ```
 
-It is a useless program, though. An ((expression)) can be content to
-just produce a value, which can then be used by the enclosing code. A
-((statement)) stands on its own, so it amounts to something only if it
-affects the world. It could display something on the screen—that
-counts as changing the world—or it could change the internal state of
-the machine in a way that will affect the statements that come after
-it. These changes are called _((side effect))s_. The statements in the
-previous example just produce the values `1` and `true` and then
-immediately throw them away. This leaves no impression on the world at
-all. When you run this program, nothing observable happens.
+Programul de mai sus este inutil. O expresie poate fi responsabilă de producerea unei valori, care apoi urmează să fie folosită de către codul care o include. O instrucțiune este o construcție de sine stătătoare și contează doar în măsura în care produce un efect. Aceasta ar putea afișa o informație pe ecran sau ar putea modifica starea internă a mașinii într-un mod care să influențeze execuția instrucțiunilor care îi urmează. Aceste modificări sunt denumite _side effects_. Instrucțiunile din programul de mai sus doar produc valorile `1` și `true` pe care nu le folosesc mai departe pentru nimic altceva, ceea ce nu produce nici un fel de modificări. Atunci când rulați acest program, nu se întâmplă nimic observabil.
 
 {{index "programming style", "automatic semicolon insertion", semicolon}}
 
-In some cases, JavaScript allows you to omit the semicolon at the end
-of a statement. In other cases, it has to be there, or the next
-((line)) will be treated as part of the same statement. The rules for
-when it can be safely omitted are somewhat complex and error-prone. So
-in this book, every statement that needs a semicolon will always get
-one. I recommend you do the same, at least until you've learned more
-about the subtleties of missing semicolons.
+În unele situații, JavaScript vă permite să omiteți caracterul `;` la sfârșitul unei instrucțiuni. În alte cazuri, este obligatoriu să îl utilizați pentru a evita ca următoarea instrucțiune să fie tratată ca și cum ar face parte din instrucțiunea curentă. Regulile cu privire la omiterea caracterului `;` sunt relativ complexe și favorizează erorile. Astfel încât, în această carte, la sfârșitul fiecărei instrucțiuni vom utiliza `;`, cel puțin până veți învăța suficient de multe despre subtilitățile omiterii caracterului `;`.
 
 ## Bindings
 
 {{indexsee variable, binding}}
 {{index [syntax, statement], [binding, definition], "side effect", [memory, organization], [state, in binding]}}
 
-How does a program keep an internal state? How does it remember
-things? We have seen how to produce new values from old values, but
-this does not change the old values, and the new value has to be
-immediately used or it will dissipate again. To catch and hold values,
-JavaScript provides a thing called a _binding_, or _variable_:
+Cum își păstrează un program starea internă? Cum își amintește lucruri? Am văzut cum putem produce valori noi pe baza unor valori existente dar astfel nu vom schimba valorile existente iar noile valori trebuie utilizate imediat, altfel vor dispărea. Pentru a păstra valorile, JavaScript utilizează un concept numit _binding_ sau _variabilă_:
 
 ```
 let caught = 5 * 5;
@@ -96,17 +50,11 @@ let caught = 5 * 5;
 
 {{index "let keyword"}}
 
-That's a second kind of ((statement)). The special word
-(_((keyword))_) `let` indicates that this sentence is going to define
-a binding. It is followed by the name of the binding and, if we want
-to immediately give it a value, by an `=` operator and an expression.
+Acesta este un alt tip de instrucțiune. Cuvântul special `let` arată că această propoziție va defini o variabilă. Este urmat de numele variabilei și, dacă vrem să oferim imediat o valoare, vom folosi operatorul `=` și apoi o expresie.
 
-The previous statement creates a binding called `caught` and uses it
-to grab hold of the number that is produced by multiplying 5 by 5.
+Instrucțiunea anterioară crează o variabilă numită `caught` și o utilizează pentru a prelua și stoca numărul produs de înmulțirea `5*5`.
 
-After a binding has been defined, its name can be used as an
-((expression)). The value of such an expression is the value the
-binding currently holds. Here's an example:
+După ce o variabilă a fost definită, numele ei poate fi folosit ca și o expresie. Valoarea produsă de o astfel de expresie este tocmai valoarea stocată în variabilă. Iată un exemplu:
 
 ```
 let ten = 10;
@@ -116,10 +64,7 @@ console.log(ten * ten);
 
 {{index "= operator", assignment, [binding, assignment]}}
 
-When a binding points at a value, that does not mean it is tied to
-that value forever. The `=` operator can be used at any time on
-existing bindings to disconnect them from their current value and have
-them point to a new one.
+Când o variabilă indică o anumită valoare, aceasta nu înseamnă că variabila este legată de acea valoare pentru totdeauna. Operatorul `=` poate fi utilizat pentru a deconecta o variabilă de la valoarea curentă și a o face să refere o altă valoare.
 
 ```
 let mood = "light";
@@ -132,15 +77,9 @@ console.log(mood);
 
 {{index [binding, "model of"], "tentacle (analogy)"}}
 
-You should imagine bindings as tentacles, rather than boxes. They do
-not _contain_ values; they _grasp_ them—two bindings can refer to the
-same value. A program can access only the values that it still has a
-reference to. When you need to remember something, you grow a tentacle
-to hold on to it or you reattach one of your existing tentacles to it.
+V-ați putea imagina variabilele ca și niște tentacule, în loc de cutii. Ele nu conțin valori, ci le referă. Două variabile pot referi aceeași valoare. Un program poate referi doar acele valori pentru care încă mai are cel puțin o referință. Atunci când trebuie să memorați un lucru, vă creați un tentacul care să îl refere sau reatașați un tentacul existent care referă o valoare de care nu mai aveți nevoie.
 
-Let's look at another example. To remember the number of dollars that
-Luigi still owes you, you create a binding. And then when he pays back
-$35, you give this binding a new value.
+Să analizăm un alt exemplu. Pentru a memora suma în dolari pe care Luigi v-o datorează, creați o variabilă. Apoi, când Luigi vă returnează $35, îi atribuiți acestei variabile o noua valoare.
 
 ```
 let luigisDebt = 140;
@@ -151,14 +90,11 @@ console.log(luigisDebt);
 
 {{index undefined}}
 
-When you define a binding without giving it a value, the tentacle has
-nothing to grasp, so it ends in thin air. If you ask for the value of
-an empty binding, you'll get the value `undefined`.
+Când definiți o variabilă fără să îi atribuiți o valoare, tentaculul nu referă nimic. Dacă cereți valoarea unei variabile "empty", veți obține valoarea `undefined`.
 
 {{index "let keyword"}}
 
-A single `let` statement may define multiple bindings. The
-definitions must be separated by commas.
+O singură instrucțiune `let` poate defini mai multe variabile. Definițiile trebuie separate prin virgulă:
 
 ```
 let one = 1, two = 2;
@@ -166,8 +102,7 @@ console.log(one + two);
 // → 3
 ```
 
-The words `var` and `const` can also be used to create bindings, in a
-way similar to `let`.
+Și cuvintele `var` și `const` pot fi folosite pentru crearea variabilelor, similar cu modul în care am folosit `let`.
 
 ```
 var name = "Ayda";
@@ -178,35 +113,21 @@ console.log(greeting + name);
 
 {{index "var keyword"}}
 
-The first, `var` (short for "variable"), is the way bindings were
-declared in pre-2015 JavaScript. I'll get back to the precise way it
-differs from `let` in the [next chapter](functions). For now,
-remember that it mostly does the same thing, but we'll rarely use it
-in this book because it has some confusing properties.
+`var` (prescurtarea de la _variabilă_) este modul în care se defineau variabilele în versiunile JavaScript anterioare versiunii 2015. Voi reveni asupra diferenței față de `let` în [capitolul următor](functions). Pentru moment, rețineți că în cea mai mare parte se întâmplă același lucru, dar rareori vom folosi `var` în această carte pentru că are câteva proprietăți care crează confuzie.
 
 {{index "const keyword", naming}}
 
-The word `const` stands for _((constant))_. It defines a constant
-binding, which points at the same value for as long as it lives. This
-is useful for bindings that give a name to a value so that you can
-easily refer to it later.
+Cuvântul `const` este prescurtarea de la _constantă_. El definește un binding constant, care se referă la aceeași valoare pe toată durata existenței sale. Acesta este util pentru crearea de binding-uri care dau un nume unei valori astefel încât poate fi ușor referită în continuare.
 
-## Binding names
+## Numele binding-urilor
 
 {{index "underscore character", "dollar sign", [binding, naming]}}
 
-Binding names can be any word. Digits can be part of binding
-names—`catch22` is a valid name, for example—but the name must not
-start with a digit. A binding name may include dollar signs (`$`) or
-underscores (`_`) but no other punctuation or special characters.
+Numele bindingurilor pot fi orice cuvinte. Cifrele pot face parte din nume - `catch22` este un nume valid - dar nu este permis ca numele să înceapă cu o cifră. Numele unui binding poate include simbolul `$` sau `_` dar nu și alte semne de punctuație sau caractere speciale.
 
 {{index [syntax, identifier], "implements (reserved word)", "interface (reserved word)", "package (reserved word)", "private (reserved word)", "protected (reserved word)", "public (reserved word)", "static (reserved word)", "void operator", "yield (reserved word)", "enum (reserved word)", "reserved word", [binding, naming]}}
 
-Words with a special meaning, such as `let`, are _((keyword))s_, and
-they may not be used as binding names. There are also a number of
-words that are "reserved for use" in ((future)) versions of
-JavaScript, which also can't be used as binding names. The full list
-of keywords and reserved words is rather long.
+Cuvintele care au o ssemnificație specială, cum ar fi `let`, sunt _cuvinte-cheie_ și nu este permisă utilizarea lor pentru a denumi binding-urile. Există de asemenea o serie de cuvinte care sunt _rezervate_ pentru utilizarea lor în versiunile ulterioare ale JavaScript și care de asemenea nu pot fi folosite ca și nume pentru binding-uri. Lista completă a cuvintelor cheie și rezervate este destul de lungă.
 
 ```{lang: "text/plain"}
 break case catch class const continue debugger default
@@ -218,35 +139,22 @@ switch this throw true try typeof var void while with yield
 
 {{index [syntax, error]}}
 
-Don't worry about memorizing this list. When creating a binding produces
-an unexpected syntax error, see whether you're trying to define a
-reserved word.
+Nu vă îngrijorați că ar trebui să memorați această listă. Atunci când crearea unui binding produce o eroare de sintaxă neașteptată, verificați dacă nu cumva utilizați un cuvânt rezervat pentru definire.
 
-## The environment
+## Mediul
 
 {{index "standard environment", [browser, environment]}}
 
-The collection of bindings and their values that exist at a given time
-is called the _((environment))_. When a program starts up, this
-environment is not empty. It always contains bindings that are part of
-the language ((standard)), and most of the time, it also has bindings
-that provide ways to interact with the surrounding system. For
-example, in a browser, there are functions to interact with the
-currently loaded website and to read ((mouse)) and ((keyboard)) input.
+Colecția de bindinguri precum și valorile lor care există la orice moment dat reprezintă _mediul_. Când un program își începe execuția, mediul nu este gol. El conține întotdeauna bindinguri care fac parte din standardul limbajului și, de cele mai multe ori, are și bindinguri care oferă modalități de interacțiune cu sistemul înconjurător. De exemplu, într-un browser, există funcții pentru interacțiunea cu websiteul încărcat momentan și pentru a citi intrarea de la mouse sau tastatură.
 
-## Functions
+## Funcții
 
 {{indexsee "application (of functions)", [function, application]}}
 {{indexsee "invoking (of functions)", [function, application]}}
 {{indexsee "calling (of functions)", [function, application]}}
 {{index output, function, [function, application], [browser, environment]}}
 
-A lot of the values provided in the default environment have the type
-_((function))_. A function is a piece of program wrapped in a value.
-Such values can be _applied_ in order to run the wrapped program. For
-example, in a browser environment, the binding `prompt` holds a
-function that shows a little ((dialog box)) asking for user input. It
-is used like this:
+Mare parte dintre valorile oferite în mediul implicit au tipul _function_. O funcție este o bucată de program împachetată într-o valoare. Asemenea valori pot fi _aplicate_ pentru a executa programul împachetat în interiorul lor. De exemplu, în mediul unui browser, bindingul `prompt` reține o funcție care afișează o casetă de dialog în care user-ului i se cere să introducă o valoare. Se utilizează astfel:
 
 ```
 prompt("Enter passcode");
@@ -256,38 +164,19 @@ prompt("Enter passcode");
 
 {{index parameter, [function, application], [parentheses, arguments]}}
 
-Executing a function is called _invoking_, _calling_, or _applying_
-it. You can call a function by putting parentheses after an
-expression that produces a function value. Usually you'll directly use
-the name of the binding that holds the function. The values between
-the parentheses are given to the program inside the function. In the
-example, the `prompt` function uses the string that we give it as the
-text to show in the dialog box. Values given to functions are called
-_((argument))s_. Different functions might need a different number or
-different types of arguments.
+Execuția unei funcții se numește _invocare (invoking)_, _apelare (calling)_ sau _aplicare (applying)_. Puteți apela o funcție prin plasarea parantezelor după o expresie care produce valoarea de tip funcție. De regulă, veți utiliza direct numele bindingului care memorează funcția. Valorile dintre paranteze sunt furnizate ca și parametri pentru programul din interiorul funcției. În exemplu, funncția `prompt` utilizează stringul pe care l-am dat ca și text explicativ care se afișează în caseta de dialog. Valorile furnizate funcțiilor se numesc _argumente_. Funcții diferite pot avea un număr diferit de argumente sau tipuri diferite ale argumentelor.
 
-The `prompt` function isn't used much in modern web programming,
-mostly because you have no control over the way the resulting dialog
-looks, but can be helpful in toy programs and experiments.
+Funcția `prompt` nu este foarte utilizată în programarea web modernă, în principal pentru că nu avem control asupra aspectului casetei de dialog, dar poate fi utilă pentru programe de antrenament și experimente.
 
-## The console.log function
+## Funcția `console.log`
 
 {{index "JavaScript console", "developer tools", "Node.js", "console.log", output, [browser, environment]}}
 
-In the examples, I used `console.log` to output values. Most JavaScript
-systems (including all modern web browsers and Node.js) provide a
-`console.log` function that writes out its arguments to _some_ text
-output device. In browsers, the output lands in the ((JavaScript
-console)). This part of the browser interface is hidden by default,
-but most browsers open it when you press F12 or, on a Mac, [command]{keyname}-[option]{keyname}-I.
-If that does not work, search through the menus for an item named Developer
-Tools or similar.
+În exemple, am utilizat funcția `console.log` pentru a afișa valori. Majoritatea sistemelor JavaScript (inclusiv browserele web moderne si NodeJS) pun la dispoziție o funcție `console.log` care afișează argumentele primite pe un device de ieșire de tip text. În browsere, outputul se produce în consola JavaScript. Această parte a interfeței browserului este ascunsă în mod implicit, dar va fi afișată prin apăsarea tastei F12. Dacă nu se întâmplă nimic, căutați în meniu un item numit Developer Tools sau similar.
 
 {{if interactive
 
-When running the examples (or your own code) on the pages of this
-book, `console.log` output will be shown after the example, instead of
-in the browser's JavaScript console.
+Când rulați exemplele din această carte (sau propriul vostru cod) în paginile acestei cărți, ieșirea penttru `console.log` este prezentată la sfârșitul exemplului, nu în consola JavaScript.
 
 ```
 let x = 30;
@@ -299,23 +188,14 @@ if}}
 
 {{index [object, property], [property, access]}}
 
-Though binding names cannot contain ((period character))s,
-`console.log` does have one. This is because `console.log` isn't a
-simple binding. It is actually an expression that retrieves the `log`
-property from the value held by the `console` binding. We'll
-find out exactly what this means in [Chapter ?](data#properties).
+Deși numele bindingurilor nu por conține caracterul `.`, `console.log` îl conține. Aceasta, deoarece `console.log` nu este doar un simplu binding. Este de fapt o expresie care returnează proprietatea `log` a bindingului `console`. Vom afla mai exact ce înseamnă asta în [Capitolul ?](data#properties).
 
 {{id return_values}}
-## Return values
+## Valori returnate
 
 {{index [comparison, "of numbers"], "return value", "Math.max function", maximum}}
 
-Showing a dialog box or writing text to the screen is a _((side
-effect))_. A lot of functions are useful because of the side effects
-they produce. Functions may also produce values, in which case they
-don't need to have a side effect to be useful. For example, the
-function `Math.max` takes any amount of number arguments and gives
-back the greatest.
+Afișarea unei casete de dialog pe ecran este un efect secundar. Multe funcții sunt utile ca urmare a efectului secundar pe care îl produc. Funcțiile pot produce și valori, caz în care nu trebuie să producă un efect secundar pentru a fi utile. De exemplu, funcția `Math.max` primește oricâte argumente și returnează pe cel mai mare dintre ele.
 
 ```
 console.log(Math.max(2, 4));
@@ -324,100 +204,65 @@ console.log(Math.max(2, 4));
 
 {{index [function, application], minimum, "Math.min function"}}
 
-When a function produces a value, it is said to _return_ that value.
-Anything that produces a value is an ((expression)) in JavaScript,
-which means function calls can be used within larger expressions. Here
-a call to `Math.min`, which is the opposite of `Math.max`, is used as
-part of a plus expression:
+Când o funcție produce o valoare, spunem că _returnează_ acea valoare. Orice produce o valoare este o expresie în JavaScript. Ceea ce înseamnă că apelurile funcțiilor pot fi utilizate în expresii mai complicate. Iată un exemplu în care `Math.min` este utilizat ca și parte dintr-o expresie:
 
 ```
 console.log(Math.min(2, 4) + 100);
 // → 102
 ```
 
-The [next chapter](functions) explains how to write your own
-functions.
+[Capitolul următor](functions) vă explică modul în care puteți scrie propriile funcții.
 
-## Control flow
+## Controlul execuției
 
 {{index "execution order", program, "control flow"}}
 
-When your program contains more than one ((statement)), the statements
-are executed as if they are a story, from top to bottom. This example
-program has two statements. The first one asks the user for a number,
-and the second, which is executed after the first, shows the
-((square)) of that number.
+Când programul vostru conține mai mult de o instrucțiune, isntrucțiunile se execută ca și cum ar fi o poveste, de sus în jos. Exemplul de mai jos conține două instrucțiuni. Prima solicită utilizatorului să introducă un număr, iar ceea de a doua, executată ulterior primeia, afișează pătratul numărului respectiv.
 
 ```
 let theNumber = Number(prompt("Pick a number"));
-console.log("Your number is the square root of " +
-            theNumber * theNumber);
+console.log("Your number is the square root of " + theNumber * theNumber);
 ```
 
 {{index [number, "conversion to"], "type coercion", "Number function", "String function", "Boolean function", [Boolean, "conversion to"]}}
 
-The function `Number` converts a value to a number. We need that
-conversion because the result of `prompt` is a string value, and we
-want a number. There are similar functions called `String` and
-`Boolean` that convert values to those types.
+Funcția `Number` convertește o valoare într-un număr. Avem nevoie de această conversie deoarece rezultatul funcției `prompt` este un string dar noi ridicăm la pătrat un număr. Există funcții similare `String` și `Boolean` care convertesc valorile la tipurile respective.
 
-Here is the rather trivial schematic representation of straight-line
-control flow:
+Iată o reprezentare schematică trivială a controlului liniar al execuției:
 
 {{figure {url: "img/controlflow-straight.svg", alt: "Trivial control flow", width: "4cm"}}}
 
-## Conditional execution
+## Execuția condițională
 
 {{index Boolean, ["control flow", conditional]}}
 
-Not all programs are straight roads. We may, for example, want to
-create a branching road, where the program takes the proper branch
-based on the situation at hand. This is called _((conditional
-execution))_.
+Nu toate programele sunt liniare. Am putea, de exemplu, să creem o ramificație iar programul să continue execuția pe ramura corespunzătoare, în funcție de situația concretă. Aceasta este 0 _execuție condițională_.
 
 {{figure {url: "img/controlflow-if.svg", alt: "Conditional control flow",width: "4cm"}}}
 
 {{index [syntax, statement], "Number function", "if keyword"}}
 
-Conditional execution is created with the `if` keyword in JavaScript.
-In the simple case, we want some code to be executed if, and only if,
-a certain condition holds. We might, for example, want to show the
-square of the input only if the input is actually a number.
+Execuția condițională se definește cu ajutorul cuvântului-cheie `if`. În cea mai simplă variantă, dorim ca o anume bucată de cod să se execute dacă și numai dacă o anumită condiție este adevărată. De exemplu, am putea afișa pătratul valorii introduse doar dacă valoarea respectivă este un număr.
 
 ```{test: wrap}
 let theNumber = Number(prompt("Pick a number"));
 if (!Number.isNaN(theNumber)) {
-  console.log("Your number is the square root of " +
-              theNumber * theNumber);
+  console.log("Your number is the square root of " + theNumber * theNumber);
 }
 ```
-
-With this modification, if you enter "parrot", no output is shown.
+Cu această modificare, daca introduceți "parrot", nu se va afișa nimic.
 
 {{index [parentheses, statement]}}
 
-The `if` keyword executes or skips a statement depending on the value
-of a Boolean expression. The deciding expression is written after the
-keyword, between parentheses, followed by the statement to
-execute.
+Cuvântul cheie `if` execută sau nu o instrucțiune funcție de valoarea unei expresii booleene. Expresia pe baza căreia se face decizia este scrisă imediat după `if`, între paranteze. Apoi urmează instrucțiunea care se execută condiționat.
 
 {{index "Number.isNaN function"}}
 
-The `Number.isNaN` function is a standard JavaScript function that
-returns `true` only if the argument it is given is `NaN`. The `Number`
-function happens to return `NaN` when you give it a string that
-doesn't represent a valid number. Thus, the condition translates to
-"unless `theNumber` is not-a-number, do this".
+Funcția `Number.isNaN` este o funcție standard a JavaScript care returnează `true` dacă și numai dacă argumentul pe care îl primește este `NaN`. Funcția `Number` returnează `NaN` dacă primește ca argument un string care nu reprezintă un număr valid. Prin urmare, am putea citi în limbaj natural "cu excepția situației în care `theNumber` nu este un număr, execută instrucțiunea".
 
 {{index grouping, "{} (block)", [braces, "block"]}}
 
-The statement after the `if` is wrapped in braces (`{` and
-`}`) in this example. The braces can be used to group any number of
-statements into a single statement, called a _((block))_. You could
-also have omitted them in this case, since they hold only a single
-statement, but to avoid having to think about whether they are needed, most JavaScript programmers use them in every wrapped
-statement like this. We'll mostly follow that convention in this book,
-except for the occasional one-liner.
+Instrucțiunea de după `if` este plasată între acolade (`{` și `}`). Acoladele se pot utiliza pentru a grupa oricâte instrucțiuni într-o singură instrucțiune, numită _bloc_. În exemplul de mai sus le-am fi putut omite, dar pentru a evita analiza dacă sunt sau nu necesare acoladele, majoritatea programatorilor JavaScript le utilizează în situații de genul celei de mai sus. De regulă vom respecta această convenție în carte, cu excepția unor situații ocazionale:
 
 ```
 if (1 + 1 == 2) console.log("It's true");
@@ -426,16 +271,12 @@ if (1 + 1 == 2) console.log("It's true");
 
 {{index "else keyword"}}
 
-You often won't just have code that executes when a condition holds
-true, but also code that handles the other case. This alternate path
-is represented by the second arrow in the diagram. You can use the `else` keyword, together with `if`, to create two separate, alternative
-execution paths.
+Adesea, nu veți scrie doar cod care se execută dacă o anumită condiție este adevărată dar și cod care tratează cazul celălalt (condiția este falsă). Acestă cale alternativă este reprezentată de către cealaltă săgeată din diagramă. Puteți utiliza cuvântul cheie `else` împreună cu `if` pentru a crea două căi alternative separate de execuție
 
 ```{test: wrap}
 let theNumber = Number(prompt("Pick a number"));
 if (!Number.isNaN(theNumber)) {
-  console.log("Your number is the square root of " +
-              theNumber * theNumber);
+  console.log("Your number is the square root of " + theNumber * theNumber);
 } else {
   console.log("Hey. Why didn't you give me a number?");
 }
@@ -443,8 +284,7 @@ if (!Number.isNaN(theNumber)) {
 
 {{index ["if keyword", chaining]}}
 
-If you have more than two paths to choose from, you can "chain" multiple `if`/`else`
-pairs together. Here's an example:
+Dacă aveți mai mult de două căi între care trebuie să alegeți, puteți înlănțui mai multe perechi `if/else`, ca în exemplul de mai jos:
 
 ```
 let num = Number(prompt("Pick a number"));
@@ -458,22 +298,16 @@ if (num < 10) {
 }
 ```
 
-The program will first check whether `num` is less than 10. If it is,
-it chooses that branch, shows `"Small"`, and is done. If it isn't, it
-takes the `else` branch, which itself contains a second `if`. If the
-second condition (`< 100`) holds, that means the number is at least 10
-but below 100, and `"Medium"` is shown. If it doesn't, the second and
-last `else` branch is chosen.
+Programul va verifica mai întâi daca `num` este mai mic decât 10. Dacă da, va afișa `"Small"` și execuția se încheie. Dacă nu, va selecta ramura `else`, care conține un al doilea `if`. Dacă cea de a doua condiție este adevărată (`< 100`), înseamnă că numărul are valoarea cel puțin 10 dar sub 100 și se va afișa `"Medium"`. Dacă nici a doua condiție nu este adevărată, cea de a doua ramura `else` va fi afișată.
 
-The schema for this program looks something like this:
+Schema pentru acest program ar arăta cam așa:
 
 {{figure {url: "img/controlflow-nested-if.svg", alt: "Nested if control flow", width: "4cm"}}}
 
 {{id loops}}
-## while and do loops
+## Bucle `while` și `do` (repetiții)
 
-Consider a program that outputs all ((even number))s from 0 to 12. One
-way to write this is as follows:
+Să considerăm un program care afișează toate numerele pare de la 0 la 12. O modalitate de a scrie acest program este:
 
 ```
 console.log(0);
@@ -487,20 +321,13 @@ console.log(12);
 
 {{index ["control flow", loop]}}
 
-That works, but the idea of writing a program is to make something
-_less_ work, not more. If we needed all even numbers less than 1,000,
-this approach would be unworkable. What we need is a way to run a
-piece of code multiple times. This form of control flow is called a
-_((loop))_.
+Aceasta funcționează, dar ideea de a scrie un program este de a munci _mai puțin_. Dacă vrem să afișăm toate numerele pare mai mici decât 1000, acestă abordare nu este potrivită. Ceea ce ne trebuie este o modalitate de a repeta de mai multe ori execuția unei bucăți de cod. Această modalitate de control al execuției reprezintă o _buclă (repetiție)_.
 
 {{figure {url: "img/controlflow-loop.svg", alt: "Loop control flow",width: "4cm"}}}
 
 {{index [syntax, statement], "counter variable"}}
 
-Looping control flow allows us to go back to some point in the program
-where we were before and repeat it with our current program state. If
-we combine this with a binding that counts, we can do something like
-this:
+Buclele ne permit să revenim la un punct din program unde am fost anterior și să repetăm blocul respectiv de instrucțiuni în noul context al programului. Dacă mai utilizăm și un binding pentru contorizare, putem proceda astfel:
 
 ```
 let number = 0;
@@ -515,28 +342,15 @@ while (number <= 12) {
 
 {{index "while loop", Boolean, [parentheses, statement]}}
 
-A ((statement)) starting with the keyword `while` creates a loop. The
-word `while` is followed by an ((expression)) in parentheses and
-then a statement, much like `if`. The loop keeps entering that
-statement as long as the expression produces a value that gives `true`
-when converted to Boolean.
+O instrucțiune care începe cu cuvântul cheie `while` crează o buclă. Cuvântul `while` este urmat de o expresie între paranteze și apoi o instrucțiune, similar cu `if`. Bucla execută instrucțiunea cât timp expresia produce o valoare care se convertește la valoarea booleană `true`.
 
 {{index [state, in binding], [binding, as state]}}
 
-The `number` binding demonstrates the way a ((binding)) can track the
-progress of a program. Every time the loop repeats, `number` gets a
-value that is 2 more than its previous value. At the beginning of
-every repetition, it is compared with the number 12 to decide whether
-the program's work is finished.
+Binding-ul `number` demonstrează modul în care putem folosi un binding pentru a urmări progresul unui program. La fiecare repetiție a buclei, valoarea referită de `number` crește cu 2. La începutul fiecărei repetiții, valoarea este comparată cu 12 pentru a determina dacă programul trebuie să se încheie sau nu.
 
 {{index exponentiation}}
 
-As an example that actually does something useful, we can now write a
-program that calculates and shows the value of 2^10^ (2 to the 10th
-power). We use two bindings: one to keep track of our result and one
-to count how often we have multiplied this result by 2. The loop tests
-whether the second binding has reached 10 yet and, if not, updates
-both bindings.
+Ca și exemplu care calculează o valoare utilă, putem scrie un program care calculează valoarea expresiei 2^10^. Utilizăm două bindinguri: unul pentru a memora rezultatul și altul pentru a număra de câte ori am multiplicat rezultatul cu 2. Bucla testează dacă cel de-al doilea binding a ajuns la valoarea 10 sau nu. Dacă nu, actualizează ambele bindinguri.
 
 ```
 let result = 1;
@@ -549,18 +363,11 @@ console.log(result);
 // → 1024
 ```
 
-The counter could also have started at `1` and checked for `<= 10`,
-but for reasons that will become apparent in [Chapter
-?](data#array_indexing), it is a good idea to get used to
-counting from 0.
+Am fi putut inițializa contorul cu 1 și să testăm dacă este `<=10` dar, pentru motive care vor deveni evidente în capitolul [?](data#array_indexing), este o idee bună să ne familiarizăm cu indexarea de la 0.
 
 {{index "loop body", "do loop", ["control flow", loop]}}
 
-A `do` loop is a control structure similar to a `while` loop. It
-differs only on one point: a `do` loop always executes its body at
-least once, and it starts testing whether it should stop only after
-that first execution. To reflect this, the test appears after the body
-of the loop.
+O buclă `do` este o structură de control similară cu o buclă `while`. Există o singură diferență: o buclă `do` va executa întotdeauna cel puțin odată instrucțiunea definită în corpul său și va testa dacă trebuie să își continue execuția dupa prima execuție. Pentru a reflecta acest aspect, testul se definește după corpul buclei.
 
 ```
 let yourName;
@@ -572,30 +379,15 @@ console.log(yourName);
 
 {{index [Boolean, "conversion to"], "! operator"}}
 
-This program will force you to enter a name. It will ask again and
-again until it gets something that is not an empty string. Applying
-the `!` operator will convert a value to Boolean type before negating
-it, and all strings except `""` convert to `true`. This means the loop
-continues going round until you provide a non-empty name.
+Acest program vă va obliga să introduceți un nume. Va continua să vă solicite acest lucru până când veti introduce o valoare diferită de stringul gol. Aplicarea operatorului `!` va converti valoarea introdusă la o valoare booleană înainte de a o nega. Orice string diferit de `""` va fi convertit la valoarea `true`. Aceasta înseamnă ca bucla se va executa până când veți introduce un nume diferit de stringul gol.
 
-## Indenting Code
+## Indentarea codului
 
 {{index [code, "structure of"], [whitespace, indentation], "programming style"}}
 
-In the examples, I've been adding spaces in front of statements that
-are part of some larger statement. These spaces are not required—the computer
-will accept the program just fine without them. In fact, even the
-((line)) breaks in programs are optional. You could write a program as
-a single long line if you felt like it.
+În exemple, am adăugat spații în fața instrucțiuniloe care fac parte din alte instrucțiuni. Aceste spații nu sunt obligatorii - computerul va accepta programul și fără ele. De fapt, chiar și scrierea programelor pe mai multe linii este opțională. Puteți scrie un program sub forma unei singure linii foarte lungi, dacă doriți.
 
-The role of this ((indentation)) inside ((block))s is to make the
-structure of the code stand out. In code where new blocks are opened
-inside other blocks, it can become hard to see where one block ends
-and another begins. With proper indentation, the visual shape of a
-program corresponds to the shape of the blocks inside it. I like to
-use two spaces for every open block, but tastes differ—some people use
-four spaces, and some people use ((tab character))s. The important
-thing is that each new block adds the same amount of space.
+Rolul indentării în interiorul unui bloc este de a evidenția structura codului. În codul în care noile blocuri sunt introduse în interiorul altor blocuri, poate fi dificil să vă dați seama unde se termină un bloc și începe un altul. Prin indentarea corespunzătoare, forma vizuală a programului reprezintă modul de subordonare a blocurilor din interiorul său. Prefer să utilizez două spații pentru indentare, dar gusturile diferă - unii programatori utilizează patru spații, alții preferă să utilizeze `tab`-uri. Ceea ce este cu adevărat important este să utilizați o indentare consistentă.
 
 ```
 if (false != true) {
@@ -606,25 +398,17 @@ if (false != true) {
 }
 ```
 
-Most code ((editor)) programs[ (including the one in this book)]{if
-interactive} will help by automatically indenting new lines the proper
-amount.
+Majoritatea programelor pentru editarea codului vă asistă prin indentarea automată a codului în mod corespunzător.
 
-## for loops
+## Bucle `for`
 
 {{index [syntax, statement], "while loop", "counter variable"}}
 
-Many loops follow the pattern shown in the `while` examples. First a
-"counter" binding is created to track the progress of the loop. Then
-comes a `while` loop, usually with a test expression that checks whether the
-counter has reached its end value. At the end of the loop body, the
-counter is updated to track progress.
+Multe bucle urmează un șablon similar cu cel prezentat în exemplele pentru bucla `while`. Se crează mai întâi un binding cu rol de "contor" pentru a urmări progresul buclei `while`. Apoi urmează bucla `while`, de regulă cu o expresie de test care verifică dacă s-a atins sau nu valoarea finală a contorului. La sfârșitul corpului buclei se actualizează valoarea contorului pentru a urmări progresul.
 
 {{index "for loop", loop}}
 
-Because this pattern is so common, JavaScript and similar languages
-provide a slightly shorter and more comprehensive form, the `for`
-loop.
+Deoarece acest șablon este atât de frecvent, JavaScript, ca și alte limbaje de programare, pune la dispoziție o instrucțiune mai compactă și mai inteligibilă, bucla `for`.
 
 ```
 for (let number = 0; number <= 12; number = number + 2) {
@@ -637,23 +421,15 @@ for (let number = 0; number <= 12; number = number + 2) {
 
 {{index ["control flow", loop], state}}
 
-This program is exactly equivalent to the
-[earlier](program_structure#loops) even-number-printing example. The
-only change is that all the ((statement))s that are related to the
-"state" of the loop are grouped together after `for`.
+Acest program este echivalent cu cel [anterior](program_structure#loops) care afișa numerele pare. Singura modificare este că toate instrucțiunile relativ la modificarea "stării" buclei sunt grupate după `for`.
 
 {{index [binding, as state], [parentheses, statement]}}
 
-The parentheses after a `for` keyword must contain two
-((semicolon))s. The part before the first semicolon _initializes_ the
-loop, usually by defining a binding. The second part is the
-((expression)) that _checks_ whether the loop must continue. The final
-part _updates_ the state of the loop after every iteration. In most
-cases, this is shorter and clearer than a `while` construct.
+Parantezele de după cuvântul cheie `for` trebuie să conțină două caractere `;`. Partea din fața primului caracter `;` _inițializează_ bucla, de regulă prin definirea unui binding. Între cele două caractere `;` se definește expresia care _verifică_ dacă bucla trebuie să continue. Iar după cel de-al doilea caracter `;` se precizează setul de expresii care _actualizează_ starea buclei după fiecare iterație. De cele mai multe ori, o construcție `for` este mai scurtă și mai clară decât o construcție `while`.
 
 {{index exponentiation}}
 
-This is the code that computes 2^10^ using `for` instead of `while`:
+În exemplul de mai jos calculăm 2^10^ utilizând o buclă `for` în locul unei bucle `while`:
 
 ```{test: wrap}
 let result = 1;
@@ -664,16 +440,13 @@ console.log(result);
 // → 1024
 ```
 
-## Breaking Out of a Loop
+## Ieșirea forțată dintr-o buclă
 
 {{index [loop, "termination of"], "break keyword"}}
 
-Having the looping condition produce `false` is not the only way a
-loop can finish. There is a special statement called `break` that has
-the effect of immediately jumping out of the enclosing loop.
+Evaluarea la valoarea `false` a condiției buclei nu este singura modalitate de a ieși dintr-o buclă. Avem la dispoziție o instrucțiune specială `break` care are ca efect ieșirea imediată din bucla în interiorul căreia este plasată.
 
-This program illustrates the `break` statement. It finds the first number
-that is both greater than or equal to 20 and divisible by 7.
+Porgramul care urmează exemplifică utilizarea instrucțiunii `break`. Acest program determină primul număr mai mare decât 20 și divizibil cu 7:
 
 ```
 for (let current = 20; ; current = current + 1) {
@@ -687,58 +460,43 @@ for (let current = 20; ; current = current + 1) {
 
 {{index "remainder operator", "% operator"}}
 
-Using the remainder (`%`) operator is an easy way to test whether a
-number is divisible by another number. If it is, the remainder of
-their division is zero.
+Operatorul pentru calculul restului împărțirii întregi (`%`) este o modalitate simplă de a determina dacă un număr este divizibil cu un alt număr. Dacă da, restul împărțirii întregi este zero.
 
 {{index "for loop"}}
 
-The `for` construct in the example does not have a part that checks
-for the end of the loop. This means that the loop will never stop
-unless the `break` statement inside is executed.
+Construcția `for` din exemplul de mai sus nu are definită partea care verifică dacă bucla trebuie să se încheie. Aceasta înseamnă că bucla nu se va încheia decât în momentul în care se va executa instrucțiunea `break` din interiorul ei. 
 
-If you were to remove that `break` statement or you accidentally write
-an end condition that always produces `true`, your program would get
-stuck in an _((infinite loop))_. A program stuck in an infinite loop
-will never finish running, which is usually a bad thing.
+Dacă eliminați instrucțiunea `break` sau scrieți accidental o condiție care se evaluează întotdeauna la valoarea `true`, programul va intra într-o _buclă infinită_ și nu se va încheia niciodată, ceea ce, de regulă, este de nedorit.
 
 {{if interactive
 
-If you create an infinite loop in one of the examples on these pages,
-you'll usually be asked whether you want to stop the script after a
-few seconds. If that fails, you will have to close the tab that you're
-working in, or on some browsers close your whole browser, to recover.
+Dacă reușiți să creați o buclă infinită într-unul din exemplele din această carte, de regulă veți fi întrebat după câteva dacă doriți să încheiați execuția scriptului. Dacă nu, va trebui să inchideți tabul respectiv sau, în unele browsere, să inchideți complet browserul pentru a recupera situația de eroare.
 
 if}}
 
 {{index "continue keyword"}}
 
-The `continue` keyword is similar to `break`, in that it influences
-the progress of a loop. When `continue` is encountered in a loop body,
-control jumps out of the body and continues with the loop's next
-iteration.
+Cuvântul cheie `continue` este similar cuvântului cheie `break` în sensul că influențează progresul buclei. Când se va excuta instrucțiunea `continue` în interiorul buclei, se trece imediat la o nouă iterație a buclei.
 
-## Updating bindings succinctly
+## Actualizarea compactă a bindingurilor
 
 {{index assignment, "+= operator", "-= operator", "/= operator", "*= operator", [state, in binding], "side effect"}}
 
-Especially when looping, a program often needs to "update" a binding
-to hold a value based on that binding's previous value.
+Mai ales în cadrul buclelor, un program are nevoie să "actualizeze" un binding care memorează o valoare pe baza valorii anterioare a bindingului.
 
 ```{test: no}
 counter = counter + 1;
 ```
 
-JavaScript provides a shortcut for this.
+JavaScript vă pune la dispoziție o variantă prescurtată:
 
 ```{test: no}
 counter += 1;
 ```
 
-Similar shortcuts work for many other operators, such as `result *= 2`
-to double `result` or `counter -= 1` to count downward.
+Aveți la dispoziție prescurtări similare pentru mulți alți operatori, cum ar fi `result *= 2` pentru a dubla `result` sau `counter -= 1` pentru a contoriza prin scădere.
 
-This allows us to shorten our counting example a little more.
+Această facilitate ne permită să mai scurtăm puțin exemplul nostru de contorizare:
 
 ```
 for (let number = 0; number <= 12; number += 2) {
@@ -748,14 +506,13 @@ for (let number = 0; number <= 12; number += 2) {
 
 {{index "++ operator", "-- operator"}}
 
-For `counter += 1` and `counter -= 1`, there are even shorter
-equivalents: `counter++` and `counter--`.
+Pentru `counter += 1` și `counter -= 1` avem la dispoziție forme și mai prescurtate: `counter++` și `counter--`.
 
-## Dispatching on a value with switch
+## Selectarea pe baza unei valori folosind `switch`
 
 {{index [syntax, statement], "conditional execution", dispatch, ["if keyword", chaining]}}
 
-It is not uncommon for code to look like this:
+Frecvent, avem cod în programele noastre care arată astfel:
 
 ```{test: no}
 if (x == "value1") action1();
@@ -766,11 +523,7 @@ else defaultAction();
 
 {{index "colon character", "switch keyword"}}
 
-There is a construct called `switch` that is intended to express such
-a "dispatch" in a more direct way. Unfortunately, the syntax
-JavaScript uses for this (which it inherited from the C/Java line of
-programming languages) is somewhat awkward—a chain of `if` statements
-may look better. Here is an example:
+Există o construcție numită `switch` care are rolul de a exprima o asemenea "selecție" mai direct. Din păcate, sintaxa utilizată de JavaScript (care este moștenită din limbajele de programare descendente din C/Java) este oarecum incomodă - o succesiune de instrucțiuni `if` ar putea arăta mai bine. Iată un exemplu:
 
 ```
 switch (prompt("What is the weather like?")) {
@@ -790,25 +543,13 @@ switch (prompt("What is the weather like?")) {
 
 {{index fallthrough, "break keyword", "case keyword", "default keyword"}}
 
-You may put any number of `case` labels inside the block opened by
-`switch`. The program will start executing at the label that
-corresponds to the value that `switch` was given, or at `default` if
-no matching value is found. It will continue executing, even across
-other labels, until it reaches a `break` statement. In some cases,
-such as the `"sunny"` case in the example, this can be used to share
-some code between cases (it recommends going outside for both sunny
-and cloudy weather). But be careful—it is easy to forget such a
-`break`, which will cause the program to execute code you do not want
-executed.
+Puteți plasa oricâte etichete `case` în interiorul blocului deschis prin `switch`. Programul va continua execuția cu eticheta care corespunde valorii evaluate în expresia de început a instrucțiunii `switch` sau cu cazul `default` dacă nu a fost găsită nici o potrivire. Execuția va continua până la întâlnirea unei instrucțiuni `break`. În unele cazuri, cum ar fi cazul `"sunny"` din exemplu, execuția continuă cu instrucțiunea asociată cazului următor (lipsește `break`). Dar trebuie să fiți atenți - dacă ați omis accidental instrucțiunea `break`, programul ar putea executa cod pe care nu ați dorit să îl execute.
 
-## Capitalization
+## Utilizarea literelor mari și mici 
 
 {{index capitalization, [binding, naming], [whitespace, syntax]}}
 
-Binding names may not contain spaces, yet it is often helpful to use
-multiple words to clearly describe what the binding represents. These
-are pretty much your choices for writing a binding name with several
-words in it:
+Numele bindingurilor nu pot conține spații însă este de multe ori util să folosim mai multe cuvinte pentru a descrie ce reprezintă bindingul respectiv. În mare, aveți următoarele opțiuni lizibile de a scrie numele unui binding cu mai multe cuvinte:
 
 ```{lang: null}
 fuzzylittleturtle
@@ -819,38 +560,21 @@ fuzzyLittleTurtle
 
 {{index "camel case", "programming style", "underscore character"}}
 
-The first style can be hard to read. I rather like the look of the
-underscores, though that style is a little painful to type. The
-((standard)) JavaScript functions, and most JavaScript programmers,
-follow the bottom style—they capitalize every word except the first.
-It is not hard to get used to little things like that, and code with
-mixed naming styles can be jarring to read, so we follow this
-((convention)).
+Primul stil este greu de citit. Mai bine aș utiliza al doilea stil, însă acesta este mai greu de tastat. Funcțiile standard din JavaScript utilizează ultimul stil de scriere - fiecare cuvânt se scrie cu literă mare, cu excepția primului. Nu e greu să vă acomodați cu asemenea aspecte, iar codul scris cu multiple stiluri de denumire este deranjant la citire, astfel că vom utiliza și noi ultima convenție de mai sus.
 
 {{index "Number function", constructor}}
 
-In a few cases, such as the `Number` function, the first letter of a
-binding is also capitalized. This was done to mark this function as a
-constructor. What a constructor is will become clear in [Chapter
-?](object#constructors). For now, the important thing is not
-to be bothered by this apparent lack of ((consistency)).
+În câteva cazuri, cum ar fi funcția `Number`, prima literă a numelui este literă mare. Aceasta marchează faptul că această funcție este un constructor. O să clarificăm ce înseamnă un constructor în capitolul [?](object#constructor). Deocamdată, important este să nu vă lăsați deranjați de această aparentă lipsă de consistență.
 
-## Comments
+## Comentarii
 
 {{index readability}}
 
-Often, raw code does not convey all the information you want a program
-to convey to human readers, or it conveys it in such a cryptic way
-that people might not understand it. At other times, you might just
-want to include some related thoughts as part of your program. This is
-what _((comment))s_ are for.
+Adesea, codul în sine nu transmite toată informația pe care am dori să o transmită programul unui cititor uman sau o transmite într-un mod suficient de criptic pentru a o face greu de înțeles pentru unii cititori. Alteori, probabil că doriți să adăugați câteva idei ca și parte a programului. Pentru toate acestea, puteți folosi _comentarii_.
 
 {{index "slash character", "line comment"}}
 
-A comment is a piece of text that is part of a program but is
-completely ignored by the computer. JavaScript has two ways of writing
-comments. To write a single-line comment, you can use two slash
-characters (`//`) and then the comment text after it.
+Un comentariu este o bucată de text care face parte dintr-un program dar este complet ignorată de către computer. JavaScript permite două moduri de a scrie comentarii. Pentru a scrie un comentariu pe o singură linie, veți putea folosi `//` și apoi să scrieți textul comentariului.
 
 ```{test: no}
 let accountBalance = calculateBalance(account);
@@ -865,10 +589,7 @@ addToReport(accountBalance, report);
 
 {{index "block comment"}}
 
-A `//` comment goes only to the end of the line. A section of text
-between `/*` and `*/` will be ignored in its entirety, regardless of
-whether it contains line breaks. This is useful for adding blocks of
-information about a file or a chunk of program.
+Un comentariu `//` se încheie la sfârșitul liniei. O secțiune de text între `/*` și `*/` va fi ignorată complet, chiar dacă este scrisă pe mai multe linii. Aceasta este utilă pentru a adăuga un comentariu de tip bloc despre un fișier sau o anumită parte a unui program.
 
 ```
 /*
@@ -880,51 +601,29 @@ information about a file or a chunk of program.
 const myNumber = 11213;
 ```
 
-## Summary
+## Rezumat
 
-You now know that a program is built out of statements, which
-themselves sometimes contain more statements. Statements tend to
-contain expressions, which themselves can be built out of smaller
-expressions.
+Acum știți că un program este alcătuit din instrucțiuni, care pot conține la rândul lor alte instrucțiuni. Instrucțiunile tind să conțină expresii, care la rândul lor pot conține alte expresii.
 
-Putting statements after one another gives you a program that is
-executed from top to bottom. You can introduce disturbances in the
-flow of control by using conditional (`if`, `else`, and `switch`) and
-looping (`while`, `do`, and `for`) statements.
+Scriind instrucțiunile una după alta obțineși un program care este executat de sus în jos. Puteți introduce perturbații în execuția programului prin utilizarea instrucțiunilor condiționale (`if`, `else` și `switch`) sau a celor de repetiție (`while`, `do` și `for`).
 
-Bindings can be used to file pieces of data under a name, and they are
-useful for tracking state in your program. The environment is the set
-of bindings that are defined. JavaScript systems always put a number
-of useful standard bindings into your environment.
+Bindingurile pot fi utilizate pentru a asocia nume unor date și sunt utile pentru a urmări starea programului. Mediul reprezintă setul de bindinguri care sunt definite. Sistemul JavaScript introduce întotdeauna un număr de bindinguri utile în mediul programului.
 
-Functions are special values that encapsulate a piece of program. You
-can invoke them by writing `functionName(argument1, argument2)`. Such
-a function call is an expression and may produce a value.
+Funcțiile sunt valori speciale care încapsulează o bucată dintr-un program. Le puteți apela astfel: `functionName(argument1, argument2)`. Un asemenea apel de funcție este o expresie și poate produce o valoare.
 
-## Exercises
+## Exerciții
 
 {{index exercises}}
 
-If you are unsure how to test your solutions to the exercises, refer to the
-[Introduction](intro).
+Dacă nu sunteți siguri cum să vă testați soluțiile, referiți-va la [Introducere](intro).
 
-Each exercise starts with a problem description. Read this description and try to
-solve the exercise. If you run into problems, consider reading the
-hints [after the exercise]{if interactive}[at the [end of the
-book](hints)]{if book}. Full solutions to the exercises are
-not included in this book, but you can find them online at
-[_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code#2).
-If you want to learn something from the exercises, I recommend looking
-at the solutions only after you've solved the exercise, or at least
-after you've attacked it long and hard enough to have a slight
-headache.
+Fiecare exercițiu începe cu o descriere a problemei. Citiți această descriere cu atenție și încercați să rezolvați exercițiul. Dacă vă încurcați, citiți indiciile de ajutor de la sfârșitul exercițiului. Cartea nu conține soluțiile complete, dar le puteți găsi la adresa  [_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code#2). Dacă doriți cu adevărat să învățați din exerciții, vă recomand să nu citiți soluțiile înainte de a rezolva exercițiul sau măcar după ce ați depus suficient efort pentru rezolvarea exercițiului.
 
-### Looping a triangle
+### Construcția unui triunghi
 
 {{index "triangle (exercise)"}}
 
-Write a ((loop)) that makes seven calls to `console.log` to output the
-following triangle:
+Scrieți o buclă care efectuează apeluri utile ale `console.log` pentru a afișa un triunghi conform exemplului de mai jos:
 
 ```{lang: null}
 #
@@ -938,8 +637,7 @@ following triangle:
 
 {{index [string, length]}}
 
-It may be useful to know that you can find the length of a string by
-writing `.length` after it.
+Ar putea fi util să știți că puteți determina lungimea unui string scriind `.length` după el.
 
 ```
 let abc = "abc";
@@ -949,8 +647,7 @@ console.log(abc.length);
 
 {{if interactive
 
-Most exercises contain a piece of code that you can modify to solve
-the exercise. Remember that you can click code blocks to edit them.
+Majoritatea exercițiilor conțin o bucată de cod pe care o puteți edita pentru a rezolva exercițiul. Vă reamintesc că puteți executa click pe blocul de cod pentru a-l edita.
 
 ```
 // Your code here.
@@ -961,15 +658,9 @@ if}}
 
 {{index "triangle (exercise)"}}
 
-You can start with a program that prints out the numbers 1 to 7, which
-you can derive by making a few modifications to the [even number
-printing example](program_structure#loops) given earlier in the
-chapter, where the `for` loop was introduced.
+Puteți începe prin a scrie un program care se afișeze numerele de la 1 la 7, pe care îl puteți obține prin modificarea [exemplului cu afișarea numerelor pare](program_structure#loops) anterior, folosit ca exemplu când am introdus bucla `for`.
 
-Now consider the equivalence between numbers and strings of hash
-characters. You can go from 1 to 2 by adding 1 (`+= 1`). You can go
-from `"#"` to `"##"` by adding a character (`+= "#"`). Thus, your
-solution can closely follow the number-printing program.
+Acum analizați echivalența dintre numere și numărul de caractere `#`. Puteți trece de la 1 la 2 adăugând 1 (`+=1`). Puteți trece de la `#` la `##` adăugând un caracter (`+="#"`). Prin urmare, puteți folosi aceeași structură ca și în programul care afișează numerele.
 
 hint}}
 
@@ -977,18 +668,11 @@ hint}}
 
 {{index "FizzBuzz (exercise)", loop, "conditional execution"}}
 
-Write a program that uses `console.log` to print all the numbers from
-1 to 100, with two exceptions. For numbers divisible by 3, print
-`"Fizz"` instead of the number, and for numbers divisible by 5 (and
-not 3), print `"Buzz"` instead.
+Scrieți un program care utilizează `console.log` pentru a afișa toate numerele de la 1 la 100, cu două excepții. Pentru numerele divizibile cu 3, va afișa `"Fizz"` în locul numărului iar pentru cele divizibile cu 5 (dar nu și cu 3), va afișa `"Buzz"`.
 
-When you have that working, modify your program to print `"FizzBuzz"`
-for numbers that are divisible by both 3 and 5 (and still print
-`"Fizz"` or `"Buzz"` for numbers divisible by only one of those).
+După ce reușiti să rezolvați exercițiul. modificați codul astfel încât să se afișeze `"FizzBuzz"` pentru numerele care sunt divizibile și cu 3 și cu 5 (și va continua să afișeze `"Fizz"` sau `"Buzz"` pentru cele divizibile doar cu una dintre aceste valori).
 
-(This is actually an ((interview question)) that has been claimed to
-weed out a significant percentage of programmer candidates. So if you
-solved it, your labor market value just went up.)
+(Aceasta este de fapt o întrebare din interviuri despre care se crede că filtrează un procent semnificativ de candidați. Dacă ați reușit să o rezolvați, valoarea voastră pe piața muncii tocmai a crescut.)
 
 {{if interactive
 ```
@@ -1000,35 +684,23 @@ if}}
 
 {{index "FizzBuzz (exercise)", "remainder operator", "% operator"}}
 
-Going over the numbers is clearly a looping job, and selecting what to
-print is a matter of conditional execution. Remember the trick of
-using the remainder (`%`) operator for checking whether a number is
-divisible by another number (has a remainder of zero).
+Evident, parcurgerea intervalului de valori de la 1 la 100 presupune utilizarea unei bucle iar selectarea valorii care urmează să se afișeze este o execuție condiționată. Vă reamintesc că putem utiliza operatorul modulo (`%`) pentru a verifica dacă un număr este divizibil cu un alt număr (restul împărțirii este zero).
 
-In the first version, there are three possible outcomes for every
-number, so you'll have to create an `if`/`else if`/`else` chain.
+În prima versiune, există trei rezultate posibile pentru fiecare număr deci, va trebui să construiți o structură `if`/`else if`/`else`.
 
 {{index "|| operator", ["if keyword", chaining]}}
 
-The second version of the program has a straightforward solution and a
-clever one. The simple solution is to add another conditional "branch" to
-precisely test the given condition. For the clever solution, build up a
-string containing the word or words to output and print either this
-word or the number if there is no word, potentially by making good use
-of the `||` operator.
+Cea de a două versiune are o soluție evidentă și una mai inteligentă. Soluția simplă presupune adăugarea unei noi ramuri pentru a testa condiția suplimentară. Pentru soluția mai inteligentă, construiți un string ce conține cuvântul sau cuvintele ce trebuie afișate și apoi afișați fie cuvântul fie numărul dacă nu există cuvântul, prin utilizarea operatorului `||`.
 
 hint}}
 
-### Chessboard
+### Tablla de șah
 
 {{index "chessboard (exercise)", loop, [nesting, "of loops"], "newline character"}}
 
-Write a program that creates a string that represents an 8×8 grid,
-using newline characters to separate lines. At each position of the
-grid there is either a space or a "#" character. The characters should
-form a chessboard.
+Scrieți un program care crează un string ce reprezintă o tablă 8 x 8 utilizând caractere `\n` pentru a separa liniile. Pe fiecare poziție a gridului există fie un spațiu, fie un caracter `#`. Caracterele trebuie să alterneze pe linii consecutive, ca pe o tablă de șah.
 
-Passing this string to `console.log` should show something like this:
+Transmițând acest string metodei `console.log` ar trebui să afișați ceva similar cu:
 
 ```{lang: null}
  # # # #
@@ -1041,9 +713,7 @@ Passing this string to `console.log` should show something like this:
 # # # # 
 ```
 
-When you have a program that generates this pattern, define a
-binding `size = 8` and change the program so that it works for
-any `size`, outputting a grid of the given width and height.
+După ce reușiți să generați tabla 8 x 8, creați un binding `size = 8` și modificați programul astfel încât să funcționeze pentru orice dimensiune a grilei, afișând o tablă de dimensiune `size`.
 
 {{if interactive
 ```
@@ -1055,26 +725,16 @@ if}}
 
 {{index "chess board (exercise)"}}
 
-You can build the string by starting with an empty one (`""`) and
-repeatedly adding characters. A newline character is written `"\n"`.
+Puteți construi stringul începând cu un string gol `""` și să adaugați pe rând caractere. Caracterul `"\n"` poate fi utilizat pentru a afișa o linie nouă.
 
 {{index [nesting, "of loops"], [braces, "block"]}}
 
-To work with two ((dimensions)), you will need a ((loop)) inside of a
-loop. Put braces around the bodies of both loops to make it
-easy to see where they start and end. Try to properly indent these
-bodies. The order of the loops must follow the order in which we build
-up the string (line by line, left to right, top to bottom). So the
-outer loop handles the lines, and the inner loop handles the characters
-on a line.
+Pentru a itera în două dimensiuni, va trebui să utilizați o buclă în interiorul altei bucle. Plasați acolade în jurul corpurilor buclelor pentru a idnetifica ușor începutul și sfârșitul fiecărei bucle. Indentați corespunzător corpurile celor două bucle. Ordinea celor două bucle trebuie să urmărească ordinea în care construim stringul (linie cu linie, de la stânga la dreapta și de sus în jos). Prin urmare, bucla exterioară gestionează liniile iar bucla interioară gestionează caracterele de pe fiecare linie.
 
 {{index "counter variable", "remainder operator", "% operator"}}
 
-You'll need two bindings to track your progress. To know whether to
-put a space or a hash sign at a given position, you could test whether
-the sum of the two counters is even (`% 2`).
+Pentru a urmări progresul, aveți nevoie de două bindinguri. Pentru a determina care dintre caractere trebuie să îl folosiți pe o poziție dată puteți testa paritatea sumei celor două contoare (`%2`).
 
-Terminating a line by adding a newline character must happen after the
-line has been built up, so do this after the inner loop but inside the outer loop.
+După fiecare linie (adică după fiecare finalizare a buclei interioare), adăugați caracterul linie nouă (`"\n"`).
 
 hint}}
