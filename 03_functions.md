@@ -1,10 +1,8 @@
-# Functions
+# Funcții
 
 {{quote {author: "Donald Knuth", chapter: true}
 
-People think that computer science is the art of geniuses but the
-actual reality is the opposite, just many people doing things that
-build on each other, like a wall of mini stones.
+Oamenii cred că știința computerelor este arta geniilor dar realitatea demonstrează contrarul, doar mai mulți oameni făcând lucruri care se construiesc unele pe baza altora, ca un perete de mici pietre.
 
 quote}}
 
@@ -14,32 +12,19 @@ quote}}
 
 {{index function, [code, "structure of"]}}
 
-Functions are the bread and butter of JavaScript programming. The
-concept of wrapping a piece of program in a value has many uses. It
-gives us a way to structure larger programs, to reduce repetition, to
-associate names with subprograms, and to isolate these subprograms
-from each other.
+Funcțiile sunt "sarea și piperul" programării JavaScript. Ideea de a împacheta o bucată de program într-o valoare are multe utilizări. Ne oferă o modalitate de a structura programe mai mari, de a reduce repetiția, de a asocia nume subprogramelor și de a izola subprogramele.
 
-The most obvious application of functions is defining new
-((vocabulary)). Creating new words in prose is usually bad style. But
-in programming, it is indispensable.
+Cea mai evidentă aplicație a funcțiilor este pentru definirea unui nou vocabular. Crearea unor noi cuvinte în proză este de regulă un stil nerecomandat. Însă în programare, este indispensabilă.
 
 {{index abstraction, vocabulary}}
 
-Typical adult English speakers have some 20,000 words in their
-vocabulary. Few programming languages come with 20,000 commands built
-in. And the vocabulary that _is_ available tends to be more precisely
-defined, and thus less flexible, than in human language. Therefore, we
-usually _have_ to introduce new concepts to avoid repeating ourselves
-too much.
+Un vorbitor adult de limba engleză are un vocabular de aproximativ 20000 de cuvinte. Puține limbaje de programare au 20000 de comenzi predefinite. Vocabularul _disponibil_ tinde să fie definit mai precis și mai puțin flexibil decât cel din limbile vorbite de oameni. Prin urmare, de regulă avem nevoie să introducem noi concepte pentru a evita repetiția excesivă.
 
-## Defining a function
+## Definirea unei funcții
 
 {{index "square example", [function, definition], [binding, definition]}}
 
-A function definition is a regular binding where the value of the
-binding is a function. For example, this code defines `square` to
-refer to a function that produces the square of a given number:
+Definirea unei funcții este un binding obișnuit în care valoarea bindingului este o funcție. De exemplu, codul de ,ao jos definește `square` pentru a defini o funcție care produce pătratul unui număr dat:
 
 ```
 const square = function(x) {
@@ -53,18 +38,11 @@ console.log(square(12));
 {{indexsee "curly braces", braces}}
 {{index [braces, "function body"], block, [syntax, function], "function keyword", [function, body], [function, "as value"], [parentheses, arguments]}}
 
-A function is created with an expression that starts with the keyword
-`function`. Functions have a set of _((parameter))s_ (in this case,
-only `x`) and a _body_, which contains the statements that are to be
-executed when the function is called. The function body of a function
-created this way must always be wrapped in braces, even when it
-consists of only a single ((statement)).
+O funcție este creată cu ajutorul unei expresii care începe cu cuvântul cheie `function`. Funcțiile au o listă de parametri (în cazul nostru, doar `x`) și un _corp_ care conține instrucțiunile ce trebuie executate atunci când se apelează funcția. Corpul funcție astfel create trebuie inclus întotdeauna între acolade, chiar dacă funcția execută o singură instrucțiune. 
 
 {{index "power example"}}
 
-A function can have multiple parameters or no parameters at all. In
-the following example, `makeNoise` does not list any parameter names,
-whereas `power` lists two:
+O funcție poate avea mai mulți parametri sau nici unul. În exemplul de mai jos, funcția `makeNoise` nu enumeră nici un parametru iar funcția `power` enumeră doi parametri:
 
 ```
 const makeNoise = function() {
@@ -88,51 +66,26 @@ console.log(power(2, 10));
 
 {{index "return value", "return keyword", undefined}}
 
-Some functions produce a value, such as `power` and `square`, and some
-don't, such as `makeNoise`, whose only result is a ((side effect)). A
-`return` statement determines the value the function returns. When
-control comes across such a statement, it immediately jumps out of the
-current function and gives the returned value to the code that called
-the function. A `return` keyword without an expression after it will
-cause the function to return `undefined`. Functions that don't have a
-`return` statement at all, such as `makeNoise`, similarly return
-`undefined`.
+Unele funcții produc o valoare, cum ar fi `power` sau `square` iar altele nu produc nici o valoare, cum ar fi `makeNoise` al cărei singur rezultat este un efect secundar. O instrucțiune `return` determină valoarea returnată de către o funcție. Atuncci când controlul ajunge la o asemenea isntrucțiune, execuția funcției se încheie imediat și valoarea este returnată codului care a apelat funcția. Utilizarea cuvântului cheie `return` fără a preciza expresia de evaluat va determina returnarea valorii `undefined`. Funcțiile care nu conțin deloc o instrucțiune `return`, cum este cazul funcției `makeNoise` vor returna tot valoarea `undefined`.
 
 {{index parameter, [function, application], [binding, "from parameter"]}}
 
-Parameters to a function behave like regular bindings, but their
-initial values are given by the _caller_ of the function, not the code
-in the function itself.
+Parametrii unei funcții se comportă ca orice alt binding, dar valorile lor inițiale sunt furnizate de către codul _apelant_, nu de către codul funcției. 
 
-## Bindings and scopes
+## Bindinguri și domenii de vizibilitate (scopes)
 
 {{indexsee "top-level scope", "global scope"}}
 {{index "var keyword", "global scope", [binding, global], [binding, "scope of"]}}
 
-Each binding has a _((scope))_, which is the part of the program
-in which the binding is visible. For bindings defined outside of any
-function or block, the scope is the whole program—you can refer to
-such bindings wherever you want. These are called _global_.
+Fiecare binding are un _domeniu de vizibilitate (scope)_ care este partea programului în care bindingul este vizibil (accesibil). Pentru bindingurile definite în afara oricărei funcții sau a oricărui bloc, domeniul de vizibilitate este întregul program - vă puteți referi la un asemenea binding din orice parte a programului. Aceste bindiguri au un domeniu de vizibilitate _global_. 
 
 {{index "local scope", [binding, local]}}
 
-But bindings created for function ((parameter))s or declared inside a
-function can be referenced only in that function, so they are known as
-_local_ bindings. Every time the function is called, new instances of these
-bindings are created. This provides some isolation between
-functions—each function call acts in its own little world (its local
-environment) and can often be understood without knowing a lot about
-what's going on in the global environment.
+Biindigurile crete pentru parametrii unei funcții sau cele declarate în interiorul unei funcții pot fi referite doar în interiorul acelei funcții. Din acest motiv, sunt denumite bindinguri _locale_. La fiecare apel al funcției, se crează noi instanțe ale acestor bindinguri. Astfel este posibilă o izolare a funcțiilor - fiecare apel al unei funcții acționează in micul univers al funcției (mediul său local) și de regulă poate fi înțeles fără a cunoaște multe detalii despre ceea ce se întâmplă în contextul global.
 
 {{index "let keyword", "const keyword", "var keyword"}}
 
-Bindings declared with `let` and `const` are in fact local to the
-_((block))_ that they are declared in, so if you create one of those
-inside of a loop, the code before and after the loop cannot "see" it.
-In pre-2015 JavaScript, only functions created new scopes, so
-old-style bindings, created with the `var` keyword, are visible
-throughout the whole function that they appear in—or throughout the
-global scope, if they are not in a function.
+Bindigurile declarate cu `let` sau `const` sunt de fapt locale _blocului_ de cod în care au fost declarate. Prin urmare, dacă declarați un astfel de binding în interiorul unei bucle, codul ce precede sau cel ce urmează bucla nu va "vedea" bindingul. În versiunile anterioare JavaScript-2015, doar funcțiile creau noi domenii de vizibilitate astfel încât bindigurile create folosind `var` erau vizibile în tot contextul funcției în care erau definite sau în tot contextul global, dacă nu erau definite într-o funcție.
 
 ```
 let x = 10;
@@ -149,12 +102,7 @@ console.log(x + z);
 
 {{index [binding, visibility]}}
 
-Each ((scope)) can "look out" into the scope around it, so `x` is
-visible inside the block in the example. The exception is when
-multiple bindings have the same name—in that case, code can see only
-the innermost one. For example, when the code inside the `halve`
-function refers to `n`, it is seeing its _own_ `n`, not the global
-`n`.
+Fiecare domeniu de vizibilitate poate să "vadă" contextul care îl include, astfel încât `x` este vizibil în interiorul blocului din exemplu. Excepția este cazul în care mai multe bindinguri au același nume (fiind definite în contexte diferite) - în acest caz, codul poate referi doar bindingul din contextul cel mai interior. De exemplu, atunci când codul din funcția `halve` se referă la `n` se va referi la propriul său binding creat de parametrul `n` și nu la `n` definit în contextul global.
 
 ```
 const halve = function(n) {
@@ -170,18 +118,15 @@ console.log(n);
 
 {{id scoping}}
 
-### Nested scope
+### Domenii de vizibilitate imbricate
 
 {{index [nesting, "of functions"], [nesting, "of scope"], scope, "inner function", "lexical scoping"}}
 
-JavaScript distinguishes not just _global_ and _local_
-bindings. Blocks and functions can be created inside other blocks and
-functions, producing multiple degrees of locality.
+JavaScript nu face diferența doar între bingurile _globale_ și cele _locale_. Blocurile și funcțiile se pot crea în interiorul altor blocuri sau funcții, producând mai multe nivele de _localizare_.
 
 {{index "landscape example"}}
 
-For example, this function—which outputs the ingredients needed to
-make a batch of hummus—has another function inside it:
+De exemplu, această funcție, care afișează ingredientele necesare pentru a găti o porție de humus - are o altă funcție în interiorul ei:
 
 ```
 const hummus = function(factor) {
@@ -203,31 +148,19 @@ const hummus = function(factor) {
 
 {{index [function, scope], scope}}
 
-The code inside the `ingredient` function can see the `factor` binding
-from the outer function. But its local bindings, such as `unit` or
-`ingredientAmount`, are not visible in the outer function.
+Codul din interiorul funcției `ingredient` poate referi bindingul `factor` definit în funcția exterioară. Dar bindingurile sale locale, cum ar fi `unit` sau `ingredientAmount` nu sunt vizibile în funcția exterioară.
 
-The set of bindings visible inside a block is determined by the place of
-that block in the program text. Each local scope can also see all the
-local scopes that contain it, and all scopes can see the global scope.
-This approach to binding visibility is called _((lexical scoping))_.
+Mulțimea bindigurilor vizibile în interiorul unui bloc este determinată de locul în care este plasat blocul în cadrul programului. Fiecare domeniu de vizibilitate local poate observa toate domeniile de vizibilitate care îl conțin și orice domeniu de vizibilitate poate observa contextul global. Aceste reguli cu privire la vizibilitatea biningurilor definesc _sfera lexicală_.
 
-## Functions as values
+## Funcțiile ca și valori
 
 {{index [function, "as value"], [binding, definition]}}
 
-A function binding usually simply acts as a name for a specific piece
-of the program. Such a binding is defined once and never changed. This
-makes it easy to confuse the function and its name.
+Un binding de tip funcție este de regulă un nume pentru o bucată din program. Un asemenea binding este definit o singură dată și nu se modifică. Aceasta poate provoca o confuzie între funcție și numele ei.
 
 {{index [binding, assignment]}}
 
-But the two are different. A function value can do all the things that
-other values can do—you can use it in arbitrary ((expression))s, not
-just call it. It is possible to store a function value in a new
-binding, pass it as an argument to a function, and so on. Similarly, a
-binding that holds a function is still just a regular binding and can,
-if not constant, be assigned a new value, like so:
+Dar cele două noțiuni sunt diferite. O valoare de tip funcție poate fi utilizată la fel ca și orice altă valoare - o puteți utiliza în orice expresii, nu doar să o apelați. Puteți să memorați o valoare de tip funcție într-un nou binding, să o transmiteți ca și argument al unei funcții și altele. Similar, un binding care se refră la o funcție este doar un binding normal și, dacă nu este definit ca și constant, i se poate atribui o nouă valoare, ca și în exemplul de mai jos:
 
 ```{test: no}
 let launchMissiles = function() {
@@ -240,16 +173,13 @@ if (safeMode) {
 
 {{index [function, "higher-order"]}}
 
-In [Chapter ?](higher_order), we will discuss the interesting things
-that can be done by passing around function values to other functions.
+În [Capitolul ?](higher_order), vom discuta despre lucrurile interesante pe care le puteți realiza prin transmiterea valorilor de tip funcșie ca și parametri ai altor funcții.
 
-## Declaration notation
+## Notația declarativă
 
 {{index [syntax, function], "function keyword", "square example", [function, definition], [function, declaration]}}
 
-There is a slightly shorter way to create a function binding. When the
-`function` keyword is used at the start of a statement, it works
-differently.
+Există și o modalitate mai scurtă puțin de a crea un binding de tip funcție. Când utilizăm cuvântul cheie `function` la începutul unei instrucțiuni, avem o funcționare diferită.
 
 ```{test: wrap}
 function square(x) {
@@ -259,11 +189,9 @@ function square(x) {
 
 {{index future, "execution order"}}
 
-This is a function _declaration_. The statement defines the binding
-`square` and points it at the given function. It is slightly easier
-to write and doesn't require a semicolon after the function.
+Aceasta este o _declarație_ a unei funcții. Instrucțiunea definește bindingul `square` care va referi funcția dată. Este puțin mai ușor de scris și nu este necesar să folosim `;` după acolada de final a funcției.
 
-There is one subtlety with this form of function definition.
+Există o subtilitate relativ la această modalitate de a defini o funcție.
 
 ```
 console.log("The future says:", future());
@@ -273,23 +201,13 @@ function future() {
 }
 ```
 
-The preceding code works, even though the function is defined _below_ the code
-that uses it. Function declarations are not part of the regular
-top-to-bottom flow of control. They are conceptually moved to the top
-of their scope and can be used by all the code in that scope. This is
-sometimes useful because it offers the freedom to order code in a
-way that seems meaningful, without worrying about having to define all
-functions before they are used.
+Codul de mai sus funcționează chiar dacă funcția este definită _după_ codul care o utilizează. Declarațiile funcțiilor nu fac parte din fluxul obișnuit al programului. Ele sunt mutate conceptual la începutul domeniului lor de vizibilitate și pot fi utilizate din orice parte a codului din domeniul de vizibilitate respectiv. Uneori această caracteristică este utilă deoarce oferă libertatea de a ordona codul într-un mod inteligibil fără a fi necesar să vă preocupe definirea tuturor funcțiilor înainte de a fi utilizate.
 
-## Arrow functions
+## Funcții Arrow
 
 {{index function, "arrow function"}}
 
-There's a third notation for functions, which looks very different
-from the others. Instead of the `function` keyword, it uses an arrow
-(`=>`) made up of an equal sign and a greater-than character (not to be
-confused with the greater-than-or-equal operator, which is written
-`>=`).
+Există și o a treia notație pentru funcții, care arată complet diferit de celelalte. În locul cuvântului cheie `function` se utilizează o "săgeată (arrow)" (`=>`) (a nu se confunda cu operatorul mai mare sau egal scris `>=`).
 
 ```{test: wrap}
 const power = (base, exponent) => {
@@ -303,17 +221,11 @@ const power = (base, exponent) => {
 
 {{index [function, body]}}
 
-The arrow comes _after_ the list of parameters and is followed by the
-function's body. It expresses something like "this input (the
-((parameter))s) produces this result (the body)".
+Săgeata se plasează _după_ lista parametrilor și este urmată de corpul funcției. Această notație exprimă conceptul "această intrare (lista parametrilor) produce acest rezultat (corpul funcției)".
 
 {{index [braces, "function body"], "square example", [parentheses, arguments]}}
 
-When there is only one parameter name, you can omit the parentheses around the
-parameter list. If the body is a single expression,
-rather than a ((block)) in braces, that expression will be returned
-from the function. So, these two definitions of `square` do the same
-thing:
+Atunci când se utilizează un singur parametru, puteți omite parantezele în jurul listei de parametri. Dacă în corpul unei funcții există o singură expresie, nu un bloc plasat între acolade, acea expresie va fi returnată de către funcție. De exemplu, cele două definiții de mai jos ale funcției `square` produc același rezultat:
 
 ```
 const square1 = (x) => { return x * x; };
@@ -322,8 +234,7 @@ const square2 = x => x * x;
 
 {{index [parentheses, arguments]}}
 
-When an arrow function has no parameters at all, its parameter list is
-just an empty set of parentheses.
+Atunci când o funcție arrow nu are deloc parametri, lista sa de parametri este definită ca o pereche de paranteze fără a preciza nimic în interiorul parantezelor:
 
 ```
 const horn = () => {
@@ -333,23 +244,16 @@ const horn = () => {
 
 {{index verbosity}}
 
-There's no deep reason to have both arrow functions and
-`function` expressions in the language. Apart from a minor detail,
-which we'll discuss in [Chapter ?](object), they do the same thing.
-Arrow functions were added in 2015, mostly to make it possible to
-write small function expressions in a less verbose way. We'll be using
-them a lot in [Chapter ?](higher_order).
+Nu există nici un motiv profund pentru a avea atât funcții arrow cât și expresii de tip funcție în limbaj. Cu excepția unui detaliu minor pe care îl vom discuta în capitolul [?](object), ele operează la fel. Funcțiile arrow au fost adăugate în 2015, în principal cu scopul de a scrie funcții scurte într=un mod mai puțin detaliat. Le vom utiliza pe larg în [capitolul ?](higher_order).
 
 {{id stack}}
 
-## The call stack
+## Stiva de apel
 
 {{indexsee stack, "call stack"}}
 {{index "call stack", [function, application]}}
 
-The way control flows through functions is somewhat involved. Let's
-take a closer look at it. Here is a simple program that makes a few
-function calls:
+Modul în care se controlează execuția funcțiilor este oarecum elaborat. Haideți să facem câteva clarificări. Iată un program simplu care execută câteva apeluri de funcții:
 
 ```
 function greet(who) {
@@ -361,15 +265,9 @@ console.log("Bye");
 
 {{index ["control flow", functions], "execution order", "console.log"}}
 
-A run through this program goes roughly like this: the call to `greet`
-causes control to jump to the start of that function (line 2). The
-function calls `console.log`, which takes control, does its job, and
-then returns control to line 2. There it reaches the end of the
-`greet` function, so it returns to the place that called it, which is
-line 4. The line after that calls `console.log` again. After that
-returns, the program reaches its end.
+O execuție a acetui program funcționează în linii mari astfel: apelul la funcția `greet` va determina trecerea controlului la începutul acestei funcții (linia 2). Funcția apelează `console.log`, care preia controlul, își execută rolul și apoi returnează controlul în linia 2. Aici se ajunge la sfârșitul funcției deci se va reveni în locul de unde funcția a fost apelată, care este linia 4. Apoi se apelează din nou `console.log`. După ce se revine din acel apel, programul ajunge la sfârșit.
 
-We could show the flow of control schematically like this:
+Am putea reprezenta schematic fluxul controlului astfel:
 
 ```{lang: null}
 not in function
@@ -383,26 +281,13 @@ not in function
 
 {{index "return keyword", [memory, call stack]}}
 
-Because a function has to jump back to the place that called it when
-it returns, the computer must remember the context from which the call
-happened. In one case, `console.log` has to return to the `greet`
-function when it is done. In the other case, it returns to the end of
-the program.
+Deoarece din funcție se va sări înapoi în locul de unde a fost apelată, computerul trebuie să memoreze contextul din care a avut loc apelul. În unul dintre apeluri `console.log` a trebuit să returneze in funcția `greet` la sfârșitul execuției. În celalalt caz, a trebuit să returneze în contextul programului principal.
 
-The place where the computer stores this context is the _((call
-stack))_. Every time a function is called, the current context is
-stored on top of this stack. When a function returns, it removes the
-top context from the stack and uses that context to continue execution.
+Locul în care computerul memorează acest context este _stiva de apel_. De fiecare dată când se apelează o funcție, contextul curent este memorat în vârful acestei stive. Când funcția returnează, contextul salvat este eliminat din stivă și utilizat pentru a continua execuția.
 
 {{index "infinite loop", "stack overflow", recursion}}
 
-Storing this stack requires space in the computer's memory. When the
-stack grows too big, the computer will fail with a message like "out
-of stack space" or "too much recursion". The following code
-illustrates this by asking the computer a really hard question that
-causes an infinite back-and-forth between two functions. Rather, it
-_would_ be infinite, if the computer had an infinite stack. As it is,
-we will run out of space, or "blow the stack".
+Memorarea acestei stive necesită spațiu în memoria computerului. Atunci când stiva crește prea mult, computerul va eșua cu un mesaj de eroare în genul "out of stack space" sau "too much recursion". Codul din exemplul care urmează ilustrează acest comportament prin adresarea unei întrebări cu adevărat dificile care cauzează o infinitate de apeluri între două funcții. Ar fi într-adevăr o infinitate de apeluri dacă am avea în computer o cantitate infinită de memorie. În realitate însă, o să rămânem fără spațiu de memorie și "stiva va exploda".
 
 ```{test: no}
 function chicken() {
@@ -415,11 +300,11 @@ console.log(chicken() + " came first.");
 // → ??
 ```
 
-## Optional Arguments
+## Argumente opționale
 
 {{index argument, [function, application]}}
 
-The following code is allowed and executes without any problem:
+Codul din exemplul de mai jos este permis și se execută fără nici o problemă:
 
 ```
 function square(x) { return x * x; }
@@ -427,25 +312,15 @@ console.log(square(4, true, "hedgehog"));
 // → 16
 ```
 
-We defined `square` with only one ((parameter)). Yet when we call it
-with three, the language doesn't complain. It ignores the extra
-arguments and computes the square of the first one.
+Am definit funncția `square` cu un singur parametru. Totuși am folosit trei parametri la apelul acestei funcții, fără ca interpretorul JavaScript să se plângă. Doar va ignora parametrii extra și va utiliza doar primul parametru transmis la apel.
 
 {{index undefined}}
 
-JavaScript is extremely broad-minded about the number of arguments you
-pass to a function. If you pass too many, the extra ones are ignored.
-If you pass too few, the missing parameters get assigned the value
-`undefined`.
+JavaScript este extrem de flexibil relativ la numărul de parametri pe care îi transmitem unei funcții. Dacă transmitem prea mulți parametri, parametrii extra sunt ignorați. Dacă transmitem prea puțini parametri, parametrii care lipsesc vor fi inițializați cu valoarea `undefined`.
 
-The downside of this is that it is possible—likely, even—that you'll
-accidentally pass the wrong number of arguments to functions. And no
-one will tell you about it.
+Dezavantajul acestei abordări este că puteți ușor să transmiteți accidental un număr greșit de argumente spre funcții și nu veți primi nici un avertisment despre aceasta.
 
-The upside is that this behavior can be used to allow a function to be
-called with different numbers of arguments. For example, this `minus`
-function tries to imitate the `-` operator by acting on either one or
-two arguments:
+Avantajul este că veți putea să utilizați acest comportament pentru a permite apelul unei funcții cu un număr variabil de argument.De exemplu, funcția `minus` din exemplul de mai jos încearcă să imite operatorul `-` acționând asupra unuia sau a două argumente:
 
 ```
 function minus(a, b) {
@@ -462,15 +337,11 @@ console.log(minus(10, 5));
 {{id power}}
 {{index "optional argument", "default value", parameter, ["= operator", "for default value"]}}
 
-If you write an `=` operator after
-a parameter, followed by an expression, the value of that expression
-will replace the argument when it is not given.
+Dacă scrieți simbolul `=` după numele unui parametru și apoi precizați o expresie validă, valorea acelei expresii va înlocui parametrul în cazul în care acesta lipsește.
 
 {{index "power example"}}
 
-For example, this version of `power` makes its second argument
-optional. If you don't provide it or pass the value `undefined`, it will default to two, and the
-function will behave like `square`.
+De exemplu, versiunea de mai jos a funcției `power` are al doilea argument opțional. Dacă nu transmiteți o valoare sau transmiteți valoarea `undefined`, va utiliza valoarea implicită 2 și funcția se va comporta ca și funcția `square` definită anterior.
 
 ```{test: wrap}
 function power(base, exponent = 2) {
@@ -489,29 +360,20 @@ console.log(power(2, 6));
 
 {{index "console.log"}}
 
-In the [next chapter](data#rest_parameters), we will see a way in
-which a function body can get at the whole list of arguments it was
-passed. This is helpful because it makes it possible for a function to
-accept any number of arguments. For example, `console.log` does
-this—it outputs all of the values it is given.
+În [capitolul următor](data#rest_parameters) vom vedea cum putem face ca în corpul funcției să accesăm întreaga listă a argumentelor care au fost transmise. Este util să putem face asta deoarece devine posibil să scriem funcții care acceptă oricâți parametri. De exemplu, `console.log` afișează toate valorile primite ca și parametri:
 
 ```
 console.log("C", "O", 2);
 // → C O 2
 ```
 
-## Closure
+## Închideri (closures)
 
 {{index "call stack", "local binding", [function, "as value"], scope}}
 
-The ability to treat functions as values, combined with the fact that
-local bindings are re-created every time a function is called, brings
-up an interesting question. What happens to local bindings when the
-function call that created them is no longer active?
+Abilitatea de a trata funcțiile ca și valori, combinată cu faptul că bindigurile locale sunt recreate de fiecare dată când se apelează o funcție, ridică o întrebare interesantă. Ce se întâmplă cu bindingurile locale când apelul funcției care le-a creat nu mai este activ?
 
-The following code shows an example of this. It defines a function,
-`wrapValue`, that creates a local binding. It then returns a function
-that accesses and returns this local binding.
+Codul următor ilustrează această situație. Se definește o funcție `wrapValue` care crează un binding local. Apoi returnează o funcție care accesează și returnează bindingul local.
 
 ```
 function wrapValue(n) {
@@ -527,22 +389,13 @@ console.log(wrap2());
 // → 2
 ```
 
-This is allowed and works as you'd hope—both instances of the binding
-can still be accessed. This situation is a good demonstration of the
-fact that local bindings are created anew for every call, and
-different calls can't trample on one another's local bindings.
+Acest comportament este permis și funcționează așa cum speram - ambele instanțe ale bindingului pot fi accesate. Aceasta este o demonstrație bună a faptului că bindingurile locale sunt recreate pentru fiecare apel și că apelurile diferite nu își suprapun bindingurile locale.
 
-This feature—being able to reference a specific instance of a local
-binding in an enclosing scope—is called _((closure))_. A function that
-references bindings from local scopes around it is called _a_ closure. This behavior
-not only frees you from having to worry about lifetimes of bindings
-but also makes it possible to use function values in some creative
-ways.
+Această facilitate - abilitatea de a referi o instanță specifică a unui binding local dintr-un domeniu de vizibilitate inclus se numește _închidere (closure)_. Acest comportament nu doar vă eliberează de îngrijorări cu privire la ciclul de viață al bindingurilor, dar vă și dă posibilitatea de a utiliza valori de tip funcție în moduri creative.
 
 {{index "multiplier function"}}
 
-With a slight change, we can turn the previous example into a way to
-create functions that multiply by an arbitrary amount.
+Cu o modificare relativ simplă, putem schimba exemplul următor pentru a crea o funcție care multiplică cu orice factor arbitrar.
 
 ```
 function multiplier(factor) {
@@ -556,31 +409,19 @@ console.log(twice(5));
 
 {{index [binding, "from parameter"]}}
 
-The explicit `local` binding from the `wrapValue` example isn't really
-needed since a parameter is itself a local binding.
+Bindingul explicit cu numele `local` din exemplul cu funcția `wrapValue` nu este necesar, deoarece parametrul în sine este un binding local.
 
 {{index [function, "model of"]}}
 
-Thinking about programs like this takes some practice. A good mental
-model is to think of function values as containing both the code in
-their body and the environment in which they are created. When called,
-the function body sees the environment in which it was created, not the
-environment in which it is called.
+Aveți nevoie de puțină practică pentru a gândi astfel programele. Un model mental bun este să gândiți valorile de tip funcție ca având atât codul în corpul lor cât și mediul în care sunt create. Când sunt apelate, corpul funcției are acces la mediul în care a fost creat, nu la cel din care a fost apelat.
 
-In the example, `multiplier` is called and creates an environment in
-which its `factor` parameter is bound to 2. The function value it
-returns, which is stored in `twice`, remembers this environment. So
-when that is called, it multiplies its argument by 2.
+În exemplu, funcția `multiplier` este apelată și crează un mediu în care parametrul său `factor` este legat de valoarea 2. Valoarea de tip funcție pe care o returnează, care este memorată în `twice`, își amintește despre acest mediu astfel încât, atunci când este apelată, își multiplică argumentul cu 2.
 
-## Recursion
+## Recursivitatea
 
 {{index "power example", "stack overflow", recursion, [function, application]}}
 
-It is perfectly okay for a function to call itself, as long as it
-doesn't do it so often that it overflows the stack. A function that calls
-itself is called _recursive_. Recursion allows some functions to be
-written in a different style. Take, for example, this alternative
-implementation of `power`:
+Este perfect în regulă pentru o funcție să se autoapeleze, cât timp nu o face de prea multe ori și cauzează umplerea stivei (stack overflow). O funcție care se autoapelează este o funncție _recursivă_. Recursivitatea permite scrierea anumitor funcții într-un stil diferit. Iată de exemplu o implementare alternativă a funcției `power`:
 
 ```{test: wrap}
 function power(base, exponent) {
@@ -597,69 +438,38 @@ console.log(power(2, 3));
 
 {{index loop, readability, mathematics}}
 
-This is rather close to the way mathematicians define exponentiation
-and arguably describes the concept more clearly than the looping
-variant. The function calls itself multiple times with ever smaller
-exponents to achieve the repeated multiplication.
+Aceasta este mai aproape de modul în care matematicienii definesc exponențierea și descrie conceptul mai clar decât varianta care folosea o buclă. Funcția se autoapelează de mai multe ori cu un exponent din ce în ce mai redus, pentru a realiza înmulțirea repetată.
 
 {{index [function, application], efficiency}}
 
-But this implementation has one problem: in typical JavaScript
-implementations, it's about three times slower than the looping version.
-Running through a simple loop is generally cheaper than calling a
-function multiple times.
+Totuși, această implementare are o problemă: în implementările tipice ale JavaScript, este cam de trei ori mai lentă decât varianta ce folosește bucla. Execuția unei bucle este în general mai puțin costisitoare decât apelul unei funcții de mai multe ori.
 
 {{index optimization}}
 
-The dilemma of speed versus ((elegance)) is an interesting one. You
-can see it as a kind of continuum between human-friendliness and
-machine-friendliness. Almost any program can be made faster by making
-it bigger and more convoluted. The programmer has to decide on an
-appropriate balance.
+Dilema între vitezază și eleganță este interesantă. Există un continuum între "human-friendly" și "machine-friendly". Aproape orice program poate fi rapidizat prin mărirea dimensiunii lui și ridicarea complexității. Programatorul trebuie să decidă asupra unui echilibru adecvat.
 
-In the case of the `power` function, the inelegant (looping) version
-is still fairly simple and easy to read. It doesn't make much sense to
-replace it with the recursive version. Often, though, a program deals
-with such complex concepts that giving up some efficiency in order to
-make the program more straightforward is helpful.
+În cazul funcției `power`, soluția mai puțin elegantă, bazată pe buclă este destul de simplă și ușor de citit. Nu face prea mult sens să o înlocuim cu versiunea recursivă. Însă adesea un program manevrează concepte atât de complexe încât diminuarea eficienței, cu scopul de a îmbunătății claritatea codului, este utilă.
 
 {{index profiling}}
 
-Worrying about efficiency can be a distraction. It's yet another
-factor that complicates program design, and when you're doing
-something that's already difficult, that extra thing to worry about
-can be paralyzing.
+Preocuparea despre eficiență poate fi o distracție. Este un alt factor care complică conceperea programelor iar atunci când construim ceva care deja este dificil, acel motiv extra de preocupare poate fi paralizant.
 
 {{index "premature optimization"}}
 
-Therefore, always start by writing something that's correct and easy
-to understand. If you're worried that it's too slow—which it usually
-isn't since most code simply isn't executed often enough to take any
-significant amount of time—you can measure afterward and improve it
-if necessary.
+Prin urmare, începeți întotdeauna prin a scrie un cod corect și ușor de înțeles. Dacă vă preocupă că aveți un cod prea lent - ceea ce, de regulă, nu e cazul pentru că majoritatea codului nu se execută atât de des încât să consume un timp semnificativ - puteți măsura ulterior performanța și să o îmbunătățiți dacă e nevoie.
 
 {{index "branching recursion"}}
 
-Recursion is not always just an inefficient alternative to looping.
-Some problems really are easier to solve with recursion than with
-loops. Most often these are problems that require exploring or
-processing several "branches", each of which might branch out again
-into even more branches.
+Recursivitatea nu este întotdeauna doar o alternativă ineficientă la utilizarea buclelor. Unele probleme sunt cu mult mai ușor de rezolvat prin utilizarea recursivității. Cel mai adesea, acestea sunt probleme care necesită explorarea și procesarea mai multor "ramuri", fiecare dintre ele putând să se ramifice în și mai multe "ramuri".
 
 {{id recursive_puzzle}}
 {{index recursion, "number puzzle example"}}
 
-Consider this puzzle: by starting from the number 1 and repeatedly
-either adding 5 or multiplying by 3, an infinite set of numbers
-can be produced. How would you write a function that, given a number,
-tries to find a sequence of such additions and multiplications that
-produces that number?
+Iată un exemplu: pornind de la numărul 1 și adăugând 5 sau multiplicând cu 3, putem genera o infinitate de numere. Cum veți scrie o funcție care, pentru un număr dat, încearcă să determine o secvență de asemenea adunări și inmulțiri încât să genereze acel număr?
 
-For example, the number 13 could be reached by first multiplying by 3
-and then adding 5 twice, whereas the number 15 cannot be reached at
-all.
+De exemplu, numărul 13 poate fi obținut prin înmulțirea cu 3 și adunarea numărului 5 de două ori (1*3+5+5), iar numărul 15 nu poate fi generat.
 
-Here is a recursive solution:
+Soluția recursivă este prezentată în exemplul de mai jos:
 
 ```
 function findSolution(target) {
@@ -680,38 +490,19 @@ console.log(findSolution(24));
 // → (((1 * 3) + 5) * 3)
 ```
 
-Note that this program doesn't necessarily find the _shortest_
-sequence of operations. It is satisfied when it finds any sequence at
-all.
+Programul acesta nu determină neapărat _cea mai scurtă_ secvență de operații ci orice secvență care satisface enunțul problemei.
 
-It is okay if you don't see how it works right away. Let's work
-through it, since it makes for a great exercise in recursive thinking.
+E în regulă dacă nu îl înțegeți cum funcționează. Haideți să îl parcurgem pentru că este un exercițiu foarte bun pentru gândirea recursivă.
 
-The inner function `find` does the actual recursing. It takes two
-((argument))s: the current number and a string that records how we
-reached this number. If it finds a solution, it returns a string that
-shows how to get to the target. If no solution can be found starting
-from this number, it returns `null`.
+Funcția interioară `find` execută de fapt recurența. Ea are două argumente: numărul curent și stringul care reține cum am ajuns la acel număr. Dacă găsește o soluție, returnează un string care arată cum ajungem la valoarea dată. Dacă nu găsește nici o soluție, va returna `null`.
 
 {{index null, "|| operator", "short-circuit evaluation"}}
 
-To do this, the function performs one of three actions. If the current
-number is the target number, the current history is a way to reach
-that target, so it is returned. If the current number is greater than
-the target, there's no sense in further exploring this branch because
-both adding and multiplying will only make the number bigger, so it
-returns `null`. Finally, if we're still below the target number,
-the function tries both possible paths that start from the current
-number by calling itself twice, once for addition and once for
-multiplication. If the first call returns something that is not
-`null`, it is returned. Otherwise, the second call is returned,
-regardless of whether it produces a string or `null`.
+Pentru a realiza acest lucru, funcția execută una din trei acțiuni. Dacă numărul curent este numărul țintă, valoarea curentă a `history` este o modalitate de a obține acel număr și va fi returnată. Dacă numărul curent este mai mare decât valoarea-țintă, se va returna `null` (nu are sens să continuăm explorarea pentru ca putem obține doar valori și mai mari). În sfârșit, dacă suntem sub numărul-țintă, funcția va explora ambele căi posibile pornind de la numărul curent, adică se va apela de două ori, pentru multiplicarea cu 3 și adunarea cu 5. Dacă primul apel va returna o valoare nenulă, acesta va reprezenta soluția. În caz contrar, valoarea produsă de către al doilea apel va fi cea returnată.
 
 {{index "call stack"}}
 
-To better understand how this function produces the effect we're
-looking for, let's look at all the calls to `find` that are made when
-searching for a solution for the number 13.
+Pentru a înțelege și mai bine cum se execută funcția, haideți să analizăm apeluri la funcția `find` care se efectuează pentru găsirea unei soluții pentru numărul 13.
 
 ```{lang: null}
 find(1, "1")
@@ -729,59 +520,34 @@ find(1, "1")
         found!
 ```
 
-The indentation indicates the depth of the call stack. The first time
-`find` is called, it starts by calling itself to explore the solution
-that starts with `(1 + 5)`. That call will further recurse to explore
-_every_ continued solution that yields a number less than or equal to
-the target number. Since it doesn't find one that hits the target, it
-returns `null` back to the first call. There the `||` operator causes
-the call that explores `(1 * 3)` to happen. This search has more
-luck—its first recursive call, through yet _another_ recursive call,
-hits upon the target number. That innermost call returns a string, and
-each of the `||` operators in the intermediate calls passes that string
-along, ultimately returning the solution.
+Indentarea indică adâncimea stivei. Prima dată când este apelată funcția `find`, va începe prin autoapelare pentru a explora soluții care încep cu `(1 + 5)`. Apelul va continua pentru a explora _fiecare_ soluție care conduce la un număr mai mic sau egal cu numărul țintă. Deoarece nu va fi găsită o soluție, se va returna în final `null`. Operatorul `||` va determina continuarea explorării cu alternativa `(1 * 3)`. Această variantă va identifica la un moment dat o soluție.
 
-## Growing functions
+## Crearea funcțiilor
 
 {{index [function, definition]}}
 
-There are two more or less natural ways for functions to be introduced
-into programs.
+Există două motive mai mult sau mai puțin naturale de a introduce funcții în programe.
 
 {{index repetition}}
 
-The first is that you find yourself writing similar code multiple
-times. You'd prefer not to do that. Having more code means more space
-for mistakes to hide and more material to read for people trying to
-understand the program. So you take the repeated functionality, find a
-good name for it, and put it into a function.
+Primul este acela că scrieți cod similar de mai multe ori. Ați prefera să nu faceți asta. O cantitate mai mare de cod înseamnă mai multe șanse pentru greșeli și mai mult material pentru lectură pentru cineva care încearcă să înțeleagă programul. Astfel încât veți lua funcționalitatea pe care o repetați, îi veți da un nume adecvat și o veți plasa într-o funcție.
 
-The second way is that you find you need some functionality that you
-haven't written yet and that sounds like it deserves its own function.
-You'll start by naming the function, and then you'll write its body.
-You might even start writing code that uses the function before you
-actually define the function itself.
+Al doilea motiv este că trebuie să implementați o anumită funcționalitate pe care nu ați implementat-o deja și care pare să merite propria funcție. Veți începe prin a denumi funcția și apoi veți scrie corpul ei. Puteți chiar să începeți să scrieți cod care utilizează funcția respectivă înainte de a o defini.
 
 {{index [function, naming], [binding, naming]}}
 
-How difficult it is to find a good name for a function is a good
-indication of how clear a concept it is that you're trying to wrap.
-Let's go through an example.
+Dificultatea de a găsi un nume bun pentru funcție este un indicator bun cu privire la cât de clar este conceptul pe care încercăm să îl implementăm. Haideți să mai analizăm un exemplu:
 
 {{index "farm example"}}
 
-We want to write a program that prints two numbers: the numbers of
-cows and chickens on a farm, with the words `Cows` and `Chickens`
-after them and zeros padded before both numbers so that they are
-always three digits long.
+Vrem să scriem un program care afișează două numere: numărul de vaci și găini dintr-o fermă, cu cuvintele `Cows` și `Chickens` după ele, si cu zerouri nesemnificative în față astfel încât numerele se vor afișa întotdeauna cu trei cifre.
 
 ```{lang: null}
 007 Cows
 011 Chickens
 ```
 
-This asks for a function of two arguments—the number of cows and the
-number of chickens. Let's get coding.
+Avem nevoie de o funcție cu două argumente - numărul de vaci și numărul de găini.
 
 ```
 function printFarmInventory(cows, chickens) {
@@ -801,20 +567,13 @@ printFarmInventory(7, 11);
 
 {{index ["length property", "for string"], "while loop"}}
 
-Writing `.length` after a string expression will give us the length of
-that string. Thus, the `while` loops keep adding zeros in front of the
-number strings until they are at least three characters long.
+Scriind `.length` după o expresie de tip string vom obține lungimea stringului respectiv. Prin urmare, bucla `while` va continua să adauge zerouri la începutul stringului ce reprezintă numărul până când acesta va avea lungimea de 3 caractere.
 
-Mission accomplished! But just as we are about to send the farmer the
-code (along with a hefty invoice), she calls and tells us she's also
-started keeping pigs, and couldn't we please extend the software to
-also print pigs?
+Misiune îndeplinită! Dar chiar când ne pregătim să trimitem fermierului codul (și o factură serioasă :) ), primim un apel în care suntem informați că ferma a început să crească și porci și au rugămintea să includem și această informație în afișaj.
 
 {{index "copy-paste programming"}}
 
-We sure can. But just as we're in the process of copying and pasting
-those four lines one more time, we stop and reconsider. There has to
-be a better way. Here's a first attempt:
+Desigur că putem. Dar chiar în timp ce ne pregăteam să copiem încă odată cele patru linii, ne oprim și reanalizăm. Trebuie să existe o variantă mai bună. Iată o primă încercare:
 
 ```
 function printZeroPaddedWithLabel(number, label) {
@@ -836,14 +595,11 @@ printFarmInventory(7, 11, 3);
 
 {{index [function, naming]}}
 
-It works! But that name, `printZeroPaddedWithLabel`, is a little
-awkward. It conflates three things—printing, zero-padding, and adding
-a label—into a single function.
+Funcționează! Dar acel nume, `printZeroPaddedWithLabel`, este cam ciudat. De fapt am cuplat trei operații într-o singură funcție: afișarea, adăugarea zerourilor și adăugarea unei etichete.
 
 {{index "zeroPad function"}}
 
-Instead of lifting out the repeated part of our program wholesale,
-let's try to pick out a single _concept_.
+În loc să extragem toată partea care se repetă, haideți să extragem un singur _concept_.
 
 ```
 function zeroPad(number, width) {
@@ -865,76 +621,36 @@ printFarmInventory(7, 16, 3);
 
 {{index readability, "pure function"}}
 
-A function with a nice, obvious name like `zeroPad` makes it easier
-for someone who reads the code to figure out what it does. And such a
-function is useful in more situations than just this specific program.
-For example, you could use it to help print nicely aligned tables of
-numbers.
+O funcție cu un nume simplu și evident, cum ar fi `zeroPad` ușurează sarcina de a identifica rolul funcției pentru cineva care citește codul. Pe de altă parte, o asemenea funcție este utilă în mai multe situații decât acest program specific. Ați putea să o utilizați pentru a afișa tabele aliniate frumos.
 
 {{index [interface, design]}}
 
-How smart and versatile _should_ our function be? We could write
-anything, from a terribly simple function that can only pad a number
-to be three characters wide to a complicated generalized
-number-formatting system that handles fractional numbers, negative
-numbers, alignment of decimal dots, padding with different characters,
-and so on.
+Cât de inteligentă și de versatilă trebuie să fie funcția noastră? Putem scrie orice, de la o funcție extraordinar de simplă care poate doar să afișeze un număr cu trei caractere, până la un sistem foarte complicat de formatare a numerelor care gestionează numere fracționare, numere negative, alinierea punctului zecimal, utilizarea unor caractere diferite de `0` pentru aliniere și așa mai departe.
 
-A useful principle is to not add cleverness unless you are absolutely
-sure you're going to need it. It can be tempting to write general
-"((framework))s" for every bit of functionality you come across.
-Resist that urge. You won't get any real work done—you'll just be
-writing code that you never use.
+Un principiu util este de a nu adăuga "istețime" până nu sunteți absolut convinși că veți avea nevoie de ea. Poate fi tentant să scrieți cod general pentru fiecare bucată de funcționalitate pe care o implementați. Rezistați acestei tentații. Nu veți finaliza nimic real - doar veți scrie cod pe care nu îl veți utiliza niciodată.
 
 {{id pure}}
-## Functions and side effects
+## Funcțiile și efectele secundare
 
 {{index "side effect", "pure function", [function, purity]}}
 
-Functions can be roughly divided into those that are called for their
-side effects and those that are called for their return value. (Though
-it is definitely also possible to both have side effects and return a
-value.)
+Funcțiile pot fi împărțite în principiu în două mari categorii: cele care sunt apelate pentru efectele lor secundare și cele care sunt apelate pentru valoarea returnată (deși este posibil ca o funcție să aibă atât efecte secundare cât și să returneze o valoare).
 
 {{index reuse}}
 
-The first helper function in the ((farm example)),
-`printZeroPaddedWithLabel`, is called for its side effect: it prints a
-line. The second version, `zeroPad`, is called for its return value.
-It is no coincidence that the second is useful in more situations than
-the first. Functions that create values are easier to combine in new
-ways than functions that directly perform side effects.
+Prima funcție helper din exemplul de mai sus cu ferma, `printZeroPaddedWithLabel`, este apelată pentru efectele sale secundare: afișează o linie. Cea de a doua versiune, `zeroPad`, este apelată pentru valoarea returnată. Nu este o întâmplare că cea de a doua funcție este utilă în mai multe situații decât prima. Funcțiile care crează valori sunt mai ușor de combinat în moduri noi decât cele care provoacă direct efecte secundare.
 
 {{index substitution}}
 
-A _pure_ function is a specific kind of value-producing function that
-not only has no side effects but also doesn't rely on side effects
-from other code—for example, it doesn't read global bindings whose
-value might change. A pure function has the pleasant property that,
-when called with the same arguments, it always produces the same value
-(and doesn't do anything else). A call to such a function can be
-substituted by its return value without changing the meaning of the
-code. When you are not sure that a pure function is working correctly,
-you can test it by simply calling it and know that if it works in
-that context, it will work in any context. Nonpure functions tend to
-require more scaffolding to test.
+O funcție _pură_ este un tip specific de funcție care produce valori, care nu doar că nu are efecte secundare dar nici nu se bazează pe efectele secundare din alt cod - de exemplu, nu se referă la bindingurile globale a căror valori s-ar putea modifica. O funcție pură are proprietatea plăcută de a produce întotdeauna aceeași valoare atunci când este apelată cu același set de valori pentru argumente, fără a executa nimic altceva. Un apel la o asemenea funcție poate fi înlocuit cu valoarea returnată fără a modifica semnificația codului. Atunci când nu sunteți siguri dacă o funcție pură funcționează corect, o puteți testa prin simpla apelare a ei cu garanția că, dacă funcționează în acel context, va funcționa în orice alt context. Funcțiile impure for necesita de regulă mai multe pregătiri pentru a fi testate.
 
 {{index optimization, "console.log"}}
 
-Still, there's no need to feel bad when writing functions that are not
-pure or to wage a holy war to purge them from your code. Side effects
-are often useful. There'd be no way to write a pure version of
-`console.log`, for example, and `console.log` is good to have. Some
-operations are also easier to express in an efficient way when we use
-side effects, so computing speed can be a reason to avoid purity.
+Totuși, nu trebuie să vă simțiși rău când scrieți funcții impure sau să declanșați un război sfânt pentru îndepărtarea lor din cod. Efectele secundare sunt adesea utile. Nu există nici o modalitate de a scrie o versiune pură a `console.log`, de exemplu, dar este util să aveți la dispoziție o asemenea funcție. Unele operații sunt mai ușor de exprimat eficient atunci când utilizăm efectele secundare, astfel încât viteza de calcul poate fi un motiv bun de a evita puritatea.
 
-## Summary
+## Rezumat
 
-This chapter taught you how to write your own functions. The
-`function` keyword, when used as an expression, can create a function
-value. When used as a statement, it can be used to declare a binding
-and give it a function as its value. Arrow functions are yet another
-way to create functions.
+În acest capitol ați învățat cum să scrieți propriile voastre funcții. Cuvântul cheie `function`, utilizat ca o expresie, poate crea o valoare de tip funcție. Atunci când este utilizat ca o instrucțiune, poate fi utilizat pentru a declara un binding și ai atribui ca valoare o funcție. Funcțiile arrow sunt un alt mod de a crea funcții.
 
 ```
 // Define f to hold a function value
@@ -951,27 +667,17 @@ function g(a, b) {
 let h = a => a % 3;
 ```
 
-A key aspect in understanding functions is understanding scopes. Each
-block creates a new scope. Parameters and bindings declared in a given
-scope are local and not visible from the outside. Bindings declared
-with `var` behave differently—they end up in the nearest function
-scope or the global scope.
+Un aspect cheie pentru înțelegerea funcțiilor este înțelegerea domeniilor de vizibilitate. Fiecare bloc crează un nou domeniu de vizibilitate. Parametrii și bindingurile create într-un domeniu de vizibilitate sunt locale și nu sunt vizibile din exterior. Bindingurile declarate cu `var` au comportament diferit - ele devin vizibile în cel mai apropiat domeniu de vizibilitate al unei funcții sau în domeniul de vizibilitate global.
 
-Separating the tasks your program performs into different functions is
-helpful. You won't have to repeat yourself as much, and functions can
-help organize a program by grouping code into pieces that do specific
-things.
+Separarea prelucrărilor efectuate de programul vostru în funcții este utilă. Nu va trebui să vă repetați,  iar funcțiile vă ajută să organizați programul prin gruparea codului în bucăți care execută sarcini specifice.
 
-## Exercises
+## Exerciții
 
 ### Minimum
 
 {{index "Math object", "minimum (exercise)", "Math.min function", minimum}}
 
-The [previous chapter](program_structure#return_values) introduced the
-standard function `Math.min` that returns its smallest argument. We
-can build something like that now. Write a function `min` that takes
-two arguments and returns their minimum.
+[Capitolul anterior](program_structure#return_values) a introdus funcția `Math.min` care returna cea mai mică dintre valorile primite ca argumente. Scrieți o funcție `min` care primește două argumente și returnează minimul dintre ele.
 
 {{if interactive
 
@@ -989,39 +695,31 @@ if}}
 
 {{index "minimum (exercise)"}}
 
-If you have trouble putting braces and
-parentheses in the right place to get a valid function definition,
-start by copying one of the examples in this chapter and modifying it.
+Dacă aveți probleme în plasarea corectă a parantezelor și a acoladelor pentru a obține o definiție validă a funcției, începeți prin a copia unul dintre exemplele anterioare și apoi modificați exemplul respectiv.
 
 {{index "return keyword"}}
 
-A function may contain multiple `return` statements.
+O funcție poate conține mai multe instrucțiuni `return`.
 
 hint}}
 
-### Recursion
+### Recursivitate
 
 {{index recursion, "isEven (exercise)", "even number"}}
 
-We've seen that `%` (the remainder operator) can be used to test
-whether a number is even or odd by using `% 2` to see whether it's
-divisible by two. Here's another way to define whether a positive
-whole number is even or odd:
+Am văzut că `%` (operatorul pentru calculul restului împărțirii întregi) poat fi utilizat pentru a testa dacă un număr este par sau impar prin a utiliza `% 2` ca să verificăm dacă numărul este divizibil cu 2. Există însă un alt mod de a defini dacă un număr pozitiv este par sau impar:
 
-- Zero is even.
+- Zero este par.
 
-- One is odd.
+- Unu este impar.
 
-- For any other number _N_, its evenness is the same as _N_ - 2.
+- Pentru orice alt număr _N_, paritatea sa este aceeași cu a numărului _N_ - 2.
 
-Define a recursive function `isEven` corresponding to this
-description. The function should accept a single parameter (a
-positive, whole number) and return a Boolean.
+Definiți o funcție recursivă `isEven` corespunzător acestei descrieri. Funcția trebuie să accepte un singur parametru (un număr natural) și să returneze o valoare booleană.
 
 {{index "stack overflow"}}
 
-Test it on 50 and 75. See how it behaves on -1. Why? Can you think of
-a way to fix this?
+Testați pentru 50 sau 75. Verificați comportamentul pentru -1. De ce? Puteți imagina un mod de a fixa problema?
 
 {{if interactive
 
@@ -1042,43 +740,23 @@ if}}
 
 {{index "isEven (exercise)", ["if keyword", chaining], recursion}}
 
-Your function will likely look somewhat similar to the inner `find`
-function in the recursive `findSolution`
-[example](functions#recursive_puzzle) in this chapter, with an
-`if`/`else if`/`else` chain that tests which of the three cases
-applies. The final `else`, corresponding to the third case, makes the
-recursive call. Each of the branches should contain a `return`
-statement or in some other way arrange for a specific value to be
-returned.
+Funcția voastră va fi asemănătoare cu funcția interioară `find` în exemplul recursiv [`findSolution`](functions#recursive_puzzle) din acest capitol, cu o structură `if`/`else if`/`else` care testează care dintre cele trei cazuri trebuie aplicat. În `else` de la final, corespunzător celui de-al treilea caz, realizați apelul recursiv. Fiecare dintre cele trei cazuri trebuie să conțină o instrucțiune `return` sau să folosească un alt mod de a pregăti o valoare specifică pentru returnare.
 
 {{index "stack overflow"}}
 
-When given a negative number, the function will recurse again and
-again, passing itself an ever more negative number, thus getting
-further and further away from returning a result. It will eventually
-run out of stack space and abort.
+Atunci când i se transmite un parametru negativ, funcția va continua să se autoapeleze, cu valori negative din ce în ce mai mici și se va îndepărta de rezultat. La un moment dat, va epuiza tot spațiul din stiva de apel și va renunța.
 
 hint}}
 
-### Bean counting
+### Numărarea B-urilor
 
 {{index "bean counting (exercise)", [string, indexing], "zero-based counting", ["length property", "for string"]}}
 
-You can get the Nth character, or letter, from a string by writing
-`"string"[N]`. The returned value will be a string containing only one
-character (for example, `"b"`). The first character has position 0,
-which causes the last one to be found at position `string.length - 1`.
-In other words, a two-character string has length 2, and its
-characters have positions 0 and 1.
+Puteți determina cel de-al N-lea caracter al unui string scriind `"string"[N]`. Valoarea returnată va fi un string format dintr-un singur caracter (de exemplu, `"b"`). Primul caracter se află pe poziția 0, ceea ce înseamnă că ultimul caracter se va afla pe poziția  `string.length - 1`. Cu alte cuvinte, un string cu două caractere are lungimea 2 iar caracterele sale se află pe pozițiile 0 și 1.
 
-Write a function `countBs` that takes a string as its only argument
-and returns a number that indicates how many uppercase "B" characters
-there are in the string.
+Scrieți o funcție `countBs` care primește un string ca și singurul său argument și returnează un număr care arată câte caractere `"B"` conține stringul respectiv.
 
-Next, write a function called `countChar` that behaves like `countBs`,
-except it takes a second argument that indicates the character that is
-to be counted (rather than counting only uppercase "B" characters).
-Rewrite `countBs` to make use of this new function.
+Apoi scrieți o funcție `countChar` care are același comportament cu `countBs` cu excepția că primește un al doilea argument care precizează caracterul ale cărui apariții vor fi numărate. Apoi rescrieți `countBs` pentru a utiliza această nouă funcție.
 
 {{if interactive
 
@@ -1097,15 +775,10 @@ if}}
 
 {{index "bean counting (exercise)", ["length property", "for string"], "counter variable"}}
 
-Your function will need a ((loop)) that looks at every character in
-the string. It can run an index from zero to one below its length (`<
-string.length`). If the character at the current position is the same
-as the one the function is looking for, it adds 1 to a counter
-variable. Once the loop has finished, the counter can be returned.
+Funcția voastră va avea o buclă care va testa fiecare caracter al stringului. Va folosi un index care merge de la 0 la o valoare cu unu mai mică decât lungimea stringului (`< string.length`). Dacă în poziția curentă avem același caracter ca și cel pe care îl căutăm, adăugam 1 la o variabilă contor. După terminarea buclei, putem returna contorul.
 
 {{index "local binding"}}
 
-Take care to make all the bindings used in the function _local_ to the
-function by properly declaring them with the `let` or `const` keyword.
+Aveți grijă să creați toate bindingurile din funcție _locale_ funcției, prin declararea corespunzătoare a lor cu ajutorul cuvintelor cheie `let` sau `const`.
 
 hint}}
