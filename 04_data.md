@@ -1,13 +1,10 @@
 {{meta {load_files: ["code/journal.js", "code/chapter/04_data.js"], zip: "node/html"}}}
 
-# Data Structures: Objects and Arrays
+# Structuri de date: Object și Array
 
 {{quote {author: "Charles Babbage", title: "Passages from the Life of a Philosopher (1864)", chapter: true}
 
-On two occasions I have been asked, 'Pray, Mr. Babbage, if you put
-into the machine wrong figures, will the right answers come out?'
-[...] I am not able rightly to apprehend the kind of confusion of
-ideas that could provoke such a question.
+În două ocazii am fost întrebat, "Vă rog, Mr. Babbage, dacă introduceți în mașină cifrele greșite, va apărea rezultatul corect?" [...] Nu sunt capabil să înțeleg corect confuzia de idei care poate provoca o asemenea întrebare.
 
 quote}}
 
@@ -17,20 +14,11 @@ quote}}
 
 {{index object, "data structure"}}
 
-Numbers, Booleans, and strings are the atoms that ((data)) structures
-are built from. Many types of information require more than one
-atom, though. _Objects_ allow us to group values—including other
-objects—to build more complex structures.
+Numbers, Booleans și Strings sunt atomi cu ajutorul cărora se construiesc structurile de date. Multe tipuri de informație necesită pentru reprezentare mai mulți atomi. _Obiectele_ ne permit să grupăm valori - inclusiv alte obiecte - pentru a construi structuri mai complexe.
 
-The programs we have built so far have been limited by the fact that
-they were operating only on simple data types. This chapter will
-introduce basic data structures. By the end of it, you'll know enough
-to start writing useful programs.
+Programele pe care le-am construit până acum au fost limitate de faptul că operau doar asupra unor tipuri simple de date. În acest capitol vom introduce structuri de date de bază. La sfârșitul lui veți avea suficiente cunoștințe pentru a începe să scrieți programe utile.
 
-The chapter will work through a more or less realistic programming
-example, introducing concepts as they apply to the problem at hand.
-The example code will often build on functions and bindings that were
-introduced earlier in the text.
+De-a lungul capitolului vom lucra cu un exemplu de program mai mult sau mai puțin realist, vom introduce conceptele pe măsură ce sunt aplicabile problemei curente de rezolvat. Codurile din exemple vor fi adesea construite cu funcții sau bindinguri introduse anterior în text.
 
 {{if book
 
@@ -43,60 +31,35 @@ page.
 
 if}}
 
-## The weresquirrel
+## Veverița-vârcolac
 
 {{index "weresquirrel example", lycanthropy}}
 
-Every now and then, usually between 8 p.m. and 10 p.m.,
-((Jacques)) finds himself transforming into a small furry rodent with
-a bushy tail.
+Din când în când, de regulă între 8PM și 10PM, Jacques constată că se transformă într-un mic rozător blănos cu o coadă stufoasă.
 
-On one hand, Jacques is quite glad that he doesn't have classic
-lycanthropy. Turning into a squirrel does cause fewer problems than
-turning into a wolf. Instead of having to worry about accidentally
-eating the neighbor (_that_ would be awkward), he worries about being
-eaten by the neighbor's cat. After two occasions where he woke up on a
-precariously thin branch in the crown of an oak, naked and
-disoriented, he has taken to locking the doors and windows of his room
-at night and putting a few walnuts on the floor to keep himself busy.
+Pe de o parte, Jacques este destul de bucuros că nu suferă de licantropie clasică. Transformarea într-o veveriță cauzează mai puține probleme decât transformarea într-un lup. În loc să se îngrijoreze că ar putea să își mănânce accidental vecinul (ceea ce ar fi incomod), se îngrijorează că ar putea fi mâncat de către pisica vecinului. După ce în două ocazii s-a trezit pe o ramură firavă din coroana unui stejar, dezbrăcat și dezorientat, a decis să blocheze ușile și ferestrele camerei sale în timpul nopții și să pună câteva nuci pe podea ca să îl țină ocupat.
 
-That takes care of the cat and tree problems. But Jacques would prefer
-to get rid of his condition entirely. The irregular occurrences of the
-transformation make him suspect that they might be triggered by
-something. For a while, he believed that it happened only on days when
-he had been near oak trees. But avoiding oak trees did not stop the
-problem.
+Astfel rezolvă problemele cu pisica și copacul. Dar Jacques ar prefera sa scape cu totul din această situație. Aparițiile neregulate ale transformării l-au determinat să suspecteze că ceva declanșează problema. Pentru o vreme, a crezut că transformarea are loc doar în zilele în care a fost prezent lângă un stejar. Dar evitarea stejarilor nu a rezolvat problema.
 
 {{index journal}}
 
-Switching to a more scientific approach, Jacques has started keeping a
-daily log of everything he does on a given day and whether he changed
-form. With this data he hopes to narrow down the conditions that
-trigger the transformations.
+Trecând la o abordare mai științifică, Jacques a început să păstreze un jurnal zilnic al tuturor activităților dintr-o zi și dacă și-a schimbat forma. Astfel speră să identifice condițiile care îi declanșează transformările.
 
-The first thing he needs is a data structure to store this
-information.
+Primul lucru de care are nevoie este o structură de date pentru a stoca aceste informații.
 
-## Data sets
+## Mulțimi de date
 
 {{index ["data structure", collection], [memory, organization]}}
 
-To work with a chunk of digital data, we'll first have to find a way
-to represent it in our machine's memory. Say, for example, that we
-want to represent a ((collection)) of the numbers 2, 3, 5, 7, and 11.
+Pentru a lucra cu un calup de date digitale, mai întâi trebuie să identificăm un mod de a-l reprezenta în memoria computerului. De exemplu, vrem să reprezentăm colecția de numere 2,3,5,7 și 11.
 
 {{index string}}
 
-We could get creative with strings—after all, strings can have any
-length, so we can put a lot of data into them—and use `"2 3 5 7 11"`
-as our representation. But this is awkward. You'd have to somehow
-extract the digits and convert them back to numbers to access them.
+Putem fi creativi cu ajutorul unui string. În fond, un string poate avea orice lungime astfel încât putem plasa o mare cantitate de date într-un string. Astfel vom utiliza `"2 3 5 7 11"` ca și reprezentare. Însă este ciudat deoarece va trebui să găsim o modalitate de a extrage cifrele și a le converti înapoi în numere pentru a putea accesa informația inițială.
 
 {{index [array, creation], "[] (array)"}}
 
-Fortunately, JavaScript provides a data type specifically for storing
-sequences of values. It is called an _array_ and is written as a list
-of values between ((square brackets)), separated by commas.
+Din fericire, JavaScript are un tip de date specific pentru a memora secvențe de valori. Acesta se numește _array_ și se scrie ca o listă de valori, între paranteze drepte, separate prin virgulă.
 
 ```
 let listOfNumbers = [2, 3, 5, 7, 11];
@@ -110,40 +73,24 @@ console.log(listOfNumbers[2 - 1]);
 
 {{index "[] (subscript)", [array, indexing]}}
 
-The notation for getting at the elements inside an array also uses
-((square brackets)). A pair of square brackets immediately after an
-expression, with another expression inside of them, will look up the
-element in the left-hand expression that corresponds to the
-_((index))_ given by the expression in the brackets.
+Notația pentru referirea elementelor dintr-un array folosește tot paranteze drepte. O pereche de paranteze drepte imediat după o expresie, cu o altă expresie între parantezele drepte, va referi elementul expresiei din stânga care corespunde _indexului_ evaluat de către expresia din paranteze.
 
 {{id array_indexing}}
 {{index "zero-based counting"}}
 
-The first index of an array is zero, not one. So the first element is
-retrieved with `listOfNumbers[0]`. Zero-based counting has a long
-tradition in technology and in certain ways makes a lot of sense, but
-it takes some getting used to. Think of the index as the amount of
-items to skip, counting from the start of the array.
+Primul index al unui array este 0, nu 1. Prin urmare, primul element este returnat cu `listOfNumbers[0]`. Numărarea începând din zero are o lungă tradiție în tehnologie și oarecum are sens, dar veți avea nevoie de timp pentru adaptare. Gândiți-vă la index ca și cum ar reprezenta numărul de itemi peste care se sare, numărând de la începutul array-ului.
 
 {{id properties}}
 
-## Properties
+## Proprietăți
 
 {{index "Math object", "Math.max function", ["length property", "for string"], [object, property], "period character", [property, access]}}
 
-We've seen a few suspicious-looking expressions like `myString.length`
-(to get the length of a string) and `Math.max` (the maximum function)
-in past chapters. These are expressions that access a _property_
-of some value. In the first case, we access the `length` property of
-the value in `myString`. In the second, we access the property named
-`max` in the `Math` object (which is a collection of
-mathematics-related constants and functions).
+Am văzut câteva expresii care arătau suspect, cum ar fi `myString.length` (pentru a determina lungimea unui string) sau `Math.max` (funcția pentru determinarea maximului). Acestea sunt expresii care accesează o _proprietate_ a unei valori. În primul caz, accesăm proprietatea `length` a valorii `myString`. În al doilea caz, accesăm proprietatea numită `max` a obiectului `Math` (care este o colecție de constante și funcții matematice).
 
 {{index [property, access], null, undefined}}
 
-Almost all JavaScript values have properties. The exceptions are
-`null` and `undefined`. If you try to access a property on one of
-these nonvalues, you get an error.
+Aproape toate valorile din JavaScript au proprietăți. Excepțiile sunt `null` și `undefined`. Dacă încercați să accesați o proprietate a uneia dintre aceste non-valori, veți obține o eroare.
 
 ```{test: no}
 null.length;
@@ -153,44 +100,23 @@ null.length;
 {{indexsee "dot character", "period character"}}
 {{index "[] (subscript)", "period character", "square brackets", "computed property", [property, access]}}
 
-The two main ways to access properties in JavaScript are with a dot
-and with square brackets. Both `value.x` and `value[x]` access a
-property on `value`—but not necessarily the same property. The
-difference is in how `x` is interpreted. When using a dot, the word
-after the dot is the literal name of the property. When using square
-brackets, the expression between the brackets is _evaluated_ to get
-the property name. Whereas `value.x` fetches the property of `value`
-named "x", `value[x]` tries to evaluate the expression `x` and uses
-the result, converted to a string, as the property name.
+Cele două moduri în care ne putem referi la o proprietate în JavaScript sunt utilizarea unui punct sau a parantezelor drepte. Ambele expresii `value.x` și `value[x]` accesează o valoare a `value` - dar nu neapărat aceeași proprietate.  Diferența apare din modul în care este interpretat `x`. Atunci când folosim notația cu punct, cuvântul de după punct este numele ad-literam al proprietății.  Atunci  când folosim  paranteze pătrate, expresia dintre paranteze este _evaluată_ pentru a determina numele proprietății. Deci, `value.x` se referă la proprietatea cu numele "x" în timp ce `value[x]` mai întâi evaluează expresia x și apoi convertește rezultatul într-un string, folosit ca și nume al proprietății.
 
-So if you know that the property you are interested in is called
-_color_, you say `value.color`. If you want to extract the property
-named by the value held in the binding `i`, you say `value[i]`.
-Property names are strings. They can be any string, but the dot notation works only with
-names that look like valid binding names. So if you want to access a
-property named _2_ or _John Doe_, you must use square brackets:
-`value[2]` or `value["John Doe"]`.
+Deci, dacă știți că numele proprietății care vă interesează este _color_, puteți scrie `value.color`. Dacă vreți să extrageți proprietatea al cărei nume este stocat în bindingul `i` veți scrie `value[i]`. Numele proprietăților sunt stringuri. Ele pot fi orice string însă notația cu punct funcționează doar pentru acele nume care sunt valide ca și nume pentru bindinguri. Prin urmare, dacă vreți să accesați o proprietate numită _2_ sau _John Doe_, trebuie să utilizați paranteze pătrate: `value[2]` sau `value["John Doe"]`.
 
-The elements in an ((array)) are stored as the array's properties, using
-numbers as property names. Because you can't use the dot notation with
-numbers and usually want to use a binding that holds the index
-anyway, you have to use the bracket notation to get at them.
+Elementele unui array sunt memorate ca si proprietăți ale array-ului, folosind numere ca și nume ale proprietăților. Deoarece nu putem folosi notația cu punct pentru numere și oricum folosim de regulă un binding care reține indexul, vom folosi notația cu paranteze pentru a le referi.
 
 {{index ["length property", "for array"], [array, "length of"]}}
 
-The `length` property of an array tells us how many elements it has.
-This property name is a valid binding name, and we know its name in
-advance, so to find the length of an array, you typically write
-`array.length` because that's easier to write than `array["length"]`.
+Proprietatea `length` a unui array ne returnează numărul de elemente conținute. Numele acestei proprietăți este un nume valid pentru un binding și cunoaștem acest nume, astfel încât vom scrie `array.length` deoarece este mai ușor de scris decât `array["length"]`.
 
 {{id methods}}
 
-## Methods
+## Metode
 
 {{index [function, "as property"], method, string}}
 
-Both string and array values contain, in addition to the `length`
-property, a number of properties that hold function values.
+Atât valorile de tip string cât și cele de tip array conțin, pe lângă proprietatea `length`, și alte proprietăți care memorează valori de tip funcție.
 
 ```
 let doh = "Doh";
@@ -202,25 +128,17 @@ console.log(doh.toUpperCase());
 
 {{index "case conversion", "toUpperCase method", "toLowerCase method"}}
 
-Every string has a `toUpperCase` property. When called, it will return
-a copy of the string in which all letters have been converted to
-uppercase. There is also `toLowerCase`, going the other way.
+Orice string are o proprietate `toUpperCase`. Atunci când este apelată, aceasta va returna o copie a stringului in care toate literele sunt convertite la litere mari. Există și proprietatea `toLowerCase` care funcționează asemănător dar pentru litere mici.
 
 {{index "this binding"}}
 
-Interestingly, even though the call to `toUpperCase` does not pass any
-arguments, the function somehow has access to the string `"Doh"`, the
-value whose property we called. How this works is described in
-[Chapter ?](object#obj_methods).
+Interesant, deși proprietatea to `toUpperCase` este apelată fără nici un argument, funcția are cumva acces la stringul `"Doh"`, valoarea a cărei proprietăți este apelată. Această funcționalitate este descrisă în [Capitolul ?](object#obj_methods).
 
-Properties that contain functions are generally called _methods_ of
-the value they belong to, as in "`toUpperCase` is a method of a
-string".
+Proprietățile care conțin funcții sunt de regulă numite _metode_ ale valorii căreia îi aparțin. `toUpperCase` este o metodă a unui string.
 
 {{id array_methods}}
 
-This example demonstrates two methods you can use to manipulate
-arrays:
+Exemplul care urmează demonstrează două metode utile pentru manipularea array-urilor:
 
 ```
 let sequence = [1, 2, 3];
@@ -236,36 +154,21 @@ console.log(sequence);
 
 {{index collection, array, "push method", "pop method"}}
 
-The `push` method adds values to the end of an array, and the
-`pop` method does the opposite, removing the last value in the array
-and returning it.
+Metoda `push` adaugă valori la sfârșitul unui array iar metoda `pop` elimină ultima valoare dintr-un array și o returnează.
 
 {{index ["data structure", stack]}}
 
-These somewhat silly names are the traditional terms for operations on
-a _((stack))_. A stack, in programming, is a data structure that
-allows you to push values into it and pop them out again in the
-opposite order so that the thing that was added last is removed first.
-These are common in programming—you might remember the function ((call
-stack)) from [the previous chapter](functions#stack), which is an
-instance of the same idea.
+Aceste denumiri sunt termeni tradiționali pentru operațiile asupra unei stive. O stivă, în programare, este o structură de date care permite introducerea valorilor (push) și extragerea lor în ordine inversă ordinii de introducere (pop) astfel încât ultimul element adăugat va fi întotdeauna primul extras. Asemenea structuri sunt destul de obișnuite în programare - poate vă amintiți despre stiva de apel a funcțiilor din [capitolul anterior](functions#stack), care este o implementare a aceleiași idei.
 
-## Objects
+## Obiecte
 
 {{index journal, "weresquirrel example", array, record}}
 
-Back to the weresquirrel. A set of daily log entries can be
-represented as an array. But the entries do not consist of just a
-number or a string—each entry needs to store a list of activities and
-a Boolean value that indicates whether Jacques turned into a squirrel
-or not. Ideally, we would like to group these together into a single
-value and then put those grouped values into an array of log entries.
+Să revenim la veverița-vârcolac. Un set de intrări zilnice în jurnal poate fi reprezentat sub forma unui array. Dar intrările nu constau doar dintr-un număr sau un string - fiecare intrare trebuie să conțină o listă de activități și o valoare booleană care indică dacă Jacques s-a transformat sau nu într-o veveriță.Ideal, am dori să grupăm toate aceste informații într-o singură valoare și apoi să punem toate acele valori grupate într-un array de intrări în jurnal.
 
 {{index [syntax, object], [property, definition], [braces, object], "{} (object)"}}
 
-Values of the type _((object))_ are arbitrary collections of
-properties. One way to create an object is by using braces as an
-expression.
+Valorile de tip _obiect_ sunt colecții arbitrare de proprietăți. O modalitate de a crea un obiect este utilizarea acoladelor ca și expresie:
 
 ```
 let day1 = {
@@ -283,11 +186,7 @@ console.log(day1.wolf);
 
 {{index [quoting, "of object properties"], "colon character"}}
 
-Inside the braces, there is a list of properties separated by commas.
-Each property has a name followed by a colon and a value. When an
-object is written over multiple lines, indenting it like in the
-example helps with readability. Properties whose names aren't valid
-binding names or valid numbers have to be quoted.
+În interiorul acoladelor avem o listă de proprietăți separate prin virgulă. Fiecare proprietate are un nume și o valoare, separate prin `:`. Atunci când scriem un obiect pe mai multe linii, indentarea lor ca și în exemplu ajută pentru lizibilitate. Proprietățile ale căror nume nu sunt nume valide pentru bindinguri sau numere valide, trebuie definite ca și stringurile:
 
 ```
 let descriptions = {
@@ -298,37 +197,23 @@ let descriptions = {
 
 {{index [braces, object]}}
 
-This means that braces have _two_ meanings in JavaScript. At
-the start of a ((statement)), they start a ((block)) of statements. In
-any other position, they describe an object. Fortunately, it is rarely
-useful to start a statement with an object in braces, so the
-ambiguity between these two is not much of a problem.
+Prin urmare, acoladele au două semnificații în JavaScript. La începutul unei instrucțiuni, ele marchează începutul și sfârșitul blocului de instrucțiuni. În orice alt context, ele descriu un obiect. Din fericire, rareori este util să începem o instrucțiune cu un obiect între acolade, astfel încât ambiguitatea dintre cele două utilizări nu este o problemă.
 
 {{index undefined}}
 
-Reading a property that doesn't exist will give you the value
-`undefined`.
+Încercarea de a accesa o valoare care nu există va returna valoarea `undefined`.
 
 {{index [property, assignment], mutability, "= operator"}}
 
-It is possible to assign a value to a property expression with the `=`
-operator. This will replace the property's value if it already existed
-or create a new property on the object if it didn't.
+Putem asocia o valoare unei proprietăți cu ajutorul operatorului `=`. Această operația va înlocui valoarea proprietăți dacă proprietatea deja există sau va crea o nouă proprietate asupra obiectului, adcă nu există deja o proprietate cu numele respectiv.
 
 {{index "tentacle (analogy)", [property, "model of"], [binding, "model of"]}}
 
-To briefly return to our tentacle model of ((binding))s—property
-bindings are similar. They _grasp_ values, but other bindings and
-properties might be holding onto those same values. You may think of
-objects as octopuses with any number of tentacles, each of which has a
-name tattooed on it.
+Ca să revenim pe scurt asupra modelului nostru cu tentaculele pentru bindinguri, bindingurile pentru proprietăți sunt similare. Ele _adună_ valori, dar alte bindiguri și proprietăți s-ar putea referi la aceleași valori. Putem privi un obiect ca pe o "caracatiță" cu oricâte tentacule, fiecare având tatuat un nume.
 
 {{index "delete operator", [property, deletion]}}
 
-The `delete` operator cuts off a tentacle from such an octopus. It is
-a unary operator that, when applied to an object property,
-will remove the named property from the object. This is not a common
-thing to do, but it is possible.
+Operatorul `delete` taie unul dintre tentaculele acestei caracatițe. Acesta este un operator unar care, atunci când este aplicat asupra unei proprietăți a obiectului, va elimina acea proprietate din obiect. Aceasta nu este o operație frecventă, însă este posibilă.
 
 ```
 let anObject = {left: 1, right: 2};
@@ -345,26 +230,18 @@ console.log("right" in anObject);
 
 {{index "in operator", [property, "testing for"], object}}
 
-The binary `in` operator, when applied to a string and an object,
-tells you whether that object has a property with that name. The difference
-between setting a property to `undefined` and actually deleting it is
-that, in the first case, the object still _has_ the property (it just
-doesn't have a very interesting value), whereas in the second case the
-property is no longer present and `in` will return `false`.
+Operatorul binar `in`, aplicat asupra unui string sau a unui obiect, vă returnează dacă obiectul are sau nu o proprietate cu acel nume. Diferența dintre a seta o proprietate la valoarea `undefined` și a o șterge este dată de faptul că în primul caz obiectul are în continuare proprietatea respectivă (a cărei valoare nu prezintă prea mult interes) în timp ce în al doilea caz proprietatea nu mai există iar `in` va returna `false`.
 
 {{index "Object.keys function"}}
 
-To find out what properties an object has, you can use the
-`Object.keys` function. You give it an object, and it returns an array
-of strings—the object's property names.
+Pentru a determina numele tuturor proprietăților unui obiect, puteți folosi funcția `Object.keys`. Aceasta primește ca argument un obiect și returnează un array de stringuri - numele proprietăților obiectului.
 
 ```
 console.log(Object.keys({x: 0, y: 0, z: 2}));
 // → ["x", "y", "z"]
 ```
 
-There's an `Object.assign` function that copies all properties from
-one object into another.
+Există și o funcție `Object.assign` care copiază toate proprietățile unui obiect într-un alt obiect.
 
 ```
 let objectA = {a: 1, b: 2};
@@ -375,14 +252,11 @@ console.log(objectA);
 
 {{index array, collection}}
 
-Arrays, then, are just a kind of object specialized for storing
-sequences of things. If you evaluate `typeof []`, it produces
-`"object"`. You can see them as long, flat octopuses with all their
-tentacles in a neat row, labeled with numbers.
+Array-urile sunt doar niște obiecte specializate pentru a stoca secvențe de elemente. Dacă evaluați `typeof []` rezultatul va fi `"object"`. Le puteți privi ca pe niște caracatițe plate cu toate tentaculele într-un singur rând, etichetate cu numere.
 
 {{index journal, "weresquirrel example"}}
 
-We will represent the journal that Jacques keeps as an array of objects.
+Vom reprezenta jurnalul pe care îl menține Jacques sub forma unui array de obiecte.
 
 ```{test: wrap}
 let journal = [
@@ -399,32 +273,19 @@ let journal = [
 ];
 ```
 
-## Mutability
+## Mutabilitatea
 
-We will get to actual programming _real_ soon now. First there's one
-more piece of theory to understand.
+În curând vom trece la programarea propriu-zisa. Mai întâi vom discuta despre încă un aspect teoretic important de înțeles.
 
 {{index mutability, "side effect", number, string, Boolean, [object, mutability]}}
 
-We saw that object values can be modified. The types of values
-discussed in earlier chapters, such as numbers, strings, and Booleans,
-are all _((immutable))_—it is impossible to change values of those
-types. You can combine them and derive new values from them, but when
-you take a specific string value, that value will always remain the
-same. The text inside it cannot be changed. If you have a string that
-contains `"cat"`, it is not possible for other code to change a
-character in your string to make it spell `"rat"`.
+Am văzut că valorile obiectelor pot fi modificate. Tipurile de valori despre care am discutat în capitolele anterioare (numere, stringuri și valori booleene) sunt toate _imutabile_ - este imposibil să schimbăm valorile acelor tipuri. Le putem combina pentru a deriva noi valori dar, atunci când considerăm o anumită valoare de tip string, ea rămâne nemodificată. Textul din interiorul ei nu poate fi modificat. Dacă avem un string care conține `"cat"`, nu eeste posibil ca să scriem cod care să schimbe un singur caracter în codul nostru pentru a obține stringul `"rat"`.
 
-Objects work differently. You _can_ change their properties,
-causing a single object value to have different content at different times.
+Obiectele au un comportament diferit. _Puteți_ să le mmodificați proprietățile astfel încât o valoare de tip obiect să aibă conținuturi diferite la momente diferite.
 
 {{index [object, identity], identity, [memory, organization], mutability}}
 
-When we have two numbers, 120 and 120, we can consider them precisely
-the same number, whether or not they refer to the same physical bits.
-With objects, there is a difference between having two references to
-the same object and having two different objects that contain the same
-properties. Consider the following code:
+Când avem două numere, 120 și 120, le putem considera perfect identice, fie că se referă sau nu la aceeiași biți. În cazul obiectelor, există o diferență între a avea două referințe către același obiect sau două obiecte diferite dar care au  aceleașși proprietăți. Sa considerăm codul următor:
 
 ```
 let object1 = {value: 10};
@@ -445,20 +306,11 @@ console.log(object3.value);
 
 {{index "tentacle (analogy)", [binding, "model of"]}}
 
-The `object1` and `object2` bindings grasp the _same_ object, which is
-why changing `object1` also changes the value of `object2`. They are
-said to have the same _identity_. The binding `object3` points to a
-different object, which initially contains the same properties as
-`object1` but lives a separate life.
+Bindingurile `object1` și `object2` se referă la _același_ obiect și, din acest motiv, o schimbare asupra valorii referite de `object1` va modifica și valoarea referită de `object2`. Bindingul `object3` se referă la un obiect diferit care conține aceleași proprietăți ca și `object1` dar are un ciclu de viață separat.
 
 {{index "const keyword", "let keyword", [binding, "as state"]}}
 
-Bindings can also be changeable or constant, but this is separate from
-the way their values behave. Even though number values don't change,
-you can use a `let` binding to keep track of a changing number by
-changing the value the binding points at. Similarly, though a `const`
-binding to an object can itself not be changed and will continue to
-point at the same object, the _contents_ of that object might change.
+Bindingurile pot fi modificabile sau constante, dar acesta este un alt aspect, separat de modul în care valorile lor se comportă. Deși valorile de tip număr nu se schimbă, puteți declara un binding cu `let` care va urmări progresul unui număr care se schimbă prin modificarea valorii la care se referă bindingul. Similar, chiar dacă un binding `const` către un obiect nu poate fi modificat și va continua să se refere la același obiect, _conținutul_ acelui obiect poate fi m odificat. 
 
 ```{test: no}
 const score = {visitors: 0, home: 0};
@@ -470,20 +322,13 @@ score = {visitors: 1, home: 1};
 
 {{index "== operator", [comparison, "of objects"], "deep comparison"}}
 
-When you compare objects with JavaScript's `==` operator, it compares
-by identity: it will produce `true` only if both objects are precisely
-the same value. Comparing different objects will return `false`, even
-if they have identical properties. There is no "deep" comparison
-operation built into JavaScript, which compares objects by contents,
-but it is possible to write it yourself (which is one of the
-[exercises](data#exercise_deep_compare) at the end of this chapter).
+Când comparați obiecte cu ajutorul operatorului JavaScript `==`, acesta va compara prin identitate: va produce `true` doar dacă cele două obiecte au exact aceeași valoare. Compararea unor obiecte diferite va returna `false`, chiar dacă ele au proprietăți identice. Nu există operație de comparare profundă ("deep") predefinită în JavaScript, care să compare două obiecte prin conținutul lor, dar o puteți defini (ceea ce de fapt este unul dintre [exercițiile](data#exercise_deep_compare) de la sfârșitul acestui capitol).
 
-## The lycanthrope's log
+## Jurnalul licantropului
 
 {{index "weresquirrel example", lycanthropy, "addEntry function"}}
 
-So, Jacques starts up his JavaScript interpreter and sets up the
-environment he needs to keep his ((journal)).
+Jacques își pornește interpretorul de JavaScript și îșî setează mediul de care are nevoie pentru a își menține jurnalul.
 
 ```{includeCode: true}
 let journal = [];
@@ -495,15 +340,9 @@ function addEntry(events, squirrel) {
 
 {{index [braces, object], "{} (object)", [property, definition]}}
 
-Note that the object added to the journal looks a little odd. Instead
-of declaring properties like `events: events`, it just gives a
-property name. This is shorthand that means the same thing—if a
-property name in brace notation isn't followed by a value, its
-value is taken from the binding with the same name.
+Observați că obiectul pe care il adaugă în jurnal arată puțin ciudat. În loc să adauge proprietăți declarate cam așa: `events: events`, doar specifică numele proprietății. Aceasta este o scurtătură ce înseamnă același lucru - dacă numele unei proprietăți în notația cu acolade nu este urmat de o valoare, această valoare este preluată din bindingul cu același nume.
 
-So then, every evening at 10 p.m.—or sometimes the next morning, after
-climbing down from the top shelf of his bookcase—Jacques records the
-day.
+În fiecare seara la ora 10PM sau dimineața zilei următoare, Jacques își înregistrează ziua:
 
 ```
 addEntry(["work", "touched tree", "pizza", "running",
@@ -514,37 +353,21 @@ addEntry(["weekend", "cycling", "break", "peanuts",
           "beer"], true);
 ```
 
-Once he has enough data points, he intends to use statistics to find
-out which of these events may be related to the squirrelifications.
+Imediat ce va avea suficiente date va face apel la statistică pentru a afla care dintre aceste evenimente ar putea fi legat de transformarea sa în veveriță.
 
 {{index correlation}}
 
-_Correlation_ is a measure of ((dependence)) between statistical
-variables. A statistical variable is not quite the same as a
-programming variable. In statistics you typically have a set of
-_measurements_, and each variable is measured for every measurement.
-Correlation between variables is usually expressed as a value that
-ranges from -1 to 1. Zero correlation means the variables are not
-related. A correlation of one indicates that the two are perfectly
-related—if you know one, you also know the other. Negative one also
-means that the variables are perfectly related but that they are
-opposites—when one is true, the other is false.
+_Factorul de corelare_ este o măsura a dependenței între variable statistice. O variabilă statistică nu este același lucru ca și o variabilă în programare. În statistică, de regulă, avem un set de _măsurători_ și fiecare variabilă este măsurată pentru fiecare măsurătoare. Corelarea între variabile este de regulă exprimată ca o valoare între -1 și 1. Corelare 0 înseamnă că cele două variabile nu sunt relaționate. O corelare 1 arată că cele două variabile sunt perfect relaționate - cunoscând valoarea uneia dintre ele putem afla valoarea celeilalte. -1-1 înseamnă de asemenea că cele două variabile sunt  perffect relaaționate, dar sunt opuse - de exemplu, când una este adevărată, cealaltă este falsă.
 
 {{index "phi coefficient"}}
 
-To compute the measure of correlation between two Boolean variables,
-we can use the _phi coefficient_ (_ϕ_). This is a formula whose input
-is a ((frequency table)) containing the number of times the different
-combinations of the variables were observed. The output of the formula
-is a number between -1 and 1 that describes the correlation.
+Pentru a măsura factorul de corelare între două variabile booleene, putem utiliza _ccoeficientul phi_ (_ϕ_). Formula pentru calculul acestuia se bazează pe un tabel de frecvență care conține de câte ori a fost observată fiecare combinație a variabilelor. Rezultatul formulei este un număr între -1 și 1 care descrie corelarea.
 
-We could take the event of eating ((pizza)) and put that in a
-frequency table like this, where each number indicates the amount of
-times that combination occurred in our measurements:
+De exemplu, să considerăm evenimentul "mănânc o pizza" și să construim un tabel de frecvență ca și în figura de mai jos, unde fiecare număr arată de câte ori a apărut combinația respectivă în timpul măsurătorilor:
 
 {{figure {url: "img/pizza-squirrel.svg", alt: "Eating pizza versus turning into a squirrel", width: "7cm"}}}
 
-If we call that table _n_, we can compute _ϕ_ using the following formula:
+Dacă denumim tabelul _n_, putem calcula _ϕ_ cu formula:
 
 {{if html
 
@@ -569,55 +392,26 @@ if}}
 
 if}}
 
-(If at this point you're putting the book down to focus on a terrible
-flashback to 10th grade math class—hold on! I do not intend to torture
-you with endless pages of cryptic notation—it's just this one formula for
-now. And even with this one, all we do is turn it into JavaScript.)
+Notația [_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex} se referă la numărul de măsurători în care prima variabilă este falsă (0) iar cea de a doua adevărată (1). În tabelul nostru, [_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex} is această valoare este 9.
 
-The notation [_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex} indicates
-the number of measurements where the first variable (squirrelness) is
-false (0) and the second variable (pizza) is true (1). In the pizza
-table, [_n_~01~]{if html}[[$n_{01}$]{latex}]{if tex} is 9.
-
-The value [_n_~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex} refers
-to the sum of all measurements where the first variable is true, which
-is 5 in the example table. Likewise, [_n_~•0~]{if
-html}[[$n_{\bullet0}$]{latex}]{if tex} refers to the sum of the
-measurements where the second variable is false.
+Valoarea [_n_~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex} reprezintă suma tuturor măsurătorilor în care prima variabilă este `true`, care este 5 în exemplul nostru (suma pe a doua linie a tabelului). În același fel, [_n_~•0~]{if html}[[$n_{\bullet0}$]{latex}]{if tex} se referă la suma tuturor măsurătorilor  în care cea de a doua variabilă este `false` (suma pe prima coloană).
 
 {{index correlation, "phi coefficient"}}
 
-So for the pizza table, the part above the division line (the
-dividend) would be 1×76−4×9 = 40, and the part below it (the
-divisor) would be the square root of 5×85×10×80, or [√340000]{if
-html}[[$\sqrt{340000}$]{latex}]{if tex}. This comes out to _ϕ_ ≈
-0.069, which is tiny. Eating ((pizza)) does not appear to have
-influence on the transformations.
+Pentru exemplul nostru, nunmărătorul expresiei se evaluează 1×76−4×9 = 40, iar numitorul va fi rădăcina pătrată a numărului 5×85×10×80, sau [√340000]{if html}[[$\sqrt{340000}$]{latex}]{if tex}. În final obținem valoarea _ϕ_ ≈ 0.069, care este o valoare mică. Consumul de pizza nu pare să aibă o influență asupra transformărilor.
 
-## Computing correlation
+## Calcularea corelației
 
 {{index [array, "as table"], [nesting, "of arrays"]}}
 
-We can represent a two-by-two ((table)) in JavaScript with a
-four-element array (`[76, 9, 4, 1]`). We could also use other
-representations, such as an array containing two two-element arrays
-(`[[76, 9], [4, 1]]`) or an object with property names like `"11"` and
-`"01"`, but the flat array is simple and makes the expressions that
-access the table pleasantly short. We'll interpret the indices to the
-array as two-((bit)) ((binary number))s, where the leftmost (most
-significant) digit refers to the squirrel variable and the rightmost
-(least significant) digit refers to the event variable. For example,
-the binary number `10` refers to the case where Jacques did turn into
-a squirrel, but the event (say, "pizza") didn't occur. This happened
-four times. And since binary `10` is 2 in decimal notation, we will
-store this number at index 2 of the array.
+În JavaScript putem reprezenta un tabel 2 x 2 ca un array de 4 elemente (`[76, 9, 4, 1]`). Putem să utilizăm și alte reprezentări, cum ar fi un array ce conține două elemente de tip array cu câte două elemente fiecare: (`[[76, 9], [4, 1]]`) sau un obiect care conține proprietăți cu nume precum `"11"` sau
+`"01"`, dar un array de patru elemente este simplu și permite o reprezentare elegantă a formulei de calcul. Vom interpreta indicii array-ului ca și numere în baza 2 reprezentate pe doi biți, prima cifră (cea mai semnificativă) reprezentând variabila `squirrel`, iar cea de a doua (cea mai puțin semnificativă) variabila pentru eveniment. De exemplu, numărul binar `10` se referă la cazul în care Jacques s-a transformat, dar evenimentul nu a avut loc. Această situație a fost observată de 4 ori. Deoarece `10` reprezintă 2 în notația decimală, vom memora această valoarea în elementul de index 2 al array-ului.
 
 {{index "phi coefficient", "phi function"}}
 
 {{id phi_function}}
 
-This is the function that computes the _ϕ_ coefficient from such an
-array:
+Aceasta este funcția care calculează coeficientul _ϕ_ din array:
 
 ```{includeCode: strip_log, test: clip}
 function phi(table) {
@@ -634,28 +428,16 @@ console.log(phi([76, 9, 4, 1]));
 
 {{index "square root", "Math.sqrt function"}}
 
-This is a direct translation of the _ϕ_ formula into JavaScript.
-`Math.sqrt` is the square root function, as provided by the `Math`
-object in a standard JavaScript environment. We have to add two fields
-from the table to get fields like [n~1•~]{if
-html}[[$n_{1\bullet}$]{latex}]{if tex} because the sums of rows or
-columns are not stored directly in our data structure.
+Aceasta este o translatare directă a formulei pentru _ϕ_ în JavaScript. `Math.sqrt` este funcția pentru calculul rădăcinii pătrate, parte a obiectului `Math` într-un mediu JavaScript standard. Pentru a obține valori cum ar fi [n~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex} va trebui să adunăm câte două elemente ale tabloului deoarece suam rândurilor sau coloanelor nu este memorată în interiorul structurii noastre.
 
 {{index "JOURNAL data set"}}
 
-Jacques kept his journal for three months. The resulting ((data set))
-is available in the [coding
-sandbox](https://eloquentjavascript.net/code#4) for this chapter[
-([_https://eloquentjavascript.net/code#4_](https://eloquentjavascript.net/code#4))]{if
-book}, where it is stored in the `JOURNAL` binding and in a
-downloadable
-[file](https://eloquentjavascript.net/code/journal.js).
+Jacques și-a păstrat jurnalul timp de trei luni. Rezultatele sunt disponibile la adresa
+[_https://eloquentjavascript.net/code#4_](https://eloquentjavascript.net/code#4).
 
 {{index "tableFor function"}}
 
-To extract a two-by-two ((table)) for a specific event from the
-journal, we must loop over all the entries and tally how many times
-the event occurs in relation to squirrel transformations.
+Pentru a construi un tabel de frecvență pentru un anumit eveniment din jurnal, trebuie să parcurgem toate intrările din jurnal și să calculăm de câte ori a apărut evenimentul, împreună cu transformările:
 
 ```{includeCode: strip_log}
 function tableFor(event, journal) {
@@ -675,30 +457,21 @@ console.log(tableFor("pizza", JOURNAL));
 
 {{index [array, searching], "includes method"}}
 
-Arrays have an `includes` method that checks whether a given value
-exists in the array. The function uses that to determine whether the
-event name it is interested in is part of the event list for a given
-day.
+Array-urile au o metodă `includes` care verifică dacă valoarea data ca și argument există în array. Funcția  noastră o utilizează pentru a determina dacă numele evenimentului face parte din lista de evenimente pentru o zi dată.
 
 {{index [array, indexing]}}
 
-The body of the loop in `tableFor` figures out which box in the table
-each journal entry falls into by checking whether the entry contains
-the specific event it's interested in and whether the event happens
-alongside a squirrel incident. The loop then adds one to the correct
-box in the table.
+Corpul buclei din `tableFor` determină în care dintre cele patru contoare trebuie să plasăm fiecare valoare din jurnal, verificând dacă intrarea conține evenimentul respectiv și dacă transformarea a avut loc sau nu.
 
-We now have the tools we need to compute individual ((correlation))s.
-The only step remaining is to find a correlation for every type of
-event that was recorded and see whether anything stands out.
+Acum avem la dispoziție instrumentele pentru a calcula factorii de corelare pentru fiecare eveniment. Ne mai rămâne doar să facem calculele și să vedem dacă obținem un rezultat relevant.
 
 {{id for_of_loop}}
 
-## Array loops
+## Parcurgerea array-urilor
 
 {{index "for loop", loop, [array, iteration]}}
 
-In the `tableFor` function, there's a loop like this:
+În funcția `tableFor` există o buclă:
 
 ```
 for (let i = 0; i < JOURNAL.length; i++) {
@@ -707,12 +480,9 @@ for (let i = 0; i < JOURNAL.length; i++) {
 }
 ```
 
-This kind of loop is common in classical JavaScript—going over arrays
-one element at a time is something that comes up a lot, and to do that
-you'd run a counter over the length of the array and pick out each
-element in turn.
+Acest tip de buclă este foarte obișnuit în JavaScript - parcurgerea unui array element cu element este o operație frecventă iar pentru a o implementa vom utiliza un contor care parcurge toată mulțimea de indecși și selectează pe rând fiecare element.
 
-There is a simpler way to write such loops in modern JavaScript.
+În JavaScript modern avem o modalitate mai simplă de a scrie asemenea bucle:
 
 ```
 for (let entry of JOURNAL) {
@@ -722,21 +492,15 @@ for (let entry of JOURNAL) {
 
 {{index "for/of loop"}}
 
-When a `for` loop looks like this, with the word `of` after a variable
-definition, it will loop over the elements of the value given after
-`of`. This works not only for arrays but also for strings and some
-other data structures. We'll discuss _how_ it works in [Chapter
-?](object).
+Când o buclă `for` arată astfel, cu cuvântul `of` după definiția variabilei, va itera peste toate elementele valorii plasate după `of`. Această structură funcționează nu doar pentru array-uri, dar și pentru stringuri și alte structuri de date. Vom detalia cum funcționează în [capitolul ?](object).
 
 {{id analysis}}
 
-## The final analysis
+## Analiza finală
 
 {{index journal, "weresquirrel example", "journalEvents function"}}
 
-We need to compute a correlation for every type of event that occurs
-in the data set. To do that, we first need to _find_ every type of
-event.
+Trebuie să calculăm o corelare pentru fiecare tip de eveniment care apare în setul de date. Pentru aceasta, mai întâi trebuie să determinăm lista evenimentelor care apar în jurnal:
 
 {{index "includes method", "push method"}}
 
@@ -757,11 +521,9 @@ console.log(journalEvents(JOURNAL));
 // → ["carrot", "exercise", "weekend", "bread", …]
 ```
 
-By going over all the events and adding those that aren't already in
-there to the `events` array, the function collects every type of
-event.
+Parcurgând lista tuturor intrărilor din jurnal și colectând toate evenimentele care nu apar în array-ul `events`, funcția va colecta toate tipurile de evenimente din jurnal.
 
-Using that, we can see all the ((correlation))s.
+Apoi vom putea calcula factorul de corelare pentru fiecare eveniment.
 
 ```{test: no}
 for (let event of journalEvents(JOURNAL)) {
@@ -775,10 +537,7 @@ for (let event of journalEvents(JOURNAL)) {
 // and so on...
 ```
 
-Most correlations seem to lie close to zero. Eating carrots, bread, or
-pudding apparently does not trigger squirrel-lycanthropy. It _does_
-seem to occur somewhat more often on weekends. Let's filter the
-results to show only correlations greater than 0.1 or less than -0.1.
+Majoritatea factorilor de corelare par să fie aproape de 0. Transformarea pare însă să aibă o oarecare legătură cu weekendurile. haideți să filtrăm rezultatele pentru a afișa doar factorii mai mari decaât 0.1 sau mai mici decât -0.1.
 
 ```{test: no, startCode: true}
 for (let event of journalEvents(JOURNAL)) {
@@ -796,12 +555,9 @@ for (let event of journalEvents(JOURNAL)) {
 // → peanuts:        0.5902679812
 ```
 
-Aha! There are two factors with a ((correlation)) that's clearly stronger
-than the others. Eating ((peanuts)) has a strong positive effect on
-the chance of turning into a squirrel, whereas brushing his teeth has
-a significant negative effect.
+Aha! Există doi factori care au o corelație cu mult mai puternică decât toți ceilalți. Consumul de arahide are un efect puternic pozitiv asupra șansei de transformare în veveriță iar spălarea dinților are un efect negativ semnificativ.
 
-Interesting. Let's try something.
+Interesant. Haideți să mai încercăm un experiment.
 
 ```
 for (let entry of JOURNAL) {
@@ -814,40 +570,17 @@ console.log(phi(tableFor("peanut teeth", JOURNAL)));
 // → 1
 ```
 
-That's a strong result. The phenomenon occurs precisely when Jacques
-eats ((peanuts)) and fails to brush his teeth. If only he weren't such
-a slob about dental hygiene, he'd have never even noticed his
-affliction.
+Acesta este un rezultat puternic. Fenomenul apare cu siguranță atunci când Jacques mănâncă arahide și nu se spală pe dinți. Dacă nu ar fi fost atât de atent la igiena dentară, nu ar fi determinat niciodată cauza transformărilor sale.
 
-Knowing this, Jacques stops eating peanuts altogether and finds that
-his transformations don't come back.
-
-{{index "weresquirrel example"}}
-
-For a few years, things go great for Jacques. But at some point he
-loses his job. Because he lives in a nasty country where having no job
-means having no medical services, he is forced to take employment with
-a ((circus)) where he performs as _The Incredible Squirrelman_,
-stuffing his mouth with peanut butter before every show.
-
-One day, fed up with this pitiful existence, Jacques fails to change
-back into his human form, hops through a crack in the circus tent, and
-vanishes into the forest. He is never seen again.
-
-## Further arrayology
+## Mai multe despre array-uri
 
 {{index [array, methods], [method, array]}}
 
-Before finishing the chapter, I want to introduce you to a few more
-object-related concepts. I'll start by introducing some generally
-useful array methods.
+Haideți să ne familiarizăm cu alte câteva concepte relativ la obiecte. Să începem cu alte câteva metode generale utile pentru manipularea array-urilor
 
 {{index "push method", "pop method", "shift method", "unshift method"}}
 
-We saw `push` and `pop`, which add and remove elements at the
-end of an array, [earlier](data#array_methods) in this
-chapter. The corresponding methods for adding and removing things at
-the start of an array are called `unshift` and `shift`.
+Ne-am întâlnit cu `push` and `pop`, care adaugă sau elimină elemente la sfârșitul unui array, [anterior](data#array_methods) în acest capitol. Metodele similare pentru adăugarea și elimiarea elementelor la inceputul unui array se numesc `unshift` și `shift`.
 
 ```
 let todoList = [];
@@ -864,19 +597,11 @@ function rememberUrgently(task) {
 
 {{index "task management example"}}
 
-That program manages a queue of tasks. You add tasks to the end of the
-queue by calling `remember("groceries")`, and when you're ready to do
-something, you call `getTask()` to get (and remove) the front item
-from the queue. The `rememberUrgently` function also adds a task but
-adds it to the front instead of the back of the queue.
+Programul de mai sus gestionează o coadă de sarcini. Adăugați sarcini la sfârșitul cozii apelând `remember("groceries")`, iar atunci când sunteți pregătiți să începeți o nouă activitate, veți apela `getTask()` pentru a obține și a elimina primul element din coadă. Funcția `rememberUrgently` adaugă un element la începutul cozii.
 
 {{index [array, searching], "indexOf method", "lastIndexOf method"}}
 
-To search for a specific value, arrays provide an `indexOf` method. The method
-searches through the array from the start to the end and returns the
-index at which the requested value was found—or -1 if it wasn't found.
-To search from the end instead of the start, there's a similar method
-called `lastIndexOf`.
+Pentru a căuta o anumită valoare, avem la dispoziție pentru array-uri metoda `indexOf`. Metoda caută în întregul array, de la stânga la dreapta, și returnează indexul la care a fost găsită valoarea căutată sau -1 dacă nu a găsit valoarea. Pentru a căuta de la dreapta la stânga, puteți folosi metoda `lastIndexOf`.
 
 ```
 console.log([1, 2, 3, 2, 1].indexOf(2));
@@ -885,14 +610,11 @@ console.log([1, 2, 3, 2, 1].lastIndexOf(2));
 // → 3
 ```
 
-Both `indexOf` and `lastIndexOf` take an optional second argument that
-indicates where to start searching.
+Ambele metode acceptă un al doilea parametru care permite setarea indicelui de la care începe căutarea.
 
 {{index "slice method", [array, indexing]}}
 
-Another fundamental array method is `slice`, which takes start and end
-indices and returns an array that has only the elements between them.
-The start index is inclusive, the end index exclusive.
+O altă metodă fundamentală pentru array-uri este `slice` care primește indicii de început și de sfârșit și returnează un array ce conține elementele dintre cei doi indecși. Indicele de început este inclus iar cel de sfârșit este exclus.
 
 ```
 console.log([0, 1, 2, 3, 4].slice(2, 4));
@@ -903,18 +625,13 @@ console.log([0, 1, 2, 3, 4].slice(2));
 
 {{index [string, indexing]}}
 
-When the end index is not given, `slice` will take all of the elements
-after the start index. You can also omit the start index to copy the
-entire array.
+Atunci când indexul de sfârșit nu este precizat, `slice` va lua toate elementele de la indexul de start până la sfârșitul array-ului. Dacă se omite și indicele de început, `slice` va copia toate elementele array-ului.
 
 {{index concatenation, "concat method"}}
 
-The `concat` method can be used to glue arrays together to create a
-new array, similar to what the `+` operator does for strings.
+Metoda `concat` se poate folosi pentru a alipi array-urile și a crea un nou array, similar cu efectul operatorului `+` pentru stringuri.
 
-The following example shows both `concat` and `slice` in action. It takes
-an array and an index, and it returns a new array that is a copy of
-the original array with the element at the given index removed.
+Următorul exemplu vă prezintă `concat` și `slice` în acțiune. Primind ca argumente un array și un index, funcția returnează un nou array care este o copie a array-ului original având elementul de la indexul dat eliminat din array:
 
 ```
 function remove(array, index) {
@@ -925,15 +642,13 @@ console.log(remove(["a", "b", "c", "d", "e"], 2));
 // → ["a", "b", "d", "e"]
 ```
 
-If you pass `concat` an argument that is not an array, that value will
-be added to the new array as if it were a one-element array.
+Dacă transmiteți metodei `concat` un element care nu este array, acea valoare va fi adăugată la noul array ca și cum ar fi un array format dintr-un singur element.
 
-## Strings and their properties
+## Stringuri și proprietățile lor
 
 {{index [string, properties]}}
 
-We can read properties like `length` and `toUpperCase` from string
-values. But if you try to add a new property, it doesn't stick.
+Putem citi proprietăți cum ar fi `length` sau `toUpperCase` de pe valorile de tip string. Însă dacă încercăm să adăugăm o nouă proprietate, aceasta nu va fi memorată.
 
 ```
 let kim = "Kim";
@@ -942,16 +657,11 @@ console.log(kim.age);
 // → undefined
 ```
 
-Values of type string, number, and Boolean are not objects, and though
-the language doesn't complain if you try to set new properties on
-them, it doesn't actually store those properties. As mentioned earlier,
-such values are immutable and cannot be changed.
+Valorile dede tip string, number și boolean nu sunt obiecte și, cu toate că limbajul nu afișează erori dacă încercați să setați noi proprietăți pentru ele, acele proprietăți nu vor fi memorate. Așa cum am precizat anterior, aceste valori sunt imutabile și nu pot fi modificate.
 
 {{index [string, methods], "slice method", "indexOf method", [string, searching]}}
 
-But these types do have built-in properties. Every string value has a
-number of methods. Some very useful ones are `slice` and `indexOf`,
-which resemble the array methods of the same name.
+Dar aceste tipuri au proprietăți implicite. Orice valoare de tip string are câteva metode disponibile. Unele proprietăți foarte utile sunt `slice` și `indexOf`, care seamănă cu metodele cu același nume pentru array-uri.
 
 ```
 console.log("coconuts".slice(4, 7));
@@ -960,9 +670,7 @@ console.log("coconut".indexOf("u"));
 // → 5
 ```
 
-One difference is that a string's `indexOf` can search for a string
-containing more than one character, whereas the corresponding array
-method looks only for a single element.
+O diferență este aceea că metoda `indexOf` a unui string poate căuta un string ce conține mai multe caractere în timp ce metoda cu același nume pentru array-uri caută doar un singur element.
 
 ```
 console.log("one two three".indexOf("ee"));
@@ -971,17 +679,14 @@ console.log("one two three".indexOf("ee"));
 
 {{index [whitespace, trimming], "trim method"}}
 
-The `trim` method removes whitespace (spaces, newlines, tabs, and
-similar characters) from the start and end of a string.
+Metoda `trim` elimină spațiile goale (spaces, newlines, tabs, și alte caractere asemănătoare) de la începutul și de la sfârșitul unui string.
 
 ```
 console.log("  okay \n ".trim());
 // → okay
 ```
 
-The `zeroPad` function from the [previous chapter](functions) also
-exists as a method. It is called `padStart` and takes the desired
-length and padding character as arguments.
+Funcția `zeroPad` din [capitolul anterior](functions) există de asemenea ca și metodă. Se numește `padStart` și primește două argumente, lungimea dorită și caracterul cu care se completează stringul.
 
 ```
 console.log(String(6).padStart(3, "0"));
@@ -990,8 +695,7 @@ console.log(String(6).padStart(3, "0"));
 
 {{id split}}
 
-You can split a string on every occurrence of another string with
-`split` and join it again with `join`.
+Puteți împărți un string în funcție de fiecare apariție a unui alt string cu metoda `split` (și veți obține un array de stringuri). Apoi puteți recombina părțile folosind metoda `join`.
 
 ```
 let sentence = "Secretarybirds specialize in stomping";
@@ -1004,9 +708,7 @@ console.log(words.join(". "));
 
 {{index "repeat method"}}
 
-A string can be repeated with the `repeat` method, which creates a new
-string containing multiple copies of the original string, glued
-together.
+Un string poate fi repetat folosind metoda `repeat`, care crează un nou string ce conține mai multe copii ale stringului original, concatenate.
 
 ```
 console.log("LA".repeat(3));
@@ -1015,10 +717,7 @@ console.log("LA".repeat(3));
 
 {{index ["length property", "for string"], [string, indexing]}}
 
-We have already seen the string type's `length` property. Accessing
-the individual characters in a string looks like accessing array
-elements (with a caveat that we'll discuss in [Chapter
-?](higher_order#code_units)).
+Am folosit deja proprietatea `length` pentru stringuri. Accesarea caracterelor individuale ale unui string seamănă cu accesarea elementelor unui array (cu o precizare despre care vom discuta în [capitolul ?](higher_order#code_units)).
 
 ```
 let string = "abc";
@@ -1030,18 +729,15 @@ console.log(string[1]);
 
 {{id rest_parameters}}
 
-## Rest parameters
+## Parametri "rest"
 
 {{index "Math.max function"}}
 
-It can be useful for a function to accept any number of ((argument))s.
-For example, `Math.max` computes the maximum of _all_ the arguments it
-is given.
+Uneori este util ca o funcție să accepte oricâte argumente. De exemplu, `Math.max` calculează maximul dintre _toate_ argumentele transmise.
 
 {{index "period character", "max example", spread}}
 
-To write such a function, you put three dots before the function's
-last ((parameter)), like this:
+Pentru a scrie o asemenea funcție, punem `...` în fața ultimului parametru, astfel:
 
 ```{includeCode: strip_log}
 function max(...numbers) {
@@ -1055,15 +751,11 @@ console.log(max(4, 1, 9, -2));
 // → 9
 ```
 
-When such a function is called, the _((rest parameter))_ is bound to
-an array containing all further arguments. If there are other
-parameters before it, their values aren't part of that array. When, as
-in `max`, it is the only parameter, it will hold all arguments.
+Când apelați o asemenea funcție, _parametrul rest_ este legat de un array ce conține toate argumentele suplimentare. Dacă există și alți parametri înaintea lui, valorile lor nu fac parte din acest array. Atunci când, ca și în `max`, este singurul parametru al funcției, va memora toate argumentele.
 
 {{index [function, application]}}
 
-You can use a similar three-dot notation to _call_ a function with an
-array of arguments.
+Puteți utiliza o notație similară pentru a _apela_ o funcție cu un array de argumente.
 
 ```
 let numbers = [5, 1, 7];
@@ -1071,14 +763,11 @@ console.log(max(...numbers));
 // → 7
 ```
 
-This "((spread))s" out the array into the function call, passing its
-elements as separate arguments. It is possible to include an array
-like that along with other arguments, as in `max(9, ...numbers, 2)`.
+Aceasta _distribuie (spread)_ array-ul în apelul funcției, transmițând elementele array-ului ca și argumente separate. Putem include astfel un array împreună cu alte argumente, astfel: `max(9, ...numbers, 2)`.
 
 {{index [array, "of rest arguments"], "square brackets"}}
 
-Square bracket array notation similarly allows the triple-dot operator
-to spread another array into the new array.
+Notația cu paranteze pătrate a array-urilor acceptă la rândul ei operatorul de distribuire pentru a include elementele unui array într-un alt array.
 
 ```
 let words = ["never", "fully"];
@@ -1086,49 +775,29 @@ console.log(["will", ...words, "understand"]);
 // → ["will", "never", "fully", "understand"]
 ```
 
-## The Math object
+## Obiectul Math
 
 {{index "Math object", "Math.min function", "Math.max function", "Math.sqrt function", minimum, maximum, "square root"}}
 
-As we've seen, `Math` is a grab bag of number-related utility
-functions, such as `Math.max` (maximum), `Math.min` (minimum), and
-`Math.sqrt` (square root).
+Așa cum am văzut, `Math` este o cutie cu funcții utilitare pentru numere, cum ar fi `Math.max` (maxim), `Math.min` (minim), și `Math.sqrt` (rădăcina pătrată).
 
 {{index namespace, [object, property]}}
 
 {{id namespace_pollution}}
 
-The `Math` object is used as a container to group a bunch of related
-functionality. There is only one `Math` object, and it is almost never
-useful as a value. Rather, it provides a _namespace_ so that all these
-functions and values do not have to be global bindings.
+Obiectul `Math` este un container utilizat pentru a grupa funcționalitâți similare. Există un singur obiect `Math` și acesta nu este util aproape niciodată ca și valoare. Mai degrabă el reprezintă un _spațiu de nume_ astfel încât funcțiile și valorile nu sunt bindinguri globale.
 
 {{index [binding, naming]}}
 
-Having too many global bindings "pollutes" the namespace. The more
-names have been taken, the more likely you are to accidentally
-overwrite the value of some existing binding. For example, it's not
-unlikely to want to name something `max` in one of your programs.
-Since JavaScript's built-in `max` function is tucked safely inside the
-`Math` object, we don't have to worry about overwriting it.
+Prea multe bindiguri globale "poluează" spațiul de nume. Cu cât au fost deja folosite mai multe nume, cu atât mai probabil este ca să suprascriem accidental valoarea unui binding existent. De exemplu, este probabil ca să intenționăm să scriem o funcție cu numele `max` în unul din programele noastre. Deoarece funcția predefinită `max` din JavaScript este ascunsă în interiorul obiectului `Math`, nu trebuie să ne îngrijoreze suprascrierea accidentală a acesteia.
 
 {{index "let keyword", "const keyword"}}
 
-Many languages will stop you, or at least warn you, when you are
-defining a binding with a name that is already taken. JavaScript does
-this for bindings you declared with `let` or `const`
-but—perversely—not for standard bindings nor for bindings declared
-with `var` or `function`.
+Multe limbaje de programare vă vor opri, sau cel puțin vă vor avertiza, atunci când veți încerca să definiți un binding cu un nume care deja a fost utilizat. JavaScript procedează la fel atunci când este vorba despre bindinguri definite cu `let` sau `const`, dar nu și pentru cele definite implicit sau declarate cu `var` sau `function`.
 
 {{index "Math.cos function", "Math.sin function", "Math.tan function", "Math.acos function", "Math.asin function", "Math.atan function", "Math.PI constant", cosine, sine, tangent, "PI constant", pi}}
 
-Back to the `Math` object. If you need to do ((trigonometry)), `Math`
-can help. It contains `cos` (cosine), `sin` (sine), and `tan`
-(tangent), as well as their inverse functions, `acos`, `asin`, and
-`atan`, respectively. The number π (pi)—or at least the closest
-approximation that fits in a JavaScript number—is available as
-`Math.PI`. There is an old programming tradition of writing the names
-of ((constant)) values in all caps.
+Înapoi la obiectul `Math`. Dacă aveți nevoie să efectuați calcule trigonometrice, `Math` vă poate ajuta. El conține `cos` (cosinus), `sin` (sinus) și `tan` (tangenta), precum și funcțiile lor inverse, `acos`, `asin` și `atan`. Numărul π (pi) - de fapt cea mai bună aproximare care poate fi reprezentată într-un număr în JavaScript - este definit ca  `Math.PI`. Este o veche tradiție în programare ca numele constantelor să fie scrise cu litere mari.
 
 ```{test: no}
 function randomPointOnCircle(radius) {
@@ -1140,15 +809,11 @@ console.log(randomPointOnCircle(2));
 // → {x: 0.3667, y: 1.966}
 ```
 
-If sines and cosines are not something you are familiar with, don't
-worry. When they are used in this book, in [Chapter ?](dom#sin_cos),
-I'll explain them.
+Dacă funncțiile sinus și cosinus nu vă sunt familiare, nu vă îngrijorați. Atunci când le vom utiliza, în [capitolul ?](dom#sin_cos), le vom explica.
 
 {{index "Math.random function", "random number"}}
 
-The previous example used `Math.random`. This is a function that
-returns a new pseudorandom number between zero (inclusive) and one
-(exclusive) every time you call it.
+Exemplul anterior utilizează funcția `Math.random`. Aceasta este o funcție care generează un număr pseudoaleator între 0 (inclusiv) și 1(exclusiv) la fiecare apel.
 
 ```{test: no}
 console.log(Math.random());
@@ -1161,43 +826,28 @@ console.log(Math.random());
 
 {{index "pseudorandom number", "random number"}}
 
-Though computers are deterministic machines—they always react the same
-way if given the same input—it is possible to have them produce
-numbers that appear random. To do that, the machine keeps some hidden
-value, and whenever you ask for a new random number, it performs
-complicated computations on this hidden value to create a new value.
-It stores a new value and returns some number derived from it. That
-way, it can produce ever new, hard-to-predict numbers in a way that
-_seems_ random.
+Deși computerele sunt mașini deterministe (reacționează întotdeauna la fel pentru un set dat de valori de intrare), este posibil să le utilizăm pentru a produce valori ce par aleatoare. Pentru aceasta, mașina memorează o valoare ascunsă și de fiecare dată când avem nevoie de un nou nunmăr face niște calcule complicate asupra acestei valori ascunse pentru a crea o nouă valoare. Apoi memorează noua valoare și deduce un nou număr pe care îl returnează. În acest mod, poate genera numere greu de prezis într=un mod care _pare_ aleator.
 
 {{index rounding, "Math.floor function"}}
 
-If we want a whole random number instead of a fractional one, we can
-use `Math.floor` (which rounds down to the nearest whole number) on
-the result of `Math.random`.
+Dacă avem nevoie de un număr întreg în loc de un număr real, putem utiliza `Math.floor` (care trunchiază rezultatul la cel mai apropiat număr întreg) asupra rezultatului returnat de `Math.random`.
 
 ```{test: no}
 console.log(Math.floor(Math.random() * 10));
 // → 2
 ```
 
-Multiplying the random number by 10 gives us a number greater than or
-equal to 0 and below 10. Since `Math.floor` rounds down, this
-expression will produce, with equal chance, any number from 0 through
-9.
+Înmulțirea rezultatului cu 10 ne returnează un număr mai mare sau egal decât 0 și mai mic strict decât 10. Deoarece `Math.floor` trunchiază, această expresie va produce cu șanse egale, orice număr de la 0 la 9.
 
 {{index "Math.ceil function", "Math.round function", "Math.abs function", "absolute value"}}
 
-There are also the functions `Math.ceil` (for "ceiling", which rounds
-up to a whole number), `Math.round` (to the nearest whole number), and
-`Math.abs`, which takes the absolute value of a number, meaning it
-negates negative values but leaves positive ones as they are.
+Aveți la dispoziție și funcțiile `Math.ceil` (care rotunjește în sus la cel mai apropiat număr întreg), `Math.round` (pentru rotunjirea la cel mai apropiat număr întreg), și `Math.abs`, care returnează valoarea absolută a unui număr (numerele pozitive sunt returnate așa cum au fost primite iar cele negative se neagă înainte de a fi returnate).
 
-## Destructuring
+## Destructurarea
 
 {{index "phi function"}}
 
-Let's go back to the `phi` function for a moment.
+Să revenim la funcția `phi` pentru un moment.
 
 ```{test: wrap}
 function phi(table) {
@@ -1211,10 +861,7 @@ function phi(table) {
 
 {{index "destructuring binding", parameter}}
 
-One of the reasons this function is awkward to read is that we have a
-binding pointing at our array, but we'd much prefer to have bindings
-for the _elements_ of the array, that is, `let n00 = table[0]` and so on.
-Fortunately, there is a succinct way to do this in JavaScript.
+Unul dintre motivele pentru care această funcție este dificil de citit este că avem un binding care se referă la array-ul nostru, dar am prefera să avem bindinguri către elementele array-ului nostru, cum ar fi `let n00 = table[0]` și așa mai departe. Din fericire, avem o modalitate simplă de a face acest lucru în JavaScript.
 
 ```
 function phi([n00, n01, n10, n11]) {
@@ -1226,15 +873,11 @@ function phi([n00, n01, n10, n11]) {
 
 {{index "let keyword", "var keyword", "const keyword", [binding, destructuring]}}
 
-This also works for bindings created with `let`, `var`, or
-`const`. If you know the value you are binding is an array, you can
-use ((square brackets)) to "look inside" of the value, binding its
-contents.
+Această metodă funcționează și pentru bindinguri create cu `let`, `var`, sau `const`. Dacă știți că valoarea pe care o veți primi este un array, puteți utiliza paranteze pătrate pentru a privi în interiorul valori și a crea bindinguri pentru conținutul său.
 
 {{index [object, property], [braces, object]}}
 
-A similar trick works for objects, using braces instead of square
-brackets.
+O sintaxă asemănătoare funcționează pentru obiecte, utilizând acolade în loc de paranteze pătrate.
 
 ```
 let {name} = {name: "Faraji", age: 23};
@@ -1244,48 +887,26 @@ console.log(name);
 
 {{index null, undefined}}
 
-Note that if you try to destructure `null` or `undefined`, you get an
-error, much as you would if you directly try to access a property
-of those values.
+De menționat că, dacă încercați să destructurați `null` sau `undefined`, veți primi o eroare, la fel cum veți primi o eroare și dacă încercați să accesați o proprietate a acelor valori.
 
 ## JSON
 
 {{index [array, representation], [object, representation], "data format", [memory, organization]}}
 
-Because properties only grasp their value, rather than contain it,
-objects and arrays are stored in the computer's memory as
-sequences of bits holding the _((address))es_—the place in memory—of
-their contents. So an array with another array inside of it consists
-of (at least) one memory region for the inner array, and another for
-the outer array, containing (among other things) a binary number that
-represents the position of the inner array.
+Deoarece proprietățile doar referă valorile în loc să le conțină, obiectele și array-urile sunt stocate în memoria computerului ca și secvențe de biți ce memorează _adresele_ - locurile din memorie - unde este localizat conținutul lor. Astfel, un array ce conține un alt array constă din cel puțin o zonă de memorie pentru array-ul din interior și alta pentru array-ul exterior, ce conține (printre alte lucruri) un număr binar reprezentând poziția array-ului interior.
 
-If you want to save data in a file for later or send it to another
-computer over the network, you have to somehow convert these tangles
-of memory addresses to a description that can be stored or sent. You
-_could_ send over your entire computer memory along with the address
-of the value you're interested in, I suppose, but that doesn't seem
-like the best approach.
+Dacă vreți să salvați date într-un fișier sau să le trimiteți unui alt computer din rețtea, trebuie să convertiți cumva aceste mixuri de adrese de memorie într-o descriere care poate fi salvată sau transmisă. Ați _putea_ transmite toată memoria computerului împreuna cu adresa valorii care vă interesează, dar aceasta nu pare să fie o abordare prea bună.
 
 {{indexsee "JavaScript Object Notation", JSON}}
-
 {{index serialization, "World Wide Web"}}
 
-What we can do is _serialize_ the data. That means it is converted
-into a flat description. A popular serialization format is called
-_((JSON))_ (pronounced "Jason"), which stands for JavaScript Object
-Notation. It is widely used as a data storage and communication format
-on the Web, even in languages other than JavaScript.
+Ce putem face este să _serializăm_ datele. Adică să le convertim într-o descriere. Un format popular de serializare este numit JSON (pronunțat ca și "Jason"), prescurtarea pentru JavaScript Object Notation. Este un format foarte popular pentru stocarea datelor și ca și format de comunicare pe web, chiar și în alte limbaje.
 
 {{index [array, notation], [object, creation], [quoting, "in JSON"], comment}}
 
-JSON looks similar to JavaScript's way of writing arrays and objects,
-with a few restrictions. All property names have to be surrounded by
-double quotes, and only simple data expressions are allowed—no
-function calls, bindings, or anything that involves actual
-computation. Comments are not allowed in JSON.
+JSON arată similar modului de a scrie array-uri și obiecte în JavaScript, cu câteva restricții. Toate numele proprietăților trebuie să fie înconjurate de ghilimele și numai expresiile simple de date sunt permise - nu apeluri de funcții, legături sau orice altceva care implică de fapt calcule. Comentariile nu sunt permise în JSON.
 
-A journal entry might look like this when represented as JSON data:
+O intrare de jurnal ar putea fi scrisă astfel în JSON:
 
 ```{lang: "application/json"}
 {
@@ -1296,10 +917,7 @@ A journal entry might look like this when represented as JSON data:
 
 {{index "JSON.stringify function", "JSON.parse function", serialization, deserialization, parsing}}
 
-JavaScript gives us the functions `JSON.stringify` and `JSON.parse` to
-convert data to and from this format. The first takes a JavaScript
-value and returns a JSON-encoded string. The second takes such a
-string and converts it to the value it encodes.
+JavaScript ne pune la dispoziție funcțiile `JSON.stringify` și `JSON.parse` pentru conversia datelor în și din acest format. Prima funcție primește o valoare JavaScript si returnează un string în format JSON. Ceea de a doua primește ca argument un string JSON valid și îl convertește în valoarea inițială.
 
 ```
 let string = JSON.stringify({squirrel: false,
@@ -1310,36 +928,23 @@ console.log(JSON.parse(string).events);
 // → ["weekend"]
 ```
 
-## Summary
+## Rezumat
 
-Objects and arrays (which are a specific kind of object) provide ways
-to group several values into a single value. Conceptually, this allows
-us to put a bunch of related things in a bag and run around with the
-bag, instead of wrapping our arms around all of the individual things
-and trying to hold on to them separately.
+Obiectele și array-urile (care sunt un anumit tip de obiect) oferă modalități pentru a grupa mai multe valori într-o singură valoare. Conceptual, acest lucru ne permite să punem o grămadă de lucruri asemănătoare într-o pungă și să o folosim ca atare, în loc să ne înconjurăm brațele în jurul tuturor lucrurilor individuale și să încercăm să le ținem separat.
 
-Most values in JavaScript have properties, the exceptions being `null`
-and `undefined`. Properties are accessed using `value.prop` or
-`value["prop"]`. Objects tend to use names for their properties
-and store more or less a fixed set of them. Arrays, on the other hand,
-usually contain varying amounts of conceptually identical values and
-use numbers (starting from 0) as the names of their properties.
+Cele mai multe valori din JavaScript au proprietăți, excepțiile fiind `null` și `undefined`.Proprietățile sunt accesate folosind `value.prop` sau `value["prop"]`. Obiectele tind să utilizeze nume pentru proprietățile lor și să aibă un set relativ fix de proprietăți. Array-urile, pe de altă parte, conțin în mod obișnuit un număr variabil de valori conceptual identice și utilizează numere (începând cu 0) ca și nume pentru proprietățile lor.
 
-There _are_ some named properties in arrays, such as `length` and a
-number of methods. Methods are functions that live in properties and
-(usually) act on the value they are a property of.
+Sunt disponibile și câteva proprietăți denumite pentru array-uti, cum ar fi `length` precum și câteva metode. Metodele sunt funcții care sunnt memorate în proprietăți și de regulă acționează asupra valorii a căror proprietate sunt.
 
-You can iterate over arrays using a special kind of `for` loop—`for
-(let element of array)`.
+Puteți itera peste un array folosind o buclă `for` specială - `for (let element of array)`.
 
-## Exercises
+## Exerciții
 
-### The sum of a range
+### Suma unui interval
 
 {{index "summing (exercise)"}}
 
-The [introduction](intro) of this book alluded to the following as a
-nice way to compute the sum of a range of numbers:
+[Introducerea](intro) acestei cărți visa la următorul mod elegant de a calcula suma unui interval de numere:
 
 ```{test: no}
 console.log(sum(range(1, 10)));
@@ -1347,23 +952,13 @@ console.log(sum(range(1, 10)));
 
 {{index "range function", "sum function"}}
 
-Write a `range` function that takes two arguments, `start` and `end`,
-and returns an array containing all the numbers from `start` up to
-(and including) `end`.
+Scrieți o funcție `range` care primește două argumente, `start` și `end`, și returnează un array ce conține toate numerele de la `start` la `end` (inclusiv).
 
-Next, write a `sum` function that takes an array of numbers and
-returns the sum of these numbers. Run the example program and see
-whether it does indeed return 55.
+Apoi scrieți o funcție `sum` care va returna suma valorilor in array. Apoi rulați exemplul de mai sus și verificați dacă se afișează valoarea 55.
 
 {{index "optional argument"}}
 
-As a bonus assignment, modify your `range` function to take an
-optional third argument that indicates the "step" value used when
-building the array. If no step is given, the elements go up by
-increments of one, corresponding to the old behavior. The function
-call `range(1, 10, 2)` should return `[1, 3, 5, 7, 9]`. Make sure it
-also works with negative step values so that `range(5, 2, -1)`
-produces `[5, 4, 3, 2]`.
+Ca și sarcină suplimentară, modificați funcția `range` ca să primească un al treilea argument, opțional, care să precizeze pasul de incrementare. Dacă al treilea argument lipsește, pasul de incrementare să aibă valoarea 1 și comportamentul funcției să fie cel descris inițial. Apelul funcției în forma `range(1, 10, 2)` trebuie să returneze `[1, 3, 5, 7, 9]`. Asigurați-vă că rezultatul este corect și pentru valori negative ale pasului, astfel îcât `range(5, 2, -1)` va produce `[5, 4, 3, 2]`.
 
 {{if interactive
 
@@ -1384,54 +979,34 @@ if}}
 
 {{index "summing (exercise)", [array, creation], "square brackets"}}
 
-Building up an array is most easily done by first initializing a
-binding to `[]` (a fresh, empty array) and repeatedly calling its
-`push` method to add a value. Don't forget to return the array at the
-end of the function.
+Coonstruirea unui array se realizează cel mai simplu prin inițializarea unui binding cu valoarea  `[]` (un array gol) și apelarea repetată a metodei `push` pentru a adăuga valori. Nu uitați să returnați array-ul la sfârșitul funcției.
 
 {{index [array, indexing], comparison}}
 
-Since the end boundary is inclusive, you'll need to use the `<=`
-operator rather than `<` to check for the end of your loop.
+Deoarece limita de final este inclusivă, trebuie să utilizați operatorul `<=` și nu operatorul `<` pentru a verifica finalul buclei.
 
 {{index "arguments object"}}
 
-The step parameter can be an optional parameter that defaults (using
-the `=` operator) to 1.
+Parametrul pentru pasul de incrementare/decrementare poate fi un parametru opțional care are valoarea implicită 1 (folosiți operatorul `=`).
 
 {{index "range function", "for loop"}}
 
-Having `range` understand negative step values is probably best done
-by writing two separate loops—one for counting up and one for counting
-down—because the comparison that checks whether the loop is finished
-needs to be `>=` rather than `<=` when counting downward.
+Pentru ca funcția `range` să poată lucra și cu valori pozitive și cu valori negative ale pasului, probabil cel mai ușor ar fi să scrieți două bucle diferite - una pentru incrementare și una pentru decrementare, deoarece în funcție de semnul pasului, va trebui să folosiți `>=` sau `<=` pentru a verifica terminarea buclei.
 
-It might also be worthwhile to use a different default step, namely,
--1, when the end of the range is smaller than the start. That way,
-`range(5, 2)` returns something meaningful, rather than getting stuck
-in an ((infinite loop)). It is possible to refer to previous
-parameters in the default value of a parameter.
+De asemenea, atenție la valoarea implicită a pasului. Aceasta ar trebui să fie -1 atunci când valoarea de final este mai mică decât valoarea inițială. Astfel, `range(5, 2)` va returna un array, în loc să se blocheze într-o buclă infinită. Pentru setarea valorii default a unui parametru ne putem referi la parametrii anteriori.
 
 hint}}
 
-### Reversing an array
+### Inversarea unui array
 
 {{index "reversing (exercise)", "reverse method", [array, methods]}}
 
-Arrays have a `reverse` method that changes the array by inverting
-the order in which its elements appear. For this exercise, write two
-functions, `reverseArray` and `reverseArrayInPlace`. The first,
-`reverseArray`, takes an array as argument and produces a _new_ array
-that has the same elements in the inverse order. The second,
-`reverseArrayInPlace`, does what the `reverse` method does: it
-_modifies_ the array given as argument by reversing its elements.
-Neither may use the standard `reverse` method.
+Array-urile au o metodă `reverse` care modifică un array prin inversarea ordinii elementelor sale. Pentru acest exercițiu, scrieți două funcții: `reverseArray` și `reverseArrayInPlace`. 
+Prima va primi ca argument un array și va returna un _nou_ array conținând aceleași elemente, dar în ordine inversă. Cea de a doua funcție va face ceea ce face `reverse`: va _modifica_ array-ul primit ca argument prin inversarea ordinii elementelor sale. Nu aveți voie să folosiți funcția `reverse`.
 
 {{index efficiency, "pure function", "side effect"}}
 
-Thinking back to the notes about side effects and pure functions in
-the [previous chapter](functions#pure), which variant do you expect to
-be useful in more situations? Which one runs faster?
+Revenind la notițele despre efecte secundare și funcții pure din [capitolul anterior](functions#pure), care dintre cele două variante credeți că este utilă în mai multe situații? Care credeți că se execută mai rapid?
 
 {{if interactive
 
@@ -1452,43 +1027,23 @@ if}}
 
 {{index "reversing (exercise)"}}
 
-There are two obvious ways to implement `reverseArray`. The first is
-to simply go over the input array from front to back and use the
-`unshift` method on the new array to insert each element at its start.
-The second is to loop over the input array backwards and use the `push`
-method. Iterating over an array backwards requires a (somewhat awkward)
-`for` specification, like `(let i = array.length - 1; i >= 0; i--)`.
+Putem implementa `reverseArray` în două moduri. Primul este de a parcurge array-ul primit ca argument de la început la sfârșit și să utilizăm metoda `unshift` pentru a insera fiecare element la începutul noului array. A doua metodă ar presupune să iterăm array-ul original de la sfârșit la început și să utilizăm metoda `push`. Pentru a itera peste un array de la sfârșit la început va trebui să folosiți `for (let i = array.length - 1; i >= 0; i--)`.
 
 {{index "slice method"}}
 
-Reversing the array in place is harder. You have to be careful not to
-overwrite elements that you will later need. Using `reverseArray` or
-otherwise copying the whole array (`array.slice(0)` is a good way to
-copy an array) works but is cheating.
+Inversarea unui array pe loc este mai dificilă. Trebuie să aveți grijă să nu suprascrieți elemente de care s-ar putea să aveți nevoie mai târziu. Utilizarea unor apeluri către `reverseArray` sau altă metodă de a copia întregul array (cum ar fi `array.slice(0)`) funcționează dar în acest mod trișați (ar trebui să nu folosim structuri de date suplimentare).
 
-The trick is to _swap_ the first and last elements, then the second
-and second-to-last, and so on. You can do this by looping over half
-the length of the array (use `Math.floor` to round down—you don't need
-to touch the middle element in an array with an odd number of
-elements) and swapping the element at position `i` with the one at
-position `array.length - 1 - i`. You can use a local binding to
-briefly hold on to one of the elements, overwrite that one with its
-mirror image, and then put the value from the local binding in the
-place where the mirror image used to be.
+Ați putea aborda însă altfel problema: _interschimbăm_ primul și ultimul element, al doilea și penultimul, și așa mai departe. Veți itera pe jumătate din lungimea array-ului și veți interschimba elementul de la index `i` cu cel de pe poziția `array.length-i-1`. Interschimbarea o p uteți realiza cu un binding local care va reține primul element din pereche, apoi al doilea element înlocuiește primul și apoi din bindingul temporar setați al doilea element la valoarea inițială a primului element.
 
 hint}}
 
 {{id list}}
 
-### A list
+### O listă
 
 {{index ["data structure", list], "list (exercise)", "linked list", array, collection}}
 
-Objects, as generic blobs of values, can be used to build all sorts of
-data structures. A common data structure is the _list_ (not to be
-confused with array). A list is a nested set of objects, with the
-first object holding a reference to the second, the second to the
-third, and so on.
+Obiectele, ca și containere generice de valori, pot fi utilizate pentru a construi tot felul de structuri de date. O structură de date comună este o _listă_ ( a nu se confunda cu un array). O listă este un set de obiecte imbricate, primul obiect reținând o referință către al doilea, al doilea către al treilea și așa mai departe.
 
 ```{includeCode: true}
 let list = {
@@ -1503,31 +1058,19 @@ let list = {
 };
 ```
 
-The resulting objects form a chain, like this:
+Obiectul rezultat va fi un lanț asemănător celui din figura de mai jos:
 
 {{figure {url: "img/linked-list.svg", alt: "A linked list",width: "8cm"}}}
 
 {{index "structure sharing", [memory, structure sharing]}}
 
-A nice thing about lists is that they can share parts of their
-structure. For example, if I create two new values `{value: 0, rest:
-list}` and `{value: -1, rest: list}` (with `list` referring to the
-binding defined earlier), they are both independent lists, but they
-share the structure that makes up their last three elements. The
-original list is also still a valid three-element list.
+Interesant despre liste este faptul că pot partaja părți din structura lor. De exemplu, dacă aș crea două valori noi `{value: 0, rest: list}` și `{value: -1, rest: list}` (cu `list` referindu-se la bindingul definit anterior, ele sunt liste independente dar partajează structura care construiește ultimele trei elemente. Lista originală este de asemenea o listă validă de trei elemente.
 
-Write a function `arrayToList` that builds up a list structure like
-the one shown when given `[1, 2, 3]` as argument. Also write a
-`listToArray` function that produces an array from a list. Then add a
-helper function `prepend`, which takes an element and a list and
-creates a new list that adds the element to the front of the input
-list, and `nth`, which takes a list and a number and returns the
-element at the given position in the list (with zero referring to the
-first element) or `undefined` when there is no such element.
+Scrieți o funcție `arrayToList` care construiește o structură de tip listă asemănătoare cu cea prezentată, dacă primște argumentul `[1, 2, 3]`. De asemenea, scrieți funcția `listToArray` care realizează operația inversă. Apoi adăugați o funcție helper `prepend` care primește un element și o listă și adaugă elementul îm fața listei și o alta `nth` care primește o listă și un număr și returnează elementul de pe poziția dată a listei (primul element fiind pe poziția 0) sau `undefined` dacă nu există un asemenea element.
 
 {{index recursion}}
 
-If you haven't already, also write a recursive version of `nth`.
+Dacă nu ați implementat deja, încercați și o implementare recursivă a `nth`.
 
 {{if interactive
 
@@ -1550,36 +1093,21 @@ if}}
 
 {{index "list (exercise)", "linked list"}}
 
-Building up a list is easier when done back to front. So `arrayToList`
-could iterate over the array backwards (see the previous exercise) and, for
-each element, add an object to the list. You can use a local binding
-to hold the part of the list that was built so far and use an
-assignment like `list = {value: X, rest: list}` to add an element.
+Construcția unei liste este mai ușoară de la sfârșit spre început. Astfel, `arrayToList` ar putea itera în ordine inversă pe array (vedeți exedrcițiul anterior) și, pentru fiecare element, să adauge un obiect la listă. Puteți utiliza un binding local pentru a memora o parte din listă care a fost construită deja și veți utiliza o atribuire în genul `list = {value: X, rest: list}` pentru a adăuga un element.
 
 {{index "for loop"}}
 
-To run over a list (in `listToArray` and `nth`), a `for` loop
-specification like this can be used:
+Pentru a parcurge o listă (în `listToArray` și `nth`), puteți specifica o buclă `for` astfel:
 
 ```
 for (let node = list; node; node = node.rest) {}
 ```
 
-Can you see how that works? Every iteration of the loop, `node` points
-to the current sublist, and the body can read its `value` property to
-get the current element. At the end of an iteration, `node` moves to
-the next sublist. When that is null, we have reached the end of the
-list, and the loop is finished.
+Înțegeți cum funcționează? Fiecare iterație a buclei folosește `node` pentru a se referi la sublista curentă iar în corpul buclei putem citi valoarea `value` pentru a obține elementul curent. La sfârșitul unui pas de iterare, `node` se va referi la sublista următoare. Când se ajunge la valoarea null, înseamnă că am parcurs toată lista și bucla se încheie.
 
 {{index recursion}}
 
-The recursive version of `nth` will, similarly, look at an ever
-smaller part of the "tail" of the list and at the same time count down
-the index until it reaches zero, at which point it can return the
-`value` property of the node it is looking at. To get the zeroth
-element of a list, you simply take the `value` property of its head
-node. To get element _N_ + 1, you take the *N*th element of the list
-that's in this list's `rest` property.
+Versiunea recursivă a `nth` va proceda în mod similar, va observa porțiuni din ce în ce mai mici din listă și în același timp va număra în jos, până când indexul ajunge la valoarea 0, când va returna proprietatea `value` a nodului curent. Pentru a obține elementul zero al listei, ne referim la proprietatea `value` a nodului din capul listei. Pentru a obține elementul _N_+1 luăm elementul _N_ din lista `rest` memorată în proprietatea cu același nume a nodului din capul listei originale.
 
 hint}}
 
@@ -1589,27 +1117,17 @@ hint}}
 
 {{index "deep comparison (exercise)", [comparison, deep], "deep comparison", "== operator"}}
 
-The `==` operator compares objects by identity. But sometimes you'd
-prefer to compare the values of their actual properties.
+Operatorul `==` compară obiectele prin identitate. Dar uneori avem nevoie să comparăm valorile proprietăților lor.
 
-Write a function `deepEqual` that takes two values and returns true
-only if they are the same value or are objects with the same
-properties, where the values of the properties are equal when compared
-with a recursive call to `deepEqual`.
+Scrieți o funcție `deepEqual` care primește două valori și returnează true numai dacă ele au aceleași valori sau sunt obiecte cu aceleași proprietăți iar valorile proprietăților sunt egale atunci când se compară cu un apel recursiv al funcției `deepEqual`.
 
 {{index null, "=== operator", "typeof operator"}}
 
-To find out whether values should be compared directly (use the `===`
-operator for that) or have their properties compared, you can use the
-`typeof` operator. If it produces `"object"` for both values, you
-should do a deep comparison. But you have to take one silly exception
-into account: because of a historical accident, `typeof null` also
-produces `"object"`.
+Pentru a determina dacă valorile pot fi comparate direct (prin utilizarea operatorului `===`) sau valorile proprietăților lor trebuie să fie comparate, putem utiliza operatorul `typeof`. Dacă acesta produce valoarea `"object"` pentru ambele valori, atunci trebuie să facem o comparare pe adâncime. Dar trebuie să țineți cont de o excepție: `typeof null` produce tot `"object"`.
 
 {{index "Object.keys function"}}
 
-The `Object.keys` function will be useful when you need to go over the
-properties of objects to compare them.
+Funcția `Object.keys` va fi utilă pentru a parcurge proprietățile obiectelor în comparare.
 
 {{if interactive
 
@@ -1631,28 +1149,15 @@ if}}
 
 {{index "deep comparison (exercise)", [comparison, deep], "typeof operator", "=== operator"}}
 
-Your test for whether you are dealing with a real object will look
-something like `typeof x == "object" && x != null`. Be careful to
-compare properties only when _both_ arguments are objects. In all
-other cases you can just immediately return the result of applying
+Pentru a testa dacă aveți de aface cu un obiect real puteți testa o condiție `typeof x == "object" && x != null`. Atenție, comparați proprietățile doar dacă _ambele_ argumente sunt obiecte. În toate celelalte cazuri puteți returna imediat rezultatul aplicării operatorului 
 `===`.
 
 {{index "Object.keys function"}}
 
-Use `Object.keys` to go over the properties. You need to test whether
-both objects have the same set of property names and whether those
-properties have identical values. One way to do that is to ensure that
-both objects have the same number of properties (the lengths of the
-property lists are the same). And then, when looping over one of the
-object's properties to compare them, always first make sure
-the other actually has a property by that name. If they have the same
-number of properties and all properties in one also exist in the
-other, they have the same set of property names.
+Utilizați `Object.keys` pentru a determina lista proprietăților. Trebuie să determinați dacă ambele obiecte au același număr de proprietăți (lungimea listelor de proprietăți este aceeași). Apoi, când parcurgeți una dintre cele două liste, verificați că fiecare dintre proprietățile din prima listă are un corespondent în cea de a doua.
 
 {{index "return value"}}
 
-Returning the correct value from the function is best done by
-immediately returning false when a mismatch is found and returning
-true at the end of the function.
+Pentru a returna valoarea corectă din funcție, returnați imediat `false` când apare o nepotrivire și apoi returnați `true` la sfârșitul funcției.
 
 hint}}
