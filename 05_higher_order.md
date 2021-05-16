@@ -1,16 +1,12 @@
 {{meta {load_files: ["code/scripts.js", "code/chapter/05_higher_order.js", "code/intro.js"], zip: "node/html"}}}
 
-# Higher-Order Functions
+# Funcții de ordin superior
 
 {{if interactive
 
 {{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
 
-Tzu-li and Tzu-ssu were boasting about the size of their latest
-programs. 'Two-hundred thousand lines,' said Tzu-li, 'not counting
-comments!' Tzu-ssu responded, 'Pssh, mine is almost a *million* lines
-already.' Master Yuan-Ma said, 'My best program has five hundred
-lines.' Hearing this, Tzu-li and Tzu-ssu were enlightened.
+Tzu-li și Tzu-ssu se lăudau despre mărimea ultimelor lor programe. 'Două sute de mii de linii de cod' a spus Tzu-li, 'fără comentarii!'. Tzu-ssu i-a răspuns 'Pssh, al meu are aproape un million de linii deja'. Master Yuan-Ma a spus 'Cel mai bun program al meu are cinci sute de linii'. Auzind asta, Tzu-li și Tzu-ssu au fost iluminați.
 
 quote}}
 
@@ -20,10 +16,7 @@ if}}
 
 {{index "Hoare, C.A.R."}}
 
-There are two ways of constructing a software design: One way is to
-make it so simple that there are obviously no deficiencies, and the
-other way is to make it so complicated that there are no obvious
-deficiencies.
+Există două moduri de a concepe programe pentru computer: Unul este de a le scrie atât de simmple încât să fie evident că nu au deficiențe. Iar celalt este de a le construi atât de complicate încât să nu existe deficiențe evidente.
 
 quote}}
 
@@ -31,17 +24,11 @@ quote}}
 
 {{index "program size"}}
 
-A large program is a costly program, and not just because of the time
-it takes to build. Size almost always involves ((complexity)), and
-complexity confuses programmers. Confused programmers, in turn,
-introduce mistakes (_((bug))s_) into programs. A large program then
-provides a lot of space for these bugs to hide, making them hard to
-find.
+Un program de dimensiuni mare este un program constisitor și nu doar din cauza timpului necesar pentru a-l construi. Dimensiunea este aproape întotdeauna legată de complexitate și complexitatea provoacă multă confuzie în rândul programatorilor. Programatorii confuzi, la rândul lor, vor introduce greșeli (_buguri_) în program. Un program mare va oferi multe locuri în care bugurile acestea să se ascundă și va fi greu să fie găsite.
 
 {{index "summing example"}}
 
-Let's briefly go back to the final two example programs in the
-introduction. The first is self-contained and six lines long.
+Să revenim pe scurt la ultimele două exemple din introducere. Primul este complet și are șase linii:
 
 ```
 let total = 0, count = 1;
@@ -52,96 +39,67 @@ while (count <= 10) {
 console.log(total);
 ```
 
-The second relies on two external functions and is one line long.
+Cel de-al doilea se bazează pe două funcții externe și are o singură linie.
 
 ```
 console.log(sum(range(1, 10)));
 ```
 
-Which one is more likely to contain a bug?
+Care dintre ele este mai probabil să conțină un bug?
 
 {{index "program size"}}
 
-If we count the size of the definitions of `sum` and `range`, the
-second program is also big—even bigger than the first. But still, I'd
-argue that it is more likely to be correct.
+Dacă luăm în considerare dimensiunea funcțiilor `sum` și `range` cel de-al doilea program este chiar mai mare decât primul. Dar este mult mai probabil să fie corect.
 
 {{index [abstraction, "with higher-order functions"], "domain-specific language"}}
 
-It is more likely to be correct because the solution is expressed in a
-((vocabulary)) that corresponds to the problem being solved. Summing a
-range of numbers isn't about loops and counters. It is about ranges
-and sums.
+Este mai probabil să fie corect pentru că soluția este exprimată într-un vocabular adecvat problemei ce trebuie să fie rezolvată. Sumarea pe un interval de numere nu este despre bucle și contoare. Este despre intervale și sume.
 
-The definitions of this vocabulary (the functions `sum` and `range`)
-will still involve loops, counters, and other incidental details. But
-because they are expressing simpler concepts than the program as a
-whole, they are easier to get right.
+Definițiile acestui vocabular (funncțiile `sum` și `range`) vor folosi bucle, contoare și alte detalii. Dar, deorece ele exprimă concepte mai simple decât programul ca și întreg, este mai ușor ca să fie implementate corect.
 
-## Abstraction
+## Abstractizarea
 
-In the context of programming, these kinds of vocabularies are usually
-called _((abstraction))s_. Abstractions hide details and give us the
-ability to talk about problems at a higher (or more abstract) level.
+În contextul programării, acești termeni de vocabular se numesc _abstractizări_. Abstractizările ascund detalii și ne permit să vorbim despre probleme la un nivel mai înalt (mai abstract).
 
 {{index "recipe analogy", "pea soup"}}
 
-As an analogy, compare these two recipes for pea soup. The first one
-goes like this:
+Ca și o analogie, să comparăm aceste două rețete pentru a prepara supa de mazăre. Prima este exprimată astfel:
 
 {{quote
 
-Put 1 cup of dried peas per person into a container. Add water until
-the peas are well covered. Leave the peas in water for at least 12
-hours. Take the peas out of the water and put them in a cooking pan.
-Add 4 cups of water per person. Cover the pan and keep the peas
-simmering for two hours. Take half an onion per person. Cut it into
-pieces with a knife. Add it to the peas. Take a stalk of celery per
-person. Cut it into pieces with a knife. Add it to the peas. Take a
-carrot per person. Cut it into pieces. With a knife! Add it to the
-peas. Cook for 10 more minutes.
+Puneți o cupă de boabe uscate pentru fiecare persoană într-un vas. Adăugați apă până sunt acoperite boabele. Lăsați boabele în apă timp de cel puțin 12 ore. Scoateți boabele din apă și puneți-le într-un vas adecvat. Adăugați 4 căni de apă pentru fiecare persoană. Acoperiți vasul și lăsați-l la foc mic timp de două ore. Adăugați câte o jumătate de ceapă pentru fiecare persoană. Tăiați ceapa în cubulețe cu un cuțit. Apoi adăugați-o în vas. Adăugați câte o tulpină de țelină pentru fiecare persoană. Tăiați-o în bucăți cu un cuțit. Adăugați-o în vas. Adăugați câte un morcov pentru fiecare persoană. Tăiați-l în bucăți. Cu un cuțit! Adăugați-l în vas. Fierbeți timp de încă 10 minute.
 
 quote}}
 
-And this is the second recipe:
+Iar aceasta este cea de a doua rețetă:
 
 {{quote
 
-Per person: 1 cup dried split peas, half a chopped onion, a stalk of
-celery, and a carrot.
+Pentru o persoană: o cupă de boabe de mazăre, o jumătate de ceapă, o tulpină de țelină și un morcov.
 
-Soak peas for 12 hours. Simmer for 2 hours in 4 cups of water
-(per person). Chop and add vegetables. Cook for 10 more minutes.
+Înmuiați boabele de mazăre timp de 12 ore. Fierbeți la foc încet pentru 2 ore în 4 căni de apă (de persoană). Tăiați și adăugați legumele. Gătiți timp de încă 10 minute.
 
 quote}}
 
 {{index vocabulary}}
 
-The second is shorter and easier to interpret. But you do need to
-understand a few more cooking-related words such as _soak_, _simmer_, _chop_,
-and, I guess, _vegetable_.
+Cea de a doua rețetă este mai scurtă și mai ușor de interpretat. Dar trebuie să înțelegeți mai mulți termeni despre gătit, cum ar fi _a înmuia_, _a Înăbuși_, _a tăia_ și, banuiesc, _legume_.
 
-When programming, we can't rely on all the words we need to be waiting
-for us in the dictionary. Thus, we might fall into the pattern of the
-first recipe—work out the precise steps the computer has to perform,
-one by one, blind to the higher-level concepts that they express.
+În programare, nu ne putem aștepta ca toate cuvintele de care avem nevoie să fie disponibile în dicționar. Astfel, am putea ajunge la situația primei rețete - trebuie să definim pașii exacți pe care computerul trebuie să îi execute, unul câte unul, ignorând conceptele de nivel superior pe care aceștia le exprimă.
 
 {{index abstraction}}
 
-It is a useful skill, in programming, to notice when you are working
-at too low a level of abstraction.
+Este un talent util ca și programator ca să vă dați seama atunci când lucrați la un nivel prea scăzut de abstractizare.
 
-## Abstracting repetition
+## Abstractizarea repetițiilor
 
 {{index [array, iteration]}}
 
-Plain functions, as we've seen them so far, are a good way to build
-abstractions. But sometimes they fall short.
+Funcțiile, așa cum am văzut, sunt un bun mod de a construi abstracții. Dar uneori nu sunt potrivite.
 
 {{index "for loop"}}
 
-It is common for a program to do something a given number of times.
-You can write a `for` ((loop)) for that, like this:
+Frecvent în programe repetăm un lucru de un număr dat de ori. Puteți scrie o buclă `for` astfel:
 
 ```
 for (let i = 0; i < 10; i++) {
@@ -149,8 +107,7 @@ for (let i = 0; i < 10; i++) {
 }
 ```
 
-Can we abstract "doing something _N_ times" as a function? Well, it's
-easy to write a function that calls `console.log` _N_ times.
+Putem abstractiza "să facem ceva de _N_ ori" ca o funcție? Desigur, este ușor să scriem o funcție care apelează `console.log` de _N_ ori.
 
 ```
 function repeatLog(n) {
@@ -164,9 +121,7 @@ function repeatLog(n) {
 
 {{indexsee "higher-order function", "function, higher-order"}}
 
-But what if we want to do something other than logging the numbers?
-Since "doing something" can be represented as a function and functions
-are just values, we can pass our action as a function value.
+Dar dacă vrem să executăm o altă operație în loc de `console.log`? Deoarece ceea ce vrem să facem poate fi reprezentat ca o funcție și funcțiile sunt doar valori, am putea transmite acțiunea dorită ca și argument al funcției.
 
 ```{includeCode: "top_lines: 5"}
 function repeat(n, action) {
@@ -181,8 +136,7 @@ repeat(3, console.log);
 // → 2
 ```
 
-We don't have to pass a predefined function to `repeat`. Often, it
-is easier to create a function value on the spot instead.
+Nu e necesar să transmitem o funcție predefinită funcției `repeat`. Adesea este mai ușor să creem o valooare de tip funcție pe loc:
 
 ```
 let labels = [];
@@ -195,30 +149,17 @@ console.log(labels);
 
 {{index "loop body", [braces, body], [parentheses, arguments]}}
 
-This is structured a little like a `for` loop—it first describes the
-kind of loop and then provides a body. However, the body is now written
-as a function value, which is wrapped in the parentheses of the
-call to `repeat`. This is why it has to be closed with the closing
-brace _and_ closing parenthesis. In cases like this example, where the
-body is a single small expression, you could also omit the
-braces and write the loop on a single line.
+Această sintaxa este structura asemănător unei bucle `for` - mai întâi descrie tipul de bbuclă și apoi definește un corp. Dar corpul este definit acum ca o valoare de tip funcție, inclusă între parantezele apelului la funcția `repeat`. De aceea trebuie să fie inclusă între acolade și paranteze de închidere. În cazuri ca și acest exemplu simplu, când corpul este o singură expresie, puteți omite acoladele și să scrieți bucla pe o singură linie.
 
-## Higher-order functions
+## Funcții de ordin superior
 
 {{index [function, "higher-order"], [function, "as value"]}}
 
-Functions that operate on other functions, either by taking them as
-arguments or by returning them, are called _higher-order functions_.
-Since we have already seen that functions are regular values, there is
-nothing particularly remarkable about the fact that such functions
-exist. The term comes from ((mathematics)), where the distinction
-between functions and other values is taken more seriously.
+Funcțiile care operează asupra altor funcții, fie primite ca și argumente, fie returnate, sunt numite _funcții de ordin superior_. Deoarece știm deja că funcțiile sunt valori, nu există nimic remarcabil relativ la faptul că asemenea funcții există. Termenul provine din matematică, unde distincția între funcții și alte valori este tratată mai serios.
 
 {{index abstraction}}
 
-Higher-order functions allow us to abstract over _actions_, not just
-values. They come in several forms. For example, we can have
-functions that create new functions.
+Funcțiile de ordin superior ne permit să abstrtractizăm _acțiunile_, nu doar valorile. Ele vin în mai multe forme. De exemplu, putem avea funcții care crează noi funcții.
 
 ```
 function greaterThan(n) {
@@ -229,7 +170,7 @@ console.log(greaterThan10(11));
 // → true
 ```
 
-And we can have functions that change other functions.
+Și putem avea funcții care modificlte funcții.
 
 ```
 function noisy(f) {
@@ -245,8 +186,7 @@ noisy(Math.min)(3, 2, 1);
 // → called with [3, 2, 1] , returned 1
 ```
 
-We can even write functions that provide new types of ((control
-flow)).
+Putem chiar să scriem funcții care crează noi modalități de control al execuției.
 
 ```
 function unless(test, then) {
@@ -264,8 +204,7 @@ repeat(3, n => {
 
 {{index [array, methods], [array, iteration], "forEach method"}}
 
-There is a built-in array method, `forEach`, that provides something
-like a `for`/`of` loop as a higher-order function.
+Există o metodă predefinită pe array, `forEach`, care ne oferă funcționalitate asemăănătoare cu bucla `for`/`of` ca și o funcție de nivel superior.
 
 ```
 ["A", "B"].forEach(l => console.log(l));
@@ -273,34 +212,19 @@ like a `for`/`of` loop as a higher-order function.
 // → B
 ```
 
-## Script data set
+## Seturi de caractere
 
-One area where higher-order functions shine is data processing. To process data, we'll need some actual data. This chapter will
-use a ((data set)) about scripts—((writing system))s such as Latin,
-Cyrillic, or Arabic.
+O zonă în care funcțiile de ordin superior sunt extrem de utile este prelucrarea datelor. Pentru a prelucra date, mai întâi trebuie să le obținem. În acest capitol vom utiliza multțimi de date despre seturi de caractere, cum ar fi Latin, Cyrillic și Arabic.
 
-Remember ((Unicode)) from [Chapter ?](values#unicode), the system that
-assigns a number to each character in written language? Most of these
-characters are associated with a specific script. The standard
-contains 140 different scripts—81 are still in use today, and 59
-are historic.
+Vă amintiți despre Unicode din [capitolul ?](values#unicode), sistemul care asociază un număr fiecărui caracter din orice limbă scrisă? Standardul conține 140 seturi diferite de caractere - 81 încă folosite azi iar 59 adăugate din considerente istorice.
 
-Though I can fluently read only Latin characters, I appreciate the
-fact that people are writing texts in at least 80 other writing
-systems, many of which I wouldn't even recognize. For example, here's
-a sample of ((Tamil)) handwriting:
+Deși pot citi fluent doar caractere Latin, respect faptul că oamenii scriu texte în cel puțin 80 alte de moduri de scriere, dintre care multe sunt chair de nerecunoscut pentru mine. De exemplu, iată cum arată o scriere de mână Tamil:
 
 {{figure {url: "img/tamil.png", alt: "Tamil handwriting"}}}
 
 {{index "SCRIPTS data set"}}
 
-The example ((data set)) contains some pieces of information about the
-140 scripts defined in Unicode. It is available in the [coding
-sandbox](https://eloquentjavascript.net/code#5) for this chapter[
-([_https://eloquentjavascript.net/code#5_](https://eloquentjavascript.net/code#5))]{if
-book} as the `SCRIPTS` binding. The binding contains an array of
-objects, each of which describes a script.
-
+Setul de caractere exemplificat conține unele informații despre cele 140 de secțiuni ale Unicode. Este disponibil la adresa ([_https://eloquentjavascript.net/code#5_](https://eloquentjavascript.net/code#5))]
 
 ```{lang: "application/json"}
 {
@@ -313,28 +237,17 @@ objects, each of which describes a script.
 }
 ```
 
-Such an object tells us the name of the script, the Unicode ranges
-assigned to it, the direction in which it is written, the
-(approximate) origin time, whether it is still in use, and a link to
-more information. The direction may be `"ltr"` for left to right, `"rtl"`
-for right to left (the way Arabic and Hebrew text are written), or
-`"ttb"` for top to bottom (as with Mongolian writing).
+Un asemenea obiect ne dă informații despre setul de caractere, domeniul de valori asociate în Unicode, direcția în care se scrie, originea aproximativă în timp, dacă mai este utilizat sau nu și un link util pentru a afla mai multe informații. Direcția poate fi `"ltr"` (de la stânga la dreapta), `"rtl"` (de la dreapta la stânga - cum se scriu textele în arabă sau ebraică) sau `"ttb"` (de sus în jos, ca și în mongolă).
 
 {{index "slice method"}}
 
-The `ranges` property contains an array of Unicode character
-((range))s, each of which is a two-element array containing a lower bound
-and an upper bound. Any character codes within these ranges are assigned
-to the script. The lower ((bound)) is inclusive (code 994 is a Coptic
-character), and the upper bound is non-inclusive (code 1008 isn't).
+Proprietatea `ranges` conține un array de intervale Unicod, fiecare definit ca un array de două elemente ce conține limita inferioară și cea superioară. Orice coduri aparținând acestor intervale fac parte din respectivul set de caractere. Limita inferioară este inclusivă (codul 994 face parte din setul Coptic) iar limita superioară este exclusivă (codul 1008 nu face parte).
 
 ## Filtering arrays
 
 {{index [array, methods], [array, filtering], "filter method", [function, "higher-order"], "predicate function"}}
 
-To find the scripts in the data set that are still in use, the
-following function might be helpful. It filters out the elements in an
-array that don't pass a test.
+Pentru a determina scrierile din setul de date care sunt încă utilizate, ar putea fi util următorul script, care filtrează elementele din array care nu trec un test:
 
 ```
 function filter(array, test) {
@@ -353,20 +266,13 @@ console.log(filter(SCRIPTS, script => script.living));
 
 {{index [function, "as value"], [function, application]}}
 
-The function uses the argument named `test`, a function value, to fill
-a "gap" in the computation—the process of deciding which elements to
-collect.
+Funcția utilizează argumentul `test`, o valoare de tip funcție, pentru a închide un "gol" în calcule - procesul de a decide care dintre elemente să fie colectat.
 
 {{index "filter method", "pure function", "side effect"}}
 
-Note how the `filter` function, rather than deleting elements from the
-existing array, builds up a new array with only the elements that pass
-the test. This function is _pure_. It does not modify the array it is
-given.
+Observați că funcția `filter`, în loc să elimine elemente din array-ul inițial, construiește un array nou ce conține doar elementele care trec testul. Această funcție este _pură_. Ea nu modifică array-ul primit.
 
-Like `forEach`, `filter` is a ((standard)) array method. The example
-defined the function only to show what it does internally.
-From now on, we'll use it like this instead:
+Ca și `forEach`, `filter` este o metodă implicită pentru array-uri. Exemplul definește funcția doar pentru a demonstra cum funcționează aceasta intern. În continuare, o vom folosi astfel:
 
 ```
 console.log(SCRIPTS.filter(s => s.direction == "ttb"));
@@ -375,20 +281,15 @@ console.log(SCRIPTS.filter(s => s.direction == "ttb"));
 
 {{id map}}
 
-## Transforming with map
+## Transformarea cu `map`
 
 {{index [array, methods], "map method"}}
 
-Say we have an array of objects representing scripts, produced by
-filtering the `SCRIPTS` array somehow. But we want an array of names,
-which is easier to inspect.
+Să presupunem că avem un array de obiecte ce reprezintă seturile de caractere, produs prin filtrarea array-ului `SCRIPTS`. Dar vrem să construim un array de nume, care este mai ușor de inspectat.
 
 {{index [function, "higher-order"]}}
 
-The `map` method transforms an array by applying a function to all of
-its elements and building a new array from the returned values. The
-new array will have the same length as the input array, but its
-content will have been _mapped_ to a new form by the function.
+Metoda `map` transformă un array prin aplicarea unei funcții asupra fiecărui element al array-ului și construirea unui nou array cu valorile returnate. Noul array va avea aceeași lungime ca și array-ul de intrare, dar conținutul său va fi _mapat_ într-o nouă formă de către funncție.
 
 ```
 function map(array, transform) {
@@ -404,31 +305,21 @@ console.log(map(rtlScripts, s => s.name));
 // → ["Adlam", "Arabic", "Imperial Aramaic", …]
 ```
 
-Like `forEach` and `filter`, `map` is a standard array method.
+Ca și `forEach` și `filter`, `map` este o metodă standard pentru array-uri.
 
-## Summarizing with reduce
+## Rezumatul cu `reduce`
 
 {{index [array, methods], "summing example", "reduce method"}}
 
-Another common thing to do with arrays is to compute a single value
-from them. Our recurring example, summing a collection of numbers, is
-an instance of this. Another example is finding the script with
-the most characters.
+O altă operație frecventă cu array-urile este de a calcula o singură valoare din colecția de elemente. Exemplul nostru recursiv, sumarea ueni colecții de nume, este un exemplu bun. Alt exemplu este determinarea setului de caractere ce conține cele mai multe elemente.
 
 {{indexsee "fold", "reduce method"}}
 
 {{index [function, "higher-order"], "reduce method"}}
 
-The higher-order operation that represents this pattern is called
-_reduce_ (sometimes also called _fold_). It builds a value by
-repeatedly taking a single element from the array and combining it
-with the current value. When summing numbers, you'd start with the
-number zero and, for each element, add that to the sum.
+Operația de ordin superior care reprezintă acest șablon se numește _reduce_ (uneori denumită și _fold_). Ea construiește o valoare prin alegerea repetată a câte unui element din array și combinarea acestuia cu valoarea curentă. Când adunăm numerele, începem cu numărul zero și, pentru fiecare număr, îl adăăugăm la sumă.
 
-The parameters to `reduce` are, apart from the array, a combining
-function and a start value. This function is a little less
-straightforward than `filter` and `map`, so take a close look at
-it:
+Parametrii funcției `reduce` sunt, pe lângă array-ul de prelucrat, o funcție de combinare și o valoare de start. Această funcție este puțin mai greu de înțeles decât `filter` sau `map`, așa că ar trebui să analizați cu atenție exemplul:
 
 ```
 function reduce(array, combine, start) {
@@ -445,11 +336,7 @@ console.log(reduce([1, 2, 3, 4], (a, b) => a + b, 0));
 
 {{index "reduce method", "SCRIPTS data set"}}
 
-The standard array method `reduce`, which of course corresponds to
-this function, has an added convenience. If your array contains at
-least one element, you are allowed to leave off the `start` argument.
-The method will take the first element of the array as its start value
-and start reducing at the second element.
+Metoda standard pentru array-uri `reduce`, care corespunde funcției de mai sus, mai are o convenție. Dacă array-ul conține cel puțin un element, puteți să nu transmiteți argumentul `start`. Metoda va considera primul element ca și valoare de start și va reduce array-ul începând cu al doilea element.
 
 ```
 console.log([1, 2, 3, 4].reduce((a, b) => a + b));
@@ -458,8 +345,7 @@ console.log([1, 2, 3, 4].reduce((a, b) => a + b));
 
 {{index maximum, "characterCount function"}}
 
-To use `reduce` (twice) to find the script with the most characters,
-we can write something like this:
+Pentru a utiliza `reduce` (de două ori) ca să găsim scrierea cu cele mai multe caractere, putem scrie un cod asemănător celui de mai jos:
 
 ```
 function characterCount(script) {
@@ -474,28 +360,15 @@ console.log(SCRIPTS.reduce((a, b) => {
 // → {name: "Han", …}
 ```
 
-The `characterCount` function reduces the ranges assigned to a script
-by summing their sizes. Note the use of destructuring in the parameter
-list of the reducer function. The second call to `reduce` then uses
-this to find the largest script by repeatedly comparing two scripts
-and returning the larger one.
+Funcția `characterCount` reduce intervalele asociate unei scrieri prin sumarea dimensiunilor lor. Observați utilizarea destructurării în lista de parametri a funcției reducătoare. Cel de al doilea apel al funcției `reduce` utilizează apoi valoarea returnată de prima funcție pentru a determina scrierea cu cele mai multe caractere prin compararea repetată a două scrieri și a returna scrierea mai cuprinzătoare.
 
-The Han script has more than 89,000 characters assigned to it in the
-Unicode standard, making it by far the biggest writing system in the
-data set. Han is a script (sometimes) used for Chinese, Japanese, and
-Korean text. Those languages share a lot of characters, though they
-tend to write them differently. The (U.S.-based) Unicode Consortium
-decided to treat them as a single writing system to save
-character codes. This is called _Han unification_ and still makes some
-people very angry.
+Scrierea Han are mai mult de 89000 de caractere asociate în standardul Unicode, ceea ce o face de departe cel mai cuprinzător sistem de scriere din setul de date. Han este o scriere utilizată uneori pentru texte în chineză, japoneză sau coreană. Aceste limbi utilizează în comun multe caractere deși tind să le utilizeze în mod diferit. Consorțiul Unicode (U.S.) a decis să le grupeze într-un singur sistem de scriere pentru a economisi numărul de coduri utilizate. Aceasta este așa numita _unificare Han_ și incă înfurie pe unii utilizatori.
 
-## Composability
+## Compozabilitate
 
 {{index loop, maximum}}
 
-Consider how we would have written the previous example (finding the
-biggest script) without higher-order functions. The code is not that
-much worse.
+Să vedem cum am fi scris soluția din exemplul de mai sus fără a utiliza funcții de ordin superior (ca să determinăm scrierea cu cele mai multe caractere). Codul nu arată chiar așa de rău.
 
 ```{test: no}
 let biggest = null;
@@ -509,16 +382,15 @@ console.log(biggest);
 // → {name: "Han", …}
 ```
 
-There are a few more bindings, and the program is four lines
-longer. But it is still very readable.
+
+
+Se utilizează câteva bindinguri în plus și programul este cu patru linii mai lung. Dar este încă foarte lizibil.
 
 {{index "average function", composability, [function, "higher-order"], "filter method", "map method", "reduce method"}}
 
 {{id average_function}}
 
-Higher-order functions start to shine when you need to _compose_
-operations. As an example, let's write code that finds the average
-year of origin for living and dead scripts in the data set.
+Funcțiile de ordin superior încep să strălucească atunci când este necesar să _compunem_ operațiile.De exemplu, haideți să scriem codul care determină media anului de origine pentru scrieri utilizate în curent și istorice din setul de date.
 
 ```
 function average(array) {
@@ -533,14 +405,9 @@ console.log(Math.round(average(
 // → 204
 ```
 
-So the dead scripts in Unicode are, on average, older than the living
-ones. This is not a terribly meaningful or surprising statistic. But I
-hope you'll agree that the code used to compute it isn't hard to read.
-You can see it as a pipeline: we start with all scripts, filter out
-the living (or dead) ones, take the years from those, average them,
-and round the result.
+Deci, scrierile istorice sunt în medie mai vechi decât cele încă utilizate în prezent. Aceasta nu este o statistică cu o semnificație extraordinară sau surprinzătoare. Dar sper că sunteți de acord că nu este dificil de urmărit codul care calculează acest rezultat. Îl puteți privi ca pe o conductă: începem cu tot setul de date, îl filtrăm pentru scrierile de care avem nevoie, extragem anii, calculăm media și rotunjim rezultatul.
 
-You could definitely also write this computation as one big ((loop)).
+Ați fi putut cu siguranță să scrieți toată logica într-o singură buclă:
 
 ```
 let total = 0, count = 0;
@@ -554,30 +421,19 @@ console.log(Math.round(total / count));
 // → 1165
 ```
 
-But it is harder to see what was being computed and how. And because
-intermediate results aren't represented as coherent values, it'd be a
-lot more work to extract something like `average` into a separate
-function.
+Dar este mai dificil de înțeles ce și cum urmează să fie calculat. Și, deoarece rezultatele intermediare nu sunt reprezentate ca și valori coerente, ar fi mult mai dificil de a extrage o valoare cum ar fi funcția `average` într-o bucată separată de cod.
 
 {{index efficiency, [array, creation]}}
 
-In terms of what the computer is actually doing, these two approaches
-are also quite different. The first will build up new arrays when
-running `filter` and `map`, whereas the second computes only some
-numbers, doing less work. You can usually afford the readable
-approach, but if you're processing huge arrays, and doing so many
-times, the less abstract style might be worth the extra speed.
+În ceea ce privește operațiile efectuate de către computer, cele două abordări sunt destul de diferite. Prima va construi noi array-uri când se execută `filter` și `map` în timp ce cea de a doua va calcula niște numere, efectuând mai puține operații. De regulă vă puteți permite prima abordare, cea mai lizibilă, dar atunci când prelucrați array-uri de mari dimensiuni, abordarea mai puțin abstractă ar putea să merite câștigul de viteză.
 
-## Strings and character codes
+## Stringuri și codurile caracterelor
 
 {{index "SCRIPTS data set"}}
 
-One use of the data set would be figuring out what script a piece of
-text is using. Let's go through a program that does this.
+O utilizare a setului de date ar putea fi pentru a determina scrierea pe care o utilizează o anumită bucată de text. Haideți să construim un program care realizează aceasta.
 
-Remember that each script has an array of character code ranges
-associated with it. So given a character code, we could use a function
-like this to find the corresponding script (if any):
+Amintiți-vă ca fiecare scriere utilizează un array de intervale asociate cu ea. Astfel, dat fiind un cod al unui caracter, putem utiliza o funcție ca și cea care urmează pentru a determina scrierea din care face parte:
 
 {{index "some method", "predicate function", [array, methods]}}
 
@@ -597,41 +453,21 @@ console.log(characterScript(121));
 // → {name: "Latin", …}
 ```
 
-The `some` method is another higher-order function. It takes a test
-function and tells you whether that function returns true for any of the
-elements in the array.
+Metoda `some` este o altă funcție de ordin superior. Ia primește ca argument o funcție de test și ne returnează dacă acea funcție returnează true pentru oricare dintre elementele array-ului.
 
 {{id code_units}}
 
-But how do we get the character codes in a string?
+Dar cum putem obține codurile caracterelor dintr-un string?
 
-In [Chapter ?](values) I mentioned that JavaScript ((string))s are
-encoded as a sequence of 16-bit numbers. These are called _((code
-unit))s_. A ((Unicode)) ((character)) code was initially supposed to
-fit within such a unit (which gives you a little over 65,000
-characters). When it became clear that wasn't going to be enough, many
-people balked at the need to use more memory per character. To address
-these concerns, ((UTF-16)), the format used by JavaScript strings, was
-invented. It describes most common characters using a single 16-bit
-code unit but uses a pair of two such units for others.
+În [capitolul ?](values) am precizat că stringurile JavaScript sunt codificate ca o secvență de numere pe 16 biți. Acestea sunt numite _unități de cod_. Inițial, un cod Unicode se presupunea că poate fi codificat într-o asemenea unitate (ceea ce permitea codificarea a aproximativ 65000 caractere). Când a devenit evident că numărul acesta este prea mic, au apărut voci care susțineau că trebuie să folosim mai multă memorie pentru fiecare caracter. Pentru a adresa aceste probleme, a fost inventat formatul UTF-16, utilizat pentru stringurile JavaScript. Acest standard descrie caracterele cele mai frecvent utilizate ca o singură unitate de cod pe 16 biți dar pentru unele caractere utilizează o pereche de unități de cod.
 
 {{index error}}
 
-UTF-16 is generally considered a bad idea today. It seems almost
-intentionally designed to invite mistakes. It's easy to write programs
-that pretend code units and characters are the same thing. And if your
-language doesn't use two-unit characters, that will appear to work
-just fine. But as soon as someone tries to use such a program with
-some less common ((Chinese characters)), it breaks. Fortunately, with
-the advent of ((emoji)), everybody has started using two-unit
-characters, and the burden of dealing with such problems is more
-fairly distributed.
+UTF-16 este considerat o idee proastă în prezent. Pare a fi conceput intenționat pentru a provoca greșeli. Este ușor să scriem programe care pretind că nu există nici o diferență între unități de cod și caractere. Dacă scrierea pe care o utilizați nu conține caractere reprezentate pe două unități, acesta va părea că funcționează fără probleme. Dar imediat ce un alt programator încearcă să utilizeze un asemenea program utilizând caractere mai puțin folosite (cum ar fi cele din limba chineză), programul eșuează. Din fericire, odată cu apariția caracterelor emoji toată lumea a început să folosească caractere reprezentate pe două unități de cod și presiunea de a rezolva asemenea probleme este distribuită mai uniform.
 
 {{index [string, length], [string, indexing], "charCodeAt method"}}
 
-Unfortunately, obvious operations on JavaScript strings, such as
-getting their length through the `length` property and accessing their
-content using square brackets, deal only with code units.
+Din păcate, operații evidente asupra stringurilor JavaScript, cum ar fi determinarea lungimii cu ajutorul proprietății `length` precum și accesarea conținutului lor în paranteze pătrate, utilizează doar unități de cod.
 
 ```{test: no}
 // Two emoji characters, horse and shoe
@@ -648,21 +484,11 @@ console.log(horseShoe.codePointAt(0));
 
 {{index "codePointAt method"}}
 
-JavaScript's `charCodeAt` method gives you a code unit, not a full
-character code. The `codePointAt` method, added later, does give a
-full Unicode character. So we could use that to get characters from a
-string. But the argument passed to `codePointAt` is still an index
-into the sequence of code units. So to run over all characters in a
-string, we'd still need to deal with the question of whether a
-character takes up one or two code units.
+Metoda JavaScript `charCodeAt` vă returnează o unitate de cod, nu un caracter complet. metoda `codePointAt`, adăugată ulterior, vă returnează de fapt un caracter Unicode complet. Am putea să o utilizăm pentru a obține caracterele unui string. Dar argumentul transmis metodei `codePointAt` este tot un index într-o secvență de unități de cod. Prin urmare, pentru a parcurge toate caracterele dintr-un string, va trebui să răspundem la întrebarea dacă un caracter folosește una sau două unități de cod.
 
 {{index "for/of loop", character}}
 
-In the [previous chapter](data#for_of_loop), I mentioned that a
-`for`/`of` loop can also be used on strings. Like `codePointAt`, this
-type of loop was introduced at a time where people were acutely aware
-of the problems with UTF-16. When you use it to loop over a string, it
-gives you real characters, not code units.
+În [capitolul anterior](data#for_of_loop), am menționat că o buclă `for`/`of` poate fi utilizată și pentru stringuri. Ca și `codePointAt`, acest tip de buclă a fost introdus atunci când programatorii erau conștienți cu privire la problemele generate de utilizarea UTF-16. Când folosiți acest tip de buclă pentru a itera pe un string, veți obține caracterele reale, nu unități de cod.
 
 ```
 let roseDragon = "🌹🐉";
@@ -673,17 +499,13 @@ for (let char of roseDragon) {
 // → 🐉
 ```
 
-If you have a character (which will be a string of one or two code
-units), you can use `codePointAt(0)` to get its code.
+Când aveți un caracter (care va fi un string de una sau două unități de cod), puteți utiliza `codePointAt(0)` pentru a obține codul său.
 
-## Recognizing text
+## Recunoașterea textului
 
 {{index "SCRIPTS data set", "countBy function", [array, counting]}}
 
-We have a `characterScript` function and a way to correctly loop over
-characters. The next step is to count the characters that belong
-to each script. The following counting abstraction will be useful
-there:
+Avem funcția `characterScript` și o modalitate de a itera corect caracterele. Următorul pas este de a contoriza caracterele care corespund fiecărei scrieri. Următoarea abstracție pentru numărare va fi utilă:
 
 ```{includeCode: strip_log}
 function countBy(items, groupName) {
@@ -704,23 +526,15 @@ console.log(countBy([1, 2, 3, 4, 5], n => n > 2));
 // → [{name: false, count: 2}, {name: true, count: 3}]
 ```
 
-The `countBy` function expects a collection (anything that we can loop
-over with `for`/`of`) and a function that computes a group name for a
-given element. It returns an array of
-objects, each of which names a group and tells you the number of
-elements that were found in that group.
+Funcția `countBy` primește o colecție (orice poate fi iterat cu `for`/`of`) și o funcție care determină numele grupului pentru un element dat. Va returna un array de obiecte, fiecare reprezentând numele unui grup și numărul de elemente ce fac parte din acel grup.
 
 {{index "findIndex method", "indexOf method"}}
 
-It uses another array method—`findIndex`. This method is somewhat like
-`indexOf`, but instead of looking for a specific value, it finds the
-first value for which the given function returns true. Like `indexOf`,
-it returns -1 when no such element is found.
+Utilizăm o altă metodă - `findIndex`. Această metodă este asemănătoare cu `indexOf`, dar, în loc să caute o anumită valoare, caută prima valoare pentru care funcția returnează prima valoare pentru care funcția dată returnează `true`. Ca și `indexOf`, returnează -1 dacă nu găsește un asemenea element.
 
 {{index "textScripts function", "Chinese characters"}}
 
-Using `countBy`, we can write the function that tells us which scripts
-are used in a piece of text.
+Folosind `countBy` putem scrie funcția care determină care scrieri sunt folosite într-un text.
 
 ```{includeCode: strip_log, startCode: true}
 function textScripts(text) {
@@ -743,46 +557,25 @@ console.log(textScripts('英国的狗说"woof", 俄罗斯的狗说"тяв"'));
 
 {{index "characterScript function", "filter method"}}
 
-The function first counts the characters by name, using
-`characterScript` to assign them a name and falling back to the
-string `"none"` for characters that aren't part of any script. The
-`filter` call drops the entry for `"none"` from the resulting array
-since we aren't interested in those characters.
+Prima funcție numără caracterele după nume, utilizând `characterScript` pentru a le asocia unui nume și folosind valoarea implicită `"none"` pentru caracterele care nu fac parte din nici o scriere. Apelul către funcția `filter` elimină caracterele din grupul `"none"` deoarece acestea nu prezintă interes.
 
 {{index "reduce method", "map method", "join method", [array, methods]}}
 
-To be able to compute ((percentage))s, we first need the total number
-of characters that belong to a script, which we can compute with
-`reduce`. If no such characters are found, the function returns a
-specific string. Otherwise, it transforms the counting entries into
-readable strings with `map` and then combines them with `join`.
+Pentru a calcula procentajele, mai întâi trebuie să determinăm numărul total de caractere pentru fiecare scriere, ceea ce putem face folosind `reduce`. Dacă nu determinăm nici un asemenea caracter, funcția returnează un string specific. Altfel, transformă intrările contorizate în stringuri lizibile, folosind `map` și apoi combinându-le cu `join`.
 
-## Summary
+## Rezumat
 
-Being able to pass function values to other functions is a deeply
-useful aspect of JavaScript. It allows us to write functions that
-model computations with "gaps" in them. The code that calls these
-functions can fill in the gaps by providing function values.
+Abilitatea de a transmite valori de tip funcție altor funcții este un aspect profund util în JavaScript. Astfel putem scrie funcții care modelează calcule cu "goluri" în ele. Codul care apelează aceste funcții va umple golurile cu ajutorul unor valori de tip funcție.
 
-Arrays provide a number of useful higher-order methods. You can use
-`forEach` to loop over the elements in an array. The `filter` method
-returns a new array containing only the elements that pass the
-((predicate function)). Transforming an array by putting each element
-through a function is done with `map`. You can use `reduce` to combine
-all the elements in an array into a single value. The `some` method
-tests whether any element matches a given predicate function. And
-`findIndex` finds the position of the first element that matches a
-predicate.
+Pentru array-uri avem la dispoziție câteva metode utile de ordin superior. Putem utiliza bucla `forEach` pentru a itera peste elementele unui array. metoda `filter` ne returnează un array ce conține doar elementele care trec peste testul funcției predicat. Putem transforma fiecare element al unui array folosind metoda `map`. Putem folosi `reduce` pentru a combina elementele unui array într-o singură valoare. Metoda `some` testează dacă există măcar un singur element în array care verifică funcția predicat. Iar `findIndex` determină poziția primului element care satisface predicatul.
 
-## Exercises
+## Exerciții
 
-### Flattening
+### Aplatizarea (Flattening)
 
 {{index "flattening (exercise)", "reduce method", "concat method", [array, flattening]}}
 
-Use the `reduce` method in combination with the `concat` method to
-"flatten" an array of arrays into a single array that has all the
-elements of the original arrays.
+Utilizați metoda `reduce` în combinație cu metoda `concat` pentru a "aplatiza" un array de array-uri într-un array pe un singur nivel ce conține toate elementele array-urilor originale.
 
 {{if interactive
 
@@ -793,20 +586,13 @@ let arrays = [[1, 2, 3], [4, 5], [6]];
 ```
 if}}
 
-### Your own loop
+### Propria versiune de buclă
 
 {{index "your own loop (example)", "for loop"}}
 
-Write a higher-order function `loop` that provides something like a
-`for` loop statement. It takes a value, a test function, an update
-function, and a body function. Each iteration, it first runs the test
-function on the current loop value and stops if that returns false.
-Then it calls the body function, giving it the current value. 
-Finally, it calls the update function to create a new value and
-starts from the beginning.
+Scrieți o funcție de ordin superior `loop` care execută o operație asemănătoare unei instrucțiuni `for`. Va primi ca și argumente o valoare, o funcție de test, o funcție de actualizare și o funcție pentru corpul acțiunii. La fiecare iterație, mai întâi va rula funcția test asupra valorii curente a buclei și se va opri dacă testul este fals. Apoi va apela funcția pentru corpul buclei, având ca și parametru valoarea curentă. Apoi va apela funcția pentru actualizare pentru a crea o nouă valoare și va reîncepe execuția.
 
-When defining the function, you can use a regular loop to do the
-actual looping.
+Când definiți funcția, puteți utiliza o buclă obișnuită pentru iterare.
 
 {{if interactive
 
@@ -821,18 +607,13 @@ loop(3, n => n > 0, n => n - 1, console.log);
 
 if}}
 
-### Everything
+### Totul
 
 {{index "predicate function", "everything (exercise)", "every method", "some method", [array, methods], "&& operator", "|| operator"}}
 
-Analogous to the `some` method, arrays also have an `every` method.
-This one returns true when the given function returns true for _every_
-element in the array. In a way, `some` is a version of the `||`
-operator that acts on arrays, and `every` is like the `&&` operator.
+Analog metodei `some`, array-urile au și o metodă `every`. Aceasta returnează `true` doar dacă funcția dată returnează true pentru fiecare element al array-ului. Dintr-un anume punct de vedere, `some` este o versiune de `||` asupra unui array iar `every` este o versiune asemănătoare operatorului `&&`.
 
-Implement `every` as a function that takes an array and a predicate
-function as parameters. Write two versions, one using a loop and one
-using the `some` method.
+Implementați `every` ca și o funcție care primește un array și o funcție predicat ca și argumente. Scrieți două versiuni, una care utilizează o buclă și alta care utilizează metoda `some`.
 
 {{if interactive
 
@@ -855,36 +636,21 @@ if}}
 
 {{index "everything (exercise)", "short-circuit evaluation", "return keyword"}}
 
-Like the `&&` operator, the `every` method can stop evaluating further
-elements as soon as it has found one that doesn't match. So the
-loop-based version can jump out of the loop—with `break` or
-`return`—as soon as it runs into an element for which the predicate
-function returns false. If the loop runs to its end without finding
-such an element, we know that all elements matched and we should
-return true.
+Ca și operatorul `&&`, metoda `every` poate să încheie evaluarea elementelor atunci când determină că elementul curent nu se potrivește. Astfel încât versiunea bazată pe buclă poate încheia execuția folosind `break` sau `return` imediat ce detectează că, pentru un anume element, funcția predicat returnează `false`. Dacă bucla se execută până la final fără să detecteze un astfel de element, știm că toate elementele au fost potrivite și putem returna `true`.
 
-To build `every` on top of `some`, we can apply _((De Morgan's
-laws))_, which state that `a && b` equals `!(!a || !b)`. This can be
-generalized to arrays, where all elements in the array match if there
-is no element in the array that does not match.
+Pentru a construi `every` cu ajutorul `some` putem aplica _legile lui De Morgan_ care afirmă că `a && b` este egal cu `!(!a || !b)`. Generalizând pentru array-uri, putem spune că toate elementele din array se potrivesc dacă nu există nici un element în array care nu se potrivește.
 
 hint}}
 
-### Dominant writing direction
+### Direcția dominantă de scriere
 
 {{index "SCRIPTS data set", "direction (writing)", "groupBy function", "dominant direction (exercise)"}}
 
-Write a function that computes the dominant writing direction in a
-string of text. Remember that each script object has a `direction`
-property that can be `"ltr"` (left to right), `"rtl"` (right to left),
-or `"ttb"` (top to bottom).
+Scrieți o funcție care calculează direcția dominantă de scriere într-un text. Vă reamintesc că fiecare obiect ce descrie o scriere are o proprietate `direction` care poate fi `"ltr"` (stânga-dreapta), `"rtl"` (dreapta-stânga) sau `"ttb"` (sus-jos).
 
 {{index "characterScript function", "countBy function"}}
 
-The dominant direction is the direction of a majority of the
-characters that have a script associated with them. The
-`characterScript` and `countBy` functions defined earlier in the
-chapter are probably useful here.
+Direcția dominantă este direcția majorității caracterelor care au o scriere asociată. Probabil funcțiile `characterScript` și `countBy` pe care le-am implementat anterior ar putea fi utile.
 
 {{if interactive
 
@@ -904,16 +670,10 @@ if}}
 
 {{index "dominant direction (exercise)", "textScripts function", "filter method", "characterScript function"}}
 
-Your solution might look a lot like the first half of the
-`textScripts` example. You again have to count characters by a
-criterion based on `characterScript` and then filter out the part of
-the result that refers to uninteresting (script-less) characters.
+Soluția ar putea fi foarte asemănătoare cu prima parte a exemplului `textScripts`. Din nou va trebui să numărați caracterele pe baza unui criteriu bazat pe `characterScript` și apoi să eliminați prin filtrare caracterele neinteresante.
 
 {{index "reduce method"}}
 
-Finding the direction with the highest character count can be done
-with `reduce`. If it's not clear how, refer to the example
-earlier in the chapter, where `reduce` was used to find the script
-with the most characters.
+Determinarea direcției cu cel mai mare număr de caractere se poate determina cu `reduce`. Dacă nu vă e clar cum, studiați exemplul anterior din acest capitol, în care am folosit `reduce` pentru a determina scrierea cu cele mai multe caractere.
 
 hint}}
