@@ -1,12 +1,10 @@
 {{meta {load_files: ["code/chapter/06_object.js"], zip: "node/html"}}}
 
-# The Secret Life of Objects
+# Viața secretă a obiectelor
 
 {{quote {author: "Barbara Liskov", title: "Programming with Abstract Data Types", chapter: true}
 
-An abstract data type is realized by writing a special kind of program
-[…] which defines the type in terms of the operations which can be
-performed on it.
+Un tip de date abstract se construiește prin scrierea unui tip special de program […] care definește tipul sub forma operațiilor care se pot efectua asupra lui.
 
 quote}}
 
@@ -14,70 +12,42 @@ quote}}
 
 {{figure {url: "img/chapter_picture_6.jpg", alt: "Picture of a rabbit with its proto-rabbit", chapter: framed}}}
 
-[Chapter ?](data) introduced JavaScript's objects. In programming
-culture, we have a thing called _((object-oriented programming))_, a
-set of techniques that use objects (and related concepts) as the
-central principle of program organization.
+[Capitolul ?](data) introduce obiectele JavaScript. În cultura programării, avem o metodologie numită _programare orientată obiect_ care reprezintă un set de tehnici care utilizează obiecte (și concepte înrudite) ca și principiul central de organizare a programelor.
 
-Though no one really agrees on its precise definition, object-oriented
-programming has shaped the design of many programming languages,
-including JavaScript. This chapter will describe the way these ideas
-can be applied in JavaScript.
+Deși nu există un consens cu privire la o definiție precisă, programarea orientată obiect a definit forma multor limbaje de programare, inclusiv JavaScript. Acest capitol va descrie modul în care aceste idei pot fi aplicate în JavaScript.
 
-## Encapsulation
+## Încapsularea
 
 {{index encapsulation, isolation, modularity}}
 
-The core idea in object-oriented programming is to divide programs
-into smaller pieces and make each piece responsible for managing its
-own state.
+Ideea de bază în programarea orientată obiect este de a divide programele în bucăți mai mici și a scrie fiecare bucată astfel încât să fie responsabilă de gestiunea stării sale.
 
-This way, some knowledge about the way a piece of the program works
-can be kept _local_ to that piece. Someone working on the rest of the
-program does not have to remember or even be aware of that knowledge.
-Whenever these local details change, only the code directly around it
-needs to be updated.
+Astfel, anumite cunoștințe despre modul în care funcționează o anumită parte din program pot fi păstrate la nivel _local_, în acea bucată de cod. Cineva care ar lucra în altă parte a programului nu va trebui să își amintească sau să conștientizeze aceste cunoștințe. Întotdeauna când aceste detalii locale vor fi actualizate, doar codul care le conține direct va trebui să fie actualizat.
 
 {{id interface}}
 {{index [interface, object]}}
 
-Different pieces of such a program interact with each other through
-_interfaces_, limited sets of functions or bindings that provide
-useful functionality at a more abstract level, hiding their precise
-implementation.
+Diferitele părți ale unui asemenea program interacționează între ele prin intermediul _interfețelor_, seturi limitate de funcții sau bindinguri care oferă funcționalitate utilă la un nivel mai abstract, ascuzând detaliile de implementare.
 
 {{index "public properties", "private properties", "access control", [method, interface]}}
 
-Such program pieces are modeled using ((object))s. Their interface
-consists of a specific set of methods and properties. Properties
-that are part of the interface are called _public_. The others, which
-outside code should not be touching, are called _private_.
+Asemenea părți de program se modelează folosind obiecte. Interfața lor constă într-un set specific de metode și proprietăți. Proprietățile care fac parte din interfață sunt numite _publice_. Celelalte, care nu trebuie să fie utilizate de codul din afara, sunt numite _private_.
 
 {{index "underscore character"}}
 
-Many languages provide a way to distinguish public and private
-properties and prevent outside code from accessing the private
-ones altogether. JavaScript, once again taking the minimalist
-approach, does not—not yet at least. There is work underway to add
-this to the language.
+Multe limbaje oferă un mod de a distinge între accesarea proprietăților publice și private și interzic codului exterior să le acceseze pe cele private. JavaScript, printr-o abordare minimalistă, nu o interzice - cel puțin nu încă. Există inițiative de a adăuga această facilitate limbajului.
 
-Even though the language doesn't have this distinction built in,
-JavaScript programmers _are_ successfully using this idea. Typically,
-the available interface is described in documentation or comments. It
-is also common to put an underscore (`_`) character at the start of
-property names to indicate that those properties are private.
+Deși limbajul nu are această dinstincție implementată, programatorii JavaScript utilizează cu succes această idee. De regulă, interfața disponibilă este descrisă în  documentație sau în comentarii. De asemenea, o practică frecventă este plasarea caractererului `_` la începutul numelui unei proprietăți pentru a preciza că acea proprietate este privată.
 
-Separating interface from implementation is a great idea. It is
-usually called _((encapsulation))_.
+Separarea interfeței de implementare este o idee extraordinară. De regulă, aceasta poartă numele de _încapsulare_.
 
 {{id obj_methods}}
 
-## Methods
+## Metode
 
 {{index "rabbit example", method, [property, access]}}
 
-Methods are nothing more than properties that hold function values.
-This is a simple method:
+Metodele nu sunt altceva decât proprietăți care rețin o valoare de tip funcție. Iată o metodă simplă:
 
 ```
 let rabbit = {};
@@ -91,10 +61,7 @@ rabbit.speak("I'm alive.");
 
 {{index "this binding", "method call"}}
 
-Usually a method needs to do something with the object it was called
-on. When a function is called as a method—looked up as a property and
-immediately called, as in `object.method()`—the binding called `this`
-in its body automatically points at the object that it was called on.
+De regulă o metodă trebuie să execute o operație cu obiectul asupra căruia a fost apelată. Atunci când o funcție este apelată ca și o metodă - folosind `object.method()` - bindingul numit `this` în corpul metodei indică automat obiectul asupra căruia a fost apelată.
 
 ```{includeCode: "top_lines:6", test: join}
 function speak(line) {
@@ -115,26 +82,18 @@ hungryRabbit.speak("I could use a carrot right now.");
 
 {{index "call method"}}
 
-You can think of `this` as an extra ((parameter)) that is passed in a
-different way. If you want to pass it explicitly, you can use a
-function's `call` method, which takes the `this` value as its first
-argument and treats further arguments as normal parameters.
+Puteți interpreta `this` ca și un parametru suplimentar transmis într-un mod diferit. Dacă doriți să îl transmiteți explicit, puteți utiliza metoda `call` a unei funcții, care primește `this` ca și primul argument și tratează celelalte argumente ca și parametri normali.
 
 ```
 speak.call(hungryRabbit, "Burp!");
 // → The hungry rabbit says 'Burp!'
 ```
 
-Since each function has its own `this` binding, whose value depends on
-the way it is called, you cannot refer to the `this` of the wrapping
-scope in a regular function defined with the `function` keyword.
+Deoarece fiecare funcție are propriul său binding `this`, a cărui valoare depinde de modul în care a fost apelată, nu vă puteți referi la `this` din domeniul de vizibilitate înconjurător într-o funcție definită cu ajutorul cuvântului cheie `function`.
 
 {{index "this binding", "arrow function"}}
 
-Arrow functions are different—they do not bind their own `this` but
-can see the `this` binding of the scope around them. Thus, you can do
-something like the following code, which references `this` from inside
-a local function:
+Funcțiile arrow sunt diferite - ele nu crează propriul binding `this` ci se referă la bindingul `this` din domeniul de vizibilitate care le înconjoară. Prin urmare, puteți scrie cod astfel, referindu-vă la `this` din interiorul unei funncții locale:
 
 ```
 function normalize() {
@@ -146,16 +105,15 @@ normalize.call({coords: [0, 2, 3], length: 5});
 
 {{index "map method"}}
 
-If I had written the argument to `map` using the `function` keyword,
-the code wouldn't work.
+Dacă aș fi scris argumentul funcției `map` folosind cuvântul cheie `function`, codul de mai sus nu ar fi funcționat.
 
 {{id prototypes}}
 
-## Prototypes
+## Prototipuri
 
 {{index "toString method"}}
 
-Watch closely.
+Urmăriți atent:
 
 ```
 let empty = {};
@@ -167,23 +125,15 @@ console.log(empty.toString());
 
 {{index magic}}
 
-I pulled a property out of an empty object. Magic!
+Am extras o proprietate dintr-un obiect gol. Magie!
 
 {{index [property, inheritance], [object, property]}}
 
-Well, not really. I have simply been withholding information about the
-way JavaScript objects work. In addition to their set of properties,
-most objects also have a _((prototype))_. A prototype is another
-object that is used as a fallback source of properties. When an object
-gets a request for a property that it does not have, its prototype
-will be searched for the property, then the prototype's prototype, and
-so on.
+Bine, nu chiar. Doar că nu am dat încă detalii despre modul în care funcționează obiectele JavaScript. Pe lângă setul propriu de proprietăți, majoritatea obiectelor au și un _prototip_. Un prototip este un alt obiect care este folosit ca și sursă implicită de proprietăți. Dacă un obiect primește o cerere pentru o proprietate pe care nu o are, proprietatea respectivă va fi căutată în prototippul său, apoi în prototipul prototipului său, etc.
 
 {{index "Object prototype"}}
 
-So who is the ((prototype)) of that empty object? It is the great
-ancestral prototype, the entity behind almost all objects,
-`Object.prototype`.
+Dar cine este prototipul unui obiect gol? Este marele strămoș, prototipul din spatele aproape tuturor obiectelor, `Object.prototype`.
 
 ```
 console.log(Object.getPrototypeOf({}) ==
@@ -195,22 +145,15 @@ console.log(Object.getPrototypeOf(Object.prototype));
 
 {{index "getPrototypeOf function"}}
 
-As you guess, `Object.getPrototypeOf` returns the prototype of an
-object.
+Cuum probabil ați ghicit, `Object.getPrototypeOf` returnează prototipul unui obiect.
 
 {{index "toString method"}}
 
-The prototype relations of JavaScript objects form a ((tree))-shaped
-structure, and at the root of this structure sits `Object.prototype`.
-It provides a few methods that show up in all objects, such as
-`toString`, which converts an object to a string representation.
+Relațiile dintre prototipurile obiectelor JavaScript formează o structură arborescentă iar rădăcina acestei structuri este `Object.prototype`. Acesta pune la dispoziție mai multe metode, cum ar fi `toString` care convertește un obiect în reprezentarea sa de tip string.
 
 {{index inheritance, "Function prototype", "Array prototype", "Object prototype"}}
 
-Many objects don't directly have `Object.prototype` as their
-((prototype)) but instead have another object that provides a different set of
-default properties. Functions derive from `Function.prototype`, and
-arrays derive from `Array.prototype`.
+Multe obiecte nu au descendență directă din `Object.prototype` ca și prototip al lor ci sunt descendenți al unui alt obiect care are un set diferit de proprietăți implicite. Orice funcție este derivată din `Function.prototype`, iar array-urile sunt derivate din `Array.prototype`.
 
 ```
 console.log(Object.getPrototypeOf(Math.max) ==
@@ -223,14 +166,11 @@ console.log(Object.getPrototypeOf([]) ==
 
 {{index "Object prototype"}}
 
-Such a prototype object will itself have a prototype, often
-`Object.prototype`, so that it still indirectly provides methods like
-`toString`.
+Asemenea obiecte prototip au la rândul lor un prototip, adesea `Object.prototype`, astfel încât, în mod indirect, metodele cum ar fi `toString` sunt disponibile.
 
 {{index "rabbit example", "Object.create function"}}
 
-You can use `Object.create` to create an object with a specific
-((prototype)).
+Puteți folosi `Object.create` pentru a construi un obiect cu un anumit prototip.
 
 ```
 let protoRabbit = {
@@ -246,41 +186,25 @@ killerRabbit.speak("SKREEEE!");
 
 {{index "shared property"}}
 
-A property like `speak(line)` in an object expression is a shorthand way
-of defining a method. It creates a property called `speak` and gives
-it a function as its value.
+O proprietate asemănătoare cu `speak(line)` într-o expresie de tip obiect este o modalitate mai scurtă de a defini o metodă. Ea crează o proprietate numită `speak` și îi atribuie ca și valoare o funcție.
 
-The "proto" rabbit acts as a container for the properties that are
-shared by all rabbits. An individual rabbit object, like the killer
-rabbit, contains properties that apply only to itself—in this case its
-type—and derives shared properties from its prototype.
+Iepurele "proto" acționează ca și un container pentru proprietățile pe care le au toți iepurii. Un obiect individual de tip iepure, cum ar fi un iepure ucigaș, are toate proprietățile care se refră doar la el - tipul său - precum și pe cele derivate din prototipul său.
 
 {{id classes}}
 
-## Classes
+## Clase
 
 {{index "object-oriented programming"}}
 
-JavaScript's ((prototype)) system can be interpreted as a somewhat
-informal take on an object-oriented concept called _((class))es_. A
-class defines the shape of a type of object—what methods and
-properties it has. Such an object is called an _((instance))_ of the
-class.
+Sistemul de prototipuri din JavaScript poate fi interpretat ca un sistem informal de reprezentare a conceptului orientat obiect numit _clase_. O clasă definește forma unui anumit tip de obiect - ce metode și ce proprietăți are respectivul tip de obiecte. Un obiect particular va fi denumit _instanță_ a clasei respective.
 
 {{index [property, inheritance]}}
 
-Prototypes are useful for defining properties for which all instances
-of a class share the same value, such as ((method))s. Properties that
-differ per instance, such as our rabbits' `type` property, need to
-be stored directly in the objects themselves.
+Prototipurile sunt utile pentru a defini proprietăți pentru care toate instanțele unei clase partajează aceeași valoare, cum ar fi metodele. Proprietățile care diferă pentru fiecare instanță, cum ar fi proprietatea `type` a iepurelui, trebuie să fie memorate direct în obiect.
 
 {{id constructors}}
 
-So to create an instance of a given class, you have to make
-an object that derives from the proper prototype, but you _also_ have
-to make sure it, itself, has the properties that instances of this
-class are supposed to have. This is what a _((constructor))_ function
-does.
+Prin urmare, pentru a crea o instanță a unei clase date, trebuie să construiți un obiect care este derivat din prototipul corespunzător, dar trebui și să vă asigurați că are toate proprietățile pe care le au instanțele acestei clase. Pentru aceasta folosim funcții _constructor_.
 
 ```
 function makeRabbit(type) {
@@ -292,16 +216,11 @@ function makeRabbit(type) {
 
 {{index "new operator", "this binding", "return keyword", [object, creation]}}
 
-JavaScript provides a way to make defining this type of function
-easier. If you put the keyword `new` in front of a function call, the
-function is treated as a constructor. This means that an object with
-the right prototype is automatically created, bound to `this` in the
-function, and returned at the end of the function.
+În JavaScript aveți posibilitatea să definiți mai ușor acest tip de funcții. Dacă plasați cuvântul `new` în fața unui apel de funcție, funcția este tratată ca un constructor. Aceasta înseamnă că se va crea automat un obiect cu prototipul adecvat, legat de `this` în funcție și returnat la sfârșitul funcției.
 
 {{index "prototype property"}}
 
-The prototype object used when constructing objects is found by taking
-the `prototype` property of the constructor function.
+Obiectul prototip utilizat pentru construcția obiectelor este determinat prin consultarea proprietății `prototype` a funcției constructor.
 
 {{index "rabbit example"}}
 
@@ -318,26 +237,15 @@ let weirdRabbit = new Rabbit("weird");
 
 {{index constructor}}
 
-Constructors (all functions, in fact) automatically get a property
-named `prototype`, which by default holds a plain, empty object that
-derives from `Object.prototype`. You can overwrite it with a new
-object if you want. Or you can add properties to the existing object,
-as the example does.
+Constructorii (de fapt toate funcțiile) automat au o proprietate numită `prototype`, care implicit stochează un obiect gol ce derivă din `Object.prototype`. O puteți suprascrie cu un alt obiect dacă doriți. Sau puteți adăuga proprietăți la obiectul existent, ca și în exemplu.
 
 {{index capitalization}}
 
-By convention, the names of constructors are capitalized so that they
-can easily be distinguished from other functions.
+Prin convenție, numele constructorilor încep cu literă mare astfel încât să îi putem identifica rapid în multitudinea de funcții.
 
 {{index "prototype property", "getPrototypeOf function"}}
 
-It is important to understand the distinction between the way a
-prototype is associated with a constructor (through its `prototype`
-property) and the way objects _have_ a prototype (which can be found
-with `Object.getPrototypeOf`). The actual prototype of a constructor
-is `Function.prototype` since constructors are functions. Its
-`prototype` _property_ holds the prototype used for instances created
-through it.
+Este important să înțelegeți distincția dintre modul în care un prototip se asociază cu un constructor (prin intermediul propreității `prototype`) și felul în care obiectele au un prototip (care poate fi determinat cu ajutorul `Object.getPrototypeOf`). De fapt, prototipul unui constructor este `Function.prototype` deoarece constructorii sunt funcții. Proprietatea `prototype` reține prototipul utilizat pentru a crea instanțe cu ajutorul său.
 
 ```
 console.log(Object.getPrototypeOf(Rabbit) ==
@@ -348,12 +256,9 @@ console.log(Object.getPrototypeOf(weirdRabbit) ==
 // → true
 ```
 
-## Class notation
+## Notația pentru clasă
 
-So JavaScript ((class))es are ((constructor)) functions with a
-((prototype)) property. That is how they work, and until 2015, that
-was how you had to write them. These days, we have a less awkward
-notation.
+Clasele JavaScript sunt funcții constructor ce au un prototip. Așa funcționează și așa trebuia să le scriem, până în 2015. Acum, avem la dispoziție o notație mai puțin ciudată.
 
 ```{includeCode: true}
 class Rabbit {
@@ -371,28 +276,13 @@ let blackRabbit = new Rabbit("black");
 
 {{index "rabbit example", [braces, class]}}
 
-The `class` keyword starts a ((class declaration)), which allows us to
-define a constructor and a set of methods all in a single place. Any
-number of methods may be written inside the declaration's braces.
-The one named `constructor` is treated specially. It
-provides the actual constructor function, which will be bound to the
-name `Rabbit`. The others are packaged into that constructor's
-prototype. Thus, the earlier class declaration is equivalent to the
-constructor definition from the previous section. It just looks nicer.
+Cuvîntul `class` începe declarația unei clase, ceea ce ne permite să definim un constructor și un set de metode, toate într-un singur bloc. Putem scrie oricâte metode în blocul declarației. Cea numită `constructor` primește un tratament special. Ea este de fapt funcția constructor, care va fi legată de numele `Rabbit`. Toate celelalte sunt împachetate în prototipul acestui constructor. Prin urmare, declarația anterioară a unei clase este echivalentă cu definiția constructorului din secțiunea anterioară. Doar că arată mai bine.
 
 {{index ["class declaration", properties]}}
 
-Class declarations currently allow only _methods_—properties that hold
-functions—to be added to the ((prototype)). This can be somewhat
-inconvenient when you want to save a non-function value in there.
-The next version of the language will probably improve this. For now, you
-can create such properties by directly manipulating the
-prototype after you've defined the class.
+Declarațiile claselor permit deocamdată doar adăugarea _metodelor_ - proprietăți ce memorează funcții - la prototip. Acesta ar putea fi oarecum un inconvenient când încercați să salvați o valoare care nu este funcție. Probabil versiunile următoare ale limbajului vor imbunătăți aceasta. Acum, puteți crea asemenea proprietăți prin manipularea directă a prototipului, după ce ați definit clasa.
 
-Like `function`, `class` can be used both in statements and in
-expressions. When used as an expression, it doesn't define a
-binding but just produces the constructor as a value. You are allowed
-to omit the class name in a class expression.
+Ca și `function`, `class` poate fi utilizat atât în instrucțiuni cât și în expresii. Când este utilizat într-o expresie, nu definește un binding ci doar produce constructorul clasei ca și valoare. Puteți să omiteți denumirea clasei într-o expresie de tip clasă.
 
 ```
 let object = new class { getWord() { return "hello"; } };
@@ -400,15 +290,11 @@ console.log(object.getWord());
 // → hello
 ```
 
-## Overriding derived properties
+## Suprascrierea proprietăților derivate
 
 {{index "shared property", overriding, [property, inheritance]}}
 
-When you add a property to an object, whether it is present in the
-prototype or not, the property is added to the object _itself_.
-If there was already a property with
-the same name in the prototype, this property will no longer affect
-the object, as it is now hidden behind the object's own property.
+Când adăugați o proprietate la un obiect, fie că este prezentă în prototip sau nu, proprietatea este adăugată obiectului în sine. Dacă exista deja o proprietate cu acest nume în prototipul său, acea proprietate nu va mai afecta obiectul deoarece acum va fi ascunsă de către proprietatea obiectului în sine.
 
 ```
 Rabbit.prototype.teeth = "small";
@@ -425,25 +311,17 @@ console.log(Rabbit.prototype.teeth);
 
 {{index [prototype, diagram]}}
 
-The following diagram sketches the situation after this code has run.
-The `Rabbit` and `Object` ((prototype))s lie behind `killerRabbit` as
-a kind of backdrop, where properties that are not found in the object
-itself can be looked up.
+Următoarea diagramă schițează situația după execuția acestui cod. Prototipurile obiectelor `Rabbit` și `Object` sunt în spatele obiectului `killerRabbit`, ca un fel de fundal, iar proprietățile care nu sunt găsite în obiectul în sine vor fi căutate în ele.
 
 {{figure {url: "img/rabbits.svg", alt: "Rabbit object prototype schema",width: "8cm"}}}
 
 {{index "shared property"}}
 
-Overriding properties that exist in a prototype can be a useful thing
-to do. As the rabbit teeth example shows, overriding can be used to express
-exceptional properties in instances of a more generic class of
-objects, while letting the nonexceptional objects take a
-standard value from their prototype.
+Suprascrierea proprietăților care există deja într-un prototip poate fi utilă. Așa cum ne arată exemplul de mai sus, suprascrierea poate fi utilizată pentru a exprima proprietăți excepționale în instanțe ale unei clase mai generice, iar obiectele normale vor avea valorile standard ale proprietăților extrase din prototip.
 
 {{index "toString method", "Array prototype", "Function prototype"}}
 
-Overriding is also used to give the standard function and array prototypes a
-different `toString` method than the basic object prototype.
+Am putea utiliza suprascrierea pentru a înlocui funcția `toString` standard pentru prototipurile pentru funcții și array-uri cu o metodă diferită de cea de bază.
 
 ```
 console.log(Array.prototype.toString ==
@@ -455,32 +333,22 @@ console.log([1, 2].toString());
 
 {{index "toString method", "join method", "call method"}}
 
-Calling `toString` on an array gives a result similar to calling
-`.join(",")` on it—it puts commas between the values in the array.
-Directly calling `Object.prototype.toString` with an array produces a
-different string. That function doesn't know about arrays, so it
-simply puts the word _object_ and the name of the type between square
-brackets.
+Apelul funcției `toString` pentru un array ne dă un rezultat similar cu apelul funcției `.join(",")` asupra sa - se afișează o listă de valori separate prin virgulă. Apelul direct al funcției `Object.prototype.toString` cu un parametru de tip array va produce un string diferit. Acea funcție nu știe ce este un array, astfel încât va afișa cuvântul _object_ și numele tipului variabilei între paranteze pătrate.
 
 ```
 console.log(Object.prototype.toString.call([1, 2]));
 // → [object Array]
 ```
 
-## Maps
+## Map-uri
 
 {{index "map method"}}
 
-We saw the word _map_ used in the [previous chapter](higher_order#map)
-for an operation that transforms a data structure by applying a
-function to its elements. Confusing as it is, in programming the same
-word is also used for a related but rather different thing.
+Am utilizat _map_ în [capitolul anterior](higher_order#map) pentru operația de transformare a unei structuri de date prin aplicarea unei funcții asupra elementelor sale. Cu toată confuzia, în programare se utilizează același cuvânt pentru a denumi un concept înrudit dar diferit.
 
 {{index "map (data structure)", "ages example", ["data structure", map]}}
 
-A _map_ (noun) is a data structure that associates values (the keys)
-with other values. For example, you might want to map names to ages.
-It is possible to use objects for this.
+Un _map_ (substantiv) este o structură de date care asociază valori (chei) cu alte valori. De exemplu, am dori să mapăm numele cu vârstele. Pentru aceasta putem folosi obiecte.
 
 ```
 let ages = {
@@ -499,18 +367,11 @@ console.log("Is toString's age known?", "toString" in ages);
 
 {{index "Object.prototype", "toString method"}}
 
-Here, the object's property names are the people's names, and the
-property values are their ages. But we certainly didn't list anybody named
-toString in our map. Yet, because plain objects derive from
-`Object.prototype`, it looks like the property is there.
+În acest caz, proprietățile obiectelor sunt numite cu numele persoanelor iar valorile reprezintă vârstele acelor persoane. Evident, nimeni nu are numele `toString` în lista noastră. Totuși, deoarece obiectele astfel definite sunt derivate din `Object.prototype`, se pare că proprietatea este prezentă.
 
 {{index "Object.create function", prototype}}
 
-As such, using plain objects as maps is dangerous. There are several
-possible ways to avoid this problem. First, it is possible to create
-objects with _no_ prototype. If you pass `null` to `Object.create`,
-the resulting object will not derive from `Object.prototype` and can
-safely be used as a map.
+În consecință, utilizarea obiectelor simple ca și mapări este periculoasă. Avem mai multe variante de a evita problema. Mai întâi, putem crea obiecte care nu au un prototip. Dacă transmitem `null` către `Object.create`, obiectul rezultat nu va fi derivat din `Object.prototype` și poate fi folosit în siguranță ca și un map.
 
 ```
 console.log("toString" in Object.create(null));
@@ -519,15 +380,11 @@ console.log("toString" in Object.create(null));
 
 {{index [property, naming]}}
 
-Object property names must be strings. If you need a map whose
-keys can't easily be converted to strings—such as objects—you cannot
-use an object as your map.
+Numele proprietăților obiectelor trebuie să fie stringuri. Dacă aveți nevoie de un map ale cărui chei nu pot fi ușor convertite în stringuri - cum ar fi obiectele - nu puteți utiliza un obiect ca și un map.
 
 {{index "Map class"}}
 
-Fortunately, JavaScript comes with a class called `Map` that is
-written for this exact purpose. It stores a mapping and allows any
-type of keys.
+Din fericire, JavaScript definește o clasă `Map` exact în acest scop. Ea memorează o mapare și permite orice tip de valoare pentru chei.
 
 ```
 let ages = new Map();
@@ -545,19 +402,11 @@ console.log(ages.has("toString"));
 
 {{index [interface, object], "set method", "get method", "has method", encapsulation}}
 
-The methods `set`, `get`, and `has` are part of the interface of the
-`Map` object. Writing a data structure that can quickly update and
-search a large set of values isn't easy, but we don't have to worry
-about that. Someone else did it for us, and we can go through this
-simple interface to use their work.
+Metodele `set`, `get` și `has` fac parte din interfața obiectului `Map`. Scrierea unei structuri care poate fi actualizată rapid și care permite căutarea într-un set mare de valori nu este ușoară. Dar nu trebuie nici să ne îngrijoreze. Altcineva a rezolvat deja problema și putem folosi această interfață simplă.
 
 {{index "hasOwnProperty method", "in operator"}}
 
-If you do have a plain object that you need to treat as a map for some
-reason, it is useful to know that `Object.keys` returns only an
-object's _own_ keys, not those in the prototype. As an alternative to
-the `in` operator, you can use the `hasOwnProperty` method, which
-ignores the object's prototype.
+Dacă aveți un obiect simplu pe care trebuie să îl tratați ca pe un map, este util să știți că `Object.keys` returnează doar cheile _proprii_ ale obiectului, nu și pe cele ale prototipului. Ca o alternativă la operatorul `in` puteți folosi metoda `hasOwnProperty` care ignoră prototipul obiectului.
 
 ```
 console.log({x: 1}.hasOwnProperty("x"));
@@ -566,16 +415,11 @@ console.log({x: 1}.hasOwnProperty("toString"));
 // → false
 ```
 
-## Polymorphism
+## Polimorfismul
 
 {{index "toString method", "String function", polymorphism, overriding, "object-oriented programming"}}
 
-When you call the `String` function (which converts a value to a
-string) on an object, it will call the `toString` method on that
-object to try to create a meaningful string from it. I mentioned that
-some of the standard prototypes define their own version of `toString`
-so they can create a string that contains more useful information than
-`"[object Object]"`. You can also do that yourself.
+Când apelați funcția `String` asupra unui obiect (care convertește o valoare într-un string), aceasta va apela metoda `toString` a obiectului pentru a încerca să creeze un string care are semnificație. Unele prototipuri standard definesc propria versiune a metodei `toString` astfel încât pot crea un string ce conține o informație mai utilă decât `"[object Object]"`. Și noi putem face același lucru.
 
 ```{includeCode: "top_lines: 3"}
 Rabbit.prototype.toString = function() {
@@ -588,44 +432,23 @@ console.log(String(blackRabbit));
 
 {{index "object-oriented programming", [interface, object]}}
 
-This is a simple instance of a powerful idea. When a piece of code is
-written to work with objects that have a certain interface—in this
-case, a `toString` method—any kind of object that happens to support
-this interface can be plugged into the code, and it will just work.
+Acesta este un exemplu simplu al unei idei foarte puternice. Atunci când o bucată de cod este scrisă astfel încât poate funcționa pentru obiecte care au o anumită interfață - în acest caz metoda `toString` - orice obiect care suportă această interfață poate fi conectat la acel cod și codul va funcționa.
 
-This technique is called _polymorphism_. Polymorphic code can work
-with values of different shapes, as long as they support the interface
-it expects.
+Această tehnică poartă denumirea de _polimorfism_. Codul polimorfic poate funcționa cu valori de tipuri diferite, cât timp aceste valori suportă interfața de care codul are nevoie.
 
 {{index "for/of loop", "iterator interface"}}
 
-I mentioned in [Chapter ?](data#for_of_loop) that a `for`/`of` loop
-can loop over several kinds of data structures. This is another case
-of polymorphism—such loops expect the data structure to expose a
-specific interface, which arrays and strings do. And we can also add
-this interface to our own objects! But before we can do that, we need
-to know what symbols are.
+Am menționat în [capitolul ?](data#for_of_loop) că o buclă `for`/`of` poate fi folosită pentru mai multe tipuri de structuri de date. Acesta este un alt exemplu de polimorfism - asemenea bucle se așteaptă ca structura de date să epună o anumită interfață, care este expusă de către array-uri și stringuri. Putem adăuga această interfață și obiectelor noastre! Dar înainte de a putea să facem acest lucru, trebuie să aflăm ce sunt simbolurile.
 
-## Symbols
+## Simbolurile
 
-It is possible for multiple interfaces to use the same property name
-for different things. For example, I could define an interface in which
-the `toString` method is supposed to convert the object into a piece
-of yarn. It would not be possible for an object to conform to both
-that interface and the standard use of `toString`.
+Este posibil ca interfețe diferite să utilizeze același nume al unnei proprietăți pentru operații diferite. De exemplu, am putea defini o interfață în care metoda `toString` va converti un obiect în ceva nemaivăzut. Nu va fi posibil ca un obiect să se conformeze atât acelei interfețe cât și unei interfețe care utilizează metoda `toString` în mod standard.
 
-That would be a bad idea, and this problem isn't that common. Most
-JavaScript programmers simply don't think about it. But the language
-designers, whose _job_ it is to think about this stuff, have provided
-us with a solution anyway.
+Aceasta ar fi o idee proastă și problema aceasta nu este foarte frecventă. Majoritatea programatorilor JavaScript nu se gândesc la acest aspect. Dar arhitecții limbajului, care au sarcina de a se gândi la astfel de aspecte, ne-au dat o soluție.
 
 {{index "Symbol function", [property, naming]}}
 
-When I claimed that property names are strings, that wasn't entirely
-accurate. They usually are, but they can also be _((symbol))s_.
-Symbols are values created with the `Symbol` function. Unlike strings,
-newly created symbols are unique—you cannot create the same symbol
-twice.
+Când am spus că numele propreităților sunt stringuri, nu am fost chiar exact. De regulă e adevărat, însă sunt și _simboluri_. Simbolurile sunt valori create cu funcția `Symbol`. Spre deosebire de stringuri, simbolurile nou create sunt unice - nu puteți crea de două ori același simbol.
 
 ```
 let sym = Symbol("name");
@@ -636,14 +459,9 @@ console.log(blackRabbit[sym]);
 // → 55
 ```
 
-The string you pass to `Symbol` is included when you convert it to a
-string and can make it easier to recognize a symbol when, for
-example, showing it in the console. But it has no meaning beyond
-that—multiple symbols may have the same name.
+Stringul pe care îl transmiteți funcției `Symbol` este inclus atunci când îl convertiți într-un string și ușurează identificarea acestui simbol când, de exemplu, îl afișați în consolă. Dar nu are nici o semnificație suplimentară dincolo de faptul că mai multe simboluri nu pot avea aceleași nume.
 
-Being both unique and usable as property names makes symbols suitable
-for defining interfaces that can peacefully live alongside other
-properties, no matter what their names are.
+Faptul că sunt unice și utilizabile ca și nume ale proprietăților face aceste simboluri potrivite pentru definirea interfețelor care pot trăi în pace lângă alte proprietăți, indiferent de numele acestora.
 
 ```{includeCode: "top_lines: 1"}
 const toStringSymbol = Symbol("toString");
@@ -659,11 +477,7 @@ console.log([1, 2][toStringSymbol]());
 
 {{index [property, naming]}}
 
-It is possible to include symbol properties in object expressions and
-classes by using ((square bracket))s around the property name.
-That causes the property name to be evaluated, much like the square
-bracket property access notation, which allows us to refer to a
-binding that holds the symbol.
+Putem include proprietăți definite cu simboluri în expresii de tip obiect și clase utilizând paranteze pătrate în jurul numelui proprietății. Prin aceasta numele proprietății va fi evaluat, similar notației cu paranteze pătrate pentru accesul proprietăților, care ne permite să ne referim la un binding ce referă acel simbol.
 
 ```
 let stringObject = {
@@ -673,29 +487,19 @@ console.log(stringObject[toStringSymbol]());
 // → a jute rope
 ```
 
-## The iterator interface
+## Interfața iterator
 
 {{index "iterable interface", "Symbol.iterator symbol", "for/of loop"}}
 
-The object given to a `for`/`of` loop is expected to be _iterable_.
-This means it has a method named with the `Symbol.iterator`
-symbol (a symbol value defined by the language, stored as a property
-of the `Symbol` function).
+Ne așteptăm ca un obiect transmis unei bucle `for`/`of` să fie _iterabil_. Aceasta înseamnă că trebuie să aibă o metodă denumită cu simbolul `Symbol.iterator` (simbol definit de către limbaj și stocat ca o proprietate a funcției `Symbol`).
 
 {{index "iterator interface", "next method"}}
 
-When called, that method should return an object that provides a
-second interface, _iterator_. This is the actual thing that iterates.
-It has a `next` method that returns the next result. That result
-should be an object with a `value` property that provides the next value,
-if there is one, and a `done` property, which should be true when there
-are no more results and false otherwise.
+Când este apelată, această metodă trebuie să returneze un obiect care expune o a doua interfață, _iterator_. Aceasta este cea care realizează iterarea propriu-zisă. Ea definește o metodă `next` care returnează următorul rezultat. Acel rezultat trebuie să fie un obiect care are proprietatea `value` ce returnează următoarea valoare, dacă există una și o proprietate `done` care trebuie să fie `true` dacă nu mai există alte rezultate și `false` în caz contrar.
 
-Note that the `next`, `value`, and `done` property names are plain
-strings, not symbols. Only `Symbol.iterator`, which is likely to be
-added to a _lot_ of different objects, is an actual symbol.
+De menționat că `next`, `value`, și `done` sunt nume de proprietăți care sunt stringuri, nu simboluri. Doar `Symbol.iterator`, care este probabil să fie adăugat șa o mulțime de obiecte diferite, este de fapt un simbol.
 
-We can directly use this interface ourselves.
+Putem utiliza direct această interfață.
 
 ```
 let okIterator = "OK"[Symbol.iterator]();
@@ -711,8 +515,7 @@ console.log(okIterator.next());
 
 {{id matrix}}
 
-Let's implement an iterable data structure. We'll build a _matrix_
-class, acting as a two-dimensional array.
+Să implementăm o structură de date iterabilă. Vom construi o clasă _matrix_, care va funcționa ca un array bidimensional.
 
 ```{includeCode: true}
 class Matrix {
@@ -737,19 +540,11 @@ class Matrix {
 }
 ```
 
-The class stores its content in a single array of _width_ × _height_
-elements. The elements are stored row by row, so, for example, the third
-element in the fifth row is (using zero-based indexing) stored at
-position 4 × _width_ + 2.
+Clasa își memorează conținutul întru array cu _width_ × _height_ elemente. Elementele sunt memorate rând cu rând, de exemplu al treilea element de pe al cincilea rând (utilizând indexarea din zero) este memorat în poziția 4 × _width_ + 2.
 
-The constructor function takes a width, a height, and an optional
-`element` function that will be used to fill in the initial values.
-There are `get` and `set` methods to retrieve and update elements in
-the matrix.
+Funcția constructor primeste `width`, `height` și o funcție opțională `element` utilizată pentru a determina valorile inițiale. Sunt definite metode `get` și `set` pentru a returna sau a actualiza elementele din matrice.
 
-When looping over a matrix, you are usually interested in the position
-of the elements as well as the elements themselves, so we'll have our
-iterator produce objects with `x`, `y`, and `value` properties.
+Când iterăm peste o matrice, de regulă ne interesează poziția fiecărui element, precum și elementul în sine, deci iteratorul nostru va trebui să producă elemente cu proprietățile `x`, `y` și `value`.
 
 {{index "MatrixIterator class"}}
 
@@ -777,18 +572,9 @@ class MatrixIterator {
 }
 ```
 
-The class tracks the progress of iterating over a matrix in its `x`
-and `y` properties. The `next` method starts by checking whether the
-bottom of the matrix has been reached. If it hasn't, it _first_
-creates the object holding the current value and _then_ updates its
-position, moving to the next row if necessary.
+Clasa gestionează progresul iterării peste o matrice în proprietățile `x` și `y`. Metoda `next` începe prin a verifica dacă s-a ajuns la sfârșitul matricii. Dacă nu, _mai întâi_ crează un obiect ce reține valoarea curentă și _apoi_ îi actualizează poziția, mutându-se la următorul rând dacă este necesar.
 
-Let's set up the `Matrix` class to be iterable. Throughout this book,
-I'll occasionally use after-the-fact prototype manipulation to add
-methods to classes so that the individual pieces of code remain small
-and self-contained. In a regular program, where there is no need to
-split the code into small pieces, you'd declare these methods directly
-in the class instead.
+Haideți să facem clasa `Matrix` iterabilă. Pe parcusul acestei cărți, ocazional, voi manipula prototipurile create pentru a adăuga metode claselor astfel încât bucățile de cod să rămână simple. Într-un program obișnuit, unde nu este necesară spargerea codului în bucăți mai mici, veți declara aceste metode direct în clasă.
 
 ```{includeCode: true}
 Matrix.prototype[Symbol.iterator] = function() {
@@ -798,7 +584,7 @@ Matrix.prototype[Symbol.iterator] = function() {
 
 {{index "for/of loop"}}
 
-We can now loop over a matrix with `for`/`of`.
+Acum vom putea itera peste matrice cu `for`/`of`.
 
 ```
 let matrix = new Matrix(2, 2, (x, y) => `value ${x},${y}`);
@@ -811,20 +597,13 @@ for (let {x, y, value} of matrix) {
 // → 1 1 value 1,1
 ```
 
-## Getters, setters, and statics
+## Getter-e, setter-e, și proprietăți statice
 
 {{index [interface, object], [property, definition], "Map class"}}
 
-Interfaces often consist mostly of methods, but it is also okay to
-include properties that hold non-function values. For example, `Map`
-objects have a `size` property that tells you how many keys are stored
-in them.
+Interfețele constau în principal din metode, dar puteți include și proprietăși care includ valori care nu sunt de tip funcție. De exemplu, obiectele `Map` au o proprietate `size` care vă spune câte chei conține map-ul respectiv.
 
-It is not even necessary for such an object to compute and store such
-a property directly in the instance. Even properties that are accessed
-directly may hide a method call. Such methods are called
-_((getter))s_, and they are defined by writing `get` in front of the
-method name in an object expression or class declaration.
+Nu este necesar pentru un asemenea obiect ca să calculeze și să memoreze o asemenea proprietate direct pe instanță. Chiar și proprietățile accesate direct ar putea ascunde un apel spre o metodă. Asemenea metode se numesc _getter-e_ și sunt definite folosind `get` în fața numelui metodei într-o expresie de tip obiect sau în declararea unei clase.
 
 ```{test: no}
 let varyingSize = {
@@ -841,9 +620,7 @@ console.log(varyingSize.size);
 
 {{index "temperature example"}}
 
-Whenever someone reads from this object's `size` property, the
-associated method is called. You can do a similar thing when a
-property is written to, using a _((setter))_.
+Atunci când este consultată proprietatea `size` a obiectului, este de fapt apelată metoda asociată. Puteți proceda similar când vreți să scrieți într-o proprietate, utilizând un _setter_.
 
 ```{test: no, startCode: true}
 class Temperature {
@@ -870,47 +647,27 @@ console.log(temp.celsius);
 // → 30
 ```
 
-The `Temperature` class allows you to read and write the temperature
-in either degrees ((Celsius)) or degrees ((Fahrenheit)), but
-internally it stores only Celsius and automatically converts to
-and from Celsius in the `fahrenheit` getter and setter.
+Clasa `Temperature` ne permite să citim temperatura fie în grade Celsius fie în grade Fahrenheit, dar stochează intern doar temperatura în grade Celsius și convertește automat în grade Fahrenheit în getter-ul și setter-ul `fahrenheit`.
 
 {{index "static method"}}
 
-Sometimes you want to attach some properties directly to your
-constructor function, rather than to the prototype. Such methods won't
-have access to a class instance but can, for example, be used to
-provide additional ways to create instances.
+Uneori, vreți să atașați proprietăți direct funcției constructor, nu prototipului clasei. Asemenea funcții nu vor avea acces la o instanță a clasei dar vor putea, de exemplu, să fie utilizate pentru a implementa moduri suplimentare de a crea instanțe.
 
-Inside a class declaration, methods that have `static` written before
-their name are stored on the constructor. So the `Temperature` class
-allows you to write `Temperature.fromFahrenheit(100)` to create a
-temperature using degrees Fahrenheit.
+În interiorul declarației unei clase, metodele care au `static` în fața numelui lor sunt memorate în constructor. Astfel încât clasa `Temperature` vă permite să scrieți `Temperature.fromFahrenheit(100)` pentru a crea un obiect pornind de la temperatura în grade Fahrenheit.
 
-## Inheritance
+## Moștenirea
 
 {{index inheritance, "matrix example", "object-oriented programming", "SymmetricMatrix class"}}
 
-Some matrices are known to be _symmetric_. If you mirror a symmetric
-matrix around its top-left-to-bottom-right diagonal, it stays the
-same. In other words, the value stored at _x_,_y_ is always the same
-as that at _y_,_x_.
+Unele matrice sunt _simetrice_. Dacă le oglindim față de diagonala stânga-sus-dreapta-jos, ele sunt nemodificate. Cu alte cuvinte, valoarea memorată în poziția _x_,_y_ este aceeați cu valoarea memorată în poziția _y_,_x_.
 
-Imagine we need a data structure like `Matrix` but one that enforces
-the fact that the matrix is and remains symmetrical. We could write it
-from scratch, but that would involve repeating some code very similar
-to what we already wrote.
+Imaginați-vă că avem nevoie de o structură de date similară cu `Matrix` dar care să impună faptul că matricea rămâne simetrică. Putem scrie aceasta structură de la zero, dar ar trebui să repetăm cod similar cu cel pe care l-am scris deja.
 
 {{index overriding, prototype}}
 
-JavaScript's prototype system makes it possible to create a _new_
-class, much like the old class, but with new definitions for some of
-its properties. The prototype for the new class derives from the old
-prototype but adds a new definition for, say, the `set` method.
+Sistemul de prototipuri al JavaScript permite crearea unei _noi clase_, asemănătoare cu vechea clasă dar având definiții noi pentru o parte din proprietăți. Prototipul noii clase este derivat din vechiul prototip dar adăugă o nouă definiție pentru metoda `set`, de exemplu.
 
-In object-oriented programming terms, this is called
-_((inheritance))_. The new class inherits properties and behavior from
-the old class.
+În terminologia programării orientate obiect, aceasta se numește _moștenire_. Noua clasă moștenește proprietățile și comportamentul de la vechea clasă.
 
 ```{includeCode: "top_lines: 17"}
 class SymmetricMatrix extends Matrix {
@@ -934,51 +691,24 @@ console.log(matrix.get(2, 3));
 // → 3,2
 ```
 
-The use of the word `extends` indicates that this class shouldn't be
-directly based on the default `Object` prototype but on some other class. This
-is called the _((superclass))_. The derived class is the
-_((subclass))_.
+Utilizarea cuvântului `extends` arată că această clasă nu trebuie să se bazeze direct pe prototipul implicit `Object` ci pe o altă clasă. Clasa pe care se bazează este denumită _superclasă_ iar cea nouă este denumită _subclasă_.
 
-To initialize a `SymmetricMatrix` instance, the constructor calls its
-superclass's constructor through the `super` keyword. This is necessary
-because if this new object is to behave (roughly) like a `Matrix`, it
-is going to need the instance properties that matrices have. 
-To ensure the matrix is symmetrical, the constructor wraps the
-`element` function to swap the coordinates for values below the
-diagonal.
+Pentru a inițializa o instanță `SymmetricMatrix`, constructorul apelează constructorul superclasei prin utilizarea cuvântului `super`. Aceasta este necesară deoarece noul obiect se va comporta în mare cam ca și un obiect `Matrix` și va avea nevoie de proprietățile pe care le au matricile. Pentru a ne asigura că matricea este simetrică, constructorul va împacheta funcția `element` pentru a interschimba coordonatele valorilor de sub diagonală.
 
-The `set` method again uses `super` but this time not to call the
-constructor but to call a specific method from the superclass's set of
-methods. We are redefining `set` but do want to use the original
-behavior. Because `this.set` refers to the _new_ `set` method, calling
-that wouldn't work. Inside class methods, `super` provides a way to
-call methods as they were defined in the superclass.
+Metoda `set` utilizează la rândul ei `super` dar nu pentru a apela constructorul ci pentru a apela o metodă specifică din mulțimea de metode a superclasei. Redefinim `set` însă vrem să folosim și comportamentul original. Deoarece `this.set` se referă la _noua_ metodă `set`, apelul acesta nu va funcționa. În interiorul metodelor unei clase putem apela metodele definite în superclasa acesteia folosind `super`.
 
-Inheritance allows us to build slightly different data types from
-existing data types with relatively little work. It is a fundamental
-part of the object-oriented tradition, alongside encapsulation and
-polymorphism. But while the latter two are now generally regarded as
-wonderful ideas, inheritance is more controversial.
+Moștenirea ne permite să construim tipuri de date diferite pornind de la tipurile de date existente, fără un efort prea mare. Este o parte fundamentală a tradiției orientate-obiect, împreună cu încapsularea și polimorfismul. Dar în timp ce acestea sunt acceptate ca idei superbe, moștenirea este o idee mai controversată.
 
 {{index complexity, reuse, "class hierarchy"}}
 
-Whereas ((encapsulation)) and polymorphism can be used to _separate_
-pieces of code from each other, reducing the tangledness of the
-overall program, ((inheritance)) fundamentally ties classes together,
-creating _more_ tangle. When inheriting from a class, you usually have
-to know more about how it works than when simply using it. Inheritance
-can be a useful tool, and I use it now and then in my own programs,
-but it shouldn't be the first tool you reach for, and you probably
-shouldn't actively go looking for opportunities to construct class
-hierarchies (family trees of classes).
+În timp ce încapsularea și polimorfismul pot fi utilizate pentru a _separa_ bucățile de cod, reducând complexitatea programului în ansamblu, moștenirea cuplează clasele împreună, ridicând complexitatea. Pentru a moșteni o clasă trebuie să cunoaștem mai multe despre cum funcționează decât atunci când doar o folosim. Moștenirea poate fi un instrument util pe care să îl folosim uneori în programele noastre dar nu trebuie să fie primul instrument pe care îl folosiți și probabil nu ar trebui să căutați activ oportunități pentru a construi ierarhii de clase (arbori de clase).
 
-## The instanceof operator
+
+## Operatorul `instanceof`
 
 {{index type, "instanceof operator", constructor, object}}
 
-It is occasionally useful to know whether an object was derived from a
-specific class. For this, JavaScript provides a binary operator called
-`instanceof`.
+Uneori este util să știți dacă un obiect a fost derivat dintr-o anume clasă. Pentru aceasta, JavaScript vă pune la dispoziție operatorul binar `instanceof`.
 
 ```
 console.log(
@@ -994,69 +724,39 @@ console.log([1] instanceof Array);
 
 {{index inheritance}}
 
-The operator will see through inherited types, so a `SymmetricMatrix`
-is an instance of `Matrix`. The operator can also be applied to
-standard constructors like `Array`. Almost every object is an instance
-of `Object`.
+Operatorul va căuta și prin ierarhia de clase, astfel încât un obiect `SymmetricMatrix` este o instanță a clasei `Matrix`. Operatorul poate fi aplicat și asupra constructorilor standard cum ar fi `Array`. Aproape orice obiect este o instanță a   `Object`.
 
-## Summary
+## Rezumat
 
-So objects do more than just hold their own properties. They have
-prototypes, which are other objects. They'll act as if they have
-properties they don't have as long as their prototype has that
-property. Simple objects have `Object.prototype` as their prototype.
+Obiectele fac mult mai mult decât doar să stocheze propriile proprietăți. Ele au prototipuri, care sunt alte obiecte. Ele funcționează ca și cum ar avea propreități pe care nu le au, cât timp prototipurile lor au acele proprietăți. Obiectele simple au ca și prototip `Object.prototype`.
 
-Constructors, which are functions whose names usually start with a
-capital letter, can be used with the `new` operator to create new
-objects. The new object's prototype will be the object found in the
-`prototype` property of the constructor. You can make good use of this
-by putting the properties that all values of a given type share into
-their prototype. There's a `class` notation that provides a clear way
-to define a constructor and its prototype.
+Constructorii, care sutn funcții al căror nume de regulă începe cu o literă mare, pot fi utilizați împreună cu operatorul `new` pentru a crea noi obiecte. Prototipul noului obiect va fi obiectul returnat de proprietatea `prototype` a constructorului. Puteți folosi aceasta în avantajul vostru prin plasarea tuturor proprietăților comune unui anume tip în prototipul lor. Există o notație pentru clase, care folosește `class` și oferă o modalitate mai clară de a defini un constructor și prototipul său.
 
-You can define getters and setters to secretly call methods every time
-an object's property is accessed. Static methods are methods stored in
-a class's constructor, rather than its prototype.
+Puteți defini getter-e și setter-e pentru a apela în secret metode de fiecare dată când se accesează o anume proprietate a unui obiect. Metodele statice sunt metode care se memorează în constructorul clasei și nu în prototipul acesteia.
 
-The `instanceof` operator can, given an object and a constructor, tell
-you whether that object is an instance of that constructor.
+Operatorul `instanceof` poate, dat fiind un obiect și un constructor, să determine dacă obiectul este sau nu o instanță a acelui constructor.
 
-One useful thing to do with objects is to specify an interface for
-them and tell everybody that they are supposed to talk to your object
-only through that interface. The rest of the details that make up your
-object are now _encapsulated_, hidden behind the interface.
+Un lucru util pe care îl putem face cu obiectele este să specificăm o interfață pentru ele și să informăm pe toată lumea că ar trebui să comunice cu obiectele noastre prin intermediul acelei interfețe. Restul detaliilor care constitui obiectul vor fi astfel _încapsulate_, ascunse în spatele interfeței.
 
-More than one type may implement the same interface. Code written to
-use an interface automatically knows how to work with any number of
-different objects that provide the interface. This is called
-_polymorphism_.
+Aceeași interfață poate fi implementată de către mai mult de un tip. Codul scris pentru a utiliza o interfață știe automat cum să lucrez cu orice număr de obiecte care oferă acea interfață. Acesta este _polimorfismul_.
 
-When implementing multiple classes that differ in only some details,
-it can be helpful to write the new classes as _subclasses_ of an
-existing class, _inheriting_ part of its behavior.
+Când implementăm mai multe clase care diferă între ele doar prin câteva detalii, ar putea fi util ca să scriem noi clase ca și _subclase_ ale unor clase existente, _moștenind_ parte din comportamentul acestora.
 
-## Exercises
+## Exerciții
 
 {{id exercise_vector}}
 
-### A vector type
+### Un tip vector
 
 {{index dimensions, "Vec class", coordinates, "vector (exercise)"}}
 
-Write a ((class)) `Vec` that represents a vector in two-dimensional
-space. It takes `x` and `y` parameters (numbers), which it should save
-to properties of the same name.
+Scrieți o clasă `Vec` ce reprezintă un vector în două dimensiuni. Ea va primi parametrii `x` și `y` (numere), pe care îi va salva în proprietățile cu același nume.
 
 {{index addition, subtraction}}
 
-Give the `Vec` prototype two methods, `plus` and `minus`, that take
-another vector as a parameter and return a new vector that has the sum
-or difference of the two vectors' (`this` and the parameter) _x_ and
-_y_ values.
+Adăugați prototipului `Vec` două metode, `plus` și `minus`, care primesc un alt vector ca și parametru și returnează suma, respectiv diferența celor doi vectori (`this` și parametrul primit).
 
-Add a ((getter)) property `length` to the prototype that computes the
-length of the vector—that is, the distance of the point (_x_, _y_) from
-the origin (0, 0).
+Adăugați o proprietate getter `length` care va calcula lungimea vectorului - adică, distanța dintre punctul (_x_, _y_) și origine (0, 0).
 
 {{if interactive
 
@@ -1076,53 +776,33 @@ if}}
 
 {{index "vector (exercise)"}}
 
-Look back to the `Rabbit` class example if you're unsure how `class`
-declarations look.
+Uitați-vă la exemplul cu clasa `Rabbit` dacă nu sunteți siguri cum ar trebui să declarați o clasă.
 
 {{index Pythagoras, "defineProperty function", "square root", "Math.sqrt function"}}
 
-Adding a getter property to the constructor can be done by putting the
-word `get` before the method name. To compute the distance from (0, 0)
-to (x, y), you can use the Pythagorean theorem, which says that the
-square of the distance we are looking for is equal to the square of
-the x-coordinate plus the square of the y-coordinate. Thus, [√(x^2^ +
-y^2^)]{if html}[[$\sqrt{x^2 + y^2}$]{latex}]{if tex} is the number you
-want, and `Math.sqrt` is the way you compute a square root in
-JavaScript.
+Adăugați un getter la constructor prin plasarea cuvântului `get` înainte de numele metodei. Pentru a calcula distanța de la (0, 0) la (x, y), puteți utiliza teorema lui Pitagora, conform căreia [√(x^2^ + y^2^)]{if html}[[$\sqrt{x^2 + y^2}$]{latex}]{if tex} este numărul pe care ar trebui să îl calculați iar `Math.sqrt` este funcția pe care o puteți folosi pentru calculul rădăcinii pătrate în JavaScript.
 
 hint}}
 
-### Groups
+### Grupuri
 
 {{index "groups (exercise)", "Set class", "Group class", "set (data structure)"}}
 
 {{id groups}}
 
-The standard JavaScript environment provides another data structure
-called `Set`. Like an instance of `Map`, a set holds a collection of
-values. Unlike `Map`, it does not associate other values with those—it
-just tracks which values are part of the set. A value can be part
-of a set only once—adding it again doesn't have any effect.
+Mediul standard JavaScript vă pune la dispoziție si o altă structură de date, numită `Set`. Asemănător unei instanțe `Map`, un set memorează o colecție de valori. Spre deosebire de `Map`, nu asociază aceste valori cu altele - doar urmărește ce valori fac parte din set. O anumită valoare face parte dintr-un set doar o dată - încercarea de a o adăuga încă o dată nu va avea nici un efect.
 
 {{index "add method", "delete method", "has method"}}
 
-Write a class called `Group` (since `Set` is already taken). Like
-`Set`, it has `add`, `delete`, and `has` methods. Its constructor
-creates an empty group, `add` adds a value to the group (but only if
-it isn't already a member), `delete` removes its argument from the
-group (if it was a member), and `has` returns a Boolean value
-indicating whether its argument is a member of the group.
+Scrieți o clasă `Group` (deoarece `Set` este folosit deja). Adăugați ca și pentru `Set` metodele `add`, `delete` și `has`. COnstructorul său va crea un grup gol, `add` va adăuga o (valoare numai dacă aceasta nu a fost deja adăugată), `delete` va elimina o valoare din grup (dacă aceasta face parte din grup), iar `has` returnează o valoare booleană ce precizează dacă argumentul său este membru al grupului.
 
 {{index "=== operator", "indexOf method"}}
 
-Use the `===` operator, or something equivalent such as `indexOf`, to
-determine whether two values are the same.
+Utilizați operatorul `===` sau altceva echivalent cum ar fi `indexOf` pentru a determina dacă două valori sunt identice.
 
 {{index "static method"}}
 
-Give the class a static `from` method that takes an iterable object
-as argument and creates a group that contains all the values produced
-by iterating over it.
+Adăugați clasei o metodă statică `from` care primește ca și argument un obiect iterabil și crează un grup care conține toate valorile produse prin iterarea asupra obiectului.
 
 {{if interactive
 
@@ -1148,47 +828,33 @@ if}}
 
 {{index "groups (exercise)", "Group class", "indexOf method", "includes method"}}
 
-The easiest way to do this is to store an array of group members
-in an instance property. The `includes` or `indexOf` methods can be
-used to check whether a given value is in the array.
+Cel mai simplu mod de a reține elementele grupului este utilizarea unui array de membri ai grupului într-o proprietate a instanței. Metodele `includes` și `indexOf` pot fi utilizate pentru a verifica dacă o valoare dată aparține array-ului.
 
 {{index "push method"}}
 
-Your class's ((constructor)) can set the member collection to an empty
-array. When `add` is called, it must check whether the given value is
-in the array or add it, for example with `push`, otherwise.
+Constructorul clasei va inițializa colecția de membri la un array gol. Când se va apela `add`, va trebui să verificăm dacă valoarea există deja în array și dacă nu, să o adăugăm, folosind de exemplu `push`.
 
 {{index "filter method"}}
 
-Deleting an element from an array, in `delete`, is less
-straightforward, but you can use `filter` to create a new array
-without the value. Don't forget to overwrite the property holding the
-members with the newly filtered version of the array.
+Eliminarea unei element din array, în metoda `delete` nu este la fel de directă. Dar ați putea crea un array nou folosind `filter` care să elimine valoarea. Apoi va trebui să suprascrieți proprietatea care reține membrii cu versiunea filtrată a array-ului.
 
 {{index "for/of loop", "iterable interface"}}
 
-The `from` method can use a `for`/`of` loop to get the values out of
-the iterable object and call `add` to put them into a newly created
-group.
+Metoda `from` poate utiliza o buclă `for`/`of` pentru a prelua valorile din obiectul iterabil și să apeleze `add` pentru a le adăuga pe rând la grupul nou creat.
 
 hint}}
 
-### Iterable groups
+### Grupuri iterabile
 
 {{index "groups (exercise)", [interface, object], "iterator interface", "Group class"}}
 
 {{id group_iterator}}
 
-Make the `Group` class from the previous exercise iterable. Refer 
-to the section about the iterator interface earlier in the chapter if
-you aren't clear on the exact form of the interface anymore.
+Faceți clasa `Group` din exemplul anterior iterabilă. Consultați secțiunea despre interfața iterator din acest capitol dacă nu vă mai amintiți detaliile.
 
-If you used an array to represent the group's members, don't just
-return the iterator created by calling the `Symbol.iterator` method on
-the array. That would work, but it defeats the purpose of this exercise.
+Dacă ați utilizat un array pentru a reprezenta membrii grupului, nu returnați pur și simplu iteratorul creat prin apelarea metodei `Symbol.iterator` asupra array-ului. Ar funcționa, dar ar fi împotriva scopului exercițiului.
 
-It is okay if your iterator behaves strangely when the group is
-modified during iteration.
+Este ok dacă iteratorul vostru se comportă ciudat când grupul este modificat în timpul iterării.
 
 {{if interactive
 
@@ -1209,28 +875,17 @@ if}}
 
 {{index "groups (exercise)", "Group class", "next method"}}
 
-It is probably worthwhile to define a new class `GroupIterator`.
-Iterator instances should have a property that tracks the current
-position in the group. Every time `next` is called, it checks whether
-it is done and, if not, moves past the current value and returns it.
+Probabil că ar merita să definim o nouă clasă, `GroupIterator`. Instanțele iterator trebuie să aibă o proprietate care urmărește poziția curentă în grup. De fiecare dată când se apelează `next`, aceasta verifică dacă iterarea s-a încheiat, iar dacă nu, trece la următorul element și îl returnează.
 
-The `Group` class itself gets a method named by `Symbol.iterator`
-that, when called, returns a new instance of the iterator class for
-that group.
+Clasa `Group` primește o metodă numită ca și `Symbol.iterator` care, când va fi apelată, va returna o nouă instanță a clasei iterator pentru acel grup.
 
 hint}}
 
-### Borrowing a method
+### Împrumutarea unei metode
 
-Earlier in the chapter I mentioned that an object's `hasOwnProperty`
-can be used as a more robust alternative to the `in` operator when you
-want to ignore the prototype's properties. But what if your map needs
-to include the word `"hasOwnProperty"`? You won't be able to call that
-method anymore because the object's own property hides the method
-value.
+Anterior în acest capitol am menționat că `hasOwnProperty` poate fi utilizată pentru obiecte ca o alternativă mai robustă la operatorul `in`, atunci când vrem să ignorăm proprietățile prototipului. Dar cum procedăm dacă map-ul nostru ar trebui să includă cheia `"hasOwnProperty"`? Nu vom mai putea să apelăm acea metodă deorece proprietatea proprie a obiectului ascunde metoda și o face inaccesibilă.
 
-Can you think of a way to call `hasOwnProperty` on an object that has
-its own property by that name?
+Puteți să vă imaginați o modalitate de a apela `hasOwnProperty` asupra unui obiect care are deja o proprietate cu acel nume?
 
 {{if interactive
 
@@ -1246,10 +901,9 @@ if}}
 
 {{hint
 
-Remember that methods that exist on plain objects come from
-`Object.prototype`.
+Amintiți-vă că metodele care există pe obiecte simple provin din `Object.prototype`.
 
-Also remember that you can call a function with a specific `this`
-binding by using its `call` method.
+
+De asemenea, puteți apela o funcție cu un binding `this` specific utilizând metoda `call`.
 
 hint}}
