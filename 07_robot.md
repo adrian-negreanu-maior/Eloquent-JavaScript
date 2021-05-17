@@ -1,11 +1,10 @@
 {{meta {load_files: ["code/chapter/07_robot.js", "code/animatevillage.js"], zip: html}}}
 
-# Project: A Robot
+# Proiect: Un Robot
 
 {{quote {author: "Edsger Dijkstra", title: "The Threats to Computing Science", chapter: true}
 
-[...] the question of whether Machines Can Think [...] is about as
-relevant as the question of whether Submarines Can Swim.
+[...] întrebarea dacă mașinile pot gândi [...] este cam la fel de relevantă ca și întrebarea dacă submarinele pot înota.
 
 quote}}
 
@@ -15,22 +14,15 @@ quote}}
 
 {{index "project chapter", "reading code", "writing code"}}
 
-In "project" chapters, I'll stop pummeling you with new theory for a
-brief moment, and instead we'll work through a program together. Theory
-is necessary to learn to program, but reading and understanding actual
-programs is just as important.
+În capitolele de proiecte, ne oprim puțin din a parcurge teorie și vom lucra împreună la un program. Teoria este necesară pentru a învăța să programați, dar este la fel de important să puteți citi și înțelege programe.
 
-Our project in this chapter is to build an ((automaton)), a little
-program that performs a task in a ((virtual world)). Our automaton
-will be a mail-delivery ((robot)) picking up and dropping off parcels.
+Proiectul din acest capitol este despre a construi un automat, un mic program care realizeazî o sarcină într-o lume virtuală. Automatul nostru este un robot pentru livrarea corespondenței care va ridica și va lăsa colete.
 
 ## Meadowfield
 
 {{index "roads array"}}
 
-The village of ((Meadowfield)) isn't very big. It consists of 11
-places with 14 roads between them. It can be described with this
-array of roads:
+Orașul Meadowfield nu este foarte mare. El constă din 11 locuri cu 14 drumuri între ele. Poate fi descris ca un array de drumuri:
 
 ```{includeCode: true}
 const roads = [
@@ -46,16 +38,11 @@ const roads = [
 
 {{figure {url: "img/village2x.png", alt: "The village of Meadowfield"}}}
 
-The network of roads in the village forms a _((graph))_. A graph is a
-collection of points (places in the village) with lines between them
-(roads). This graph will be the world that our robot moves through.
+Rețeaua de drumuri a orașului formează un graf. Un graf este o colecție de puncte (locuri din oraș) cu linii între ele (drumurile). Acest graf este lumea în care robotul nostru se va deplasa.
 
 {{index "roadGraph object"}}
 
-The array of strings isn't very easy to work with. What we're
-interested in is the destinations that we can reach from a given
-place. Let's convert the list of roads to a data structure that, for
-each place, tells us what can be reached from there.
+Nu este foarte ușor să lucrăm cu array-ul de stringuri. Ceea ce ne interesează sunt destinațiile în care putem ajunge dintr-un loc dat. Haideți să convertim lista de drumuri într-o structură de date care, pentru fiecare loc, ne precizează ce destinații putem atinge.
 
 ```{includeCode: true}
 function buildGraph(edges) {
@@ -77,62 +64,37 @@ function buildGraph(edges) {
 const roadGraph = buildGraph(roads);
 ```
 
-Given an array of edges, `buildGraph` creates a map object that, for
-each node, stores an array of connected nodes.
+Dat fiind un array de muchii, `buildGraph` crează un map care, pentru fiecare nod, memorează array-ul de noduri conectate.
 
 {{index "split method"}}
 
-It uses the `split` method to go from the road strings, which have the
-form `"Start-End"`, to two-element arrays containing the start and end
-as separate strings.
+Mai întâi, utilizăm metoda `split` pentru a trece de la stringuri, care au forma `"Start-End"`, la array-uri de două elemente ce conțin `Start` și `End` ca și stringuri separate.
 
-## The task
+## Sarcina
 
-Our ((robot)) will be moving around the village. There are parcels
-in various places, each addressed to some other place. The robot picks
-up parcels when it comes to them and delivers them when it arrives at
-their destinations.
+Robotul nostru se va deplasa prin oraș. Există colete în diferite locuri, fiecare destinat unei alte locații. Robotul ridică acele colete când ajunge la ele și le livrează atunci când ajunge la destinația lor.
 
-The automaton must decide, at each point, where to go next. It has
-finished its task when all parcels have been delivered.
+Automatul trebuie să decidă, în fiecare nod, care este următorul nod în care se va deplasa. Își va termina sarcina în momentul în care toate pachetele au fost livrate.
 
 {{index simulation, "virtual world"}}
 
-To be able to simulate this process, we must define a virtual world
-that can describe it. This model tells us where the robot is and where
-the parcels are. When the robot has decided to move somewhere, we need
-to update the model to reflect the new situation.
+Pentru a putea simula acest proces, trebuie să definim o lume virtuală care îl descrie. Acest model ne va spune unde este robotul și unde sunt coletele. Când robotul a decis să se deplaseze într-o nouă locație, trebuie să actualizăm modelul pentru a reflecta noua situație.
 
 {{index [state, in objects]}}
 
-If you're thinking in terms of ((object-oriented programming)), your
-first impulse might be to start defining objects for the various
-elements in the world: a ((class)) for the robot, one for a parcel,
-maybe one for places. These could then hold properties that describe
-their current ((state)), such as the pile of parcels at a location,
-which we could change when updating the world.
+Dacă gândiți in termenii programării orientate obiect, primul impuls ar fi să începeți prin a defini obiecte pentru diferitele elemente ale lumii virtuale: o clasă pentru robot, una pentru colet și poate una pentru destinații. Acestea ar putea să conțină proprietăți care descriu starea lor curentă, cum ar fi stiva de colete dintr-o locație pe care le-am putea modifica atunci când actualizăm lumea virtuală.
 
-This is wrong.
+Dar această abordare este greșită.
 
-At least, it usually is. The fact that something sounds like an object
-does not automatically mean that it should be an object in your
-program. Reflexively writing classes for every concept in your
-application tends to leave you with a collection of interconnected
-objects that each have their own internal, changing state. Such
-programs are often hard to understand and thus easy to break.
+Cel puțin este _de regulă_ greșită. Faptul că o anumită entitate pare a fi un obiect nu înseamnă automat că trebuie să fie un obiect în program. Scrierea din reflex a unor clase pentru fiecare concept din aplicație tinde să vă conducă la o colecție de obiecte interconectate care au fiecare propria stare interna, schimbătoare. Asemenea programe sunt adesea greu de înțeles și ușor de stricat.
 
 {{index [state, in objects]}}
 
-Instead, let's condense the village's state down to the minimal
-set of values that define it. There's the robot's current location and
-the collection of undelivered parcels, each of which has a current
-location and a destination address. That's it.
+haideți să condensăm mai bine starea orașului la un set minimal de valori care o definesc. Există locația curentă a robotului și colecția de pachete încă nelivrate, fiecare dintre ele având o locație curentă și o adresă de destinație. Atât!
 
 {{index "VillageState class", "persistent data structure"}}
 
-And while we're at it, let's make it so that we don't _change_ this
-state when the robot moves but rather compute a _new_ state for the
-situation after the move.
+Haideți să procedăm astfel încât să nu _modificăm_ starea când robotul se mișcă, ci să calculăm o _nouă_ stare pentru situația de după deplasarea robotului.
 
 ```{includeCode: true}
 class VillageState {
@@ -155,23 +117,13 @@ class VillageState {
 }
 ```
 
-The `move` method is where the action happens. It first checks whether
-there is a road going from the current place to the destination, and
-if not, it returns the old state since this is not a valid move.
+Acțiunea are loc în metoda `move`. Mai întâi se verifică dacă există un drum de la locația curentă până la destinație și, dacă nu, returnează vechea stare deoarece această mutare nu ar fi validă.
 
 {{index "map method", "filter method"}}
 
-Then it creates a new state with the destination as the robot's new
-place. But it also needs to create a new set of parcels—parcels that
-the robot is carrying (that are at the robot's current place) need to
-be moved along to the new place. And parcels that are addressed to the
-new place need to be delivered—that is, they need to be removed from
-the set of undelivered parcels. The call to `map` takes care of the
-moving, and the call to `filter` does the delivering.
+Apoi se crează o nouă stare cu destinația ca și noua poziție a robotului. Dar va trebui și să creeze un nou set de colete, coletele pe care robotul le transportă (cele care se vor afla în noua locație a robotului) trebuie să fie mutate în noua locație. Iar coletele care sunt adresate noii locație trebuie să fie livrate - adică, să fie eliminate din setul de pachete nelivrate. Apelul funcției `map` rezolvă problema mișcării, iar apelul funcției `filter` se va ocupa de livrare.
 
-Parcel objects aren't changed when they are moved but re-created. The
-`move` method gives us a new village state but leaves the old one
-entirely intact.
+Obiectele pentru colete nu sunt modificate când sunt transportate ci sunt recreate. Metoda `move` ne dă o nouă stare a orașului, dar lasă vechea stare intactă.
 
 ```
 let first = new VillageState(
@@ -188,28 +140,15 @@ console.log(first.place);
 // → Post Office
 ```
 
-The move causes the parcel to be delivered, and this is reflected in
-the next state. But the initial state still describes the situation
-where the robot is at the post office and the parcel is undelivered.
+Mișcarea cauzează livrarea coletului și aceasta se reflectă în starea următoare. Dar starea inițială încă descrie situația în care robotul este la oficiul poștal și coletul nu este livrat.
 
-## Persistent data
+## Date persistente
 
 {{index "persistent data structure", mutability, ["data structure", immutable]}}
 
-Data structures that don't change are called _((immutable))_ or
-_persistent_. They behave a lot like strings and numbers in that they
-are who they are and stay that way, rather than containing different
-things at different times.
+Structurile de date care nu se modifică se numesc _imutabile_ sau _persistente_. Ele se comportă asemănător stringurilor și numerelor în sensul că sunt ceea ce sunt și rămân așa, în loc să conțină date diferite la momente diferite.
 
-In JavaScript, just about everything _can_ be changed, so working with
-values that are supposed to be persistent requires some restraint.
-There is a function called `Object.freeze` that changes an object so
-that writing to its properties is ignored. You could use that to make
-sure your objects aren't changed, if you want to be careful. Freezing
-does require the computer to do some extra work, and having updates
-ignored is just about as likely to confuse someone as having them do
-the wrong thing. So I usually prefer to just tell people that a given
-object shouldn't be messed with and hope they remember it.
+În JavaScript, aproape orice poate fi modificat astfel încât lucrul cu valori care se presupune că sunt persistente necesită câteva restricții. Există o funcție numită  `Object.freeze` care modifică un obiect astfel încât orice scriere în proprietățile sale este ignorată. Puteți folosi această metodă pentru a vă asigura că obiectele nu sunt modificate. Înghețarea cere extra efort din partea computerului și ignorarea actualizărilor ar putea crea cam la fel de multă confuzie ca și actualizarea greșită. Așa că ar fi de preferat să informăm că un anume obiect nu ar trebui modificat și să sperăm că ceiallți programatori care vor interacționa cu obiectul își vor aminti.
 
 ```
 let object = Object.freeze({value: 5});
@@ -218,44 +157,23 @@ console.log(object.value);
 // → 5
 ```
 
-Why am I going out of my way to not change objects when the language
-is obviously expecting me to?
+De ce evit să modific obiecte când este evident că limbajul se așteaptă să fac asta?
 
-Because it helps me understand my programs. This is about complexity
-management again. When the objects in my system are fixed, stable
-things, I can consider operations on them in isolation—moving to
-Alice's house from a given start state always produces the same new
-state. When objects change over time, that adds a whole new dimension
-of complexity to this kind of reasoning.
+Deoarece mă ajută să înțeleg programele. Este vorba din nou despre gestiunea complexității. Când obiectele din sistemul meu sunt fixe, stabile, pot considera operațiile asupra lor izolate - deplasarea la casa lui Alice dintr-o stare de start va produce întotdeauna aceeași stare. Când obiectele se modifică în timp, acest comporttament adaugă o dimensiune complet nouă a complexității acestui mod de a gândi.
 
-For a small system like the one we are building in this chapter, we
-could handle that bit of extra complexity. But the most important
-limit on what kind of systems we can build is how much we can
-understand. Anything that makes your code easier to understand makes
-it possible to build a more ambitious system.
+Pentru un sistem de mici dimensiuni, ca și cel pe care îl construim în acest capitol, am putea gestiona complexitatea adăugată. Dar cea mai importantă limitare cu privire la tipul de sisteme pe care le putem construi este dată de capacitatea noastră de a înțelege. Orice face codul mai ușor de înțeles va face posibil să construim un sistem mai ambițios.
 
-Unfortunately, although understanding a system built on persistent data
-structures is easier, _designing_ one, especially when your
-programming language isn't helping, can be a little harder. We'll
-look for opportunities to use persistent data structures in this
-book, but we'll also be using changeable ones.
+Din păcate, deși înțelegerea unui sistem bazat pe structuri de date persistente este mai ușoară, _conceperea_ lui, mai ales atunci  când limbajul de programare nu este de prea mare ajutor, poate fi mai dificilă. Vom căuta oportunități de a utiliza structuri de date persistente pe parcursul acestei cărți, însă vom utiliza și structuri ce se modifică în timp.
 
-## Simulation
+## Simularea
 
 {{index simulation, "virtual world"}}
 
-A delivery ((robot)) looks at the world and decides in which
-direction it wants to move. As such, we could say that a robot is a
-function that takes a `VillageState` object and returns the name of a
-nearby place.
+Un robot de livrare analizează lumea virtuală și decide în ce direcție să se deplaseze. Prin urmare, putem spune că robotul este o funcție care primește obiectul `VillageState` și returnează numele unei locații învecinate.
 
 {{index "runRobot function"}}
 
-Because we want robots to be able to remember things, so that they can
-make and execute plans, we also pass them their memory and allow them
-to return a new memory. Thus, the thing a robot returns is an object
-containing both the direction it wants to move in and a memory value
-that will be given back to it the next time it is called.
+Deoarece vrem ca robotul să fie înzestrat cu memorie, astfel încât să poată crea și executa planuri, trebuie să îi transmitem și memoria și să îi permitem să returneze o memorie nouă. Astfel, robotul va returna un obiect ce va conține atât destinația de deplasare cât și valoarea memoriei care îi va fi transmisă din nou atunci când va fi apelat data viitoare.
 
 ```{includeCode: true}
 function runRobot(state, robot, memory) {
@@ -272,19 +190,13 @@ function runRobot(state, robot, memory) {
 }
 ```
 
-Consider what a robot has to do to "solve" a given state. It must pick
-up all parcels by visiting every location that has a parcel and
-deliver them by visiting every location that a parcel is addressed to,
-but only after picking up the parcel.
+Sa vedem ce trebuie să facă un robot pentru a "rezolva" o stare dată. Trebuie să culeagă toate coletele prin vizitarea fiecărei locații care are cel puțin un colet și să le livreze prin vizitarea oricărei locații căreia îi este adresat cel puțin un colet, dar numai după ce a ridicat coletul.
 
-What is the dumbest strategy that could possibly work? The robot could
-just walk in a random direction every turn. That means, with
-great likelihood, it will eventually run into all parcels and then
-also at some point reach the place where they should be delivered.
+Care ar fi cea mai stupidă strategie care ar putea funcționa? Robotul ar putea să se deplaseze la întâmplare în fiecare mișcare. Adică, cu mare probabilitate, va ridica la un moment dat toate pachetele și la un moment ulterior ar ajunge în locația de livrare a fiecărui pachet.
 
 {{index "randomPick function", "randomRobot function"}}
 
-Here's what that could look like:
+O asemenea abordare ar putea arăta cam așa:
 
 ```{includeCode: true}
 function randomPick(array) {
@@ -299,20 +211,11 @@ function randomRobot(state) {
 
 {{index "Math.random function", "Math.floor function", [array, "random element"]}}
 
-Remember that `Math.random()` returns a number between zero and
-one—but always below one. Multiplying such a number by the length of an
-array and then applying `Math.floor` to it gives us a random index for
-the array.
+`Math.random()` va returna întotdeauna un număr real din intervalul [0,1). Multiplicând acest număr cu lungimea unui array și apoi apelând `Math.floor`, obținem un index aleator al unui element al array-ului.
 
-Since this robot does not need to remember anything, it ignores its
-second argument (remember that JavaScript functions can be called with
-extra arguments without ill effects) and omits the `memory` property
-in its returned object.
+Deoarece acest robot nu trebuie să își amintească nimic, el poate ignora cel de-al doilea argument (funcțiile JavaScript pot fi apelate cu argumente asemănătoare fără a produce efecte) și omite proprietatea `memory` din obiectul returnat.
 
-To put this sophisticated robot to work, we'll first need a way to
-create a new state with some parcels. A static method (written here by
-directly adding a property to the constructor) is a good place to put
-that functionality.
+Pentru a pune acest robot sofisticat la lucru, mai întâi avem nevoie de o modalitate de a crea o nouă stare cu câteva colete. O metodă statică (scrisă în codul de mai jos prin adăugarea directă a unei proprietăți la constructor) este un loc bun pentru a adăuga acestă funcționalitate.
 
 ```{includeCode: true}
 VillageState.random = function(parcelCount = 5) {
@@ -331,11 +234,9 @@ VillageState.random = function(parcelCount = 5) {
 
 {{index "do loop"}}
 
-We don't want any parcels that are sent from the same place that they
-are addressed to. For this reason, the `do` loop keeps picking new
-places when it gets one that's equal to the address.
+Nu ne interesează coletele care sunt trimise la aceeași locație ca și cea în care se află. Din acest motiv, bucla `do` analizează noi locații când primește o locație care este egală cu adresa.
 
-Let's start up a virtual world.
+Să pornim o lume virtuală.
 
 ```{test: no}
 runRobot(VillageState.random(), randomRobot);
@@ -345,38 +246,25 @@ runRobot(VillageState.random(), randomRobot);
 // → Done in 63 turns
 ```
 
-It takes the robot a lot of turns to deliver the parcels because it
-isn't planning ahead very well. We'll address that soon.
+Robotul va face multe mutări pentru a livra coletele deoarece nu planifică grozav de bine. Vom rezolva această problemă în curând.
 
 {{if interactive
 
-For a more pleasant perspective on the simulation, you can use the
-`runRobotAnimation` function that's available in [this chapter's
-programming environment](https://eloquentjavascript.net/code/#7).
-This runs the simulation, but instead of outputting text, it shows
-you the robot moving around the village map.
+Pentru o perspectivă mai plăcută asupra simulării, puteți folosi funcția `runRobotAnimation` disponibilă în [mediul de programare al acestui capitol](https://eloquentjavascript.net/code/#7). Aceasta rulează simularea dar, în loc să afișeze text, afișează robotul ce se deplasează pe harta orașului.
 
 ```{test: no}
 runRobotAnimation(VillageState.random(), randomRobot);
 ```
 
-The way `runRobotAnimation` is implemented will remain a mystery for
-now, but after you've read the [later chapters](dom) of this book,
-which discuss JavaScript integration in web browsers, you'll be able
-to guess how it works.
+Modul în care am implementat `runRobotAnimation` va rămâne deocamdată un mister, dar după ce veți parcurge [capitolele următoare](dom) ale acestei cărți, care discută integrarea JavaScript în browserele web, o să vă dați seama cum funcționează.
 
 if}}
 
-## The mail truck's route
+## Ruta camionului de poștă
 
 {{index "mailRoute array"}}
 
-We should be able to do a lot better than the random ((robot)). An
-easy improvement would be to take a hint from the way real-world mail
-delivery works. If we find a route that passes all places in the
-village, the robot could run that route twice, at which point it is
-guaranteed to be done. Here is one such route (starting from the post
-office):
+Ar trebui să ne descurcăm mult mai bine decât robotul aleator. O îmbunătățire ușor de implementat ar fi să ne inspirăm din modul în care funcționează livrarea corespondenței în lumea reală. Dacă găsim o rută care trece prin toate locațiile din oraș, robotul ar putea parcurge acea rută de două ori, ceea ce ar garanta finalizarea sarcinii. Mai jos vă prezint o asemenea rută (începând de la oficiul poștal):
 
 ```{includeCode: true}
 const mailRoute = [
@@ -389,9 +277,7 @@ const mailRoute = [
 
 {{index "routeRobot function"}}
 
-To implement the route-following robot, we'll need to make use of
-robot memory. The robot keeps the rest of its route in its memory and
-drops the first element every turn.
+Pentru a implementa robotul care urmărește o rută, va trebui să folosim memoria robotului. Robotul va memora restul rutei în memorie și la fiecare deplasare va elimina primul element al rutei.
 
 ```{includeCode: true}
 function routeRobot(state, memory) {
@@ -402,8 +288,7 @@ function routeRobot(state, memory) {
 }
 ```
 
-This robot is a lot faster already. It'll take a maximum of 26 turns
-(twice the 13-step route) but usually less.
+Acest robot va fi mult mai rapid. Va avea nevoie de cel mult 26 de mutări (de ouă ori pe ruta de 13 pași), dar de regulă va face chiar mai puține mișcări.
 
 {{if interactive
 
@@ -413,45 +298,25 @@ runRobotAnimation(VillageState.random(), routeRobot, []);
 
 if}}
 
-## Pathfinding
+## Determinarea drumului
 
-Still, I wouldn't really call blindly following a fixed route
-intelligent behavior. The ((robot)) could work more efficiently if it
-adjusted its behavior to the actual work that needs to be done.
+Nu aș considera că urmarea unei rute fixe este un comportament inteligent. Robotul ar putea lucra mai eficient dacă și-ar ajuta comportamentul la munca efectivă pe care trebuie să o efectueze.
 
 {{index pathfinding}}
 
-To do that, it has to be able to deliberately move toward a given
-parcel or toward the location where a parcel has to be delivered.
-Doing that, even when the goal is more than one move away, will
-require some kind of route-finding function.
+Pentru aceasta, ar trebui să fie capabil să se miște deliberat către un colet sau către o locație în care coletul ar trebui să fie livrat. Astfel, chiar dacă scopul este la mai mult de o mutare, va fi necesară o funcție pentru detectarea rutei.
 
-The problem of finding a route through a ((graph)) is a typical
-_((search problem))_. We can tell whether a given solution (a route)
-is a valid solution, but we can't directly compute the solution the
-way we could for 2 + 2. Instead, we have to keep creating potential
-solutions until we find one that works.
+Problema determinării unei rute într-un graf este o problemă clasică de _căutare_. Putem spune dacă o soluție dată (o rută) este validă dar nu o putem calcula direct, așa cum procedăm pentru 2 + 2, de exemplu. De fapt, va trebui să creem soluții potențiale, până când găsim una care funcționează.
 
-The  number of possible routes through a graph is infinite. But
-when searching for a route from _A_ to _B_, we are interested only in
-the ones that start at _A_. We also don't care about routes that visit
-the same place twice—those are definitely not the most efficient route
-anywhere. So that cuts down on the number of routes that the route
-finder has to consider.
+Numărul de rute posibile într-un graf poate fi foarte mare. Dar atunci când căutăm o rută de la _A_ la _B_ ne interesează doar rutele care pornesc din _A_. De asemenea, nu ne interesează rutele care vizitează același loc de mai multe ori - cu siguranță acelea nu sunt cele mai eficiente rute. Astfel reducem numărul de rute care trebuie să fie considerate.
 
-In fact, we are mostly interested in the _shortest_ route. So we want
-to make sure we look at short routes before we look at longer ones. A
-good approach would be to "grow" routes from the starting point,
-exploring every reachable place that hasn't been visited yet, until a
-route reaches the goal. That way, we'll only explore routes that are
-potentially interesting, and we'll find the shortest route (or one of the
-shortest routes, if there are more than one) to the goal.
+De fapt, ne interesează _cea mai scurtă_ rută. Deci vrem să considerăm rute scurte înainte de a considera rute mai lungi. O abordare bună ar fi să "creștem" rutele din punctul de plecare explorând fiecare locație ce poate fi atinsă dar nu a fost încă considerată, până când ruta își atinge destinația. Astfel, vom explora doar rutele care sunt potențial interesante și vom determina cea mai scurtă rută către destinație (sau una dintre cele mai scurte rute, dacă există mai multe rute de aceeași lungime).
 
 {{index "findRoute function"}}
 
 {{id findRoute}}
 
-Here is a function that does this:
+Iată cum ar putea arăta funcția care realizează aceasta:
 
 ```{includeCode: true}
 function findRoute(graph, from, to) {
@@ -468,39 +333,17 @@ function findRoute(graph, from, to) {
 }
 ```
 
-The exploring has to be done in the right order—the places that were
-reached first have to be explored first. We can't immediately explore
-a place as soon as we reach it because that would mean places reached
-_from there_ would also be explored immediately, and so on, even
-though there may be other, shorter paths that haven't yet been
-explored.
+Explorarea trebuie să se realizeze în ordinea corectă - locațiile atinse mai întâi trebuie să fie primele care sunt explorate. Nu putem explora imediat o locație deoarece asta ar însemna că și locațiile care pot fi atinse direct din această locație vor fi explorate imediat, chiar dacă ar putea exista o altă cale mai scurtă care nu a fost încă explorată.
 
-Therefore, the function keeps a _((work list))_. This is an array of
-places that should be explored next, along with the route that got us
-there. It starts with just the start position and an empty route.
+Prin urmare, funcția va reține o _listă de lucru_. Acesta este un array cu locațiile care urmează să fie explorate, împreună cu ruta care ne-a adus în această locație. Vom începe din poziția de start cu o rută goală.
 
-The search then operates by taking the next item in the list and
-exploring that, which means all roads going from that place are
-looked at. If one of them is the goal, a finished route can be
-returned. Otherwise, if we haven't looked at this place before, a new
-item is added to the list. If we have looked at it before, since we
-are looking at short routes first, we've found either a longer route
-to that place or one precisely as long as the existing one, and we
-don't need to explore it.
+Căutarea este realizată prin considerarea următorului item din listă și explorarea sa, ceea ce înseamnă că toate drumurile ce pleacă din acea locație sunt considerate. Dacă unul dintre ele este obiectivul, putem returna o rută. În caz contrar, dacă nu am atins această locație anterior, vom adăuga un nou item la listă. Dacă locația a fost atinsă anterior, deoarece ne interesează doar rutele cele mai scurte, fie am găsit o rută mai lungă decât cea anterioară, fie o rută de aceeași lungime și nu va fi necesar să o explorăm.
 
-You can visually imagine this as a web of known routes crawling out
-from the start location, growing evenly on all sides (but never
-tangling back into itself). As soon as the first thread reaches the
-goal location, that thread is traced back to the start, giving us our
-route.
+Vă puteți imagina această abordarea ca pe o rețea de rute cunoscute care crește din locația inițială, uniform în toate direcțiile (dar fără bucle de revenire). Imediat ce un fir ajunge în locația de destinație, acest fir este urmărit până la locația de start și astfel obținem ruta de interes.
 
 {{index "connected graph"}}
 
-Our code doesn't handle the situation where there are no more work
-items on the work list because we know that our graph is _connected_,
-meaning that every location can be reached from all other locations.
-We'll always be able to find a route between two points, and the
-search can't fail.
+Codul nostru nu tratează situația în care nu mai putem continua explorarea deoarce știm că graful nostru este _conex_, adică orice locație poate fi atinsă din orice altă locație. Întotdeauna vom putea determina o rută între două locații și căutarea nu va putea eșua.
 
 ```{includeCode: true}
 function goalOrientedRobot({place, parcels}, route) {
@@ -518,16 +361,11 @@ function goalOrientedRobot({place, parcels}, route) {
 
 {{index "goalOrientedRobot function"}}
 
-This robot uses its memory value as a list of directions to move in,
-just like the route-following robot. Whenever that list is empty, it
-has to figure out what to do next. It takes the first undelivered
-parcel in the set and, if that parcel hasn't been picked up yet, plots a
-route toward it. If the parcel _has_ been picked up, it still needs to be
-delivered, so the robot creates a route toward the delivery address instead.
+Acest robot își va utiliza valoarea memoriei ca o listă de direcții în care să se miște, ca și robotul ce urmărea o cale fixată. Când acea listă se golește, va trebui să determine ce urmează să facă. Robotul va considera primul colet nelivrat și, dacă acel pachet nu a fost încă ridicat, determină o rută către el. După ce coletul a fost ridicat, va trebui să fie livrat, astfel încât robotul va calcula o rută către adresa de livrare.
 
 {{if interactive
 
-Let's see how it does.
+Haideți să vedem ce se întâmplă.
 
 ```{test: no, startCode: true}
 runRobotAnimation(VillageState.random(),
@@ -536,26 +374,19 @@ runRobotAnimation(VillageState.random(),
 
 if}}
 
-This robot usually finishes the task of delivering 5 parcels in about
-16 turns. That's slightly better than `routeRobot` but still definitely not optimal.
+Acest robot își finalizează sarcina de a livra 5 colete în aproximativ 16 mutări. Ceea ce e puțin mai bine decît in cazul `routeRobot` dar nu optimal.
 
-## Exercises
+## Exerciții
 
-### Measuring a robot
+### Măsurarea unui robot
 
 {{index "measuring a robot (exercise)", testing, automation, "compareRobots function"}}
 
-It's hard to objectively compare ((robot))s by just letting them solve
-a few scenarios. Maybe one robot just happened to get easier tasks or
-the kind of tasks that it is good at, whereas the other didn't.
+Este greu să comparăm roboții doar lăsându-i să rezolve câteva scenarii. Poate că un robot a primit o sarcină mai ușoară sau genul de sarcină pe care este specializat să o rezolve eficient.
 
-Write a function `compareRobots` that takes two robots (and their
-starting memory). It should generate 100 tasks and let each of
-the robots solve each of these tasks. When done, it should output the
-average number of steps each robot took per task.
+Scrieți o funcție `compareRobots` care primește doi roboți și memoriile lor inițiale. Funcția va genera 100 de sarcini și va lăsa fiecare robot să le rezolve pe toate. La final, va afișa numărul mediu de pași necesar fiecărui robot pentru a rezolva toate sarcinile.
 
-For the sake of fairness, make sure you give each task to both
-robots, rather than generating different tasks per robot.
+Pentru echitate, fiecare task trebuie să fie rezolvat de ambii roboți, în loc să se genereze sarcini diferite pentru fiecare robot.
 
 {{if interactive
 
@@ -572,28 +403,19 @@ if}}
 
 {{index "measuring a robot (exercise)", "runRobot function"}}
 
-You'll have to write a variant of the `runRobot` function that,
-instead of logging the events to the console, returns the number of
-steps the robot took to complete the task.
+Va trebui să scrieți o variantă a funcției `runRobot` care, în loc să afișeze evenimentele în consolă, să returneze numărul de pași necesari robotului pentru completarea sarcinii.
 
-Your measurement function can then, in a loop, generate new states and
-count the steps each of the robots takes. When it has generated enough
-measurements, it can use `console.log` to output the average for each
-robot, which is the total number of steps taken divided by the number
-of measurements.
+Apoi, funcția de măsurare, într-o buclă, va putea să genereze noi stări și să numere pașii pe care îi face fiecare robot. După ce a făcut destule măsurători, funcția va utiliza `console.log` pentru a afișa media pentru fiecare robot, care se va calcula ca raportul dintre numărul total de pași efectuați și numărul total de măsurători.
 
 hint}}
 
-### Robot efficiency
+### Eficiența robotului
 
 {{index "robot efficiency (exercise)"}}
 
-Can you write a robot that finishes the delivery task faster than
-`goalOrientedRobot`? If you observe that robot's behavior, what
-obviously stupid things does it do? How could those be improved?
+Puteți scrie un robot care finalizează livrarea mai repede decât `goalOrientedRobot`? Dacă observați comportamentul acelui robot, ce manevre stupide face acesta? Cum l-ați putea îmbunătăți?
 
-If you solved the previous exercise, you might want to use your
-`compareRobots` function to verify whether you improved the robot.
+Dacă ați rezolvat excercițiul, utilizați funcția `compareRobots` pentru a verifica că ați îmbunătățit într-adevăr robotul.
 
 {{if interactive
 
@@ -609,51 +431,32 @@ if}}
 
 {{index "robot efficiency (exercise)"}}
 
-The main limitation of `goalOrientedRobot` is that it considers only
-one parcel at a time. It will often walk back and forth across the
-village because the parcel it happens to be looking at happens to be
-at the other side of the map, even if there are others much closer.
+Cea mai mare limitare a `goalOrientedRobot` este că ia în calcul întotdeuna un singur colet. Se va deplasa adesea de-a lungul orașului deoarece coletul pe care îl va ridica va trebui să îl livreze în partea opusă a orașului, chiar dacă alte obiecte ar putea fi mult mai apropiate.
 
-One possible solution would be to compute routes for all packages and
-then take the shortest one. Even better results can be obtained, if
-there are multiple shortest routes, by preferring the ones that go to
-pick up a package instead of delivering a package.
+O soluție posibilă ar fi să calculăm rutele pentru toate pachetele și să o alegem pe cea mai scurtă. Putem obține rezultate și mai bune dacă, în cazul în care există mai multe rute scurte, le preferăm pe cele care ridică pachete în locul celor care livrează pachete.
 
 hint}}
 
-### Persistent group
+### Grup persistent
 
 {{index "persistent group (exercise)", "persistent data structure", "Set class", "set (data structure)", "Group class", "PGroup class"}}
 
-Most data structures provided in a standard JavaScript environment
-aren't very well suited for persistent use. Arrays have `slice` and
-`concat` methods, which allow us to easily create new arrays without
-damaging the old one. But `Set`, for example, has no methods for
-creating a new set with an item added or removed.
+Majoritatea structurilor de date disponibile într-un mediu JavaScript standard nu sunt foarte potrivite pentru utilizarea persistentă. Array-urile au metodele `slice` și `concat` care ne permit să creem ușor array-uri noi fără să modificăm array-ul original. Dar `Set` nu are metode pentru crearea unui nou set cu un item adăugat sau eliminat.
 
-Write a new class `PGroup`, similar to the `Group` class from [Chapter
-?](object#groups), which stores a set of values. Like `Group`, it has
-`add`, `delete`, and `has` methods.
+Scrieți o nouă clasă, `PGroup`, similară clasei `Group` din [capitolul ?](object#groups), care memorează un set de valori. Ca și `Group`, va avea metodele `add`, `delete` și `has`.
 
-Its `add` method, however, should return a _new_ `PGroup` instance
-with the given member added and leave the old one unchanged.
-Similarly, `delete` creates a new instance without a given member.
 
-The class should work for values of any type, not just strings. It
-does _not_ have to be efficient when used with large amounts of
-values.
+Metoda `add` va returna o _nouă instanță_ `PGroup` cu noul membru adăugat, lăsând neschimbată instanța originală. Similar, `delete` va crea o nouă instanță, fără membrul primit ca și argument. 
+
+Clasa va trebui să funcționeze pentru valori de orice tip, nu doar pentru stringuri. Nu este necesar să fie eficientă atunci când lucrează cu un volum mare de valori.
 
 {{index [interface, object]}}
 
-The ((constructor)) shouldn't be part of the class's interface
-(though you'll definitely want to use it internally). Instead, there
-is an empty instance, `PGroup.empty`, that can be used as a starting
-value.
+Constructorul nu trebuie să facă parte din interfața clasei (deși probabil că o să îl utilizați intern). În locul lui, trebuie să existe o instanță goală, `PGroup.empty`, pe care o veți utiliza ca și valoare de pornire.
 
 {{index singleton}}
 
-Why do you need only one `PGroup.empty` value, rather than having a
-function that creates a new, empty map every time?
+De ce ați dori să aveți o valoare `PGroup.empty` în locul unei funcții care crează un set gol nou de fiecare dată?
 
 {{if interactive
 
@@ -680,27 +483,18 @@ if}}
 
 {{index "persistent map (exercise)", "Set class", [array, creation], "PGroup class"}}
 
-The most convenient way to represent the set of member values
-is still as an array since arrays are easy to copy.
+Cel mai convenabil mod de a reprezenta setul de valori membre este tot un array, deoarece array-urile sunt ușor de copiat.
 
 {{index "concat method", "filter method"}}
 
-When a value is added to the group, you can create a new group with a
-copy of the original array that has the value added (for example, using
-`concat`). When a value is deleted, you filter it from the array.
+Când o valoare se adaugă la un grup, puteți crea un nou grup cu o copie a array-ului original care conține valoarea adăugată (utrilizând de exemplu `concat`). Când o valoare este eliminată, o veți filtra din array.
 
-The class's ((constructor)) can take such an array as argument and
-store it as the instance's (only) property. This array is never
-updated.
+Constructorul clasei poate primi un asemenea array ca și argument și îl va memora ca și singura proprietate a instanței. Acest array nu va fi actualizat niciodată.
 
 {{index "static method"}}
 
-To add a property (`empty`) to a constructor that is not a method, you
-have to add it to the constructor after the class definition, as a
-regular property.
+Pentru a adăuga o proprietate (`empty`) la un constructor, dar care nu este o metodă, trebuie să o adăugați consttructorului după definiția clasei, ca și proprietate obișnuită.
 
-You need only one `empty` instance because all empty groups are the
-same and instances of the class don't change. You can create many
-different groups from that single empty group without affecting it.
+Aveți nevoie doar de o singură instanță `empty` deoarece toate grupurile goale sunt identice și instanțele clasei nu vor fi modificate. Puteți crea oricâte grupuri din acel grup gol, fără a-l afecta.
 
 hint}}
