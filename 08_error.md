@@ -1,12 +1,10 @@
 {{meta {load_files: ["code/chapter/08_error.js"]}}}
 
-# Bugs and Errors
+# Buguri și erori
 
 {{quote {author: "Brian Kernighan and P.J. Plauger", title: "The Elements of Programming Style", chapter: true}
 
-Debugging is twice as hard as writing the code in the first place.
-Therefore, if you write the code as cleverly as possible, you are, by
-definition, not smart enough to debug it.
+Debugging-ul este de două ori mai dificil decât scrierea codului inițial. Prin urmare, dacă ați scris codul cât de inteligent ați putut, sunteți, prin definiție, insuficient de deștept pentru a-l repara.
 
 quote}}
 
@@ -14,59 +12,33 @@ quote}}
 
 {{index "Kernighan, Brian", "Plauger, P.J.", debugging, "error handling"}}
 
-Flaws in computer programs are usually called _((bug))s_. It makes
-programmers feel good to imagine them as little things that just
-happen to crawl into our work. In reality, of course, we put them
-there ourselves.
+Defectele din programele pentru computer se numesc de obicei _bug-uri_. Programatorii se simt bine să și le imagineze ca și mici lucruri care reușesc să pătrundă în munca lor. Însă, în realitate, noi suntem cei care le plasăm în cod.
 
-If a program is crystallized thought, you can roughly categorize bugs
-into those caused by the thoughts being confused and those caused by
-mistakes introduced while converting a thought to code. The former
-type is generally harder to diagnose and fix than the latter.
+Dacă un program este suficient de cristalizat, putem categoriza bug-urile în cele care sunt cauzate de gândirea confuză și cele cauzate de erori atunci când gândirea a fost transformată în cod. În general, cele din prima categorie sunt mai greu de diagnosticat și fixat decât cele din a doua categorie.
 
-## Language
+## Limbajul
 
 {{index parsing, analysis}}
 
-Many mistakes could be pointed out to us automatically by the
-computer, if it knew enough about what we're trying to do. But here
-JavaScript's looseness is a hindrance. Its concept of bindings and
-properties is vague enough that it will rarely catch ((typo))s before
-actually running the program. And even then, it allows you to do some
-clearly nonsensical things without complaint, such as computing
-`true * "monkey"`.
+Multe greșeli pot fi identificate automat de către computer, dacă înțelege suficient ceea ce încercăm să facem. Dar libertatea din JavaScript este un dezavantaj. Conceptul său de bindinguri și proprietăți este suficient de vag încât rareori va prinde erorile de tastare înainte de a rula programul. Și chiar și atunci, vă va permite să faceți lucruri care evident nu au sens fără să se plângă, cum ar fi să calculați `true * "monkey"`.
 
 {{index [syntax, error], [property, access]}}
 
-There are some things that JavaScript does complain about. Writing a
-program that does not follow the language's ((grammar)) will
-immediately make the computer complain. Other things, such as calling
-something that's not a function or looking up a property on an
-((undefined)) value, will cause an error to be reported when the
-program tries to perform the action.
+Există însă și lucruri despre care JavaScript se plânge. Scrierea unui program care nu respectă gramatica limbajului va determina computerul să reclame imediat. Alte lucruri, cum ar fi apelarea unui binding care nu este o funcție sau încercarea de a accesa o proprietate a unei valori `undefined`, vor determina raportarea unor erori atunci când programul încearcă să execute acea acțiune.
 
 {{index NaN, error}}
 
-But often, your nonsense computation will merely produce `NaN` (not a
-number) or an undefined value, while the program happily continues,
-convinced that it's doing something meaningful. The mistake will
-manifest itself only later, after the bogus value has traveled through
-several functions. It might not trigger an error at all but silently
-cause the program's output to be wrong. Finding the source of such
-problems can be difficult.
+Dar adesea, calculele noastre fără sens vor produce `NaN` (not a number) sau o valoare `undefined`, în timp ce programul își va continua execuția, convins că face ceva important. Greșeala se va manifesta doar mai târziu, după ce valoarea eronată a călătorit prin câteva funcții. Ar putea să nu declanșeze o eroare ci doar să cauzeze o ieșire eronată a programului. Identificarea sursei unor asemenea probleme poate fi dificilă.
 
-The process of finding mistakes—bugs—in programs is called
-_((debugging))_.
+Procesul de identificare a erorilor în programe se numește _debugging_.
 
-## Strict mode
+## Modul strict
 
 {{index "strict mode", [syntax, error], function}}
 
 {{indexsee "use strict", "strict mode"}}
 
-JavaScript can be made a _little_ stricter by enabling _strict
-mode_. This is done by putting the string `"use strict"` at the top of
-a file or a function body. Here's an example:
+JavaScript poate funcționa puțin mai _strict_ prin activarea modului _strict_. Pentru aceasta, trebuie să plasăm stringul `"use strict"` la începutul programului sau la începutul corpului funcției. Iată un exemplu:
 
 ```{test: "error \"ReferenceError: counter is not defined\""}
 function canYouSpotTheProblem() {
@@ -82,28 +54,13 @@ canYouSpotTheProblem();
 
 {{index "let keyword", [binding, global]}}
 
-Normally, when you forget to put `let` in front of your binding, as
-with `counter` in the example, JavaScript quietly creates a global
-binding and uses that. In strict mode, an ((error)) is reported
-instead. This is very helpful. It should be noted, though, that this
-doesn't work when the binding in question already exists as a global
-binding. In that case, the loop will still quietly overwrite the value
-of the binding.
+În mod normal, când uitați să folosiți `let` pentru a vă declara bindingul, cum se întâmplă cu `counter` în exemplul de mai sus, JavaScript crează silențios un binding global pentru aceasta. Însă în mod strict va fi raportată o eroare. Ceea ce este foarte util. Însă trebuie să menționăm că eroarea nu este detectată în cazul în care există deja un binding global cu acel nume. În acest caz, bucla va suprascrie valoarea acelui binding.
 
 {{index "this binding", "global object", undefined, "strict mode"}}
 
-Another change in strict mode is that the `this` binding holds the
-value `undefined` in functions that are not called as ((method))s.
-When making such a call outside of strict mode, `this` refers to the
-global scope object, which is an object whose properties are the
-global bindings. So if you accidentally call a method or constructor
-incorrectly in strict mode, JavaScript will produce an error as soon
-as it tries to read something from `this`, rather than happily writing
-to the global scope.
+O altă modificare în modul strict este aceea că valoarea bindingului `this` este nedefinită în funcțiile care nu sunt apelate ca metode. Un asemenea apel în afara modului strict, va avea bindingul `this` referitor la obiectul din domeniul de vizibilitate global, care este un obiect ale cărui proprietăți sunt tocmai bindingurile globale. Astfel, dacă apelați accidental incorect o metodă sau un constructor, în mod strict, JavaScript va produce o eroare imediat ce încearcă să acceseze `this`, în loc să se mulțumească să scrie în domeniul de vizibilitate global.
 
-For example, consider the following code, which calls a
-((constructor)) function without the `new` keyword so that its `this`
-will _not_ refer to a newly constructed object:
+De exemplu, să considerăm următorul cod, care apelează funcția constructor fără cuvântul-cheie `new` astfel încât `this` nu se va referi la obiectul nou construit:
 
 ```
 function Person(name) { this.name = name; }
@@ -114,9 +71,7 @@ console.log(name);
 
 {{index error}}
 
-So the bogus call to `Person` succeeded but returned an undefined
-value and created the global binding `name`. In strict mode, the
-result is different.
+Deci, apelul eronat către `Person` a reușit, dar a returnat o valoare `undefined` și a creat bindingul global `name`. În mod strict, rezultatul este diferit:
 
 ```{test: "error \"TypeError: Cannot set property 'name' of undefined\""}
 "use strict";
@@ -125,40 +80,25 @@ let ferdinand = Person("Ferdinand"); // forgot new
 // → TypeError: Cannot set property 'name' of undefined
 ```
 
-We are immediately told that something is wrong. This is helpful.
+Ni se spune imediat că ceva este greșit, ceea ce este util.
 
-Fortunately, constructors created with the `class` notation will
-always complain if they are called without `new`, making this less of
-a problem even in non-strict mode.
+Din fericire, constructorii creați cu notația `class` vor reclama întotdeauna faptul că nu sunt apelați cu `new`, ceea ce reduce dimensiunea problemei chiar și în mod non-strict.
 
 {{index parameter, [binding, naming], "with statement"}}
 
-Strict mode does a few more things. It disallows giving a function
-multiple parameters with the same name and removes certain problematic
-language features entirely (such as the `with` statement, which is so
-wrong it is not further discussed in this book).
+Modul strict mai realizează alte câteva lucruri. Nu permite să transmitem unei funcții mai mulți parametri cu aceleași nume și elimină anumite funcționalități problematice din limbaj (cum ar fi instrucțiunea `with`, atât de greșită încât nici măcar nu vom discuta despre ea în cele ce urmează).
 
 {{index debugging}}
 
-In short, putting `"use strict"` at the top of your program rarely
-hurts and might help you spot a problem.
+Pe scurt, plasarea `"use strict"` la începutul programului rareori dăunează, dar v-ar putea ajuta să identificați o problemă.
 
-## Types
+## Tipuri
 
-Some languages want to know the types of all your bindings and
-expressions before even running a program. They will tell you right
-away when a type is used in an inconsistent way. JavaScript considers
-types only when actually running the program, and even there often
-tries to implicitly convert values to the type it expects, so it's not
-much help.
+Unele limbaje doresc să cunoască tipurile tuturor bindingurilor și expresiilor înainte de rularea programului. Ele vă vor spune imediat dacă un tip este utilizat în mod inconsistent. JavaScript ia în considerare tipurilor doar atunci când rulează programul și, chiar și atunci, adesea încearcă să convertească implicit valorile la tipurile pe care le așteaptă, așa că nu este de mare ajutor.
 
-Still, types provide a useful framework for talking about programs. A
-lot of mistakes come from being confused about the kind of value that
-goes into or comes out of a function. If you have that information
-written down, you're less likely to get confused.
+Totuși, tipurile oferă un cadru util pentru a discuta despre programe. Multe greșeli apar din confuzia relativ la tipul de valoare care intră sau iese dintr-o funcție. Dacă aveți această informație, confuzia este mai puțin probabilă.
 
-You could add a comment like the following before the `goalOrientedRobot`
-function from the previous chapter to describe its type:
+Ați putea adăuga un comentariu ca și cel de mai jos înainte de funcția `goalOrientedRobot` din capitolul anterior, pentru a-i descrie tipul:
 
 ```
 // (VillageState, Array) → {direction: string, memory: Array}
@@ -167,58 +107,31 @@ function goalOrientedRobot(state, memory) {
 }
 ```
 
-There are a number of different conventions for annotating JavaScript
-programs with types.
+Există mai multe convenții pentru adnotarea programelor JavaScript cu tipuri.
 
-One thing about types is that they need to introduce their own
-complexity to be able to describe enough code to be useful. What do
-you think would be the type of the `randomPick` function that returns
-a random element from an array? You'd need to introduce a _((type
-variable))_, _T_, which can stand in for any type, so that you can
-give `randomPick` a type like `([T]) → T` (function from an array of
-*T*s to a *T*).
+Un lucru important despre tipurile de date este că acestea trebuie să introducă propria lor complexitate pentru a putea descrie suficient codul și a fi utile. Care credeți că va fi tipul funcției `randomPick` care returnează la întâmplare un element al unui array? Trebuie să introducem o _variabilă pentru tip_, _T_, care va reprezenta orice tip, astfel încât `randomPick` să aibă un tip `([T]) → T` (o funcție care reduce un array de *T*-uri la un *T*).
 
 {{index "type checking", TypeScript}}
 
 {{id typing}}
 
-When the types of a program are known, it is possible for the computer
-to _check_ them for you, pointing out mistakes before the program is
-run. There are several JavaScript dialects that add types to the
-language and check them. The most popular one is called
-[TypeScript](https://www.typescriptlang.org/). If you are interested
-in adding more rigor to your programs, I recommend you give it a try.
+Când tipurile unui program sunt cunoscute, computerul poate să ne ajute prin verificarea lor, identificarea erorilor înainte de execuția programului. Există mai multe dialecte ale JavaScript care adaugă tipuri la limbaj și le verifică. Cel mai popular este [TypeScript](https://www.typescriptlang.org/). Dacă sunteți interesați în a adăuga mai multă rigoare programelor voastre, vă recomand să îl încercați.
 
-In this book, we'll continue using raw, dangerous, untyped JavaScript
-code.
+În această carte vom continua să utilizăm cod JavaScript brut, periculos, fără tipuri.
 
-## Testing
+## Testarea
 
 {{index "test suite", "run-time error", automation, testing}}
 
-If the language is not going to do much to help us find mistakes,
-we'll have to find them the hard way: by running the program and
-seeing whether it does the right thing.
+Dacă limbajul nu ne ajută prea mult în identificarea greșelilor, va trebui să le găsim pe calea dificilă: să rulăm programul și să vedem dacă face ceea ce trebuie.
 
-Doing this by hand, again and again, is a really bad idea. Not only is
-it annoying, it also tends to be ineffective since it takes too much
-time to exhaustively test everything every time you make a change.
+Să facem asta manual, din nou și din nou, ar fi o idee în general proastă. Nu doar că este plictisitor, dar tinde să fie și ineficient deoarece necesită prea mult timp să testăm exhaustiv de fiecare dată când facem o modificare.
 
-Computers are good at repetitive tasks, and testing is the ideal
-repetitive task. Automated testing is the process of writing a program
-that tests another program. Writing tests is a bit more work than
-testing manually, but once you've done it, you gain a kind of
-superpower: it takes you only a few seconds to verify that your
-program still behaves properly in all the situations you wrote tests
-for. When you break something, you'll immediately notice, rather than
-randomly running into it at some later time.
+Computerele excelează în sarcinile repetitive iar testarea este sarcina repetitivă perfectă. Testarea automată este procesul de scriere a unui program care testează alt program. Scrierea testelor necesită puțin mai multă muncă decât testarea manuală dar, o dată ce au fost scrise, aveți o super putere: în doar câteva secunde veți putea verifica dacă programul vostru se comportă adecvat pentru toate situațiile pentru care ați scris teste. Când stricați ceva, veți observa imediat, în loc să vă aflați întâmplător mai târziu în situația de a observa eroarea.
 
 {{index "toUpperCase method"}}
 
-Tests usually take the form of little labeled programs that verify
-some aspect of your code. For example, a set of tests for the
-(standard, probably already tested by someone else) `toUpperCase`
-method might look like this:
+Testele, de regulă, sunt mici programe etichetate care verifică anumite aspecte ale codului. De exemplu, un set de teste pentru metoda `toUpperCase` (metodă implicită și probabil deja testată de altcineva) ar putea arăta astfel:
 
 ```
 function test(label, body) {
@@ -238,48 +151,27 @@ test("don't convert case-less characters", () => {
 
 {{index "domain-specific language"}}
 
-Writing tests like this tends to produce rather repetitive, awkward
-code. Fortunately, there exist pieces of software that help you build
-and run collections of tests (_((test suites))_) by providing a
-language (in the form of functions and methods) suited to expressing
-tests and by outputting informative information when a test fails.
-These are usually called _((test runners))_.
+Scrierea acestui gen de teste tinde să producă un cod ciudat, repetitiv. Din fericire, există aplicații care ne ajută să construim și să rulăm colecții de teste (sau _suite de teste_) și care ne pun la dispoziție un limbaj (sub forma unor funcții și metode) adecvat pentru exprimarea testelor și care afișează rapoarte informative despre testele care eșuează. Acestea se numesc _executoare de teste_ (_test runners_).
 
 {{index "persistent data structure"}}
 
-Some code is easier to test than other code. Generally, the more
-external objects that the code interacts with, the harder it is to set
-up the context in which to test it. The style of programming shown in
-the [previous chapter](robot), which uses self-contained persistent
-values rather than changing objects, tends to be easy to test.
+Unele bucăți de cod sunt mai ușor de testat decât altele. În general, cu cât codul interacționează cu mai multe obiecte externe, cu atât este mai greu de setat contextul în care acesta să fie testat. Stilul de programare prezentat în [capitolul anterior](robot), care utilizează valori persistente în loc de obiecte ce se modifică, tinde să fie mai ușor de testat.
 
 ## Debugging
 
 {{index debugging}}
 
-Once you notice there is something wrong with your program
-because it misbehaves or produces errors, the next step is to figure
-out _what_ the problem is.
+Când observați că ceva este greșit în programul vostru deoarece se comportă eronat și produce erori, următorul pas este să încercați să vă dați seama _care_ este problema.
 
-Sometimes it is obvious. The ((error)) message will point at a
-specific line of your program, and if you look at the error
-description and that line of code, you can often see the problem.
+Uneori este evident. Mesajul de eroare indică o anumită linie din program și, dacă citiți descrierea erorii și acea linie de program, reușiți să vă dați seama adesea care este problema.
 
 {{index "run-time error"}}
 
-But not always. Sometimes the line that triggered the problem is
-simply the first place where a flaky value produced elsewhere gets
-used in an invalid way. If you have been solving the ((exercises)) in
-earlier chapters, you will probably have already experienced such
-situations.
+Dar nu întotdeauna. Uneori, linia care a declanșat problema este doar primul loc în care o valoare eronată, produsă în altă parte, a fost utilizată într-un mod invalid. Dacă ați încercat să rezolvați exercițiile din capitolele anterioare, probabil că deja ați ajuns în asemenea situații.
 
 {{index "decimal number", "binary number"}}
 
-The following example program tries to convert a whole number to a
-string in a given base (decimal, binary, and so on) by repeatedly
-picking out the last ((digit)) and then dividing the number to get rid
-of this digit. But the strange output that it currently produces
-suggests that it has a ((bug)).
+Exemplul următor încearcă să convertească un număr întreg într-un string într-o bază dată (zecimal, binar etc) prin considerarea repetată a ultimei cifre și apoi împărțirea numărului pentru a elimina cifra prelucrată. Dar ieșirea ciudată pe care o produce sugerează că există un bug.
 
 ```
 function numberToString(n, base = 10) {
@@ -300,25 +192,15 @@ console.log(numberToString(13, 10));
 
 {{index analysis}}
 
-Even if you see the problem already, pretend for a moment that you
-don't. We know that our program is malfunctioning, and we want to find
-out why.
+Chiar dacă ați identificat deja problema, simulați că nu ați reușit încă. Știm că programul nostru funcționează greșit și vrem să identificăm de ce.
 
 {{index "trial and error"}}
 
-This is where you must resist the urge to start making random changes
-to the code to see whether that makes it better. Instead, _think_. Analyze
-what is happening and come up with a ((theory)) of why it might be
-happening. Then, make additional observations to test this theory—or,
-if you don't yet have a theory, make additional observations to help
-you come up with one.
+Acesta este momentul în care trebuie să rezistați tentației de a face modificări la întâmplare în codul vostru, cu speranța că problema va dispărea. În loc de asta, _gândiți_. Analizați ce se întâmplă și elaborați o teorie cu privire la motivul pentru care apare această eroare. Apoi continuați cu observații suplimentare pentru a vă testa teoria sau, dacă nu aveți încă o teorie, face observații suplimentare pentru a încerca să elaborați una.
 
 {{index "console.log", output, debugging, logging}}
 
-Putting a few strategic `console.log` calls into the program is a good
-way to get additional information about what the program is doing. In
-this case, we want `n` to take the values `13`, `1`, and then `0`.
-Let's write out its value at the start of the loop.
+Plasarea strategică a câtorva apeluri `console.log` este o modalitate bună de a obține informații suplimentare despre ceea ce face programul. În cazul nostru, vrem ca `n` să ia pe rând valorile `13`, `1` și `0`. Haideți să inspectăm acest lucru.
 
 ```{lang: null}
 13
@@ -331,55 +213,31 @@ Let's write out its value at the start of the loop.
 
 {{index rounding}}
 
-_Right_. Dividing 13 by 10 does not produce a whole number. Instead of
-`n /= base`, what we actually want is `n = Math.floor(n / base)` so
-that the number is properly "shifted" to the right.
+_Corect_. Împărțirea lui 13 la 10 nu a produs un număr întreg. În loc de `n /= base`, ceea ce voiam de fapt era `n = Math.floor(n / base)` astfel încât eliminarea ultimei cifre să fie corectă.
 
 {{index "JavaScript console", "debugger statement"}}
 
-An alternative to using `console.log` to peek into the program's
-behavior is to use the _debugger_ capabilities of your browser.
-Browsers come with the ability to set a _((breakpoint))_ on a specific
-line of your code. When the execution of the program reaches a line
-with a breakpoint, it is paused, and you can inspect the values of
-bindings at that point. I won't go into details, as debuggers differ
-from browser to browser, but look in your browser's ((developer
-tools)) or search the Web for more information.
+O alternativă la utilizarea `console.log` pentru a investiga comportamentul programului este să utilizați capabilitățile de _debugging_ ale browserului. Browserele au abilitatea de a seta un _breakpoint_ pe o anumită linie a codului vostru. Când execuția programului ajunge la o linie cu un asemenea breakpoint, programul ia o pauză și puteți inspecta valorile diferitelor bindinguri în acel moment. Nu vom intra în detalii deoarece debugger-ele diferă de la un browser la altul, dar căutați "Developer Tools" pentru browserul vostru sau căutați mai multe informații pe Web.
 
-Another way to set a breakpoint is to include a `debugger` statement
-(consisting of simply that keyword) in your program. If the
-((developer tools)) of your browser are active, the program will pause
-whenever it reaches such a statement.
+Un alt mod de a seta un breakpoint este de a include o instrucțiune `debugger` în program (pur și simplu utilizați acest cuvânt cheie). Dacă instrumentele de dezvoltare din browser sunt active, programul va lua o pauză de fiecare dată când ajunge la o asemenea instrucțiune.
 
-## Error propagation
+## Propagarea erorilor
 
 {{index input, output, "run-time error", error, validation}}
 
-Not all problems can be prevented by the programmer, unfortunately. If
-your program communicates with the outside world in any way, it is
-possible to get malformed input, to become overloaded with work, or to
-have the network fail.
+Programatorii nu pot preveni toate problemele, din păcate. Dacă programul vostru interacționează cu lumea exterioară în orice mod, se poate întâmpla să primească date de intrare formatate eronat, sau să se suprasolicite sau pur și simplu să apară o eroare a rețelei.
 
 {{index "error recovery"}}
 
-If you're programming only for yourself, you can afford to just ignore
-such problems until they occur. But if you build something that is
-going to be used by anybody else, you usually want the program to do
-better than just crash. Sometimes the right thing to do is take the
-bad input in stride and continue running. In other cases, it is better
-to report to the user what went wrong and then give up. But in either
-situation, the program has to actively do something in response to the
-problem.
+Dacă programați doar pentru voi, puteți ignora aceste erori până în momentul în care vor apărea. Dar dacă construiți un program ce va fi utilizat de către alții, de regulă veți dori ca programul să se comporte mai bine decât doar să "crape". Uneori, măsura corectă este ca programul să continue, ignorând datele de intrare eronate. În alte cazuri, mai bine raportați utilizatorului ce eroare ați întâlnit și doar apoi renunțați. Dar, în orice situație, programul trebuie să reacționeze activ ca și răspuns la problemă.
 
 {{index "promptNumber function", validation}}
 
-Say you have a function `promptNumber` that asks the user for a number
-and returns it. What should it return if the user inputs "orange"?
+Să presupunem că aveți o funcție `promptNumber` care cere utilizatorului un număr și apoi îl returnează. Ce ar trebui să returneze dacă utilizatorul introduce "orange"?
 
 {{index null, undefined, "return value", "special return value"}}
 
-One option is to make it return a special value. Common choices for
-such values are `null`, `undefined`, or -1.
+O opțiune ar fi să returnați o valoare specială. Alegeri frecvente sunt `null`, `undefined` sau -1.
 
 ```{test: no}
 function promptNumber(question) {
@@ -391,21 +249,11 @@ function promptNumber(question) {
 console.log(promptNumber("How many trees do you see?"));
 ```
 
-Now any code that calls `promptNumber` must check whether an actual
-number was read and, failing that, must somehow recover—maybe by
-asking again or by filling in a default value. Or it could again
-return a special value to _its_ caller to indicate that it failed to
-do what it was asked.
+Acum, orice cod care apelează `promptNumber` ar trebui să verifice dacă a fost introdus un număr iar dacă nu, să recupereze cumva - fie prin solicitarea unui alt număr, fie prin setarea unei valori implicite. Sau ar putea să returneze o valoare specială către _apelantul_ său, prin care să informeze că nu a reușit să execute ceea ce s-a solicitat.
 
 {{index "error handling"}}
 
-In many situations, mostly when ((error))s are common and the caller
-should be explicitly taking them into account, returning a special
-value is a good way to indicate an error. It does, however, have its
-downsides. First, what if the function can already return every
-possible kind of value? In such a function, you'll have to do
-something like wrap the result in an object to be able to distinguish
-success from failure.
+În multe situații, mai ales atunci când erorile sunt obișnuite și apelantul trebuie să le ia explicit în considerare, returnarea unei valori speciale este o variantă bună pentru a semnala o eroare. Dar are și dezavantaje. Mai întâi, ce se întâmplă dacă funcția poate returna orice tip posibil de valori? Într-o asemenea funcție, ar trebui să împachetați răspunsul într-un obiect pentru a putea distinge între succes și eșec.
 
 ```
 function lastElement(array) {
@@ -419,42 +267,23 @@ function lastElement(array) {
 
 {{index "special return value", readability}}
 
-The second issue with returning special values is that it can lead to
-awkward code. If a piece of code calls `promptNumber` 10 times,
-it has to check 10 times whether `null` was returned. And if its
-response to finding `null` is to simply return `null` itself, callers
-of the function will in turn have to check for it, and so on.
+A doua problemă este că returnarea valorilor speciale poate conduce la cod ciudat. Dacă o bucată de cod apelează `promptNumber` de 10 ori, va trebui să verifice de 10 ori dacă s-a returnat `null`. Iar dacă răspunsul pentru valoarea `null` constă în returnarea acestei valori, apelanții acestei funcții va trebui să facă alte verificări asupra acestei valori, și așa mai departe.
 
-## Exceptions
+## Excepții
 
 {{index "error handling"}}
 
-When a function cannot proceed normally, what we would _like_ to do is
-just stop what we are doing and immediately jump to a place that knows
-how to handle the problem. This is what _((exception handling))_ does.
+Când o funcție nu se poate executa normal, ceea ce ne-ar _place_ ar fi să își oprească execuția și să cedăm imediat controlul unei bucăți de cod care știe cum să gestioneze problema. Acesta este rolul _gestionării excepțiilor_.
 
 {{index ["control flow", exceptions], "raising (exception)", "throw keyword", "call stack"}}
 
-Exceptions are a mechanism that makes it possible for code that runs
-into a problem to _raise_ (or _throw_) an exception. An exception can
-be any value. Raising one somewhat resembles a super-charged return
-from a function: it jumps out of not just the current function but
-also its callers, all the way down to the first call that
-started the current execution. This is called _((unwinding the
-stack))_. You may remember the stack of function calls that was
-mentioned in [Chapter ?](functions#stack). An exception zooms down
-this stack, throwing away all the call contexts it encounters.
+Excepțiile sunt un mecanism care permite codului care ajunge într-o situație de eroare să _ridice_ (sau să _arunce_) o excepție. O excepție poate fi orice valoare. Ridicarea unei excepții seamănă oarecum cu un return "pe steroizi" într-o funcție: se va ieși nu doar din contextul funcției ci și din contextele tuturor apelanților, până la codul inițial care a inițiat execuția curentă. Acest comportament se numește _desfacerea stivei_. Vă reamintiți probabil despre stiva de apel al funcțiilor menționată în [capitolul ?](functions#stack). O excepție micșorează stiva prin eliminarea tuturor contextelor de apel pe care le găsește.
 
 {{index "error handling", [syntax, statement], "catch keyword"}}
 
-If exceptions always zoomed right down to the bottom of the stack,
-they would not be of much use. They'd just provide a novel way to blow
-up your program. Their power lies in the fact that you can set
-"obstacles" along the stack to _catch_ the exception as it is zooming
-down. Once you've caught an exception, you can do something with it to
-address the problem and then continue to run the program.
+Dacă excepțiile ajung întotdeauna până la partea de jos a stivei, atunci nu au prea mare utilitate. Vor fi doar o nouă modalitate de a închide programul. Puterea lor constă în faptul că putem plasa "obstacole" pe stivă, care vor _prinde_ excepția care se deplasează în jos peste aceasta. Imediat ce ați prins o excepție, puteți executa o acțiune pentru a adresa problema și apoi să continuați execuția programului.
 
-Here's an example:
+Iată un exemplu:
 
 {{id look}}
 ```
@@ -482,52 +311,29 @@ try {
 
 {{index "exception handling", block, "throw keyword", "try keyword", "catch keyword"}}
 
-The `throw` keyword is used to raise an exception. Catching one is
-done by wrapping a piece of code in a `try` block, followed by the
-keyword `catch`. When the code in the `try` block causes an exception
-to be raised, the `catch` block is evaluated, with the name in
-parentheses bound to the exception value. After the `catch` block
-finishes—or if the `try` block finishes without problems—the program
-proceeds beneath the entire `try/catch` statement.
+Cuvântul cheie `throw` este utilizat pentru ridicarea unei excepții. Prinderea uneia se realizează prin plasarea codului generator de excepții într-un bloc `try`, urmat de un bloc `catch`. Când blocul `try` va cauza ridicarea unei excepții, se va evalua blocul `catch` cu numele din paranteze legat de valoarea excepției. După ce s-a executat blocul `catch`, sau dacă execuția blocului `try` s-a finalizat fără probleme, programul continuă cu instrucțiunea de după instrucțiunea `try/catch`.
 
 {{index debugging, "call stack", "Error type"}}
 
-In this case, we used the `Error` ((constructor)) to create our
-exception value. This is a ((standard)) JavaScript constructor that
-creates an object with a `message` property. In most JavaScript
-environments, instances of this constructor also gather information
-about the call stack that existed when the exception was created, a
-so-called _((stack trace))_. This information is stored in the `stack`
-property and can be helpful when trying to debug a problem: it tells
-us the function where the problem occurred and which functions made
-the failing call.
+Am utilizat constructorul `Error` pentru a crea valoarea excepției. Acesta este un constructor JavaScript standard care crează un obiect cu proprietatea `message`. În majoritatea mediilor JavaScript, instanțele acestui constructor adună și informații despre stiva de apel atunci când excepția fost creată, așa-numita _stack trace_. Această informație este memorată în proprietatea _stack_ și poate fi utilă pentru identificarea și rezolvarea problemei: ne informează cu privire la funcția în care a apărut problema și ce funcții au creat apelul care a eșuat.
 
 {{index "exception handling"}}
 
-Note that the `look` function completely ignores the possibility that
-`promptDirection` might go wrong. This is the big advantage of
-exceptions: error-handling code is necessary only at the point where
-the error occurs and at the point where it is handled. The functions
-in between can forget all about it.
+Observați că funcția `look` ignoră complet posibilitatea ca funcția `promptDirection` să funcționeze greșit. Acesta este marele avantaj al excepțiilor: gestionarea erorilor este necesară doar în punctul în care apare eroarea și în cel în care eroarea este prelucrată. Funcțiile apelate între aceste două puncte pot să o ignore complet.
 
-Well, almost...
+Ei bine, aproape...
 
-## Cleaning up after exceptions
+## Curățenie după excepții
 
 {{index "exception handling", "cleaning up", ["control flow", exceptions]}}
 
-The effect of an exception is another kind of control flow. Every
-action that might cause an exception, which is pretty much every
-function call and property access, might cause control to suddenly
-leave your code.
+Efectul unei excepții este un alt tip de fluxul al controlului. Fiecare acțiune care ar putea cauza o excepție, ceea ce înseamnă de fapt fiecare apel de funcție și fiecare accesare a unei proprietăți, poate conduce la transferul brusc al controlului în afara codului vostru.
 
-This means when code has several side effects, even if its
-"regular" control flow looks like they'll always all happen, an
-exception might prevent some of them from taking place.
+Aceasta înseamnă că, de fapt, atunci când codul are mai multe efecte secundare, chiar dacă fluxul "obișnuit" al controlului pare că le va cauza pe toate, o excepție ar putea să prevină apariția unora dintre aceste efecte.
 
 {{index "banking example"}}
 
-Here is some really bad banking code.
+Iată un cod foarte rău:
 
 ```{includeCode: true}
 const accounts = {
@@ -551,34 +357,17 @@ function transfer(from, amount) {
 }
 ```
 
-The `transfer` function transfers a sum of money from a given account
-to another, asking for the name of the other account in the process.
-If given an invalid account name, `getAccount` throws an exception.
+Funcția `transfer` mută o sumă de bani dintr-un cont în altul, solicitând la un moment dat numele celuilalt cont. Dacă se introduce un nume invalid de cont, `getAccount` aruncă o excepție.
 
-But `transfer` _first_ removes the money from the account and _then_
-calls `getAccount` before it adds it to another account. If it is
-broken off by an exception at that point, it'll just make the money
-disappear.
+Dar `transfer` _mai întâi_ scoate banii din cont și apoi apelează `getAccount`, înainte de a-i adăuga în celălalt cont. Dacă este întreruptă de către o excepție, banii vor dispărea pur și simplu.
 
-That code could have been written a little more intelligently, for
-example by calling `getAccount` before it starts moving money around.
-But often problems like this occur in more subtle ways. Even functions
-that don't look like they will throw an exception might do so in
-exceptional circumstances or when they contain a programmer mistake.
+Acest cod ar fi putut fi scris puțin mai inteligent, de exemplu prin apelarea `getAccount` înainte de a începe să mute banii între conturi. Însă, adesea, problemele de acest gen apar în moduri mai subtile. Chiar și funcții care nu par a arunca vreo excepție, ar putea proceda astfel în situații excepționale sau atunci când programatorul comite o greșeală.
 
-One way to address this is to use fewer side effects. Again, a
-programming style that computes new values instead of changing
-existing data helps. If a piece of code stops running in the middle of
-creating a new value, no one ever sees the half-finished value, and
-there is no problem.
+O variantă de a adresa această problemă este de utiliza mai puține efecte secundare. Din nou, un stil de programare care calculează valori noi în loc să le modifice pe cele existente ar putea fi de ajutor. Dacă o bucată de cod se oprește din execuție în mijlocul procesului de creare a noii valori, nimeni nu va observa valoarea incomplet generată și nu va fi nici o problemă.
 
 {{index block, "try keyword", "finally keyword"}}
 
-But that isn't always practical. So there is another feature that
-`try` statements have. They may be followed by a `finally` block
-either instead of or in addition to a `catch` block. A `finally` block
-says "no matter _what_ happens, run this code after trying to run the
-code in the `try` block."
+Dar nu este întotdeauna practic să procedăm astfel. Astfel că mai există o caracteristică pe care o au instrucțiunile `try`. Ele pot fi urmate de un bloc `finally`, fie în locul fie după un bloc `catch`. Blocul `finally` spune: "indiferent de rezultat, rulează acest cod după ce ai încercat să rulezi codul din blocul `try`".
 
 ```{includeCode: true}
 function transfer(from, amount) {
@@ -597,76 +386,43 @@ function transfer(from, amount) {
 }
 ```
 
-This version of the function tracks its progress, and if, when
-leaving, it notices that it was aborted at a point where it had
-created an inconsistent program state, it repairs the damage it did.
+Această versiune a funcției, își urmărește progresul și, dacă la ieșire constată că a fost terminat blocul `try` într-un punct în care a creat o stare inconsistentă, repară ceea ce a deteriorat.
 
-Note that even though the `finally` code is run when an exception
-is thrown in the `try` block, it does not interfere with the exception.
-After the `finally` block runs, the stack continues unwinding.
+De menționat că blocul `finally` se va executa și atunci când se aruncă o excepție din blocul `try`, dar nu interferă cu excepția. După executarea blocului `finally`, excepția va continua să "desfacă" stiva.
 
 {{index "exception safety"}}
 
-Writing programs that operate reliably even when exceptions pop up in
-unexpected places is hard. Many people simply don't bother, and
-because exceptions are typically reserved for exceptional
-circumstances, the problem may occur so rarely that it is never even
-noticed. Whether that is a good thing or a really bad thing depends on
-how much damage the software will do when it fails.
+Scrierea unor programe care operează fiabil, chiar și atunci când apar excepțiile în locuri neașteptate, este dificilă. Cei mai mulți programatori nici nu își bat capul și, deoarece excepțiile sunt de regulă rezervate pentru circumstanțe excepționale, problema ar putea apărea suficient de rar încât să nu fie observată vreodată. Dacă e bine sau rău, asta depinde de câte stricăciuni ar putea provoca software-ul atunci când eșuează.
 
-## Selective catching
+## Tratarea selectivă a erorilor
 
 {{index "uncaught exception", "exception handling", "JavaScript console", "developer tools", "call stack", error}}
 
-When an exception makes it all the way to the bottom of the stack
-without being caught, it gets handled by the environment. What this
-means differs between environments. In browsers, a description of the
-error typically gets written to the JavaScript console (reachable
-through the browser's Tools or Developer menu). Node.js, the
-browserless JavaScript environment we will discuss in [Chapter
-?](node), is more careful about data corruption. It aborts the whole
-process when an unhandled exception occurs.
+Atunci când o excepție ajunge până la baza stivei fără a fi tratată, va fi gestionată de către mediul de execuție. Medii diferite reacționează în mod diferit. În browsere, de regulă se afișează o descriere a erorii în consola JavaScript. NodeJS, mediul JavaScript diferit de browsere, despre care vom discuta în [capitolul ?](node), este mai atent la coruperea datelor. Va renunța la întregul proces în cazul în care există o excepție negestionată.
 
 {{index crash, "error handling"}}
 
-For programmer mistakes, just letting the error go through is often
-the best you can do. An unhandled exception is a reasonable way to
-signal a broken program, and the JavaScript console will, on modern
-browsers, provide you with some information about which function calls
-were on the stack when the problem occurred.
+Pentru greșelile de programare, să lăsăm eroarea să își urmeze cursul este de multe ori cel mai bun lucru pe care îl putem face. O excepție negestionată este un mod rezonabil de semnaliza un program defect, iar consola JavaScript din browserele moderne vă va furniza mai multe informații despre apelurile de funcții care existau în stivă la apariția problemei.
 
 {{index "user interface"}}
 
-For problems that are _expected_ to happen during routine use,
-crashing with an unhandled exception is a terrible strategy.
+Pentru problemele care este de așteptat să apară în utilizarea obișnuită, lipsa gestionării erorilor este o strategie dezastruoasă.
 
 {{index [function, application], "exception handling", "Error type", [binding, undefined]}}
 
-Invalid uses of the language, such as referencing a nonexistent
-binding, looking up a property on `null`, or calling something
-that's not a function, will also result in exceptions being raised.
-Such exceptions can also be caught.
+Utilizarea invalidă a limbajului, cum ar fi referirea unui binding inexistent, referirea unei proprietăți asupra `null` sau apelarea unei construcții care nu este o funcție, va rezulta de asemenea în ridicarea unei excepții. Asemenea excepții pot fi prinse la rândul lor.
 
 {{index "catch keyword"}}
 
-When a `catch` body is entered, all we know is that _something_ in our
-`try` body caused an exception. But we don't know _what_ did or _which_
-exception it caused.
+La intrarea în blocul `catch`, tot ceea ce știm este că _ceva_ din corpul blocului `try` a cauzat o excepție. Dar nu știm _ce_ a cauzat-o și nici _ce fel_ de excepție avem.
 
 {{index "exception handling"}}
 
-JavaScript (in a rather glaring omission) doesn't provide direct
-support for selectively catching exceptions: either you catch them all
-or you don't catch any. This makes it tempting to _assume_ that the
-exception you get is the one you were thinking about when you wrote
-the `catch` block.
+JavaScript nu oferă suport direct pentru tratarea selectivă a excepțiilor: ori le prindem pe toate ori pe nici una. Este tentant să presupunem că excepția pe care o primim este cea la care ne gândeam când am scris blocul `catch`.
 
 {{index "promptDirection function"}}
 
-But it might not be. Some other ((assumption)) might be violated, or
-you might have introduced a bug that is causing an exception. Here is
-an example that _attempts_ to keep on calling `promptDirection`
-until it gets a valid answer:
+Dar s-ar putea să nu fie adevărat. Poate că alte presupuneri pe care le-am făcut au fost violate sau poate că am introdus un bug care a cauzat excepția. Exemplul de mai jos _încearcă_ să apeleze `promptDirection` până când primește un răspuns valid:
 
 ```{test: no}
 for (;;) {
@@ -682,37 +438,19 @@ for (;;) {
 
 {{index "infinite loop", "for loop", "catch keyword", debugging}}
 
-The `for (;;)` construct is a way to intentionally create a loop that
-doesn't terminate on its own. We break out of the loop only when a
-valid direction is given. _But_ we misspelled `promptDirection`, which
-will result in an "undefined variable" error. Because the `catch`
-block completely ignores its exception value (`e`), assuming it knows
-what the problem is, it wrongly treats the binding error as indicating
-bad input. Not only does this cause an infinite loop, it 
-"buries" the useful error message about the misspelled binding.
+Construcția `for(;;)` este o modalitate de a crea intenționat o buclă infinită. Ieșim din buclă doar atunci când se introduce o direcție validă. _Dar_ am scris greșit `promptDirection`, ceea ce va conduce la o eroare "undefined variable". Deoarece blocul `catch` ignoră complet valoarea pentru excepție (`e`), presupunând că știe care este eroarea, dar tratează greșit eroarea de binding ca fiind un indiciu pentru date de intrare greșite. Nu doar că este provocată o buclă infinită, dar este "îngropat" mesajul de eroare util despre bindingul scris greșit.
 
-As a general rule, don't blanket-catch exceptions unless it is for the
-purpose of "routing" them somewhere—for example, over the network to
-tell another system that our program crashed. And even then, think
-carefully about how you might be hiding information.
+Ca și regulă generală, nu este o idee bună să prindem cu plasa toate erorile, decât în cazul în care scopul este de a le direcționa în altă parte - de exemplu, transmitem prin rețea unui alt sistem că programul nostru s-a întrerupt. Chiar și atunci, gândiți cu atenție despre modul în care s-ar putea să ascundeți informație.
 
 {{index "exception handling"}}
 
-So we want to catch a _specific_ kind of exception. We can do this by
-checking in the `catch` block whether the exception we got is the one
-we are interested in and rethrowing it otherwise. But how do we
-recognize an exception?
+Prin urmare, vrem să prindem un tip specific de excepție. Am putea face asta prin a verifica în blocul `catch` dacă excepția pe care am primit-o este cea care ne interesează și să o re-aruncăm dacă nu. Dar cum recunoaștem o excepție?
 
-We could compare its `message` property against the ((error)) message
-we happen to expect. But that's a shaky way to write code—we'd be
-using information that's intended for human consumption (the message)
-to make a programmatic decision. As soon as someone changes (or
-translates) the message, the code will stop working.
+Am putea compara proprietatea sa `message` cu mesajul de eroare pe care îl așteptăm. Dar acesta este un mod problematic de a identifica excepțiile - am utiliza informație adresată consumului uman (mesajul de eroare) pentru a lua decizii programatice. Imediat ce mesajul va fi modificat (de exemplu, prin translatare), codul nu va mai funcționa.
 
 {{index "Error type", "instanceof operator", "promptDirection function"}}
 
-Rather, let's define a new type of error and use `instanceof` to
-identify it.
+Ar fi o idee mult mai bună să definim un nou tip de eroare și să utilizăm `instanceof` pentru a realiza identificarea.
 
 ```{includeCode: true}
 class InputError extends Error {}
@@ -727,16 +465,11 @@ function promptDirection(question) {
 
 {{index "throw keyword", inheritance}}
 
-The new error class extends `Error`. It doesn't define its own
-constructor, which means that it inherits the `Error` constructor,
-which expects a string message as argument. In fact, it doesn't define
-anything at all—the class is empty. `InputError` objects behave like
-`Error` objects, except that they have a different class by which we
-can recognize them.
+Noua clasă de eroare extinde `Error`. Nu definește propriul său constructor, ceea ce înseamnă că moștenește constructorul `Error` care așteaptă un mesaj de tip string ca și argument. De fapt, nu definim absolut nimic - clasa este goală. Obiectele de tip `InputError` se comportă ca și cele de tip `Error`, cu excepția faptului că au o clasă diferită, ceea ce ne permite să le identificăm.
 
 {{index "exception handling"}}
 
-Now the loop can catch these more carefully.
+Acum, în codul buclei putem trata excepțiile cu mai multă grijă.
 
 ```{test: no}
 for (;;) {
@@ -756,20 +489,15 @@ for (;;) {
 
 {{index debugging}}
 
-This will catch only instances of `InputError` and let unrelated
-exceptions through. If you reintroduce the typo, the undefined binding
-error will be properly reported.
+Astfel vom prinde doar excepțiile de tip `InputError` și celelalte excepții vor trece mai departe. Dacă reintroduceți greșeala, eroarea de definire a bindingului va fi raportată corespunzător.
 
-## Assertions
+## Aserțiuni
 
 {{index "assert function", assertion, debugging}}
 
-_Assertions_ are checks inside a program that verify that something is
-the way it is supposed to be. They are used not to handle situations
-that can come up in normal operation but to find programmer mistakes.
+_Aserțiunile_ sunt verificări într-un program cu privire la faptul că anumite lucruri sunt așa cum ar trebui să fie. Ele nu sunt utilizate pentru a gestiona situații care pot apărea în operarea normală, ci pentru a găsi eventualele greșeli ale programatorului.
 
-If, for example, `firstElement` is described as a function that should
-never be called on empty arrays, we might write it like this:
+Dacă, de exemplu, `firstElement` este descrisă ca o funcție care trebuie să nu fie niciodată apelată pentru array-uri goale, am putea să o scriem astfel:
 
 ```
 function firstElement(array) {
@@ -782,52 +510,29 @@ function firstElement(array) {
 
 {{index validation, "run-time error", crash, assumption}}
 
-Now, instead of silently returning undefined (which you get when
-reading an array property that does not exist), this will loudly blow
-up your program as soon as you misuse it. This makes it less likely
-for such mistakes to go unnoticed and easier to find their cause when
-they occur.
+Acum, în loc să returnăm silențios `undefined` (ceea ce obținem atunci când accesăm o proprietate a unui array care nu există), acum programul va exploda cu mare zgomot dacă utilizați greșit funcția. Astfel, șansa ca o asemenea greșeală să treacă neobservată se reduce și este mai ușor de determinat sursa problemelor atunci cînd ele apar.
 
-I do not recommend trying to write assertions for every possible kind
-of bad input. That'd be a lot of work and would lead to very noisy
-code. You'll want to reserve them for mistakes that are easy to make
-(or that you find yourself making).
+Nu vă recomand să scrieți aserțiuni pentru fiecare tip posibil de date de intrare greșite. Ar fi foarte mult de lucru și codul ar fi tare gălăgios. Mai bine vă păstrați energia pentru greșelile care e ușor să apară (sau pe care constatați că le faceți frecvent).
 
-## Summary
+## Rezumat
 
-Mistakes and bad input are facts of life. An important part of
-programming is finding, diagnosing, and fixing bugs. Problems can
-become easier to notice if you have an automated test suite or add
-assertions to your programs.
+Greșelile, ca și datele de intrare eronate, fac parte din viață. O parte importantă în programare constă în identificarea, diagosticarea și repararea erorilor. Problemele sunt mai ușor de observat dacă aveți o suită de testare automată sau adăugați aserțiuni în programele voastre.
 
-Problems caused by factors outside the program's control should
-usually be handled gracefully. Sometimes, when the problem can be
-handled locally, special return values are a good way to track them.
-Otherwise, exceptions may be preferable.
+Problemele cauzate de factori externi programului ar trebui să fie tratate cu gentilețe. Uneori, atunci când problema poate fi tratată local, valorile speciale de retur sunt o strategie bună. Altfel, ar fi de preferat să utilizați excepțiile.
 
-Throwing an exception causes the call stack to be unwound until the
-next enclosing `try/catch` block or until the bottom of the stack. The
-exception value will be given to the `catch` block that catches it,
-which should verify that it is actually the expected kind of exception
-and then do something with it. To help address the unpredictable
-control flow caused by exceptions, `finally` blocks can be used to
-ensure that a piece of code _always_ runs when a block finishes.
+Aruncarea unei excepții va determina desfășurarea stivei de apel până la întâlnirea unui bloc `try/catch` sau până la baza stivei. Valoarea excepției va fi dată blocului `catch` care o prinde și care ar trebui să verifice dacă are de a face cu tipul de excepție așteptat și apoi să execute ceva ca urmare a excepției. Pentru a ne ajuta să adresăm impredictibilitatea fluxului de execuție cauzată de excepții, putem utiliza blocurile `finally` care ne asigură că o bucată de cod se execută _întotdeauna_ la finalul blocului `try/catch`.
 
-## Exercises
+## Exerciții
 
 ### Retry
 
 {{index "primitiveMultiply (exercise)", "exception handling", "throw keyword"}}
 
-Say you have a function `primitiveMultiply` that in 20 percent of
-cases multiplies two numbers and in the other 80 percent of cases raises an
-exception of type `MultiplicatorUnitFailure`. Write a function that
-wraps this clunky function and just keeps trying until a call
-succeeds, after which it returns the result.
+Să presupunem că avem o funcție `primitiveMultiply` care în 20% din cazuri înmulțește două numere iar în restul de 80% din cazuri aruncă o excepție `MultiplicatorUnitFailure`. Scrieți o funcție care împachetează această funcție ciudată și o apelează repetat până când un apel se termină cu succes, după care returnează rezultatul.
 
 {{index "catch keyword"}}
 
-Make sure you handle only the exceptions you are trying to handle.
+Asigurați-vă că tratați doar excepțiile pe care ar trebui să le tratați.
 
 {{if interactive
 
@@ -855,24 +560,17 @@ if}}
 
 {{index "primitiveMultiply (exercise)", "try keyword", "catch keyword", "throw keyword"}}
 
-The call to `primitiveMultiply` should definitely happen in a `try`
-block. The corresponding `catch` block should rethrow the exception
-when it is not an instance of `MultiplicatorUnitFailure` and ensure
-the call is retried when it is.
+Cu siguranță, apelul funcției `primitiveMultiply` trebuie să aibă loc în interiorul unui bloc `try`. Blocul `catch` corespunzător ar trebui să arunce mai departe toate excepțiile care nu sunt instanțe ale `MultiplicatorUnitFailure` iar atunci când detectează o excepție de tipul menționat să reîncerce apelul.
 
-To do the retrying, you can either use a loop that stops only when a
-call succeeds—as in the [`look` example](error#look) earlier in this
-chapter—or use ((recursion)) and hope you don't get a string of
-failures so long that it overflows the stack (which is a pretty safe
-bet).
+Pentru a reîncerca, puteți scrie fie o buclă care se oprește doar dacă apelul reușește, ca în [exemplul `look`](error#look) anterior - sau să utilizați recursivitatea și să sperați că nu veți obține o secvență de erori atât de lungă încât stiva să fie umplută (ceea ce este destul de improbabil în acest caz).
 
 hint}}
 
-### The locked box
+### Cutia încuiată
 
 {{index "locked box (exercise)"}}
 
-Consider the following (rather contrived) object:
+Să considerăm următorul obiect (controversat):
 
 ```
 const box = {
@@ -889,16 +587,11 @@ const box = {
 
 {{index "private property", "access control"}}
 
-It is a ((box)) with a lock. There is an array in the box, but you can
-get at it only when the box is unlocked. Directly accessing the
-private `_content` property is forbidden.
+Este o cutie cu o încuietoare. Există un array în interiorul cutiei, dar nu putem avea acces la el decât după deblocarea cutiei. Accesul direct la proprietatea privată `_content` este interzis.
 
 {{index "finally keyword", "exception handling"}}
 
-Write a function called `withBoxUnlocked` that takes a function value
-as argument, unlocks the box, runs the function, and then ensures that
-the box is locked again before returning, regardless of whether the
-argument function returned normally or threw an exception.
+Scrieți o funcție numită `withBoxUnlocked` care primește ca argument o valoare de tip funcție, deblochează cutia, rulează funcția și apoi închide din nou cutia înainte de returnare, indiferent dacă funcția argument a returnat normal sau a aruncat o excepție.
 
 {{if interactive
 
@@ -935,19 +628,14 @@ console.log(box.locked);
 
 if}}
 
-For extra points, make sure that if you call `withBoxUnlocked` when
-the box is already unlocked, the box stays unlocked.
+Pentru puncte-bonus, asigurați-vă că dacă apelați `withBoxUnlocked` iar cutia era deja deblocată, aceasta rămâne deblocată.
 
 {{hint
 
 {{index "locked box (exercise)", "finally keyword", "try keyword"}}
 
-This exercise calls for a `finally` block. Your function should first
-unlock the box and then call the argument function from inside a `try`
-body. The `finally` block after it should lock the box again.
+În acest exercițiu trebuie să utilizăm un block `finally`. Funcția trebuie să deblocheze mai întâi cutia și apoi să apeleze funcția argument din interiorul unui bloc `try`. În blocul `finally` cutia va fi blocată din nou.
 
-To make sure we don't lock the box when it wasn't already locked,
-check its lock at the start of the function and unlock and lock
-it only when it started out locked.
+Pentru a ne asigura că nu blocăm cutia dacă ea nu era blocată inițial, trebuie să verificăm starea acesteia la început și să utilizăm deblocarea și blocarea doar atunci când cutia era inițial blocată.
 
 hint}}
