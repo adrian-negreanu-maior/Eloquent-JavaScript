@@ -2,13 +2,13 @@
 
 {{quote {author: "Donald Knuth", chapter: true}
 
-Oamenii cred că știința computerelor este arta geniilor dar realitatea demonstrează contrarul, doar mai mulți oameni făcând lucruri care se construiesc unele pe baza altora, ca un perete de mici pietre.
+Oamenii cred că știința computerelor este arta geniilor dar realitatea demonstrează contrariul, doar mai mulți oameni făcând lucruri care se construiesc unele pe baza altora, ca un perete de mici pietre.
 
 quote}}
 
 {{index "Knuth, Donald"}}
 
-{{figure {url: "img/chapter_picture_3.jpg", alt: "Picture of fern leaves with a fractal shape", chapter: framed}}}
+{{figure {url: "img/chapter_picture_3.jpg", alt: "Imaginea unei frunze de ferigă, exemplu de formă fractală", chapter: framed}}}
 
 {{index function, [code, "structure of"]}}
 
@@ -24,7 +24,7 @@ Un vorbitor adult de limba engleză are un vocabular de aproximativ 20000 de cuv
 
 {{index "square example", [function, definition], [binding, definition]}}
 
-Definirea unei funcții este un binding obișnuit în care valoarea bindingului este o funcție. De exemplu, codul de ,ao jos definește `square` pentru a defini o funcție care produce pătratul unui număr dat:
+Definirea unei funcții este un binding obișnuit în care valoarea bindingului este o funcție. De exemplu, codul de mai jos definește `square` pentru a defini o funcție care produce pătratul unui număr dat:
 
 ```
 const square = function(x) {
@@ -66,7 +66,7 @@ console.log(power(2, 10));
 
 {{index "return value", "return keyword", undefined}}
 
-Unele funcții produc o valoare, cum ar fi `power` sau `square` iar altele nu produc nici o valoare, cum ar fi `makeNoise` al cărei singur rezultat este un efect secundar. O instrucțiune `return` determină valoarea returnată de către o funcție. Atuncci când controlul ajunge la o asemenea isntrucțiune, execuția funcției se încheie imediat și valoarea este returnată codului care a apelat funcția. Utilizarea cuvântului cheie `return` fără a preciza expresia de evaluat va determina returnarea valorii `undefined`. Funcțiile care nu conțin deloc o instrucțiune `return`, cum este cazul funcției `makeNoise` vor returna tot valoarea `undefined`.
+Unele funcții produc o valoare, cum ar fi `power` sau `square` iar altele nu produc nici o valoare, cum ar fi `makeNoise` al cărei singur rezultat este un efect secundar. O instrucțiune `return` determină valoarea returnată de către o funcție. Atunci când controlul ajunge la o asemenea instrucțiune, execuția funcției se încheie imediat și valoarea este returnată codului care a apelat funcția. Utilizarea cuvântului cheie `return` fără a preciza expresia de evaluat va determina returnarea valorii `undefined`. Funcțiile care nu conțin deloc o instrucțiune `return`, cum este cazul funcției `makeNoise` vor returna tot valoarea `undefined`.
 
 {{index parameter, [function, application], [binding, "from parameter"]}}
 
@@ -81,7 +81,7 @@ Fiecare binding are un _domeniu de vizibilitate (scope)_ care este partea progra
 
 {{index "local scope", [binding, local]}}
 
-Biindigurile crete pentru parametrii unei funcții sau cele declarate în interiorul unei funcții pot fi referite doar în interiorul acelei funcții. Din acest motiv, sunt denumite bindinguri _locale_. La fiecare apel al funcției, se crează noi instanțe ale acestor bindinguri. Astfel este posibilă o izolare a funcțiilor - fiecare apel al unei funcții acționează in micul univers al funcției (mediul său local) și de regulă poate fi înțeles fără a cunoaște multe detalii despre ceea ce se întâmplă în contextul global.
+Bindingurile create pentru parametrii unei funcții sau cele declarate în interiorul unei funcții pot fi referite doar în interiorul acelei funcții. Din acest motiv, sunt denumite bindinguri _locale_. La fiecare apel al funcției, se crează noi instanțe ale acestor bindinguri. Astfel este posibilă o izolare a funcțiilor - fiecare apel al unei funcții acționează în micul univers al funcției (mediul său local) și de regulă poate fi înțeles fără a cunoaște multe detalii despre ceea ce se întâmplă în contextul global.
 
 {{index "let keyword", "const keyword", "var keyword"}}
 
@@ -150,7 +150,7 @@ const hummus = function(factor) {
 
 Codul din interiorul funcției `ingredient` poate referi bindingul `factor` definit în funcția exterioară. Dar bindingurile sale locale, cum ar fi `unit` sau `ingredientAmount` nu sunt vizibile în funcția exterioară.
 
-Mulțimea bindigurilor vizibile în interiorul unui bloc este determinată de locul în care este plasat blocul în cadrul programului. Fiecare domeniu de vizibilitate local poate observa toate domeniile de vizibilitate care îl conțin și orice domeniu de vizibilitate poate observa contextul global. Aceste reguli cu privire la vizibilitatea biningurilor definesc _sfera lexicală_.
+Mulțimea bindigurilor vizibile în interiorul unui bloc este determinată de locul în care este plasat blocul în cadrul programului. Fiecare domeniu de vizibilitate local poate observa toate domeniile de vizibilitate care îl conțin și orice domeniu de vizibilitate poate observa contextul global. Aceste reguli cu privire la vizibilitatea bindingurilor definesc _sfera lexicală_.
 
 ## Funcțiile ca și valori
 
@@ -160,7 +160,7 @@ Un binding de tip funcție este de regulă un nume pentru o bucată din program.
 
 {{index [binding, assignment]}}
 
-Dar cele două noțiuni sunt diferite. O valoare de tip funcție poate fi utilizată la fel ca și orice altă valoare - o puteți utiliza în orice expresii, nu doar să o apelați. Puteți să memorați o valoare de tip funcție într-un nou binding, să o transmiteți ca și argument al unei funcții și altele. Similar, un binding care se refră la o funcție este doar un binding normal și, dacă nu este definit ca și constant, i se poate atribui o nouă valoare, ca și în exemplul de mai jos:
+Dar cele două noțiuni sunt diferite. O valoare de tip funcție poate fi utilizată la fel ca și orice altă valoare - o puteți utiliza în orice expresii, nu doar să o apelați. Puteți să memorați o valoare de tip funcție într-un nou binding, să o transmiteți ca și argument al unei funcții și altele. Similar, un binding care se referă la o funcție este doar un binding normal și, dacă nu este definit ca și constant, i se poate atribui o nouă valoare, ca și în exemplul de mai jos:
 
 ```{test: no}
 let launchMissiles = function() {
@@ -173,7 +173,7 @@ if (safeMode) {
 
 {{index [function, "higher-order"]}}
 
-În [Capitolul ?](higher_order), vom discuta despre lucrurile interesante pe care le puteți realiza prin transmiterea valorilor de tip funcșie ca și parametri ai altor funcții.
+În [Capitolul ?](higher_order), vom discuta despre lucrurile interesante pe care le puteți realiza prin transmiterea valorilor de tip funcție ca și parametri ai altor funcții.
 
 ## Notația declarativă
 
@@ -244,7 +244,7 @@ const horn = () => {
 
 {{index verbosity}}
 
-Nu există nici un motiv profund pentru a avea atât funcții arrow cât și expresii de tip funcție în limbaj. Cu excepția unui detaliu minor pe care îl vom discuta în capitolul [?](object), ele operează la fel. Funcțiile arrow au fost adăugate în 2015, în principal cu scopul de a scrie funcții scurte într=un mod mai puțin detaliat. Le vom utiliza pe larg în [capitolul ?](higher_order).
+Nu există nici un motiv profund pentru a avea atât funcții arrow cât și expresii de tip funcție în limbaj. Cu excepția unui detaliu minor pe care îl vom discuta în capitolul [?](object), ele operează la fel. Funcțiile arrow au fost adăugate în 2015, în principal cu scopul de a scrie funcții scurte într-un mod mai puțin detaliat. Le vom utiliza pe larg în [capitolul ?](higher_order).
 
 {{id stack}}
 
@@ -265,7 +265,7 @@ console.log("Bye");
 
 {{index ["control flow", functions], "execution order", "console.log"}}
 
-O execuție a acetui program funcționează în linii mari astfel: apelul la funcția `greet` va determina trecerea controlului la începutul acestei funcții (linia 2). Funcția apelează `console.log`, care preia controlul, își execută rolul și apoi returnează controlul în linia 2. Aici se ajunge la sfârșitul funcției deci se va reveni în locul de unde funcția a fost apelată, care este linia 4. Apoi se apelează din nou `console.log`. După ce se revine din acel apel, programul ajunge la sfârșit.
+O execuție a acestui program funcționează în linii mari astfel: apelul la funcția `greet` va determina trecerea controlului la începutul acestei funcții (linia 2). Funcția apelează `console.log`, care preia controlul, își execută rolul și apoi returnează controlul în linia 2. Aici se ajunge la sfârșitul funcției deci se va reveni în locul de unde funcția a fost apelată, care este linia 4. Apoi se apelează din nou `console.log`. După ce se revine din acel apel, programul ajunge la sfârșit.
 
 Am putea reprezenta schematic fluxul controlului astfel:
 
@@ -281,7 +281,7 @@ not in function
 
 {{index "return keyword", [memory, call stack]}}
 
-Deoarece din funcție se va sări înapoi în locul de unde a fost apelată, computerul trebuie să memoreze contextul din care a avut loc apelul. În unul dintre apeluri `console.log` a trebuit să returneze in funcția `greet` la sfârșitul execuției. În celalalt caz, a trebuit să returneze în contextul programului principal.
+Deoarece din funcție se va sări înapoi în locul de unde a fost apelată, computerul trebuie să memoreze contextul din care a avut loc apelul. În unul dintre apeluri `console.log` a trebuit să returneze in funcția `greet` la sfârșitul execuției. În celălalt caz, a trebuit să returneze în contextul programului principal.
 
 Locul în care computerul memorează acest context este _stiva de apel_. De fiecare dată când se apelează o funcție, contextul curent este memorat în vârful acestei stive. Când funcția returnează, contextul salvat este eliminat din stivă și utilizat pentru a continua execuția.
 
@@ -312,7 +312,7 @@ console.log(square(4, true, "hedgehog"));
 // → 16
 ```
 
-Am definit funncția `square` cu un singur parametru. Totuși am folosit trei parametri la apelul acestei funcții, fără ca interpretorul JavaScript să se plângă. Doar va ignora parametrii extra și va utiliza doar primul parametru transmis la apel.
+Am definit funcția `square` cu un singur parametru. Totuși am folosit trei parametri la apelul acestei funcții, fără ca interpretorul JavaScript să se plângă. Doar va ignora parametrii extra și va utiliza doar primul parametru transmis la apel.
 
 {{index undefined}}
 
@@ -320,7 +320,7 @@ JavaScript este extrem de flexibil relativ la numărul de parametri pe care îi 
 
 Dezavantajul acestei abordări este că puteți ușor să transmiteți accidental un număr greșit de argumente spre funcții și nu veți primi nici un avertisment despre aceasta.
 
-Avantajul este că veți putea să utilizați acest comportament pentru a permite apelul unei funcții cu un număr variabil de argument.De exemplu, funcția `minus` din exemplul de mai jos încearcă să imite operatorul `-` acționând asupra unuia sau a două argumente:
+Avantajul este că veți putea să utilizați acest comportament pentru a permite apelul unei funcții cu un număr variabil de argumente. De exemplu, funcția `minus` din exemplul de mai jos încearcă să imite operatorul `-` acționând asupra unuia sau a două argumente:
 
 ```
 function minus(a, b) {
@@ -337,7 +337,7 @@ console.log(minus(10, 5));
 {{id power}}
 {{index "optional argument", "default value", parameter, ["= operator", "for default value"]}}
 
-Dacă scrieți simbolul `=` după numele unui parametru și apoi precizați o expresie validă, valorea acelei expresii va înlocui parametrul în cazul în care acesta lipsește.
+Dacă scrieți simbolul `=` după numele unui parametru și apoi precizați o expresie validă, valoarea acelei expresii va înlocui parametrul în cazul în care acesta lipsește.
 
 {{index "power example"}}
 
@@ -395,7 +395,7 @@ Această facilitate - abilitatea de a referi o instanță specifică a unui bind
 
 {{index "multiplier function"}}
 
-Cu o modificare relativ simplă, putem schimba exemplul următor pentru a crea o funcție care multiplică cu orice factor arbitrar.
+Cu o modificare relativ simplă, putem schimba exemplul următor pentru a crea o funcție care multiplică folosind orice factor arbitrar.
 
 ```
 function multiplier(factor) {
@@ -421,7 +421,7 @@ Aveți nevoie de puțină practică pentru a gândi astfel programele. Un model 
 
 {{index "power example", "stack overflow", recursion, [function, application]}}
 
-Este perfect în regulă pentru o funcție să se autoapeleze, cât timp nu o face de prea multe ori și cauzează umplerea stivei (stack overflow). O funcție care se autoapelează este o funncție _recursivă_. Recursivitatea permite scrierea anumitor funcții într-un stil diferit. Iată de exemplu o implementare alternativă a funcției `power`:
+Este perfect în regulă pentru o funcție să se autoapeleze, cât timp nu o face de prea multe ori și cauzează umplerea stivei (stack overflow). O funcție care se autoapelează este o funcție _recursivă_. Recursivitatea permite scrierea anumitor funcții într-un stil diferit. Iată de exemplu o implementare alternativă a funcției `power`:
 
 ```{test: wrap}
 function power(base, exponent) {
@@ -446,13 +446,13 @@ Totuși, această implementare are o problemă: în implementările tipice ale J
 
 {{index optimization}}
 
-Dilema între vitezază și eleganță este interesantă. Există un continuum între "human-friendly" și "machine-friendly". Aproape orice program poate fi rapidizat prin mărirea dimensiunii lui și ridicarea complexității. Programatorul trebuie să decidă asupra unui echilibru adecvat.
+Dilema între viteză și eleganță este interesantă. Există un continuum între "human-friendly" și "machine-friendly". Aproape orice program poate fi rapidizat prin mărirea dimensiunii lui și ridicarea complexității. Programatorul trebuie să decidă asupra unui echilibru adecvat.
 
 În cazul funcției `power`, soluția mai puțin elegantă, bazată pe buclă este destul de simplă și ușor de citit. Nu face prea mult sens să o înlocuim cu versiunea recursivă. Însă adesea un program manevrează concepte atât de complexe încât diminuarea eficienței, cu scopul de a îmbunătății claritatea codului, este utilă.
 
 {{index profiling}}
 
-Preocuparea despre eficiență poate fi o distracție. Este un alt factor care complică conceperea programelor iar atunci când construim ceva care deja este dificil, acel motiv extra de preocupare poate fi paralizant.
+Preocuparea despre eficiență poate fi o distracție. Este un alt factor care complică modul de concepere a programelor iar atunci când construim ceva care deja este dificil, acel motiv extra de preocupare poate fi paralizant.
 
 {{index "premature optimization"}}
 
@@ -492,13 +492,13 @@ console.log(findSolution(24));
 
 Programul acesta nu determină neapărat _cea mai scurtă_ secvență de operații ci orice secvență care satisface enunțul problemei.
 
-E în regulă dacă nu îl înțegeți cum funcționează. Haideți să îl parcurgem pentru că este un exercițiu foarte bun pentru gândirea recursivă.
+E în regulă dacă nu înțelegeți cum funcționează. Haideți să îl parcurgem pentru că este un exercițiu foarte bun pentru gândirea recursivă.
 
 Funcția interioară `find` execută de fapt recurența. Ea are două argumente: numărul curent și stringul care reține cum am ajuns la acel număr. Dacă găsește o soluție, returnează un string care arată cum ajungem la valoarea dată. Dacă nu găsește nici o soluție, va returna `null`.
 
 {{index null, "|| operator", "short-circuit evaluation"}}
 
-Pentru a realiza acest lucru, funcția execută una din trei acțiuni. Dacă numărul curent este numărul țintă, valoarea curentă a `history` este o modalitate de a obține acel număr și va fi returnată. Dacă numărul curent este mai mare decât valoarea-țintă, se va returna `null` (nu are sens să continuăm explorarea pentru ca putem obține doar valori și mai mari). În sfârșit, dacă suntem sub numărul-țintă, funcția va explora ambele căi posibile pornind de la numărul curent, adică se va apela de două ori, pentru multiplicarea cu 3 și adunarea cu 5. Dacă primul apel va returna o valoare nenulă, acesta va reprezenta soluția. În caz contrar, valoarea produsă de către al doilea apel va fi cea returnată.
+Pentru a realiza acest lucru, funcția execută una din trei acțiuni. Dacă numărul curent este numărul țintă, valoarea curentă a `history` este o modalitate de a obține acel număr și va fi returnată. Dacă numărul curent este mai mare decât valoarea-țintă, se va returna `null` (nu are sens să continuăm explorarea pentru ca putem obține doar valori și mai mari). În sfârșit, dacă suntem sub numărul-țintă, funcția va explora ambele căi posibile pornind de la numărul curent, adică se va apela de două ori, pentru multiplicarea cu 3 și, respectiv, adunarea cu 5. Dacă primul apel va returna o valoare nenulă, acesta va reprezenta soluția. În caz contrar, valoarea produsă de către al doilea apel va fi cea returnată.
 
 {{index "call stack"}}
 
@@ -526,7 +526,7 @@ Indentarea indică adâncimea stivei. Prima dată când este apelată funcția `
 
 {{index [function, definition]}}
 
-Există două motive mai mult sau mai puțin naturale de a introduce funcții în programe.
+Există două motive mai mult sau mai puțin naturale pentru a introduce funcții în programe.
 
 {{index repetition}}
 
@@ -642,11 +642,11 @@ Prima funcție helper din exemplul de mai sus cu ferma, `printZeroPaddedWithLabe
 
 {{index substitution}}
 
-O funcție _pură_ este un tip specific de funcție care produce valori, care nu doar că nu are efecte secundare dar nici nu se bazează pe efectele secundare din alt cod - de exemplu, nu se referă la bindingurile globale a căror valori s-ar putea modifica. O funcție pură are proprietatea plăcută de a produce întotdeauna aceeași valoare atunci când este apelată cu același set de valori pentru argumente, fără a executa nimic altceva. Un apel la o asemenea funcție poate fi înlocuit cu valoarea returnată fără a modifica semnificația codului. Atunci când nu sunteți siguri dacă o funcție pură funcționează corect, o puteți testa prin simpla apelare a ei cu garanția că, dacă funcționează în acel context, va funcționa în orice alt context. Funcțiile impure for necesita de regulă mai multe pregătiri pentru a fi testate.
+O funcție _pură_ este un tip specific de funcție care produce valori, care nu doar că nu are efecte secundare dar nici nu se bazează pe efectele secundare din alt cod - de exemplu, nu se referă la bindingurile globale ale căror valori s-ar putea modifica. O funcție pură are proprietatea plăcută de a produce întotdeauna aceeași valoare atunci când este apelată cu același set de valori pentru argumente, fără a executa nimic altceva. Un apel la o asemenea funcție poate fi înlocuit cu valoarea returnată fără a modifica semnificația codului. Atunci când nu sunteți siguri dacă o funcție pură funcționează corect, o puteți testa prin simpla apelare a ei cu garanția că, dacă funcționează în acel context, va funcționa în orice alt context. Funcțiile impure vor necesita de regulă mai multe pregătiri pentru a fi testate.
 
 {{index optimization, "console.log"}}
 
-Totuși, nu trebuie să vă simțiși rău când scrieți funcții impure sau să declanșați un război sfânt pentru îndepărtarea lor din cod. Efectele secundare sunt adesea utile. Nu există nici o modalitate de a scrie o versiune pură a `console.log`, de exemplu, dar este util să aveți la dispoziție o asemenea funcție. Unele operații sunt mai ușor de exprimat eficient atunci când utilizăm efectele secundare, astfel încât viteza de calcul poate fi un motiv bun de a evita puritatea.
+Totuși, nu trebuie să vă simțiți rău când scrieți funcții impure sau să declanșați un război sfânt pentru îndepărtarea lor din cod. Efectele secundare sunt adesea utile. Nu există nici o modalitate de a scrie o versiune pură a `console.log`, de exemplu, dar este util să aveți la dispoziție o asemenea funcție. Unele operații sunt mai ușor de exprimat eficient atunci când utilizăm efectele secundare, astfel încât viteza de calcul poate fi un motiv bun de a evita puritatea.
 
 ## Rezumat
 
@@ -669,7 +669,7 @@ let h = a => a % 3;
 
 Un aspect cheie pentru înțelegerea funcțiilor este înțelegerea domeniilor de vizibilitate. Fiecare bloc crează un nou domeniu de vizibilitate. Parametrii și bindingurile create într-un domeniu de vizibilitate sunt locale și nu sunt vizibile din exterior. Bindingurile declarate cu `var` au comportament diferit - ele devin vizibile în cel mai apropiat domeniu de vizibilitate al unei funcții sau în domeniul de vizibilitate global.
 
-Separarea prelucrărilor efectuate de programul vostru în funcții este utilă. Nu va trebui să vă repetați,  iar funcțiile vă ajută să organizați programul prin gruparea codului în bucăți care execută sarcini specifice.
+Separarea prelucrărilor efectuate de programul vostru în funcții este utilă. Nu va trebui să vă repetați, iar funcțiile vă ajută să organizați programul prin gruparea codului în bucăți care execută sarcini specifice.
 
 ## Exerciții
 
@@ -707,7 +707,7 @@ hint}}
 
 {{index recursion, "isEven (exercise)", "even number"}}
 
-Am văzut că `%` (operatorul pentru calculul restului împărțirii întregi) poat fi utilizat pentru a testa dacă un număr este par sau impar prin a utiliza `% 2` ca să verificăm dacă numărul este divizibil cu 2. Există însă un alt mod de a defini dacă un număr pozitiv este par sau impar:
+Am văzut că `%` (operatorul pentru calculul restului împărțirii întregi) poate fi utilizat pentru a testa dacă un număr este par sau impar prin a utiliza `% 2` ca să verificăm dacă numărul este divizibil cu 2. Există însă un alt mod de a defini dacă un număr pozitiv este par sau impar:
 
 - Zero este par.
 
@@ -775,7 +775,7 @@ if}}
 
 {{index "bean counting (exercise)", ["length property", "for string"], "counter variable"}}
 
-Funcția voastră va avea o buclă care va testa fiecare caracter al stringului. Va folosi un index care merge de la 0 la o valoare cu unu mai mică decât lungimea stringului (`< string.length`). Dacă în poziția curentă avem același caracter ca și cel pe care îl căutăm, adăugam 1 la o variabilă contor. După terminarea buclei, putem returna contorul.
+Funcția voastră va avea o buclă care va testa fiecare caracter al stringului. Va folosi un index care merge de la 0 la o valoare cu 1 mai mică decât lungimea stringului (`< string.length`). Dacă în poziția curentă avem același caracter ca și cel pe care îl căutăm, adăugam 1 la o variabilă contor. După terminarea buclei, putem returna contorul.
 
 {{index "local binding"}}
 

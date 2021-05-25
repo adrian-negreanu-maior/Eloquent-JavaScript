@@ -6,7 +6,7 @@
 
 {{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
 
-Tzu-li și Tzu-ssu se lăudau despre mărimea ultimelor lor programe. 'Două sute de mii de linii de cod' a spus Tzu-li, 'fără comentarii!'. Tzu-ssu i-a răspuns 'Pssh, al meu are aproape un million de linii deja'. Master Yuan-Ma a spus 'Cel mai bun program al meu are cinci sute de linii'. Auzind asta, Tzu-li și Tzu-ssu au fost iluminați.
+Tzu-li și Tzu-ssu se lăudau despre mărimea ultimelor lor programe. 'Două sute de mii de linii de cod' a spus Tzu-li, 'fără comentarii!'. Tzu-ssu i-a răspuns 'Pssh, al meu are aproape un milion de linii deja'. Master Yuan-Ma a spus 'Cel mai bun program al meu are cinci sute de linii'. Auzind asta, Tzu-li și Tzu-ssu au fost iluminați.
 
 quote}}
 
@@ -16,15 +16,15 @@ if}}
 
 {{index "Hoare, C.A.R."}}
 
-Există două moduri de a concepe programe pentru computer: Unul este de a le scrie atât de simmple încât să fie evident că nu au deficiențe. Iar celalt este de a le construi atât de complicate încât să nu existe deficiențe evidente.
+Există două moduri de a concepe programe pentru computer: Unul este de a le scrie atât de simple încât să fie evident că nu au deficiențe. Iar celalt este de a le construi atât de complicate încât să nu existe deficiențe evidente.
 
 quote}}
 
-{{figure {url: "img/chapter_picture_5.jpg", alt: "Letters from different scripts", chapter: true}}}
+{{figure {url: "img/chapter_picture_5.jpg", alt: "Litere din diferite scrieri", chapter: true}}}
 
 {{index "program size"}}
 
-Un program de dimensiuni mare este un program constisitor și nu doar din cauza timpului necesar pentru a-l construi. Dimensiunea este aproape întotdeauna legată de complexitate și complexitatea provoacă multă confuzie în rândul programatorilor. Programatorii confuzi, la rândul lor, vor introduce greșeli (_buguri_) în program. Un program mare va oferi multe locuri în care bugurile acestea să se ascundă și va fi greu să fie găsite.
+Un program de dimensiuni mari este un program costisitor și nu doar din cauza timpului necesar pentru a-l construi. Dimensiunea este aproape întotdeauna legată de complexitate și complexitatea provoacă multă confuzie în rândul programatorilor. Programatorii confuzi, la rândul lor, vor introduce greșeli (_buguri_) în program. Un program mare va oferi multe locuri în care bugurile acestea să se ascundă și va fi greu să fie găsite.
 
 {{index "summing example"}}
 
@@ -55,7 +55,7 @@ Dacă luăm în considerare dimensiunea funcțiilor `sum` și `range` cel de-al 
 
 Este mai probabil să fie corect pentru că soluția este exprimată într-un vocabular adecvat problemei ce trebuie să fie rezolvată. Sumarea pe un interval de numere nu este despre bucle și contoare. Este despre intervale și sume.
 
-Definițiile acestui vocabular (funncțiile `sum` și `range`) vor folosi bucle, contoare și alte detalii. Dar, deorece ele exprimă concepte mai simple decât programul ca și întreg, este mai ușor ca să fie implementate corect.
+Definițiile acestui vocabular (funcțiile `sum` și `range`) vor folosi bucle, contoare și alte detalii. Dar, deorece ele exprimă concepte mai simple decât programul ca și întreg, este mai ușor să fie implementate corect.
 
 ## Abstractizarea
 
@@ -77,13 +77,13 @@ Iar aceasta este cea de a doua rețetă:
 
 Pentru o persoană: o cupă de boabe de mazăre, o jumătate de ceapă, o tulpină de țelină și un morcov.
 
-Înmuiați boabele de mazăre timp de 12 ore. Fierbeți la foc încet pentru 2 ore în 4 căni de apă (de persoană). Tăiați și adăugați legumele. Gătiți timp de încă 10 minute.
+Înmuiați boabele de mazăre timp de 12 ore. Fierbeți la foc încet pentru 2 ore în 4 căni de apă (de persoană). Tăiați și adăugați legumele. Fierbeți timp de încă 10 minute.
 
 quote}}
 
 {{index vocabulary}}
 
-Cea de a doua rețetă este mai scurtă și mai ușor de interpretat. Dar trebuie să înțelegeți mai mulți termeni despre gătit, cum ar fi _a înmuia_, _a Înăbuși_, _a tăia_ și, banuiesc, _legume_.
+Cea de a doua rețetă este mai scurtă și mai ușor de interpretat. Dar trebuie să înțelegeți mai mulți termeni despre gătit, cum ar fi _a înmuia_, _a înăbuși_, _a tăia_ și, banuiesc, _legume_.
 
 În programare, nu ne putem aștepta ca toate cuvintele de care avem nevoie să fie disponibile în dicționar. Astfel, am putea ajunge la situația primei rețete - trebuie să definim pașii exacți pe care computerul trebuie să îi execute, unul câte unul, ignorând conceptele de nivel superior pe care aceștia le exprimă.
 
@@ -136,7 +136,7 @@ repeat(3, console.log);
 // → 2
 ```
 
-Nu e necesar să transmitem o funcție predefinită funcției `repeat`. Adesea este mai ușor să creem o valooare de tip funcție pe loc:
+Nu e necesar să transmitem o funcție predefinită funcției `repeat`. Adesea este mai ușor să creem o valoare de tip funcție pe loc:
 
 ```
 let labels = [];
@@ -149,7 +149,7 @@ console.log(labels);
 
 {{index "loop body", [braces, body], [parentheses, arguments]}}
 
-Această sintaxa este structura asemănător unei bucle `for` - mai întâi descrie tipul de bbuclă și apoi definește un corp. Dar corpul este definit acum ca o valoare de tip funcție, inclusă între parantezele apelului la funcția `repeat`. De aceea trebuie să fie inclusă între acolade și paranteze de închidere. În cazuri ca și acest exemplu simplu, când corpul este o singură expresie, puteți omite acoladele și să scrieți bucla pe o singură linie.
+Această sintaxă este o structură asemănătoare unei bucle `for` - mai întâi descrie tipul de buclă și apoi definește un corp. Dar corpul este definit acum ca o valoare de tip funcție, inclusă între parantezele apelului la funcția `repeat`. De aceea trebuie să fie inclusă între acolade și paranteze de închidere. În cazuri ca și acest exemplu simplu, când corpul este o singură expresie, puteți omite acoladele și să scrieți bucla pe o singură linie.
 
 ## Funcții de ordin superior
 
@@ -159,7 +159,7 @@ Funcțiile care operează asupra altor funcții, fie primite ca și argumente, f
 
 {{index abstraction}}
 
-Funcțiile de ordin superior ne permit să abstrtractizăm _acțiunile_, nu doar valorile. Ele vin în mai multe forme. De exemplu, putem avea funcții care crează noi funcții.
+Funcțiile de ordin superior ne permit să abstractizăm _acțiunile_, nu doar valorile. Ele vin în mai multe forme. De exemplu, putem avea funcții care crează noi funcții.
 
 ```
 function greaterThan(n) {
@@ -170,7 +170,7 @@ console.log(greaterThan10(11));
 // → true
 ```
 
-Și putem avea funcții care modificlte funcții.
+Și putem avea funcții care modifică alte funcții.
 
 ```
 function noisy(f) {
@@ -204,7 +204,7 @@ repeat(3, n => {
 
 {{index [array, methods], [array, iteration], "forEach method"}}
 
-Există o metodă predefinită pe array, `forEach`, care ne oferă funcționalitate asemăănătoare cu bucla `for`/`of` ca și o funcție de nivel superior.
+Există o metodă predefinită pe array, `forEach`, care ne oferă funcționalitate asemănătoare cu bucla `for`/`of` ca și o funcție de nivel superior.
 
 ```
 ["A", "B"].forEach(l => console.log(l));
@@ -214,13 +214,13 @@ Există o metodă predefinită pe array, `forEach`, care ne oferă funcționalit
 
 ## Seturi de caractere
 
-O zonă în care funcțiile de ordin superior sunt extrem de utile este prelucrarea datelor. Pentru a prelucra date, mai întâi trebuie să le obținem. În acest capitol vom utiliza multțimi de date despre seturi de caractere, cum ar fi Latin, Cyrillic și Arabic.
+O zonă în care funcțiile de ordin superior sunt extrem de utile este prelucrarea datelor. Pentru a prelucra date, mai întâi trebuie să le obținem. În acest capitol vom utiliza multțimi de date pentru seturi de caractere, cum ar fi Latin, Cyrillic și Arabic.
 
 Vă amintiți despre Unicode din [capitolul ?](values#unicode), sistemul care asociază un număr fiecărui caracter din orice limbă scrisă? Standardul conține 140 seturi diferite de caractere - 81 încă folosite azi iar 59 adăugate din considerente istorice.
 
 Deși pot citi fluent doar caractere Latin, respect faptul că oamenii scriu texte în cel puțin 80 alte de moduri de scriere, dintre care multe sunt chair de nerecunoscut pentru mine. De exemplu, iată cum arată o scriere de mână Tamil:
 
-{{figure {url: "img/tamil.png", alt: "Tamil handwriting"}}}
+{{figure {url: "img/tamil.png", alt: "Scrierea Tamil"}}}
 
 {{index "SCRIPTS data set"}}
 
@@ -237,13 +237,13 @@ Setul de caractere exemplificat conține unele informații despre cele 140 de se
 }
 ```
 
-Un asemenea obiect ne dă informații despre setul de caractere, domeniul de valori asociate în Unicode, direcția în care se scrie, originea aproximativă în timp, dacă mai este utilizat sau nu și un link util pentru a afla mai multe informații. Direcția poate fi `"ltr"` (de la stânga la dreapta), `"rtl"` (de la dreapta la stânga - cum se scriu textele în arabă sau ebraică) sau `"ttb"` (de sus în jos, ca și în mongolă).
+Un asemenea obiect ne dă informații despre setul de caractere, domeniul de valori asociate în Unicode, direcția în care se scrie, originea aproximativă în timp, dacă mai este utilizat sau nu și un link util pentru a afla mai multe informații. Direcția poate fi `"ltr"` (de la stânga la dreapta - left to right), `"rtl"` (de la dreapta la stânga - right to left - cum se scriu textele în arabă sau ebraică) sau `"ttb"` (de sus în jos - top to bottom - ca și în mongolă).
 
 {{index "slice method"}}
 
-Proprietatea `ranges` conține un array de intervale Unicod, fiecare definit ca un array de două elemente ce conține limita inferioară și cea superioară. Orice coduri aparținând acestor intervale fac parte din respectivul set de caractere. Limita inferioară este inclusivă (codul 994 face parte din setul Coptic) iar limita superioară este exclusivă (codul 1008 nu face parte).
+Proprietatea `ranges` conține un array de intervale Unicode, fiecare definit ca un array de două elemente ce conține limita inferioară și cea superioară. Orice coduri aparținând acestor intervale fac parte din respectivul set de caractere. Limita inferioară este inclusivă (codul 994 face parte din setul Coptic) iar limita superioară este exclusivă (codul 1008 nu face parte).
 
-## Filtering arrays
+## Filtrarea array-urilor
 
 {{index [array, methods], [array, filtering], "filter method", [function, "higher-order"], "predicate function"}}
 
@@ -289,7 +289,7 @@ Să presupunem că avem un array de obiecte ce reprezintă seturile de caractere
 
 {{index [function, "higher-order"]}}
 
-Metoda `map` transformă un array prin aplicarea unei funcții asupra fiecărui element al array-ului și construirea unui nou array cu valorile returnate. Noul array va avea aceeași lungime ca și array-ul de intrare, dar conținutul său va fi _mapat_ într-o nouă formă de către funncție.
+Metoda `map` transformă un array prin aplicarea unei funcții asupra fiecărui element al array-ului și construirea unui nou array cu valorile returnate. Noul array va avea aceeași lungime ca și array-ul de intrare, dar conținutul său va fi _mapat_ într-o nouă formă de către funcție.
 
 ```
 function map(array, transform) {
@@ -311,13 +311,13 @@ Ca și `forEach` și `filter`, `map` este o metodă standard pentru array-uri.
 
 {{index [array, methods], "summing example", "reduce method"}}
 
-O altă operație frecventă cu array-urile este de a calcula o singură valoare din colecția de elemente. Exemplul nostru recursiv, sumarea ueni colecții de nume, este un exemplu bun. Alt exemplu este determinarea setului de caractere ce conține cele mai multe elemente.
+O altă operație frecventă cu array-urile este de a calcula o singură valoare din colecția de elemente. Exemplul nostru recursiv, sumarea unei colecții de nume, este un exemplu bun. Alt exemplu este determinarea setului de caractere ce conține cele mai multe elemente.
 
 {{indexsee "fold", "reduce method"}}
 
 {{index [function, "higher-order"], "reduce method"}}
 
-Operația de ordin superior care reprezintă acest șablon se numește _reduce_ (uneori denumită și _fold_). Ea construiește o valoare prin alegerea repetată a câte unui element din array și combinarea acestuia cu valoarea curentă. Când adunăm numerele, începem cu numărul zero și, pentru fiecare număr, îl adăăugăm la sumă.
+Operația de ordin superior care reprezintă acest șablon se numește _reduce_ (uneori denumită și _fold_). Ea construiește o valoare prin alegerea repetată a câte unui element din array și combinarea acestuia cu valoarea curentă. Când adunăm numerele, începem cu numărul zero și, pentru fiecare număr, îl adăugăm la sumă.
 
 Parametrii funcției `reduce` sunt, pe lângă array-ul de prelucrat, o funcție de combinare și o valoare de start. Această funcție este puțin mai greu de înțeles decât `filter` sau `map`, așa că ar trebui să analizați cu atenție exemplul:
 
@@ -382,15 +382,13 @@ console.log(biggest);
 // → {name: "Han", …}
 ```
 
-
-
 Se utilizează câteva bindinguri în plus și programul este cu patru linii mai lung. Dar este încă foarte lizibil.
 
 {{index "average function", composability, [function, "higher-order"], "filter method", "map method", "reduce method"}}
 
 {{id average_function}}
 
-Funcțiile de ordin superior încep să strălucească atunci când este necesar să _compunem_ operațiile.De exemplu, haideți să scriem codul care determină media anului de origine pentru scrieri utilizate în curent și istorice din setul de date.
+Funcțiile de ordin superior încep să strălucească atunci când este necesar să _compunem_ operațiile. De exemplu, haideți să scriem codul care determină media anului de origine pentru scrieri utilizate în curent și scrieri istorice din setul de date.
 
 ```
 function average(array) {
@@ -453,7 +451,7 @@ console.log(characterScript(121));
 // → {name: "Latin", …}
 ```
 
-Metoda `some` este o altă funcție de ordin superior. Ia primește ca argument o funcție de test și ne returnează dacă acea funcție returnează true pentru oricare dintre elementele array-ului.
+Metoda `some` este o altă funcție de ordin superior. Ia primește ca argument o funcție de test și ne returnează dacă acea funcție de test returnează true pentru măcar unul dintre elementele array-ului.
 
 {{id code_units}}
 
@@ -484,7 +482,7 @@ console.log(horseShoe.codePointAt(0));
 
 {{index "codePointAt method"}}
 
-Metoda JavaScript `charCodeAt` vă returnează o unitate de cod, nu un caracter complet. metoda `codePointAt`, adăugată ulterior, vă returnează de fapt un caracter Unicode complet. Am putea să o utilizăm pentru a obține caracterele unui string. Dar argumentul transmis metodei `codePointAt` este tot un index într-o secvență de unități de cod. Prin urmare, pentru a parcurge toate caracterele dintr-un string, va trebui să răspundem la întrebarea dacă un caracter folosește una sau două unități de cod.
+Metoda JavaScript `charCodeAt` vă returnează o unitate de cod, nu un caracter complet. Metoda `codePointAt`, adăugată ulterior, vă returnează de fapt un caracter Unicode complet. Am putea să o utilizăm pentru a obține caracterele unui string. Dar argumentul transmis metodei `codePointAt` este tot un index într-o secvență de unități de cod. Prin urmare, pentru a parcurge toate caracterele dintr-un string, va trebui să răspundem la întrebarea dacă un caracter folosește una sau două unități de cod.
 
 {{index "for/of loop", character}}
 
@@ -530,7 +528,7 @@ Funcția `countBy` primește o colecție (orice poate fi iterat cu `for`/`of`) �
 
 {{index "findIndex method", "indexOf method"}}
 
-Utilizăm o altă metodă - `findIndex`. Această metodă este asemănătoare cu `indexOf`, dar, în loc să caute o anumită valoare, caută prima valoare pentru care funcția returnează prima valoare pentru care funcția dată returnează `true`. Ca și `indexOf`, returnează -1 dacă nu găsește un asemenea element.
+Utilizăm o altă metodă - `findIndex`. Această metodă este asemănătoare cu `indexOf`, dar, în loc să caute o anumită valoare, caută prima valoare pentru care funcția dată returnează `true`. Ca și `indexOf`, returnează -1 dacă nu găsește un asemenea element.
 
 {{index "textScripts function", "Chinese characters"}}
 

@@ -10,19 +10,19 @@ quote}}
 
 {{index "artificial intelligence", "Dijkstra, Edsger"}}
 
-{{figure {url: "img/chapter_picture_7.jpg", alt: "Picture of a package-delivery robot", chapter: framed}}}
+{{figure {url: "img/chapter_picture_7.jpg", alt: "Imaginea unui robot pentru livrarea coletelor", chapter: framed}}}
 
 {{index "project chapter", "reading code", "writing code"}}
 
 În capitolele de proiecte, ne oprim puțin din a parcurge teorie și vom lucra împreună la un program. Teoria este necesară pentru a învăța să programați, dar este la fel de important să puteți citi și înțelege programe.
 
-Proiectul din acest capitol este despre a construi un automat, un mic program care realizeazî o sarcină într-o lume virtuală. Automatul nostru este un robot pentru livrarea corespondenței care va ridica și va lăsa colete.
+Proiectul din acest capitol este despre a construi un automat, un mic program care realizează o sarcină într-o lume virtuală. Automatul nostru este un robot pentru livrarea corespondenței care va ridica și va lăsa colete.
 
 ## Meadowfield
 
 {{index "roads array"}}
 
-Orașul Meadowfield nu este foarte mare. El constă din 11 locuri cu 14 drumuri între ele. Poate fi descris ca un array de drumuri:
+Orașul Meadowfield nu este foarte mare. El constă din 11 locații cu 14 drumuri între ele. Poate fi descris ca un array de drumuri:
 
 ```{includeCode: true}
 const roads = [
@@ -82,15 +82,15 @@ Pentru a putea simula acest proces, trebuie să definim o lume virtuală care î
 
 {{index [state, in objects]}}
 
-Dacă gândiți in termenii programării orientate obiect, primul impuls ar fi să începeți prin a defini obiecte pentru diferitele elemente ale lumii virtuale: o clasă pentru robot, una pentru colet și poate una pentru destinații. Acestea ar putea să conțină proprietăți care descriu starea lor curentă, cum ar fi stiva de colete dintr-o locație pe care le-am putea modifica atunci când actualizăm lumea virtuală.
+Dacă gândiți in termenii programării orientate obiect, primul impuls ar fi să începeți prin a defini obiecte pentru diferitele elemente ale lumii virtuale: o clasă pentru robot, una pentru colet și poate una pentru destinații. Acestea ar putea să conțină proprietăți care descriu starea lor curentă, cum ar fi stiva de colete dintr-o locație, pe care le-am putea modifica atunci când actualizăm lumea virtuală.
 
 Dar această abordare este greșită.
 
-Cel puțin este _de regulă_ greșită. Faptul că o anumită entitate pare a fi un obiect nu înseamnă automat că trebuie să fie un obiect în program. Scrierea din reflex a unor clase pentru fiecare concept din aplicație tinde să vă conducă la o colecție de obiecte interconectate care au fiecare propria stare interna, schimbătoare. Asemenea programe sunt adesea greu de înțeles și ușor de stricat.
+Cel puțin este _de regulă_ greșită. Faptul că o anumită entitate pare a fi un obiect nu înseamnă automat că trebuie să fie un obiect în program. Scrierea din reflex a unor clase pentru fiecare concept din aplicație tinde să vă conducă la o colecție de obiecte interconectate care au fiecare propria stare internă, schimbătoare. Asemenea programe sunt adesea greu de înțeles și ușor de stricat.
 
 {{index [state, in objects]}}
 
-haideți să condensăm mai bine starea orașului la un set minimal de valori care o definesc. Există locația curentă a robotului și colecția de pachete încă nelivrate, fiecare dintre ele având o locație curentă și o adresă de destinație. Atât!
+Haideți să condensăm mai bine starea orașului la un set minimal de valori care o definesc. Există locația curentă a robotului și colecția de pachete încă nelivrate, fiecare dintre ele având o locație curentă și o adresă de destinație. Atât!
 
 {{index "VillageState class", "persistent data structure"}}
 
@@ -121,7 +121,7 @@ Acțiunea are loc în metoda `move`. Mai întâi se verifică dacă există un d
 
 {{index "map method", "filter method"}}
 
-Apoi se crează o nouă stare cu destinația ca și noua poziție a robotului. Dar va trebui și să creeze un nou set de colete, coletele pe care robotul le transportă (cele care se vor afla în noua locație a robotului) trebuie să fie mutate în noua locație. Iar coletele care sunt adresate noii locație trebuie să fie livrate - adică, să fie eliminate din setul de pachete nelivrate. Apelul funcției `map` rezolvă problema mișcării, iar apelul funcției `filter` se va ocupa de livrare.
+Apoi se crează o nouă stare cu destinația ca și noua poziție a robotului. Dar va trebui și să creeze un nou set de colete, coletele pe care robotul le transportă (cele care se vor afla în noua locație a robotului) trebuie să fie mutate în noua locație. Iar coletele care sunt adresate noii locații trebuie să fie livrate - adică, să fie eliminate din setul de pachete nelivrate. Apelul funcției `map` rezolvă problema mișcării, iar apelul funcției `filter` se va ocupa de livrare.
 
 Obiectele pentru colete nu sunt modificate când sunt transportate ci sunt recreate. Metoda `move` ne dă o nouă stare a orașului, dar lasă vechea stare intactă.
 
@@ -159,11 +159,11 @@ console.log(object.value);
 
 De ce evit să modific obiecte când este evident că limbajul se așteaptă să fac asta?
 
-Deoarece mă ajută să înțeleg programele. Este vorba din nou despre gestiunea complexității. Când obiectele din sistemul meu sunt fixe, stabile, pot considera operațiile asupra lor izolate - deplasarea la casa lui Alice dintr-o stare de start va produce întotdeauna aceeași stare. Când obiectele se modifică în timp, acest comporttament adaugă o dimensiune complet nouă a complexității acestui mod de a gândi.
+Deoarece mă ajută să înțeleg programele. Este vorba din nou despre gestiunea complexității. Când obiectele din sistemul meu sunt fixe, stabile, pot considera operațiile asupra lor izolate - deplasarea la casa lui Alice dintr-o stare de start va produce întotdeauna aceeași stare. Când obiectele se modifică în timp, acest comportament adaugă o dimensiune complet nouă a complexității acestui mod de a gândi.
 
 Pentru un sistem de mici dimensiuni, ca și cel pe care îl construim în acest capitol, am putea gestiona complexitatea adăugată. Dar cea mai importantă limitare cu privire la tipul de sisteme pe care le putem construi este dată de capacitatea noastră de a înțelege. Orice face codul mai ușor de înțeles va face posibil să construim un sistem mai ambițios.
 
-Din păcate, deși înțelegerea unui sistem bazat pe structuri de date persistente este mai ușoară, _conceperea_ lui, mai ales atunci  când limbajul de programare nu este de prea mare ajutor, poate fi mai dificilă. Vom căuta oportunități de a utiliza structuri de date persistente pe parcursul acestei cărți, însă vom utiliza și structuri ce se modifică în timp.
+Din păcate, deși înțelegerea unui sistem bazat pe structuri de date persistente este mai ușoară, _conceperea_ lui, mai ales atunci când limbajul de programare nu este de prea mare ajutor, poate fi mai dificilă. Vom căuta oportunități de a utiliza structuri de date persistente pe parcursul acestei cărți, însă vom utiliza și structuri ce se modifică în timp.
 
 ## Simularea
 
@@ -288,7 +288,7 @@ function routeRobot(state, memory) {
 }
 ```
 
-Acest robot va fi mult mai rapid. Va avea nevoie de cel mult 26 de mutări (de ouă ori pe ruta de 13 pași), dar de regulă va face chiar mai puține mișcări.
+Acest robot va fi mult mai rapid. Va avea nevoie de cel mult 26 de mutări (de două ori pe ruta de 13 pași), dar de regulă va face chiar mai puține mișcări.
 
 {{if interactive
 
@@ -300,7 +300,7 @@ if}}
 
 ## Determinarea drumului
 
-Nu aș considera că urmarea unei rute fixe este un comportament inteligent. Robotul ar putea lucra mai eficient dacă și-ar ajuta comportamentul la munca efectivă pe care trebuie să o efectueze.
+Nu aș considera că urmarea unei rute fixe este un comportament inteligent. Robotul ar putea lucra mai eficient dacă și-ar ajusta comportamentul la munca efectivă pe care trebuie să o efectueze.
 
 {{index pathfinding}}
 
@@ -310,7 +310,7 @@ Problema determinării unei rute într-un graf este o problemă clasică de _că
 
 Numărul de rute posibile într-un graf poate fi foarte mare. Dar atunci când căutăm o rută de la _A_ la _B_ ne interesează doar rutele care pornesc din _A_. De asemenea, nu ne interesează rutele care vizitează același loc de mai multe ori - cu siguranță acelea nu sunt cele mai eficiente rute. Astfel reducem numărul de rute care trebuie să fie considerate.
 
-De fapt, ne interesează _cea mai scurtă_ rută. Deci vrem să considerăm rute scurte înainte de a considera rute mai lungi. O abordare bună ar fi să "creștem" rutele din punctul de plecare explorând fiecare locație ce poate fi atinsă dar nu a fost încă considerată, până când ruta își atinge destinația. Astfel, vom explora doar rutele care sunt potențial interesante și vom determina cea mai scurtă rută către destinație (sau una dintre cele mai scurte rute, dacă există mai multe rute de aceeași lungime).
+De fapt, ne interesează _cea mai scurtă_ rută. Deci vrem să considerăm rute scurte înainte de a considera rute mai lungi. O abordare bună ar fi să "creștem" rutele din punctul de plecare explorând fiecare locație ce poate fi atinsă dar nu a fost încă luată în considerare, până când ruta își atinge destinația. Astfel, vom explora doar rutele care sunt potențial interesante și vom determina cea mai scurtă rută către destinație (sau una dintre cele mai scurte rute, dacă există mai multe rute de aceeași lungime).
 
 {{index "findRoute function"}}
 
@@ -339,11 +339,11 @@ Prin urmare, funcția va reține o _listă de lucru_. Acesta este un array cu lo
 
 Căutarea este realizată prin considerarea următorului item din listă și explorarea sa, ceea ce înseamnă că toate drumurile ce pleacă din acea locație sunt considerate. Dacă unul dintre ele este obiectivul, putem returna o rută. În caz contrar, dacă nu am atins această locație anterior, vom adăuga un nou item la listă. Dacă locația a fost atinsă anterior, deoarece ne interesează doar rutele cele mai scurte, fie am găsit o rută mai lungă decât cea anterioară, fie o rută de aceeași lungime și nu va fi necesar să o explorăm.
 
-Vă puteți imagina această abordarea ca pe o rețea de rute cunoscute care crește din locația inițială, uniform în toate direcțiile (dar fără bucle de revenire). Imediat ce un fir ajunge în locația de destinație, acest fir este urmărit până la locația de start și astfel obținem ruta de interes.
+Vă puteți imagina această abordarea ca pe o rețea de rute cunoscute care crește din locația inițială, uniform în toate direcțiile (dar fără bucle de revenire). Imediat ce un fir ajunge în locația de destinație, acest fir este urmărit înapoi până la locația de start și astfel obținem ruta de interes.
 
 {{index "connected graph"}}
 
-Codul nostru nu tratează situația în care nu mai putem continua explorarea deoarce știm că graful nostru este _conex_, adică orice locație poate fi atinsă din orice altă locație. Întotdeauna vom putea determina o rută între două locații și căutarea nu va putea eșua.
+Codul nostru nu tratează situația în care nu mai putem continua explorarea deoarce presupunem că graful nostru este _conex_, adică orice locație poate fi atinsă din orice altă locație. Întotdeauna vom putea determina o rută între două locații și căutarea nu va putea eșua.
 
 ```{includeCode: true}
 function goalOrientedRobot({place, parcels}, route) {
@@ -415,7 +415,7 @@ hint}}
 
 Puteți scrie un robot care finalizează livrarea mai repede decât `goalOrientedRobot`? Dacă observați comportamentul acelui robot, ce manevre stupide face acesta? Cum l-ați putea îmbunătăți?
 
-Dacă ați rezolvat excercițiul, utilizați funcția `compareRobots` pentru a verifica că ați îmbunătățit într-adevăr robotul.
+Dacă ați rezolvat excercițiul, utilizați funcția `compareRobots` pentru a verifica dacă ați îmbunătățit într-adevăr robotul.
 
 {{if interactive
 
@@ -444,7 +444,6 @@ hint}}
 Majoritatea structurilor de date disponibile într-un mediu JavaScript standard nu sunt foarte potrivite pentru utilizarea persistentă. Array-urile au metodele `slice` și `concat` care ne permit să creem ușor array-uri noi fără să modificăm array-ul original. Dar `Set` nu are metode pentru crearea unui nou set cu un item adăugat sau eliminat.
 
 Scrieți o nouă clasă, `PGroup`, similară clasei `Group` din [capitolul ?](object#groups), care memorează un set de valori. Ca și `Group`, va avea metodele `add`, `delete` și `has`.
-
 
 Metoda `add` va returna o _nouă instanță_ `PGroup` cu noul membru adăugat, lăsând neschimbată instanța originală. Similar, `delete` va crea o nouă instanță, fără membrul primit ca și argument. 
 
@@ -487,13 +486,13 @@ Cel mai convenabil mod de a reprezenta setul de valori membre este tot un array,
 
 {{index "concat method", "filter method"}}
 
-Când o valoare se adaugă la un grup, puteți crea un nou grup cu o copie a array-ului original care conține valoarea adăugată (utrilizând de exemplu `concat`). Când o valoare este eliminată, o veți filtra din array.
+Când o valoare se adaugă la un grup, puteți crea un nou grup cu o copie a array-ului original care conține valoarea adăugată (utilizând de exemplu `concat`). Când o valoare este eliminată, o veți filtra din array.
 
 Constructorul clasei poate primi un asemenea array ca și argument și îl va memora ca și singura proprietate a instanței. Acest array nu va fi actualizat niciodată.
 
 {{index "static method"}}
 
-Pentru a adăuga o proprietate (`empty`) la un constructor, dar care nu este o metodă, trebuie să o adăugați consttructorului după definiția clasei, ca și proprietate obișnuită.
+Pentru a adăuga o proprietate (`empty`) la un constructor, dar care nu este o metodă, trebuie să o adăugați constructorului după definiția clasei, ca și proprietate obișnuită.
 
 Aveți nevoie doar de o singură instanță `empty` deoarece toate grupurile goale sunt identice și instanțele clasei nu vor fi modificate. Puteți crea oricâte grupuri din acel grup gol, fără a-l afecta.
 

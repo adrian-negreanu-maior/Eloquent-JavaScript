@@ -10,7 +10,7 @@ quote}}
 
 {{index "Liskov, Barbara", "abstract data type"}}
 
-{{figure {url: "img/chapter_picture_6.jpg", alt: "Picture of a rabbit with its proto-rabbit", chapter: framed}}}
+{{figure {url: "img/chapter_picture_6.jpg", alt: "Imaginea unui iepure și a proto-iepurelui său", chapter: framed}}}
 
 [Capitolul ?](data) introduce obiectele JavaScript. În cultura programării, avem o metodologie numită _programare orientată obiect_ care reprezintă un set de tehnici care utilizează obiecte (și concepte înrudite) ca și principiul central de organizare a programelor.
 
@@ -93,7 +93,7 @@ Deoarece fiecare funcție are propriul său binding `this`, a cărui valoare dep
 
 {{index "this binding", "arrow function"}}
 
-Funcțiile arrow sunt diferite - ele nu crează propriul binding `this` ci se referă la bindingul `this` din domeniul de vizibilitate care le înconjoară. Prin urmare, puteți scrie cod astfel, referindu-vă la `this` din interiorul unei funncții locale:
+Funcțiile arrow sunt diferite - ele nu crează propriul binding `this` ci se referă la bindingul `this` din domeniul de vizibilitate care le înconjoară. Prin urmare, puteți scrie cod astfel, referindu-vă la `this` din interiorul unei funcții locale:
 
 ```
 function normalize() {
@@ -129,7 +129,7 @@ Am extras o proprietate dintr-un obiect gol. Magie!
 
 {{index [property, inheritance], [object, property]}}
 
-Bine, nu chiar. Doar că nu am dat încă detalii despre modul în care funcționează obiectele JavaScript. Pe lângă setul propriu de proprietăți, majoritatea obiectelor au și un _prototip_. Un prototip este un alt obiect care este folosit ca și sursă implicită de proprietăți. Dacă un obiect primește o cerere pentru o proprietate pe care nu o are, proprietatea respectivă va fi căutată în prototippul său, apoi în prototipul prototipului său, etc.
+Bine, nu chiar. Doar că nu am dat încă detalii despre modul în care funcționează obiectele JavaScript. Pe lângă setul propriu de proprietăți, majoritatea obiectelor au și un _prototip_. Un prototip este un alt obiect care este folosit ca și sursă implicită de proprietăți. Dacă un obiect primește o cerere pentru o proprietate pe care nu o are, proprietatea respectivă va fi căutată în prototipul său, apoi în prototipul prototipului său, etc.
 
 {{index "Object prototype"}}
 
@@ -153,7 +153,7 @@ Relațiile dintre prototipurile obiectelor JavaScript formează o structură arb
 
 {{index inheritance, "Function prototype", "Array prototype", "Object prototype"}}
 
-Multe obiecte nu au descendență directă din `Object.prototype` ca și prototip al lor ci sunt descendenți al unui alt obiect care are un set diferit de proprietăți implicite. Orice funcție este derivată din `Function.prototype`, iar array-urile sunt derivate din `Array.prototype`.
+Multe obiecte nu au descendență directă din `Object.prototype` ca și prototip al lor ci sunt descendenți ai unui alt obiect care are un set diferit de proprietăți implicite. Orice funcție este derivată din `Function.prototype`, iar array-urile sunt derivate din `Array.prototype`.
 
 ```
 console.log(Object.getPrototypeOf(Math.max) ==
@@ -188,7 +188,7 @@ killerRabbit.speak("SKREEEE!");
 
 O proprietate asemănătoare cu `speak(line)` într-o expresie de tip obiect este o modalitate mai scurtă de a defini o metodă. Ea crează o proprietate numită `speak` și îi atribuie ca și valoare o funcție.
 
-Iepurele "proto" acționează ca și un container pentru proprietățile pe care le au toți iepurii. Un obiect individual de tip iepure, cum ar fi un iepure ucigaș, are toate proprietățile care se refră doar la el - tipul său - precum și pe cele derivate din prototipul său.
+Iepurele "proto" acționează ca și un container pentru proprietățile pe care le au toți iepurii. Un obiect individual de tip iepure, cum ar fi un iepure ucigaș, are toate proprietățile care se referă doar la el - tipul său - precum și pe cele derivate din prototipul său.
 
 {{id classes}}
 
@@ -245,7 +245,7 @@ Prin convenție, numele constructorilor încep cu literă mare astfel încât s�
 
 {{index "prototype property", "getPrototypeOf function"}}
 
-Este important să înțelegeți distincția dintre modul în care un prototip se asociază cu un constructor (prin intermediul propreității `prototype`) și felul în care obiectele au un prototip (care poate fi determinat cu ajutorul `Object.getPrototypeOf`). De fapt, prototipul unui constructor este `Function.prototype` deoarece constructorii sunt funcții. Proprietatea `prototype` reține prototipul utilizat pentru a crea instanțe cu ajutorul său.
+Este important să înțelegeți distincția dintre modul în care un prototip se asociază cu un constructor (prin intermediul proprietății `prototype`) și felul în care obiectele au un prototip (care poate fi determinat cu ajutorul `Object.getPrototypeOf`). De fapt, prototipul unui constructor este `Function.prototype` deoarece constructorii sunt funcții. Proprietatea `prototype` reține prototipul utilizat pentru a crea instanțe cu ajutorul său.
 
 ```
 console.log(Object.getPrototypeOf(Rabbit) ==
@@ -438,17 +438,17 @@ Această tehnică poartă denumirea de _polimorfism_. Codul polimorfic poate fun
 
 {{index "for/of loop", "iterator interface"}}
 
-Am menționat în [capitolul ?](data#for_of_loop) că o buclă `for`/`of` poate fi folosită pentru mai multe tipuri de structuri de date. Acesta este un alt exemplu de polimorfism - asemenea bucle se așteaptă ca structura de date să epună o anumită interfață, care este expusă de către array-uri și stringuri. Putem adăuga această interfață și obiectelor noastre! Dar înainte de a putea să facem acest lucru, trebuie să aflăm ce sunt simbolurile.
+Am menționat în [capitolul ?](data#for_of_loop) că o buclă `for`/`of` poate fi folosită pentru mai multe tipuri de structuri de date. Acesta este un alt exemplu de polimorfism - asemenea bucle se așteaptă ca structura de date să expună o anumită interfață, care este expusă de către array-uri și stringuri. Putem adăuga această interfață și obiectelor noastre! Dar înainte de a putea să facem acest lucru, trebuie să aflăm ce sunt simbolurile.
 
 ## Simbolurile
 
-Este posibil ca interfețe diferite să utilizeze același nume al unnei proprietăți pentru operații diferite. De exemplu, am putea defini o interfață în care metoda `toString` va converti un obiect în ceva nemaivăzut. Nu va fi posibil ca un obiect să se conformeze atât acelei interfețe cât și unei interfețe care utilizează metoda `toString` în mod standard.
+Este posibil ca interfețe diferite să utilizeze același nume al unei proprietăți pentru operații diferite. De exemplu, am putea defini o interfață în care metoda `toString` va converti un obiect în ceva nemaivăzut. Nu va fi posibil ca un obiect să se conformeze atât acelei interfețe cât și unei interfețe care utilizează metoda `toString` în mod standard.
 
 Aceasta ar fi o idee proastă și problema aceasta nu este foarte frecventă. Majoritatea programatorilor JavaScript nu se gândesc la acest aspect. Dar arhitecții limbajului, care au sarcina de a se gândi la astfel de aspecte, ne-au dat o soluție.
 
 {{index "Symbol function", [property, naming]}}
 
-Când am spus că numele propreităților sunt stringuri, nu am fost chiar exact. De regulă e adevărat, însă sunt și _simboluri_. Simbolurile sunt valori create cu funcția `Symbol`. Spre deosebire de stringuri, simbolurile nou create sunt unice - nu puteți crea de două ori același simbol.
+Când am spus că numele proprietăților sunt stringuri, nu am fost chiar exact. De regulă e adevărat, însă sunt și _simboluri_. Simbolurile sunt valori create cu funcția `Symbol`. Spre deosebire de stringuri, simbolurile nou create sunt unice - nu puteți crea de două ori același simbol.
 
 ```
 let sym = Symbol("name");
@@ -497,7 +497,7 @@ Ne așteptăm ca un obiect transmis unei bucle `for`/`of` să fie _iterabil_. Ac
 
 Când este apelată, această metodă trebuie să returneze un obiect care expune o a doua interfață, _iterator_. Aceasta este cea care realizează iterarea propriu-zisă. Ea definește o metodă `next` care returnează următorul rezultat. Acel rezultat trebuie să fie un obiect care are proprietatea `value` ce returnează următoarea valoare, dacă există una și o proprietate `done` care trebuie să fie `true` dacă nu mai există alte rezultate și `false` în caz contrar.
 
-De menționat că `next`, `value`, și `done` sunt nume de proprietăți care sunt stringuri, nu simboluri. Doar `Symbol.iterator`, care este probabil să fie adăugat șa o mulțime de obiecte diferite, este de fapt un simbol.
+De menționat că `next`, `value`, și `done` sunt nume de proprietăți care sunt stringuri, nu simboluri. Doar `Symbol.iterator`, care este probabil să fie adăugat la o mulțime de obiecte diferite, este de fapt un simbol.
 
 Putem utiliza direct această interfață.
 
@@ -540,7 +540,7 @@ class Matrix {
 }
 ```
 
-Clasa își memorează conținutul întru array cu _width_ × _height_ elemente. Elementele sunt memorate rând cu rând, de exemplu al treilea element de pe al cincilea rând (utilizând indexarea din zero) este memorat în poziția 4 × _width_ + 2.
+Clasa își memorează conținutul într-un array cu _width_ × _height_ elemente. Elementele sunt memorate rând cu rând, de exemplu al treilea element de pe al cincilea rând (utilizând indexarea din zero) este memorat în poziția 4 × _width_ + 2.
 
 Funcția constructor primeste `width`, `height` și o funcție opțională `element` utilizată pentru a determina valorile inițiale. Sunt definite metode `get` și `set` pentru a returna sau a actualiza elementele din matrice.
 
@@ -601,7 +601,7 @@ for (let {x, y, value} of matrix) {
 
 {{index [interface, object], [property, definition], "Map class"}}
 
-Interfețele constau în principal din metode, dar puteți include și proprietăși care includ valori care nu sunt de tip funcție. De exemplu, obiectele `Map` au o proprietate `size` care vă spune câte chei conține map-ul respectiv.
+Interfețele constau în principal din metode, dar puteți include și proprietăți care conțin valori care nu sunt de tip funcție. De exemplu, obiectele `Map` au o proprietate `size` care vă spune câte chei conține map-ul respectiv.
 
 Nu este necesar pentru un asemenea obiect ca să calculeze și să memoreze o asemenea proprietate direct pe instanță. Chiar și proprietățile accesate direct ar putea ascunde un apel spre o metodă. Asemenea metode se numesc _getter-e_ și sunt definite folosind `get` în fața numelui metodei într-o expresie de tip obiect sau în declararea unei clase.
 
@@ -659,13 +659,13 @@ Uneori, vreți să atașați proprietăți direct funcției constructor, nu prot
 
 {{index inheritance, "matrix example", "object-oriented programming", "SymmetricMatrix class"}}
 
-Unele matrice sunt _simetrice_. Dacă le oglindim față de diagonala stânga-sus-dreapta-jos, ele sunt nemodificate. Cu alte cuvinte, valoarea memorată în poziția _x_,_y_ este aceeați cu valoarea memorată în poziția _y_,_x_.
+Unele matrice sunt _simetrice_. Dacă le oglindim față de diagonala stânga-sus:dreapta-jos, ele sunt nemodificate. Cu alte cuvinte, valoarea memorată în poziția _x_,_y_ este aceeași cu valoarea memorată în poziția _y_,_x_.
 
 Imaginați-vă că avem nevoie de o structură de date similară cu `Matrix` dar care să impună faptul că matricea rămâne simetrică. Putem scrie aceasta structură de la zero, dar ar trebui să repetăm cod similar cu cel pe care l-am scris deja.
 
 {{index overriding, prototype}}
 
-Sistemul de prototipuri al JavaScript permite crearea unei _noi clase_, asemănătoare cu vechea clasă dar având definiții noi pentru o parte din proprietăți. Prototipul noii clase este derivat din vechiul prototip dar adăugă o nouă definiție pentru metoda `set`, de exemplu.
+Sistemul de prototipuri al JavaScript permite crearea unei _noi clase_, asemănătoare cu vechea clasă dar având definiții noi pentru o parte din proprietăți. Prototipul noii clase este derivat din vechiul prototip dar adaugă o nouă definiție pentru metoda `set`, de exemplu.
 
 În terminologia programării orientate obiect, aceasta se numește _moștenire_. Noua clasă moștenește proprietățile și comportamentul de la vechea clasă.
 
@@ -728,9 +728,9 @@ Operatorul va căuta și prin ierarhia de clase, astfel încât un obiect `Symme
 
 ## Rezumat
 
-Obiectele fac mult mai mult decât doar să stocheze propriile proprietăți. Ele au prototipuri, care sunt alte obiecte. Ele funcționează ca și cum ar avea propreități pe care nu le au, cât timp prototipurile lor au acele proprietăți. Obiectele simple au ca și prototip `Object.prototype`.
+Obiectele fac mult mai mult decât doar să stocheze propriile proprietăți. Ele au prototipuri, care sunt alte obiecte. Ele funcționează ca și cum ar avea proprietăți pe care nu le au, cât timp prototipurile lor au acele proprietăți. Obiectele simple au ca și prototip `Object.prototype`.
 
-Constructorii, care sutn funcții al căror nume de regulă începe cu o literă mare, pot fi utilizați împreună cu operatorul `new` pentru a crea noi obiecte. Prototipul noului obiect va fi obiectul returnat de proprietatea `prototype` a constructorului. Puteți folosi aceasta în avantajul vostru prin plasarea tuturor proprietăților comune unui anume tip în prototipul lor. Există o notație pentru clase, care folosește `class` și oferă o modalitate mai clară de a defini un constructor și prototipul său.
+Constructorii, care sunt funcții al căror nume de regulă începe cu o literă mare, pot fi utilizați împreună cu operatorul `new` pentru a crea noi obiecte. Prototipul noului obiect va fi obiectul returnat de proprietatea `prototype` a constructorului. Puteți folosi aceasta în avantajul vostru prin plasarea tuturor proprietăților comune unui anume tip în prototipul lor. Există o notație pentru clase, care folosește `class` și oferă o modalitate mai clară de a defini un constructor și prototipul său.
 
 Puteți defini getter-e și setter-e pentru a apela în secret metode de fiecare dată când se accesează o anume proprietate a unui obiect. Metodele statice sunt metode care se memorează în constructorul clasei și nu în prototipul acesteia.
 
@@ -738,7 +738,7 @@ Operatorul `instanceof` poate, dat fiind un obiect și un constructor, să deter
 
 Un lucru util pe care îl putem face cu obiectele este să specificăm o interfață pentru ele și să informăm pe toată lumea că ar trebui să comunice cu obiectele noastre prin intermediul acelei interfețe. Restul detaliilor care constitui obiectul vor fi astfel _încapsulate_, ascunse în spatele interfeței.
 
-Aceeași interfață poate fi implementată de către mai mult de un tip. Codul scris pentru a utiliza o interfață știe automat cum să lucrez cu orice număr de obiecte care oferă acea interfață. Acesta este _polimorfismul_.
+Aceeași interfață poate fi implementată de către mai mult de un tip. Codul scris pentru a utiliza o interfață "știe" automat cum să lucrez cu orice număr de obiecte care oferă acea interfață. Acesta este _polimorfismul_.
 
 Când implementăm mai multe clase care diferă între ele doar prin câteva detalii, ar putea fi util ca să scriem noi clase ca și _subclase_ ale unor clase existente, _moștenind_ parte din comportamentul acestora.
 
@@ -794,7 +794,7 @@ Mediul standard JavaScript vă pune la dispoziție si o altă structură de date
 
 {{index "add method", "delete method", "has method"}}
 
-Scrieți o clasă `Group` (deoarece `Set` este folosit deja). Adăugați ca și pentru `Set` metodele `add`, `delete` și `has`. COnstructorul său va crea un grup gol, `add` va adăuga o (valoare numai dacă aceasta nu a fost deja adăugată), `delete` va elimina o valoare din grup (dacă aceasta face parte din grup), iar `has` returnează o valoare booleană ce precizează dacă argumentul său este membru al grupului.
+Scrieți o clasă `Group` (deoarece `Set` este folosit deja). Adăugați ca și pentru `Set` metodele `add`, `delete` și `has`. Constructorul său va crea un grup gol, `add` va adăuga o (valoare numai dacă aceasta nu a fost deja adăugată), `delete` va elimina o valoare din grup (dacă aceasta face parte din grup), iar `has` returnează o valoare booleană ce precizează dacă argumentul său este membru al grupului.
 
 {{index "=== operator", "indexOf method"}}
 
@@ -902,7 +902,6 @@ if}}
 {{hint
 
 Amintiți-vă că metodele care există pe obiecte simple provin din `Object.prototype`.
-
 
 De asemenea, puteți apela o funcție cu un binding `this` specific utilizând metoda `call`.
 

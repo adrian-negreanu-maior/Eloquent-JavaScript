@@ -31,7 +31,7 @@ Cea mai simplă instrucțiune este o expresie urmată de `;`. Acesta este un pro
 !false;
 ```
 
-Programul de mai sus este inutil. O expresie poate fi responsabilă de producerea unei valori, care apoi urmează să fie folosită de către codul care o include. O instrucțiune este o construcție de sine stătătoare și contează doar în măsura în care produce un efect. Aceasta ar putea afișa o informație pe ecran sau ar putea modifica starea internă a mașinii într-un mod care să influențeze execuția instrucțiunilor care îi urmează. Aceste modificări sunt denumite _side effects_. Instrucțiunile din programul de mai sus doar produc valorile `1` și `true` pe care nu le folosesc mai departe pentru nimic altceva, ceea ce nu produce nici un fel de modificări. Atunci când rulați acest program, nu se întâmplă nimic observabil.
+Programul de mai sus este inutil. O expresie poate fi responsabilă de producerea unei valori, care apoi urmează să fie folosită de către codul care o include. O instrucțiune este o construcție de sine stătătoare și contează doar în măsura în care produce un efect. Aceasta ar putea afișa o informație pe ecran sau ar putea modifica starea internă a mașinii într-un mod care să influențeze execuția instrucțiunilor care îi urmează. Aceste modificări sunt denumite _efecte secundare (side effects)_. Instrucțiunile din programul de mai sus doar produc valorile `1` și `true` pe care nu le folosesc mai departe pentru nimic altceva, ceea ce nu produce nici un fel de modificări. Atunci când rulați acest program, nu se întâmplă nimic observabil.
 
 {{index "programming style", "automatic semicolon insertion", semicolon}}
 
@@ -77,7 +77,7 @@ console.log(mood);
 
 {{index [binding, "model of"], "tentacle (analogy)"}}
 
-V-ați putea imagina variabilele ca și niște tentacule, în loc de cutii. Ele nu conțin valori, ci le referă. Două variabile pot referi aceeași valoare. Un program poate referi doar acele valori pentru care încă mai are cel puțin o referință. Atunci când trebuie să memorați un lucru, vă creați un tentacul care să îl refere sau reatașați un tentacul existent care referă o valoare de care nu mai aveți nevoie.
+V-ați putea imagina variabilele ca și niște tentacule, în loc de cutii. Ele nu conțin valori, ci le referă. Două variabile pot referi aceeași valoare. Un program poate referi doar acele valori pentru care încă mai are cel puțin o referință. Atunci când trebuie să memorați un lucru, vă creați un tentacul care să îl refere sau reatașați un tentacul existent, care referă o valoare de care nu mai aveți nevoie, către o noua valoare care prezintă interes.
 
 Să analizăm un alt exemplu. Pentru a memora suma în dolari pe care Luigi v-o datorează, creați o variabilă. Apoi, când Luigi vă returnează $35, îi atribuiți acestei variabile o noua valoare.
 
@@ -117,7 +117,7 @@ console.log(greeting + name);
 
 {{index "const keyword", naming}}
 
-Cuvântul `const` este prescurtarea de la _constantă_. El definește un binding constant, care se referă la aceeași valoare pe toată durata existenței sale. Acesta este util pentru crearea de binding-uri care dau un nume unei valori astefel încât poate fi ușor referită în continuare.
+Cuvântul `const` este prescurtarea de la _constantă_. El definește un binding constant, care se referă la aceeași valoare pe toată durata existenței sale. Acesta este util pentru crearea de binding-uri care dau un nume unei valori astfel încât aceasta poate fi ușor referită în continuare.
 
 ## Numele binding-urilor
 
@@ -127,7 +127,7 @@ Numele bindingurilor pot fi orice cuvinte. Cifrele pot face parte din nume - `ca
 
 {{index [syntax, identifier], "implements (reserved word)", "interface (reserved word)", "package (reserved word)", "private (reserved word)", "protected (reserved word)", "public (reserved word)", "static (reserved word)", "void operator", "yield (reserved word)", "enum (reserved word)", "reserved word", [binding, naming]}}
 
-Cuvintele care au o ssemnificație specială, cum ar fi `let`, sunt _cuvinte-cheie_ și nu este permisă utilizarea lor pentru a denumi binding-urile. Există de asemenea o serie de cuvinte care sunt _rezervate_ pentru utilizarea lor în versiunile ulterioare ale JavaScript și care de asemenea nu pot fi folosite ca și nume pentru binding-uri. Lista completă a cuvintelor cheie și rezervate este destul de lungă.
+Cuvintele care au o semnificație specială, cum ar fi `let`, sunt _cuvinte-cheie_ și nu este permisă utilizarea lor pentru a denumi binding-urile. Există de asemenea o serie de cuvinte care sunt _rezervate_ pentru utilizarea lor în versiunile ulterioare ale JavaScript și care de asemenea nu pot fi folosite ca și nume pentru binding-uri. Lista completă a cuvintelor cheie și rezervate este destul de lungă.
 
 ```{lang: "text/plain"}
 break case catch class const continue debugger default
@@ -154,7 +154,7 @@ Colecția de bindinguri precum și valorile lor care există la orice moment dat
 {{indexsee "calling (of functions)", [function, application]}}
 {{index output, function, [function, application], [browser, environment]}}
 
-Mare parte dintre valorile oferite în mediul implicit au tipul _function_. O funcție este o bucată de program împachetată într-o valoare. Asemenea valori pot fi _aplicate_ pentru a executa programul împachetat în interiorul lor. De exemplu, în mediul unui browser, bindingul `prompt` reține o funcție care afișează o casetă de dialog în care user-ului i se cere să introducă o valoare. Se utilizează astfel:
+Mare parte dintre valorile oferite în mediul implicit au tipul _function_. O funcție este o bucată de program împachetată într-o valoare. Asemenea valori pot fi _aplicate_ pentru a executa mini-programul împachetat în interiorul lor. De exemplu, în mediul unui browser, bindingul `prompt` reține o funcție care afișează o casetă de dialog în care user-ului i se cere să introducă o valoare. Se utilizează astfel:
 
 ```
 prompt("Enter passcode");
@@ -164,7 +164,7 @@ prompt("Enter passcode");
 
 {{index parameter, [function, application], [parentheses, arguments]}}
 
-Execuția unei funcții se numește _invocare (invoking)_, _apelare (calling)_ sau _aplicare (applying)_. Puteți apela o funcție prin plasarea parantezelor după o expresie care produce valoarea de tip funcție. De regulă, veți utiliza direct numele bindingului care memorează funcția. Valorile dintre paranteze sunt furnizate ca și parametri pentru programul din interiorul funcției. În exemplu, funncția `prompt` utilizează stringul pe care l-am dat ca și text explicativ care se afișează în caseta de dialog. Valorile furnizate funcțiilor se numesc _argumente_. Funcții diferite pot avea un număr diferit de argumente sau tipuri diferite ale argumentelor.
+Execuția unei funcții se numește _invocare (invoking)_, _apelare (calling)_ sau _aplicare (applying)_. Puteți apela o funcție prin plasarea parantezelor după o expresie care produce valoarea de tip funcție. De regulă, veți utiliza direct numele bindingului care memorează funcția. Valorile dintre paranteze sunt furnizate ca și parametri pentru programul din interiorul funcției. În exemplu, funcția `prompt` utilizează stringul pe care l-am dat ca și text explicativ care se afișează în caseta de dialog. Valorile furnizate funcțiilor se numesc _argumente_. Funcții diferite pot avea un număr diferit de argumente sau tipuri diferite ale argumentelor.
 
 Funcția `prompt` nu este foarte utilizată în programarea web modernă, în principal pentru că nu avem control asupra aspectului casetei de dialog, dar poate fi utilă pentru programe de antrenament și experimente.
 
@@ -172,11 +172,11 @@ Funcția `prompt` nu este foarte utilizată în programarea web modernă, în pr
 
 {{index "JavaScript console", "developer tools", "Node.js", "console.log", output, [browser, environment]}}
 
-În exemple, am utilizat funcția `console.log` pentru a afișa valori. Majoritatea sistemelor JavaScript (inclusiv browserele web moderne si NodeJS) pun la dispoziție o funcție `console.log` care afișează argumentele primite pe un device de ieșire de tip text. În browsere, outputul se produce în consola JavaScript. Această parte a interfeței browserului este ascunsă în mod implicit, dar va fi afișată prin apăsarea tastei F12. Dacă nu se întâmplă nimic, căutați în meniu un item numit Developer Tools sau similar.
+În exemple, am utilizat funcția `console.log` pentru a afișa valori. Majoritatea sistemelor JavaScript (inclusiv browserele web moderne si NodeJS) pun la dispoziție o funcție `console.log` care afișează argumentele primite pe un device de ieșire de tip text. În browsere, afișarea se produce în consola JavaScript. Această parte a interfeței browserului este ascunsă în mod implicit, dar va fi afișată prin apăsarea tastei F12. Dacă nu se întâmplă nimic, căutați în meniu un item numit Developer Tools sau similar.
 
 {{if interactive
 
-Când rulați exemplele din această carte (sau propriul vostru cod) în paginile acestei cărți, ieșirea penttru `console.log` este prezentată la sfârșitul exemplului, nu în consola JavaScript.
+Când rulați exemplele din această carte (sau propriul vostru cod) în paginile acestei cărți, ieșirea pentru `console.log` este prezentată la sfârșitul exemplului, nu în consola JavaScript.
 
 ```
 let x = 30;
@@ -217,7 +217,7 @@ console.log(Math.min(2, 4) + 100);
 
 {{index "execution order", program, "control flow"}}
 
-Când programul vostru conține mai mult de o instrucțiune, isntrucțiunile se execută ca și cum ar fi o poveste, de sus în jos. Exemplul de mai jos conține două instrucțiuni. Prima solicită utilizatorului să introducă un număr, iar ceea de a doua, executată ulterior primeia, afișează pătratul numărului respectiv.
+Când programul vostru conține mai mult de o instrucțiune, instrucțiunile se execută ca și cum ar fi o poveste, de sus în jos. Exemplul de mai jos conține două instrucțiuni. Prima solicită utilizatorului să introducă un număr, iar ceea de a doua, executată ulterior primeia, afișează pătratul numărului respectiv.
 
 ```
 let theNumber = Number(prompt("Pick a number"));
@@ -230,13 +230,13 @@ Funcția `Number` convertește o valoare într-un număr. Avem nevoie de aceast�
 
 Iată o reprezentare schematică trivială a controlului liniar al execuției:
 
-{{figure {url: "img/controlflow-straight.svg", alt: "Trivial control flow", width: "4cm"}}}
+{{figure {url: "img/controlflow-straight.svg", alt: "Controlul fluxului de execuție", width: "4cm"}}}
 
 ## Execuția condițională
 
 {{index Boolean, ["control flow", conditional]}}
 
-Nu toate programele sunt liniare. Am putea, de exemplu, să creem o ramificație iar programul să continue execuția pe ramura corespunzătoare, în funcție de situația concretă. Aceasta este 0 _execuție condițională_.
+Nu toate programele sunt liniare. Am putea, de exemplu, să creem o ramificație iar programul să continue execuția pe ramura corespunzătoare, în funcție de situația concretă. Aceasta este o _execuție condițională_.
 
 {{figure {url: "img/controlflow-if.svg", alt: "Conditional control flow",width: "4cm"}}}
 
@@ -302,7 +302,7 @@ Programul va verifica mai întâi daca `num` este mai mic decât 10. Dacă da, v
 
 Schema pentru acest program ar arăta cam așa:
 
-{{figure {url: "img/controlflow-nested-if.svg", alt: "Nested if control flow", width: "4cm"}}}
+{{figure {url: "img/controlflow-nested-if.svg", alt: "Înlănțuirea deciziilor în fluxul de execuție", width: "4cm"}}}
 
 {{id loops}}
 ## Bucle `while` și `do` (repetiții)
@@ -323,7 +323,7 @@ console.log(12);
 
 Aceasta funcționează, dar ideea de a scrie un program este de a munci _mai puțin_. Dacă vrem să afișăm toate numerele pare mai mici decât 1000, acestă abordare nu este potrivită. Ceea ce ne trebuie este o modalitate de a repeta de mai multe ori execuția unei bucăți de cod. Această modalitate de control al execuției reprezintă o _buclă (repetiție)_.
 
-{{figure {url: "img/controlflow-loop.svg", alt: "Loop control flow",width: "4cm"}}}
+{{figure {url: "img/controlflow-loop.svg", alt: "Bucla în fluxul de execuție", width: "4cm"}}}
 
 {{index [syntax, statement], "counter variable"}}
 
@@ -346,7 +346,7 @@ O instrucțiune care începe cu cuvântul cheie `while` crează o buclă. Cuvân
 
 {{index [state, in binding], [binding, as state]}}
 
-Binding-ul `number` demonstrează modul în care putem folosi un binding pentru a urmări progresul unui program. La fiecare repetiție a buclei, valoarea referită de `number` crește cu 2. La începutul fiecărei repetiții, valoarea este comparată cu 12 pentru a determina dacă programul trebuie să se încheie sau nu.
+Binding-ul `number` demonstrează modul în care putem urmări progresul unui program. La fiecare repetiție a buclei, valoarea referită de `number` crește cu 2. La începutul fiecărei repetiții, valoarea este comparată cu 12 pentru a determina dacă programul trebuie să se încheie sau nu.
 
 {{index exponentiation}}
 
@@ -385,7 +385,7 @@ Acest program vă va obliga să introduceți un nume. Va continua să vă solici
 
 {{index [code, "structure of"], [whitespace, indentation], "programming style"}}
 
-În exemple, am adăugat spații în fața instrucțiuniloe care fac parte din alte instrucțiuni. Aceste spații nu sunt obligatorii - computerul va accepta programul și fără ele. De fapt, chiar și scrierea programelor pe mai multe linii este opțională. Puteți scrie un program sub forma unei singure linii foarte lungi, dacă doriți.
+În exemple, am adăugat spații în fața instrucțiunilor care fac parte din alte instrucțiuni. Aceste spații nu sunt obligatorii - computerul va accepta programul și fără ele. De fapt, chiar și scrierea programelor pe mai multe linii este opțională. Puteți scrie un program sub forma unei singure linii foarte lungi, dacă doriți.
 
 Rolul indentării în interiorul unui bloc este de a evidenția structura codului. În codul în care noile blocuri sunt introduse în interiorul altor blocuri, poate fi dificil să vă dați seama unde se termină un bloc și începe un altul. Prin indentarea corespunzătoare, forma vizuală a programului reprezintă modul de subordonare a blocurilor din interiorul său. Prefer să utilizez două spații pentru indentare, dar gusturile diferă - unii programatori utilizează patru spații, alții preferă să utilizeze `tab`-uri. Ceea ce este cu adevărat important este să utilizați o indentare consistentă.
 
@@ -446,7 +446,7 @@ console.log(result);
 
 Evaluarea la valoarea `false` a condiției buclei nu este singura modalitate de a ieși dintr-o buclă. Avem la dispoziție o instrucțiune specială `break` care are ca efect ieșirea imediată din bucla în interiorul căreia este plasată.
 
-Porgramul care urmează exemplifică utilizarea instrucțiunii `break`. Acest program determină primul număr mai mare decât 20 și divizibil cu 7:
+Programul care urmează exemplifică utilizarea instrucțiunii `break`. Acest program determină primul număr mai mare decât 20 și divizibil cu 7:
 
 ```
 for (let current = 20; ; current = current + 1) {
@@ -470,7 +470,7 @@ Dacă eliminați instrucțiunea `break` sau scrieți accidental o condiție care
 
 {{if interactive
 
-Dacă reușiți să creați o buclă infinită într-unul din exemplele din această carte, de regulă veți fi întrebat după câteva dacă doriți să încheiați execuția scriptului. Dacă nu, va trebui să inchideți tabul respectiv sau, în unele browsere, să inchideți complet browserul pentru a recupera situația de eroare.
+Dacă reușiți să creați o buclă infinită într-unul din exemplele din această carte, de regulă veți fi întrebat după câteva secunde dacă doriți să încheiați execuția scriptului. Dacă nu, va trebui să inchideți tabul respectiv sau, în unele browsere, să închideți complet browserul pentru a recupera din situația de eroare.
 
 if}}
 
@@ -506,7 +506,7 @@ for (let number = 0; number <= 12; number += 2) {
 
 {{index "++ operator", "-- operator"}}
 
-Pentru `counter += 1` și `counter -= 1` avem la dispoziție forme și mai prescurtate: `counter++` și `counter--`.
+Pentru `counter += 1` și `counter -= 1` avem la dispoziție forme și mai compacte: `counter++` și `counter--`.
 
 ## Selectarea pe baza unei valori folosind `switch`
 
@@ -564,7 +564,7 @@ Primul stil este greu de citit. Mai bine aș utiliza al doilea stil, însă aces
 
 {{index "Number function", constructor}}
 
-În câteva cazuri, cum ar fi funcția `Number`, prima literă a numelui este literă mare. Aceasta marchează faptul că această funcție este un constructor. O să clarificăm ce înseamnă un constructor în capitolul [?](object#constructor). Deocamdată, important este să nu vă lăsați deranjați de această aparentă lipsă de consistență.
+În câteva cazuri, cum ar fi funcția `Number`, prima literă a numelui este literă mare. Aceasta marchează faptul că această funcție este un constructor (este o convenție a programatorilor JavaScript). O să clarificăm ce înseamnă un constructor în capitolul [?](object#constructor). Deocamdată, important este să nu vă lăsați deranjați de această aparentă lipsă de consistență.
 
 ## Comentarii
 
@@ -605,7 +605,7 @@ const myNumber = 11213;
 
 Acum știți că un program este alcătuit din instrucțiuni, care pot conține la rândul lor alte instrucțiuni. Instrucțiunile tind să conțină expresii, care la rândul lor pot conține alte expresii.
 
-Scriind instrucțiunile una după alta obțineși un program care este executat de sus în jos. Puteți introduce perturbații în execuția programului prin utilizarea instrucțiunilor condiționale (`if`, `else` și `switch`) sau a celor de repetiție (`while`, `do` și `for`).
+Scriind instrucțiunile una după alta obțineți un program care este executat de sus în jos. Puteți introduce perturbații în execuția programului prin utilizarea instrucțiunilor condiționale (`if`, `else` și `switch`) sau a celor de repetiție (`while`, `do` și `for`).
 
 Bindingurile pot fi utilizate pentru a asocia nume unor date și sunt utile pentru a urmări starea programului. Mediul reprezintă setul de bindinguri care sunt definite. Sistemul JavaScript introduce întotdeauna un număr de bindinguri utile în mediul programului.
 
@@ -615,9 +615,9 @@ Funcțiile sunt valori speciale care încapsulează o bucată dintr-un program. 
 
 {{index exercises}}
 
-Dacă nu sunteți siguri cum să vă testați soluțiile, referiți-va la [Introducere](intro).
+Dacă nu sunteți siguri cum să vă testați soluțiile, referiți-vă la [Introducere](intro).
 
-Fiecare exercițiu începe cu o descriere a problemei. Citiți această descriere cu atenție și încercați să rezolvați exercițiul. Dacă vă încurcați, citiți indiciile de ajutor de la sfârșitul exercițiului. Cartea nu conține soluțiile complete, dar le puteți găsi la adresa  [_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code#2). Dacă doriți cu adevărat să învățați din exerciții, vă recomand să nu citiți soluțiile înainte de a rezolva exercițiul sau măcar după ce ați depus suficient efort pentru rezolvarea exercițiului.
+Fiecare exercițiu începe cu o descriere a problemei. Citiți această descriere cu atenție și încercați să rezolvați exercițiul. Dacă vă încurcați, citiți indiciile de ajutor de la sfârșitul exercițiului. Cartea nu conține soluțiile complete, dar le puteți găsi la adresa  [_https://eloquentjavascript.net/code_](https://eloquentjavascript.net/code#2). Dacă doriți cu adevărat să învățați din exerciții, vă recomand să nu citiți soluțiile înainte de a rezolva exercițiul sau măcar amânați până ce ați depus suficient efort pentru rezolvarea exercițiului.
 
 ### Construcția unui triunghi
 
@@ -658,7 +658,7 @@ if}}
 
 {{index "triangle (exercise)"}}
 
-Puteți începe prin a scrie un program care se afișeze numerele de la 1 la 7, pe care îl puteți obține prin modificarea [exemplului cu afișarea numerelor pare](program_structure#loops) anterior, folosit ca exemplu când am introdus bucla `for`.
+Puteți începe prin a scrie un program care să afișeze numerele de la 1 la 7, pe care îl puteți obține prin modificarea [exemplului cu afișarea numerelor pare](program_structure#loops) anterior, folosit ca exemplu când am introdus bucla `for`.
 
 Acum analizați echivalența dintre numere și numărul de caractere `#`. Puteți trece de la 1 la 2 adăugând 1 (`+=1`). Puteți trece de la `#` la `##` adăugând un caracter (`+="#"`). Prin urmare, puteți folosi aceeași structură ca și în programul care afișează numerele.
 
@@ -670,7 +670,7 @@ hint}}
 
 Scrieți un program care utilizează `console.log` pentru a afișa toate numerele de la 1 la 100, cu două excepții. Pentru numerele divizibile cu 3, va afișa `"Fizz"` în locul numărului iar pentru cele divizibile cu 5 (dar nu și cu 3), va afișa `"Buzz"`.
 
-După ce reușiti să rezolvați exercițiul. modificați codul astfel încât să se afișeze `"FizzBuzz"` pentru numerele care sunt divizibile și cu 3 și cu 5 (și va continua să afișeze `"Fizz"` sau `"Buzz"` pentru cele divizibile doar cu una dintre aceste valori).
+După ce reușiti să rezolvați exercițiul, modificați codul astfel încât să se afișeze `"FizzBuzz"` pentru numerele care sunt divizibile și cu 3 și cu 5 (și va continua să afișeze `"Fizz"` sau `"Buzz"` pentru cele divizibile doar cu una dintre aceste valori).
 
 (Aceasta este de fapt o întrebare din interviuri despre care se crede că filtrează un procent semnificativ de candidați. Dacă ați reușit să o rezolvați, valoarea voastră pe piața muncii tocmai a crescut.)
 
@@ -694,7 +694,7 @@ Cea de a două versiune are o soluție evidentă și una mai inteligentă. Solu�
 
 hint}}
 
-### Tablla de șah
+### Tabla de șah
 
 {{index "chessboard (exercise)", loop, [nesting, "of loops"], "newline character"}}
 
@@ -729,7 +729,7 @@ Puteți construi stringul începând cu un string gol `""` și să adaugați pe 
 
 {{index [nesting, "of loops"], [braces, "block"]}}
 
-Pentru a itera în două dimensiuni, va trebui să utilizați o buclă în interiorul altei bucle. Plasați acolade în jurul corpurilor buclelor pentru a idnetifica ușor începutul și sfârșitul fiecărei bucle. Indentați corespunzător corpurile celor două bucle. Ordinea celor două bucle trebuie să urmărească ordinea în care construim stringul (linie cu linie, de la stânga la dreapta și de sus în jos). Prin urmare, bucla exterioară gestionează liniile iar bucla interioară gestionează caracterele de pe fiecare linie.
+Pentru a itera în două dimensiuni, va trebui să utilizați o buclă în interiorul altei bucle. Plasați acolade în jurul corpurilor buclelor pentru a identifica ușor începutul și sfârșitul fiecărei bucle. Indentați corespunzător corpurile celor două bucle. Ordinea celor două bucle trebuie să urmărească ordinea în care construim stringul (linie cu linie, de la stânga la dreapta și de sus în jos). Prin urmare, bucla exterioară gestionează liniile iar bucla interioară gestionează caracterele de pe fiecare linie.
 
 {{index "counter variable", "remainder operator", "% operator"}}
 

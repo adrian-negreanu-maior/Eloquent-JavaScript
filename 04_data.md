@@ -100,7 +100,7 @@ null.length;
 {{indexsee "dot character", "period character"}}
 {{index "[] (subscript)", "period character", "square brackets", "computed property", [property, access]}}
 
-Cele două moduri în care ne putem referi la o proprietate în JavaScript sunt utilizarea unui punct sau a parantezelor drepte. Ambele expresii `value.x` și `value[x]` accesează o valoare a `value` - dar nu neapărat aceeași proprietate.  Diferența apare din modul în care este interpretat `x`. Atunci când folosim notația cu punct, cuvântul de după punct este numele ad-literam al proprietății.  Atunci  când folosim  paranteze pătrate, expresia dintre paranteze este _evaluată_ pentru a determina numele proprietății. Deci, `value.x` se referă la proprietatea cu numele "x" în timp ce `value[x]` mai întâi evaluează expresia x și apoi convertește rezultatul într-un string, folosit ca și nume al proprietății.
+Cele două moduri în care ne putem referi la o proprietate în JavaScript sunt utilizarea unui punct sau a parantezelor drepte. Ambele expresii `value.x` și `value[x]` accesează o proprietate a `value` - dar nu neapărat aceeași proprietate.  Diferența apare din modul în care este interpretat `x`. Atunci când folosim notația cu punct, cuvântul de după punct este numele ad-literam al proprietății. Atunci când folosim  paranteze pătrate, expresia dintre paranteze este _evaluată_ pentru a determina numele proprietății. Deci, `value.x` se referă la proprietatea cu numele "x" în timp ce `value[x]` mai întâi evaluează expresia x și apoi convertește rezultatul într-un string, folosit ca și nume al proprietății.
 
 Deci, dacă știți că numele proprietății care vă interesează este _color_, puteți scrie `value.color`. Dacă vreți să extrageți proprietatea al cărei nume este stocat în bindingul `i` veți scrie `value[i]`. Numele proprietăților sunt stringuri. Ele pot fi orice string însă notația cu punct funcționează doar pentru acele nume care sunt valide ca și nume pentru bindinguri. Prin urmare, dacă vreți să accesați o proprietate numită _2_ sau _John Doe_, trebuie să utilizați paranteze pătrate: `value[2]` sau `value["John Doe"]`.
 
@@ -128,7 +128,7 @@ console.log(doh.toUpperCase());
 
 {{index "case conversion", "toUpperCase method", "toLowerCase method"}}
 
-Orice string are o proprietate `toUpperCase`. Atunci când este apelată, aceasta va returna o copie a stringului in care toate literele sunt convertite la litere mari. Există și proprietatea `toLowerCase` care funcționează asemănător dar pentru litere mici.
+Orice string are o proprietate `toUpperCase`. Atunci când este apelată, aceasta va returna o copie a stringului în care toate literele sunt convertite la litere mari. Există și proprietatea `toLowerCase` care funcționează asemănător dar pentru litere mici.
 
 {{index "this binding"}}
 
@@ -164,7 +164,7 @@ Aceste denumiri sunt termeni tradiționali pentru operațiile asupra unei stive.
 
 {{index journal, "weresquirrel example", array, record}}
 
-Să revenim la veverița-vârcolac. Un set de intrări zilnice în jurnal poate fi reprezentat sub forma unui array. Dar intrările nu constau doar dintr-un număr sau un string - fiecare intrare trebuie să conțină o listă de activități și o valoare booleană care indică dacă Jacques s-a transformat sau nu într-o veveriță.Ideal, am dori să grupăm toate aceste informații într-o singură valoare și apoi să punem toate acele valori grupate într-un array de intrări în jurnal.
+Să revenim la veverița-vârcolac. Un set de intrări zilnice în jurnal poate fi reprezentat sub forma unui array. Dar intrările nu constau doar dintr-un număr sau un string - fiecare intrare trebuie să conțină o listă de activități și o valoare booleană care indică dacă Jacques s-a transformat sau nu într-o veveriță. Ideal, am dori să grupăm toate aceste informații într-o singură valoare și apoi să punem toate acele valori grupate într-un array de intrări în jurnal.
 
 {{index [syntax, object], [property, definition], [braces, object], "{} (object)"}}
 
@@ -197,7 +197,7 @@ let descriptions = {
 
 {{index [braces, object]}}
 
-Prin urmare, acoladele au două semnificații în JavaScript. La începutul unei instrucțiuni, ele marchează începutul și sfârșitul blocului de instrucțiuni. În orice alt context, ele descriu un obiect. Din fericire, rareori este util să începem o instrucțiune cu un obiect între acolade, astfel încât ambiguitatea dintre cele două utilizări nu este o problemă.
+Prin urmare, acoladele au două semnificații în JavaScript. În cadrul unei instrucțiuni compuse, ele marchează începutul și sfârșitul blocului de instrucțiuni. În orice alt context, ele descriu un obiect. Din fericire, rareori este util să începem o instrucțiune cu un obiect între acolade, astfel încât ambiguitatea dintre cele două utilizări nu este o problemă.
 
 {{index undefined}}
 
@@ -205,7 +205,7 @@ Prin urmare, acoladele au două semnificații în JavaScript. La începutul unei
 
 {{index [property, assignment], mutability, "= operator"}}
 
-Putem asocia o valoare unei proprietăți cu ajutorul operatorului `=`. Această operația va înlocui valoarea proprietăți dacă proprietatea deja există sau va crea o nouă proprietate asupra obiectului, adcă nu există deja o proprietate cu numele respectiv.
+Putem asocia o valoare unei proprietăți cu ajutorul operatorului `=`. Această operație va înlocui valoarea proprietății dacă proprietatea deja există sau va crea o nouă proprietate asupra obiectului, dacă nu există deja o proprietate cu numele respectiv.
 
 {{index "tentacle (analogy)", [property, "model of"], [binding, "model of"]}}
 
@@ -213,7 +213,7 @@ Ca să revenim pe scurt asupra modelului nostru cu tentaculele pentru bindinguri
 
 {{index "delete operator", [property, deletion]}}
 
-Operatorul `delete` taie unul dintre tentaculele acestei caracatițe. Acesta este un operator unar care, atunci când este aplicat asupra unei proprietăți a obiectului, va elimina acea proprietate din obiect. Aceasta nu este o operație frecventă, însă este posibilă.
+Operatorul `delete` taie unul dintre tentaculele acestei caracatițe. Acesta este un operator unar care, atunci când este aplicat asupra unei proprietăți a obiectului, va elimina acea proprietate din obiect. Aceasta nu este o operație frecvent utilizată, însă este posibilă.
 
 ```
 let anObject = {left: 1, right: 2};
@@ -275,17 +275,17 @@ let journal = [
 
 ## Mutabilitatea
 
-În curând vom trece la programarea propriu-zisa. Mai întâi vom discuta despre încă un aspect teoretic important de înțeles.
+În curând vom trece la programarea propriu-zisă. Mai întâi vom discuta despre încă un aspect teoretic important de înțeles.
 
 {{index mutability, "side effect", number, string, Boolean, [object, mutability]}}
 
-Am văzut că valorile obiectelor pot fi modificate. Tipurile de valori despre care am discutat în capitolele anterioare (numere, stringuri și valori booleene) sunt toate _imutabile_ - este imposibil să schimbăm valorile acelor tipuri. Le putem combina pentru a deriva noi valori dar, atunci când considerăm o anumită valoare de tip string, ea rămâne nemodificată. Textul din interiorul ei nu poate fi modificat. Dacă avem un string care conține `"cat"`, nu eeste posibil ca să scriem cod care să schimbe un singur caracter în codul nostru pentru a obține stringul `"rat"`.
+Am văzut că valorile obiectelor pot fi modificate. Tipurile de valori despre care am discutat în capitolele anterioare (numere, stringuri și valori booleene) sunt toate _imutabile_ - este imposibil să schimbăm valorile acelor tipuri. Le putem combina pentru a deriva noi valori dar, atunci când considerăm o anumită valoare de tip string, ea rămâne nemodificată. Textul din interiorul ei nu poate fi modificat. Dacă avem un string care conține `"cat"`, nu este posibil ca să scriem cod care să schimbe un singur caracter în codul nostru pentru a obține stringul `"rat"`.
 
-Obiectele au un comportament diferit. _Puteți_ să le mmodificați proprietățile astfel încât o valoare de tip obiect să aibă conținuturi diferite la momente diferite.
+Obiectele au un comportament diferit. _Puteți_ să le modificați proprietățile astfel încât o valoare de tip obiect să aibă conținuturi diferite la momente diferite.
 
 {{index [object, identity], identity, [memory, organization], mutability}}
 
-Când avem două numere, 120 și 120, le putem considera perfect identice, fie că se referă sau nu la aceeiași biți. În cazul obiectelor, există o diferență între a avea două referințe către același obiect sau două obiecte diferite dar care au  aceleașși proprietăți. Sa considerăm codul următor:
+Când avem două numere, 120 și 120, le putem considera perfect identice, fie că se referă sau nu la aceeiași biți. În cazul obiectelor, există o diferență între a avea două referințe către același obiect sau două obiecte diferite dar care au  aceleași proprietăți. Să considerăm codul următor:
 
 ```
 let object1 = {value: 10};
@@ -310,7 +310,7 @@ Bindingurile `object1` și `object2` se referă la _același_ obiect și, din ac
 
 {{index "const keyword", "let keyword", [binding, "as state"]}}
 
-Bindingurile pot fi modificabile sau constante, dar acesta este un alt aspect, separat de modul în care valorile lor se comportă. Deși valorile de tip număr nu se schimbă, puteți declara un binding cu `let` care va urmări progresul unui număr care se schimbă prin modificarea valorii la care se referă bindingul. Similar, chiar dacă un binding `const` către un obiect nu poate fi modificat și va continua să se refere la același obiect, _conținutul_ acelui obiect poate fi m odificat. 
+Bindingurile pot fi modificabile sau constante, dar acesta este un alt aspect, separat de modul în care valorile lor se comportă. Deși valorile de tip număr nu se schimbă, puteți declara un binding cu `let` care va urmări progresul unui număr care se schimbă prin modificarea valorii la care se referă bindingul. Similar, chiar dacă un binding `const` către un obiect nu poate fi modificat și va continua să se refere la același obiect, _conținutul_ acelui obiect poate fi modificat. 
 
 ```{test: no}
 const score = {visitors: 0, home: 0};
@@ -322,13 +322,13 @@ score = {visitors: 1, home: 1};
 
 {{index "== operator", [comparison, "of objects"], "deep comparison"}}
 
-Când comparați obiecte cu ajutorul operatorului JavaScript `==`, acesta va compara prin identitate: va produce `true` doar dacă cele două obiecte au exact aceeași valoare. Compararea unor obiecte diferite va returna `false`, chiar dacă ele au proprietăți identice. Nu există operație de comparare profundă ("deep") predefinită în JavaScript, care să compare două obiecte prin conținutul lor, dar o puteți defini (ceea ce de fapt este unul dintre [exercițiile](data#exercise_deep_compare) de la sfârșitul acestui capitol).
+Când comparați obiecte cu ajutorul operatorului JavaScript `==`, acesta va compara prin identitate: va produce `true` doar dacă cele două obiecte au exact aceeași valoare. Compararea unor obiecte diferite va returna `false`, chiar dacă ele au proprietăți identice. Nu există operație de comparare profundă ("deep comparison") predefinită în JavaScript, care să compare două obiecte prin conținutul lor, dar o puteți defini (ceea ce de fapt este unul dintre [exercițiile](data#exercise_deep_compare) de la sfârșitul acestui capitol).
 
 ## Jurnalul licantropului
 
 {{index "weresquirrel example", lycanthropy, "addEntry function"}}
 
-Jacques își pornește interpretorul de JavaScript și îșî setează mediul de care are nevoie pentru a își menține jurnalul.
+Jacques își pornește interpretorul de JavaScript și își setează mediul de care are nevoie pentru a își menține jurnalul.
 
 ```{includeCode: true}
 let journal = [];
@@ -357,7 +357,7 @@ Imediat ce va avea suficiente date va face apel la statistică pentru a afla car
 
 {{index correlation}}
 
-_Factorul de corelare_ este o măsura a dependenței între variable statistice. O variabilă statistică nu este același lucru ca și o variabilă în programare. În statistică, de regulă, avem un set de _măsurători_ și fiecare variabilă este măsurată pentru fiecare măsurătoare. Corelarea între variabile este de regulă exprimată ca o valoare între -1 și 1. Corelare 0 înseamnă că cele două variabile nu sunt relaționate. O corelare 1 arată că cele două variabile sunt perfect relaționate - cunoscând valoarea uneia dintre ele putem afla valoarea celeilalte. -1-1 înseamnă de asemenea că cele două variabile sunt  perffect relaaționate, dar sunt opuse - de exemplu, când una este adevărată, cealaltă este falsă.
+_Factorul de corelare_ este o măsura a dependenței între variable statistice. O variabilă statistică nu este același lucru ca și o variabilă în programare. În statistică, de regulă, avem un set de _măsurători_ și fiecare variabilă este măsurată pentru fiecare măsurătoare. Corelarea între variabile este de regulă exprimată ca o valoare între -1 și 1. Corelare 0 înseamnă că cele două variabile nu sunt relaționate. O corelare 1 arată că cele două variabile sunt perfect relaționate - cunoscând valoarea uneia dintre ele putem afla valoarea celeilalte. -1 înseamnă de asemenea că cele două variabile sunt perfect relaționate, dar sunt opuse - de exemplu, când una este adevărată, cealaltă este falsă.
 
 {{index "phi coefficient"}}
 
@@ -365,7 +365,7 @@ Pentru a măsura factorul de corelare între două variabile booleene, putem uti
 
 De exemplu, să considerăm evenimentul "mănânc o pizza" și să construim un tabel de frecvență ca și în figura de mai jos, unde fiecare număr arată de câte ori a apărut combinația respectivă în timpul măsurătorilor:
 
-{{figure {url: "img/pizza-squirrel.svg", alt: "Eating pizza versus turning into a squirrel", width: "7cm"}}}
+{{figure {url: "img/pizza-squirrel.svg", alt: "Mănânc o pizza vs. mă transform în veveriță", width: "7cm"}}}
 
 Dacă denumim tabelul _n_, putem calcula _ϕ_ cu formula:
 
@@ -398,7 +398,7 @@ Valoarea [_n_~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex} reprezintă suma 
 
 {{index correlation, "phi coefficient"}}
 
-Pentru exemplul nostru, nunmărătorul expresiei se evaluează 1×76−4×9 = 40, iar numitorul va fi rădăcina pătrată a numărului 5×85×10×80, sau [√340000]{if html}[[$\sqrt{340000}$]{latex}]{if tex}. În final obținem valoarea _ϕ_ ≈ 0.069, care este o valoare mică. Consumul de pizza nu pare să aibă o influență asupra transformărilor.
+Pentru exemplul nostru, numărătorul expresiei se evaluează 1×76−4×9 = 40, iar numitorul va fi rădăcina pătrată a numărului 5×85×10×80, sau [√340000]{if html}[[$\sqrt{340000}$]{latex}]{if tex}. În final obținem valoarea _ϕ_ ≈ 0.069, care este o valoare mică. Consumul de pizza nu pare să aibă o influență asupra transformărilor.
 
 ## Calcularea corelației
 
@@ -428,7 +428,7 @@ console.log(phi([76, 9, 4, 1]));
 
 {{index "square root", "Math.sqrt function"}}
 
-Aceasta este o translatare directă a formulei pentru _ϕ_ în JavaScript. `Math.sqrt` este funcția pentru calculul rădăcinii pătrate, parte a obiectului `Math` într-un mediu JavaScript standard. Pentru a obține valori cum ar fi [n~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex} va trebui să adunăm câte două elemente ale tabloului deoarece suam rândurilor sau coloanelor nu este memorată în interiorul structurii noastre.
+Aceasta este o translatare directă a formulei pentru _ϕ_ în JavaScript. `Math.sqrt` este funcția pentru calculul rădăcinii pătrate, parte a obiectului `Math` într-un mediu JavaScript standard. Pentru a obține valori cum ar fi [n~1•~]{if html}[[$n_{1\bullet}$]{latex}]{if tex} va trebui să adunăm câte două elemente ale tabloului deoarece suma rândurilor sau coloanelor nu este memorată în interiorul structurii noastre.
 
 {{index "JOURNAL data set"}}
 
@@ -537,7 +537,7 @@ for (let event of journalEvents(JOURNAL)) {
 // and so on...
 ```
 
-Majoritatea factorilor de corelare par să fie aproape de 0. Transformarea pare însă să aibă o oarecare legătură cu weekendurile. haideți să filtrăm rezultatele pentru a afișa doar factorii mai mari decaât 0.1 sau mai mici decât -0.1.
+Majoritatea factorilor de corelare par să fie aproape de 0. Transformarea pare însă să aibă o oarecare legătură cu weekendurile. Haideți să filtrăm rezultatele pentru a afișa doar factorii mai mari decât 0.1 sau mai mici decât -0.1.
 
 ```{test: no, startCode: true}
 for (let event of journalEvents(JOURNAL)) {
@@ -580,7 +580,7 @@ Haideți să ne familiarizăm cu alte câteva concepte relativ la obiecte. Să �
 
 {{index "push method", "pop method", "shift method", "unshift method"}}
 
-Ne-am întâlnit cu `push` and `pop`, care adaugă sau elimină elemente la sfârșitul unui array, [anterior](data#array_methods) în acest capitol. Metodele similare pentru adăugarea și elimiarea elementelor la inceputul unui array se numesc `unshift` și `shift`.
+Ne-am întâlnit cu `push` and `pop`, care adaugă sau elimină elemente la sfârșitul unui array, [anterior](data#array_methods) în acest capitol. Metodele similare pentru adăugarea și eliminarea elementelor la începutul unui array se numesc `unshift` și `shift`.
 
 ```
 let todoList = [];
@@ -657,7 +657,7 @@ console.log(kim.age);
 // → undefined
 ```
 
-Valorile dede tip string, number și boolean nu sunt obiecte și, cu toate că limbajul nu afișează erori dacă încercați să setați noi proprietăți pentru ele, acele proprietăți nu vor fi memorate. Așa cum am precizat anterior, aceste valori sunt imutabile și nu pot fi modificate.
+Valorile de tip string, number și boolean nu sunt obiecte și, cu toate că limbajul nu afișează erori dacă încercați să setați noi proprietăți pentru ele, acele proprietăți nu vor fi memorate. Așa cum am precizat anterior, aceste valori sunt imutabile și nu pot fi modificate.
 
 {{index [string, methods], "slice method", "indexOf method", [string, searching]}}
 
@@ -779,13 +779,13 @@ console.log(["will", ...words, "understand"]);
 
 {{index "Math object", "Math.min function", "Math.max function", "Math.sqrt function", minimum, maximum, "square root"}}
 
-Așa cum am văzut, `Math` este o cutie cu funcții utilitare pentru numere, cum ar fi `Math.max` (maxim), `Math.min` (minim), și `Math.sqrt` (rădăcina pătrată).
+Așa cum am văzut, `Math` este o cutie cu funcții utilitare pentru numere, cum ar fi `Math.max` (maxim), `Math.min` (minim), și `Math.sqrt` (rădăcina pătrată) și multe altele.
 
 {{index namespace, [object, property]}}
 
 {{id namespace_pollution}}
 
-Obiectul `Math` este un container utilizat pentru a grupa funcționalitâți similare. Există un singur obiect `Math` și acesta nu este util aproape niciodată ca și valoare. Mai degrabă el reprezintă un _spațiu de nume_ astfel încât funcțiile și valorile nu sunt bindinguri globale.
+Obiectul `Math` este un container utilizat pentru a grupa funcționalități similare. Există un singur obiect `Math` și acesta nu este util aproape niciodată ca și valoare. Mai degrabă el reprezintă un _spațiu de nume_ astfel încât funcțiile și valorile nu sunt bindinguri globale.
 
 {{index [binding, naming]}}
 
@@ -809,7 +809,7 @@ console.log(randomPointOnCircle(2));
 // → {x: 0.3667, y: 1.966}
 ```
 
-Dacă funncțiile sinus și cosinus nu vă sunt familiare, nu vă îngrijorați. Atunci când le vom utiliza, în [capitolul ?](dom#sin_cos), le vom explica.
+Dacă funcțiile _sinus_ și _cosinus_ nu vă sunt familiare, nu vă îngrijorați. Atunci când le vom utiliza, în [capitolul ?](dom#sin_cos), le vom explica.
 
 {{index "Math.random function", "random number"}}
 
@@ -826,7 +826,7 @@ console.log(Math.random());
 
 {{index "pseudorandom number", "random number"}}
 
-Deși computerele sunt mașini deterministe (reacționează întotdeauna la fel pentru un set dat de valori de intrare), este posibil să le utilizăm pentru a produce valori ce par aleatoare. Pentru aceasta, mașina memorează o valoare ascunsă și de fiecare dată când avem nevoie de un nou nunmăr face niște calcule complicate asupra acestei valori ascunse pentru a crea o nouă valoare. Apoi memorează noua valoare și deduce un nou număr pe care îl returnează. În acest mod, poate genera numere greu de prezis într=un mod care _pare_ aleator.
+Deși computerele sunt mașini deterministe (reacționează întotdeauna la fel pentru un set dat de valori de intrare), este posibil să le utilizăm pentru a produce valori ce par aleatoare. Pentru aceasta, mașina memorează o valoare ascunsă și de fiecare dată când avem nevoie de un nou număr face niște calcule complicate asupra acestei valori ascunse pentru a crea o nouă valoare. Apoi memorează noua valoare și deduce un nou număr pe care îl returnează. În acest mod, poate genera numere greu de prezis într-un mod care _pare_ aleator.
 
 {{index rounding, "Math.floor function"}}
 
@@ -895,12 +895,12 @@ De menționat că, dacă încercați să destructurați `null` sau `undefined`, 
 
 Deoarece proprietățile doar referă valorile în loc să le conțină, obiectele și array-urile sunt stocate în memoria computerului ca și secvențe de biți ce memorează _adresele_ - locurile din memorie - unde este localizat conținutul lor. Astfel, un array ce conține un alt array constă din cel puțin o zonă de memorie pentru array-ul din interior și alta pentru array-ul exterior, ce conține (printre alte lucruri) un număr binar reprezentând poziția array-ului interior.
 
-Dacă vreți să salvați date într-un fișier sau să le trimiteți unui alt computer din rețtea, trebuie să convertiți cumva aceste mixuri de adrese de memorie într-o descriere care poate fi salvată sau transmisă. Ați _putea_ transmite toată memoria computerului împreuna cu adresa valorii care vă interesează, dar aceasta nu pare să fie o abordare prea bună.
+Dacă vreți să salvați date într-un fișier sau să le trimiteți unui alt computer din rețea, trebuie să convertiți cumva aceste mixuri de adrese de memorie într-o descriere care poate fi salvată sau transmisă. Ați _putea_ transmite toată memoria computerului împreuna cu adresa valorii care vă interesează, dar aceasta nu pare să fie o abordare prea bună.
 
 {{indexsee "JavaScript Object Notation", JSON}}
 {{index serialization, "World Wide Web"}}
 
-Ce putem face este să _serializăm_ datele. Adică să le convertim într-o descriere. Un format popular de serializare este numit JSON (pronunțat ca și "Jason"), prescurtarea pentru JavaScript Object Notation. Este un format foarte popular pentru stocarea datelor și ca și format de comunicare pe web, chiar și în alte limbaje.
+Ce putem face este să _serializăm_ datele. Adică să le convertim într-o descriere. Un format popular de serializare este numit JSON (pronunțat ca și "Jason"), prescurtarea pentru JavaScript Object Notation. Este un format foarte popular pentru stocarea datelor și ca și format de comunicare pe web, chiar și în alte limbaje de programare.
 
 {{index [array, notation], [object, creation], [quoting, "in JSON"], comment}}
 
@@ -932,9 +932,9 @@ console.log(JSON.parse(string).events);
 
 Obiectele și array-urile (care sunt un anumit tip de obiect) oferă modalități pentru a grupa mai multe valori într-o singură valoare. Conceptual, acest lucru ne permite să punem o grămadă de lucruri asemănătoare într-o pungă și să o folosim ca atare, în loc să ne înconjurăm brațele în jurul tuturor lucrurilor individuale și să încercăm să le ținem separat.
 
-Cele mai multe valori din JavaScript au proprietăți, excepțiile fiind `null` și `undefined`.Proprietățile sunt accesate folosind `value.prop` sau `value["prop"]`. Obiectele tind să utilizeze nume pentru proprietățile lor și să aibă un set relativ fix de proprietăți. Array-urile, pe de altă parte, conțin în mod obișnuit un număr variabil de valori conceptual identice și utilizează numere (începând cu 0) ca și nume pentru proprietățile lor.
+Cele mai multe valori din JavaScript au proprietăți, excepțiile fiind `null` și `undefined`. Proprietățile sunt accesate folosind `value.prop` sau `value["prop"]`. Obiectele tind să utilizeze nume pentru proprietățile lor și să aibă un set relativ fix de proprietăți. Array-urile, pe de altă parte, conțin în mod obișnuit un număr variabil de valori conceptual identice și utilizează numere (începând cu 0) ca și nume pentru proprietățile lor.
 
-Sunt disponibile și câteva proprietăți denumite pentru array-uti, cum ar fi `length` precum și câteva metode. Metodele sunt funcții care sunnt memorate în proprietăți și de regulă acționează asupra valorii a căror proprietate sunt.
+Sunt disponibile și câteva proprietăți denumite pentru array-uri, cum ar fi `length`, precum și câteva metode. Metodele sunt funcții care sunt memorate în proprietăți și de regulă acționează asupra valorii a căror proprietate sunt.
 
 Puteți itera peste un array folosind o buclă `for` specială - `for (let element of array)`.
 
@@ -954,11 +954,11 @@ console.log(sum(range(1, 10)));
 
 Scrieți o funcție `range` care primește două argumente, `start` și `end`, și returnează un array ce conține toate numerele de la `start` la `end` (inclusiv).
 
-Apoi scrieți o funcție `sum` care va returna suma valorilor in array. Apoi rulați exemplul de mai sus și verificați dacă se afișează valoarea 55.
+Apoi scrieți o funcție `sum` care va returna suma valorilor in array. Rulați exemplul de mai sus și verificați dacă se afișează valoarea 55.
 
 {{index "optional argument"}}
 
-Ca și sarcină suplimentară, modificați funcția `range` ca să primească un al treilea argument, opțional, care să precizeze pasul de incrementare. Dacă al treilea argument lipsește, pasul de incrementare să aibă valoarea 1 și comportamentul funcției să fie cel descris inițial. Apelul funcției în forma `range(1, 10, 2)` trebuie să returneze `[1, 3, 5, 7, 9]`. Asigurați-vă că rezultatul este corect și pentru valori negative ale pasului, astfel îcât `range(5, 2, -1)` va produce `[5, 4, 3, 2]`.
+Ca și sarcină suplimentară, modificați funcția `range` ca să primească un al treilea argument, opțional, care să precizeze pasul de incrementare. Dacă al treilea argument lipsește, pasul de incrementare să aibă valoarea 1 și comportamentul funcției să fie cel descris inițial. Apelul funcției în forma `range(1, 10, 2)` trebuie să returneze `[1, 3, 5, 7, 9]`. Asigurați-vă că rezultatul este corect și pentru valori negative ale pasului, astfel încât `range(5, 2, -1)` va produce `[5, 4, 3, 2]`.
 
 {{if interactive
 
@@ -979,7 +979,7 @@ if}}
 
 {{index "summing (exercise)", [array, creation], "square brackets"}}
 
-Coonstruirea unui array se realizează cel mai simplu prin inițializarea unui binding cu valoarea  `[]` (un array gol) și apelarea repetată a metodei `push` pentru a adăuga valori. Nu uitați să returnați array-ul la sfârșitul funcției.
+Construirea unui array se realizează cel mai simplu prin inițializarea unui binding cu valoarea  `[]` (un array gol) și apelarea repetată a metodei `push` pentru a adăuga valori. Nu uitați să returnați array-ul la sfârșitul funcției.
 
 {{index [array, indexing], comparison}}
 
@@ -993,7 +993,7 @@ Parametrul pentru pasul de incrementare/decrementare poate fi un parametru opți
 
 Pentru ca funcția `range` să poată lucra și cu valori pozitive și cu valori negative ale pasului, probabil cel mai ușor ar fi să scrieți două bucle diferite - una pentru incrementare și una pentru decrementare, deoarece în funcție de semnul pasului, va trebui să folosiți `>=` sau `<=` pentru a verifica terminarea buclei.
 
-De asemenea, atenție la valoarea implicită a pasului. Aceasta ar trebui să fie -1 atunci când valoarea de final este mai mică decât valoarea inițială. Astfel, `range(5, 2)` va returna un array, în loc să se blocheze într-o buclă infinită. Pentru setarea valorii default a unui parametru ne putem referi la parametrii anteriori.
+De asemenea, atenție la valoarea implicită a pasului. Aceasta ar trebui să fie -1 atunci când valoarea de final este mai mică decât valoarea inițială. Astfel, `range(5, 2)` va returna un array, în loc să se blocheze într-o buclă infinită. Pentru setarea valorii implicite a unui parametru ne putem referi la parametrii anteriori.
 
 hint}}
 
@@ -1002,7 +1002,7 @@ hint}}
 {{index "reversing (exercise)", "reverse method", [array, methods]}}
 
 Array-urile au o metodă `reverse` care modifică un array prin inversarea ordinii elementelor sale. Pentru acest exercițiu, scrieți două funcții: `reverseArray` și `reverseArrayInPlace`. 
-Prima va primi ca argument un array și va returna un _nou_ array conținând aceleași elemente, dar în ordine inversă. Cea de a doua funcție va face ceea ce face `reverse`: va _modifica_ array-ul primit ca argument prin inversarea ordinii elementelor sale. Nu aveți voie să folosiți funcția `reverse`.
+Prima va primi ca argument un array și va returna un _nou_ array conținând aceleași elemente, dar în ordine inversă. Cea de a doua funcție va face ceea ce face `reverse`: va _modifica_ array-ul primit ca argument prin inversarea ordinii elementelor sale. Nu aveți voie să folosiți funcția `reverse` (cu scopul de a fi creativi).
 
 {{index efficiency, "pure function", "side effect"}}
 
@@ -1033,7 +1033,7 @@ Putem implementa `reverseArray` în două moduri. Primul este de a parcurge arra
 
 Inversarea unui array pe loc este mai dificilă. Trebuie să aveți grijă să nu suprascrieți elemente de care s-ar putea să aveți nevoie mai târziu. Utilizarea unor apeluri către `reverseArray` sau altă metodă de a copia întregul array (cum ar fi `array.slice(0)`) funcționează dar în acest mod trișați (ar trebui să nu folosim structuri de date suplimentare).
 
-Ați putea aborda însă altfel problema: _interschimbăm_ primul și ultimul element, al doilea și penultimul, și așa mai departe. Veți itera pe jumătate din lungimea array-ului și veți interschimba elementul de la index `i` cu cel de pe poziția `array.length-i-1`. Interschimbarea o p uteți realiza cu un binding local care va reține primul element din pereche, apoi al doilea element înlocuiește primul și apoi din bindingul temporar setați al doilea element la valoarea inițială a primului element.
+Ați putea aborda însă altfel problema: _interschimbăm_ primul și ultimul element, al doilea și penultimul, și așa mai departe. Veți itera pe jumătate din lungimea array-ului și veți interschimba elementul de la index `i` cu cel de pe poziția `array.length-i-1`. Interschimbarea o puteți realiza cu un binding local care va reține primul element din pereche, apoi al doilea element înlocuiește primul și apoi din bindingul temporar setați al doilea element la valoarea inițială a primului element.
 
 hint}}
 
@@ -1060,13 +1060,13 @@ let list = {
 
 Obiectul rezultat va fi un lanț asemănător celui din figura de mai jos:
 
-{{figure {url: "img/linked-list.svg", alt: "A linked list",width: "8cm"}}}
+{{figure {url: "img/linked-list.svg", alt: "O listă liniară simplu înlănțuită",width: "8cm"}}}
 
 {{index "structure sharing", [memory, structure sharing]}}
 
 Interesant despre liste este faptul că pot partaja părți din structura lor. De exemplu, dacă aș crea două valori noi `{value: 0, rest: list}` și `{value: -1, rest: list}` (cu `list` referindu-se la bindingul definit anterior, ele sunt liste independente dar partajează structura care construiește ultimele trei elemente. Lista originală este de asemenea o listă validă de trei elemente.
 
-Scrieți o funcție `arrayToList` care construiește o structură de tip listă asemănătoare cu cea prezentată, dacă primște argumentul `[1, 2, 3]`. De asemenea, scrieți funcția `listToArray` care realizează operația inversă. Apoi adăugați o funcție helper `prepend` care primește un element și o listă și adaugă elementul îm fața listei și o alta `nth` care primește o listă și un număr și returnează elementul de pe poziția dată a listei (primul element fiind pe poziția 0) sau `undefined` dacă nu există un asemenea element.
+Scrieți o funcție `arrayToList` care construiește o structură de tip listă asemănătoare cu cea prezentată, dacă primește argumentul `[1, 2, 3]`. De asemenea, scrieți funcția `listToArray` care realizează operația inversă. Apoi adăugați o funcție helper `prepend` care primește un element și o listă și adaugă elementul îm fața listei și o alta `nth` care primește o listă și un număr și returnează elementul de pe poziția dată a listei (primul element fiind pe poziția 0) sau `undefined` dacă nu există un asemenea element.
 
 {{index recursion}}
 
@@ -1093,7 +1093,7 @@ if}}
 
 {{index "list (exercise)", "linked list"}}
 
-Construcția unei liste este mai ușoară de la sfârșit spre început. Astfel, `arrayToList` ar putea itera în ordine inversă pe array (vedeți exedrcițiul anterior) și, pentru fiecare element, să adauge un obiect la listă. Puteți utiliza un binding local pentru a memora o parte din listă care a fost construită deja și veți utiliza o atribuire în genul `list = {value: X, rest: list}` pentru a adăuga un element.
+Construcția unei liste este mai ușoară de la sfârșit spre început. Astfel, `arrayToList` ar putea itera în ordine inversă pe array (vedeți exercițiul anterior) și, pentru fiecare element, să adauge un obiect la listă. Puteți utiliza un binding local pentru a memora o parte din listă care a fost construită deja și veți utiliza o atribuire în genul `list = {value: X, rest: list}` pentru a adăuga un element.
 
 {{index "for loop"}}
 
@@ -1103,7 +1103,7 @@ Pentru a parcurge o listă (în `listToArray` și `nth`), puteți specifica o bu
 for (let node = list; node; node = node.rest) {}
 ```
 
-Înțegeți cum funcționează? Fiecare iterație a buclei folosește `node` pentru a se referi la sublista curentă iar în corpul buclei putem citi valoarea `value` pentru a obține elementul curent. La sfârșitul unui pas de iterare, `node` se va referi la sublista următoare. Când se ajunge la valoarea null, înseamnă că am parcurs toată lista și bucla se încheie.
+Înțegeți cum funcționează? Fiecare iterație a buclei folosește `node` pentru a se referi la sublista curentă iar în corpul buclei putem citi valoarea `value` pentru a obține elementul curent. La sfârșitul unui pas de iterare, `node` se va referi la sublista următoare. Când se ajunge la valoarea `null`, înseamnă că am parcurs toată lista și bucla se încheie.
 
 {{index recursion}}
 
@@ -1119,7 +1119,7 @@ hint}}
 
 Operatorul `==` compară obiectele prin identitate. Dar uneori avem nevoie să comparăm valorile proprietăților lor.
 
-Scrieți o funcție `deepEqual` care primește două valori și returnează true numai dacă ele au aceleași valori sau sunt obiecte cu aceleași proprietăți iar valorile proprietăților sunt egale atunci când se compară cu un apel recursiv al funcției `deepEqual`.
+Scrieți o funcție `deepEqual` care primește două valori și returnează `true` numai dacă ele au aceleași valori sau sunt obiecte cu aceleași proprietăți iar valorile proprietăților sunt egale atunci când se compară cu un apel recursiv al funcției `deepEqual`.
 
 {{index null, "=== operator", "typeof operator"}}
 
@@ -1149,8 +1149,7 @@ if}}
 
 {{index "deep comparison (exercise)", [comparison, deep], "typeof operator", "=== operator"}}
 
-Pentru a testa dacă aveți de aface cu un obiect real puteți testa o condiție `typeof x == "object" && x != null`. Atenție, comparați proprietățile doar dacă _ambele_ argumente sunt obiecte. În toate celelalte cazuri puteți returna imediat rezultatul aplicării operatorului 
-`===`.
+Pentru a testa dacă aveți de a face cu un obiect real puteți testa o condiție `typeof x == "object" && x != null`. Atenție, comparați proprietățile doar dacă _ambele_ argumente sunt obiecte. În toate celelalte cazuri puteți returna imediat rezultatul aplicării operatorului `===`.
 
 {{index "Object.keys function"}}
 
