@@ -1,9 +1,8 @@
-# Regular Expressions
+# Expresii regulate
 
 {{quote {author: "Jamie Zawinski", chapter: true}
 
-Some people, when confronted with a problem, think 'I know, I'll use
-regular expressions.' Now they have two problems.
+Unele persoane, când se confruntă cu o problemă, gândesc: 'Știu, o să folosesc expresii regulate'. Acum au două probleme.
 
 quote}}
 
@@ -13,9 +12,7 @@ quote}}
 
 {{quote {author: "Master Yuan-Ma", title: "The Book of Programming", chapter: true}
 
-Yuan-Ma said, 'When you cut against the grain of the wood, much
-strength is needed. When you program against the grain of the problem,
-much code is needed.'
+Yuan-Ma a spus: 'Când tăiați împotriva fibrei lemnului, este necesară multă putere. Când programați împotriva fibrei problemei, este necesar mult cod.'
 
 quote}}
 
@@ -25,73 +22,46 @@ if}}
 
 {{index evolution, adoption, integration}}
 
-Programming ((tool))s and techniques survive and spread in a chaotic,
-evolutionary way. It's not always the pretty or brilliant ones that
-win but rather the ones that function well enough within the right
-niche or that happen to be integrated with another successful piece of
-technology.
+Instrumentele și tehnicile de programare supraviețuiesc și se răspândesc intr-un mod haotic, evolutionar. Nu întotdeauna câștigă cele mai drăguțe sau mai inteligente, ci cele care funcționează suficient de bine într-o nișă sau care sunt integrate cu o altă piesă de succes din tehnologie.
 
 {{index "domain-specific language"}}
 
-In this chapter, I will discuss one such tool, _((regular
-expression))s_. Regular expressions are a way to describe ((pattern))s
-in string data. They form a small, separate language that is part of
-JavaScript and many other languages and systems.
+În acest capitol vom discuta despre un asemenea instrument, _expresiile regulate_. Expresiile regulate sunt un mod de a descrie șabloane în datele de tip string. Ele formează un mic limbaj separat care face parte din JavaScript și alte limbaje și sisteme.
 
 {{index [interface, design]}}
 
-Regular expressions are both terribly awkward and extremely useful.
-Their syntax is cryptic, and the programming interface JavaScript
-provides for them is clumsy. But they are a powerful ((tool)) for
-inspecting and processing strings. Properly understanding regular
-expressions will make you a more effective programmer.
+Expresiile regulate sunt atât teribil de ciudate cât și incredibil de utile. Sintaxa lor este criptică iar intefața de programare pusă la dispoziție de către JavaScript este stângace. Dar ele reprezintă un instrument puternic pentru inspectarea și procesarea stringurilor. Înțelegerea corespunzătoare a expresiilor regulate vă va transforma într-un programator mai eficient.
 
-## Creating a regular expression
+## Crearea unei expresii regulate
 
 {{index ["regular expression", creation], "RegExp class", "literal expression", "slash character"}}
 
-A regular expression is a type of object. It can be either constructed
-with the `RegExp` constructor or written as a literal value by
-enclosing a pattern in forward slash (`/`) characters.
+O expresie regulată este un tip de obiect. Ea poate fi construită fie cu ajutorul constructorului `RegExp` fie ca o valoare literală prin includerea șablonului între caractere `/`.
 
 ```
 let re1 = new RegExp("abc");
 let re2 = /abc/;
 ```
 
-Both of those regular expression objects represent the same
-((pattern)): an _a_ character followed by a _b_ followed by a _c_.
+Ambele expresii de mai sus reprezintă același șablon: un _a_ urmat de _b_ și apoi de _c_.
 
 {{index ["backslash character", "in regular expressions"], "RegExp class"}}
 
-When using the `RegExp` constructor, the pattern is written as a
-normal string, so the usual rules apply for backslashes.
+Când se utilizează un constructor `RegExp`, șablonul este scris ca un string, astfel încât se aplică regulile uzuale pentru `\`.
 
 {{index ["regular expression", escaping], [escaping, "in regexps"], "slash character"}}
 
-The second notation, where the pattern appears between slash
-characters, treats backslashes somewhat differently. First, since a
-forward slash ends the pattern, we need to put a backslash before any
-forward slash that we want to be _part_ of the pattern. In addition,
-backslashes that aren't part of special character codes (like `\n`)
-will be _preserved_, rather than ignored as they are in strings, and
-change the meaning of the pattern. Some characters, such as question
-marks and plus signs, have special meanings in regular expressions and
-must be preceded by a backslash if they are meant to represent the
-character itself.
+Cea de a doua notație, în care șablonul se definește între caractere `/` tratează caracterele `\` oarecum diferit. Mai întâi, deoarece `/` marchează finalul șablonului, trebuie să utilizăm `\` înainte de un `/` care vrem să facă parte din șablon. În plus, caracterele `\` care nu sunt parte a unui cod cu semnificație specială vor fi _păstrate_ și vor schimba semnificația șablonului (nu trebuie să le dublăm). Unele caractere, cum ar fi `?` și `+` au semnificații speciale în expresiile regulate și trebuie să le prefixăm cu `\` dacă vrem să reprezinte caractere normale.
 
 ```
 let eighteenPlus = /eighteen\+/;
 ```
 
-## Testing for matches
+## Testarea pentru potrivire
 
 {{index matching, "test method", ["regular expression", methods]}}
 
-Regular expression objects have a number of methods. The simplest one
-is `test`. If you pass it a string, it will return a ((Boolean))
-telling you whether the string contains a match of the pattern in the
-expression.
+Obiectele de tip expresii regulate au câteva metode. Cea mai simplă este `test`. Dacă i se transmite ca argument un string, va returna o valoare booleană care ne va preciza dacă stringul conține o potrivire pentru șablonul definit de expresie.
 
 ```
 console.log(/abc/.test("abcde"));
@@ -102,24 +72,17 @@ console.log(/abc/.test("abxde"));
 
 {{index pattern}}
 
-A ((regular expression)) consisting of only nonspecial characters
-simply represents that sequence of characters. If _abc_ occurs
-anywhere in the string we are testing against (not just at the start),
-`test` will return `true`.
+O expresie regulată ce conține doar caractere fără semnificație specială reprezintă acea secvență de caractere. Dacă _abc_ apare oriunde în stringul pe care îl testăm, metoda `test` va returna `true`.
 
-## Sets of characters
+## Seturi de caractere
 
 {{index "regular expression", "indexOf method"}}
 
-Finding out whether a string contains _abc_ could just as well be done
-with a call to `indexOf`. Regular expressions allow us to express more
-complicated ((pattern))s.
+Verificarea dacă un string conține expresia _abc_ se poate face pur și simplu printr-un apel al `indexOf`. Expresiile regulate ne permit să exprimăm șabloane mai complicate.
 
-Say we want to match any ((number)). In a regular expression, putting
-a ((set)) of characters between square brackets makes that part of the
-expression match any of the characters between the brackets.
+Să presupunem că vrem să potrivim orice număr. Într-o expresie regulată, plasarea unui set de caractere între paranteze pătrate înseamnă că acea parte a expresiei regulate potrivește oricare dintre caracterele dintre paranteze.
 
-Both of the following expressions match all strings that contain a ((digit)):
+Ambele expresii de mai jos potrivesc toate stringurile care conțin o cifră:
 
 ```
 console.log(/[0123456789]/.test("in 1992"));
@@ -130,32 +93,25 @@ console.log(/[0-9]/.test("in 1992"));
 
 {{index "hyphen character"}}
 
-Within square brackets, a hyphen (`-`) between two characters can be
-used to indicate a ((range)) of characters, where the ordering is
-determined by the character's ((Unicode)) number. Characters 0 to 9
-sit right next to each other in this ordering (codes 48 to 57), so
-`[0-9]` covers all of them and matches any ((digit)).
+Între parantezele pătrate, un caracter `-` între două caractere se poate utiliza pentru a defini un interval de caractere, unde ordinea este determinată de codul Unicode al caracterelor. Caracterele de la 0 la 9 sunt ordonate (codurile de la 48 la 57), astfel încât `[0-9]` acoperă toate cifrele și potrivește oricare cifră.
 
 {{index [whitespace, matching], "alphanumeric character", "period character"}}
 
-A number of common character groups have their own
-built-in shortcuts. Digits are one of them: `\d` means the same thing
-as `[0-9]`.
+Unele grupuri de caractere frecvent utilizate au propriile scurtături. Cifrele sunt unul dintre aceste grupuri: `\d` înseamnă același lucru ca și `[0-9]`.
 
 {{index "newline character", [whitespace, matching]}}
 
 {{table {cols: [1, 5]}}}
 
-| `\d`    | Any ((digit)) character
-| `\w`    | An alphanumeric character ("((word character))")
-| `\s`    | Any whitespace character (space, tab, newline, and similar)
-| `\D`    | A character that is _not_ a digit
-| `\W`    | A nonalphanumeric character
-| `\S`    | A nonwhitespace character
-| `.`     | Any character except for newline
+| `\d`    | Orice caracter cifră
+| `\w`    | Orice caracter alfanumeric (literă sau cifră)
+| `\s`    | Orice caracter spațiu (space, tab, newline, și altele)
+| `\D`    | Orice caracter care _nu_ este o cifră
+| `\W`    | Orice caracter care nu este alfanumeric
+| `\S`    | Orice caracter care nu este spațiu
+| `.`     | Orice caracter cu excepția newline
 
-So you could match a ((date)) and ((time)) format like 01-30-2003
-15:20 with the following expression:
+Deci, veți putea potrivi un format dată-și-oră cum ar fi 01-30-2003 15:20 folosind următoarea expresie:
 
 ```
 let dateTime = /\d\d-\d\d-\d\d\d\d \d\d:\d\d/;
@@ -167,23 +123,15 @@ console.log(dateTime.test("30-jan-2003 15:20"));
 
 {{index ["backslash character", "in regular expressions"]}}
 
-That looks completely awful, doesn't it? Half of it is backslashes,
-producing a background noise that makes it hard to spot the actual
-((pattern)) expressed. We'll see a slightly improved version of this
-expression [later](regexp#date_regexp_counted).
+Arată îngrozitor, nu-i așa? Jumătate dintre caractere sunt `\`, ceea ce produce un zgomot de fundal care face dificilă sarcina de a identifica șablonul definit. Vom vedea o versiune îmbunătățită a acestei expresii [puțin mai târziu](regexp#date_regexp_counted).
 
 {{index [escaping, "in regexps"], "regular expression", set}}
 
-These backslash codes can also be used inside ((square brackets)). For
-example, `[\d.]` means any digit or a period character. But the period
-itself, between square brackets, loses its special meaning. The same
-goes for other special characters, such as `+`.
+Aceste coduri pot fi utilizate și între parantezele pătrate. De exemplu, `[\d.]` înseamnă _orice cifră sau caracterul `.`_ Dar caracterul `.` își pierde semnificația specială. Același lucru este valabil și pentru alte caractere cu semnificație specială, cum ar fi `+`.
 
 {{index "square brackets", inversion, "caret character"}}
 
-To _invert_ a set of characters—that is, to express that you want to
-match any character _except_ the ones in the set—you can write a caret
-(`^`) character after the opening bracket.
+Pentru a _inversa_ un set de caractere - adică să precizăm că se potrivește oricare caracter, cu _excepția_ celor din mulțime, putem folosi `^` după paranteza dreaptă deschisă.
 
 ```
 let notBinary = /[^01]/;
@@ -193,18 +141,15 @@ console.log(notBinary.test("1100100010200110"));
 // → true
 ```
 
-## Repeating parts of a pattern
+## Repetarea părților unui șablon
 
 {{index ["regular expression", repetition]}}
 
-We now know how to match a single digit. What if we want to match a
-whole number—a ((sequence)) of one or more ((digit))s?
+Știm cum să potrivim o singură cifră. Dar dacă vrem să căutăm un număr - adică o secvență de una sau mai multe cifre?
 
 {{index "plus character", repetition, "+ operator"}}
 
-When you put a plus sign (`+`) after something in a regular
-expression, it indicates that the element may be repeated more than
-once. Thus, `/\d+/` matches one or more digit characters.
+Atunci când plasăm simbolul `+` după ceva într-o expresie regulată, indicăm astfel că elementul se poate repeta de mai multe ori. Prin urmare, `/\d+/` potrivește unul sau mai multe caractere de tip cifră.
 
 ```
 console.log(/'\d+'/.test("'123'"));
@@ -219,17 +164,11 @@ console.log(/'\d*'/.test("''"));
 
 {{index "* operator", asterisk}}
 
-The star (`*`) has a similar meaning but also allows the pattern to
-match zero times. Something with a star after it never prevents a
-pattern from matching—it'll just match zero instances if it can't find
-any suitable text to match.
+Simbolul `*` are o semnificație similară dar permite și potrivirea de zero ori. Un element cu `*` după el nu previne potrivirea pentru un șablon - va potrivi zero instanțe dacă nu găsește nici un text potrivit.
 
 {{index "British English", "American English", "question mark"}}
 
-A question mark makes a part of a pattern _((optional))_, meaning it
-may occur zero times or one time. In the following example, the _u_
-character is allowed to occur, but the pattern also matches when it is
-missing.
+Un semn de întrebare face ca o parte a unui șablon să fie _opțională_, adică poate să nu apară deloc sau să apară o singură dată. În exemplul următor, caracterul _u_ poate să apară, dar șablonul este potrivit și dacă _u_ lipsește.
 
 ```
 let neighbor = /neighbou?r/;
@@ -241,17 +180,11 @@ console.log(neighbor.test("neighbor"));
 
 {{index repetition, [braces, "in regular expression"]}}
 
-To indicate that a pattern should occur a precise number of times, use
-braces. Putting `{4}` after an element, for example, requires it
-to occur exactly four times. It is also possible to specify a
-((range)) this way: `{2,4}` means the element must occur at least
-twice and at most four times.
+Pentru a preciza că o parte a șablonului trebuie să apară de un anumit număr de ori, folosim acolade. Plasând `{4}` după un element, de exemplu, solicităm ca elementul respectiv să apară de exact patru ori. Putem și să specificăm un interval pentru numărul de apariții, astfel: `{2,4}` înseamnă că elementul trebuie să apară de cel puțin două ori și de cel mult patru ori.
 
 {{id date_regexp_counted}}
 
-Here is another version of the ((date)) and ((time)) pattern that
-allows both single- and double-((digit)) days, months, and hours. It
-is also slightly easier to decipher.
+Iată o altă versiune a șablonului pentru dată-și-oră care permite potrivirea mai flexibilă a zilei, lunii și orei. De asemenea, aș zice că este puțin mai ușor de descifrat:
 
 ```
 let dateTime = /\d{1,2}-\d{1,2}-\d{4} \d{1,2}:\d{2}/;
@@ -259,18 +192,13 @@ console.log(dateTime.test("1-30-2003 8:45"));
 // → true
 ```
 
-You can also specify open-ended ((range))s when using braces
-by omitting the number after the comma. So, `{5,}` means five or more
-times.
+Puteți și să specificați intervale deschise când utilizați acoladele, prin omiterea numărului de după virgulă. Astfel, `{5,}` înseamnă "de cinci sau mai multe ori".
 
 ## Grouping subexpressions
 
 {{index ["regular expression", grouping], grouping, [parentheses, "in regular expressions"]}}
 
-To use an operator like `*` or `+` on more than one element at a time,
-you have to use parentheses. A part of a regular expression that
-is enclosed in parentheses counts as a single element as far as the
-operators following it are concerned.
+Pentru a utliza operatori cum ar fi `*` sau `+` pe mai multe elemente, trebuie să utilizați paranteze. O parte a unei expresii regulate care este inclusă între paranteze reprezintă un singur element din punct de vedere al operatorilor care îi urmează.
 
 ```
 let cartoonCrying = /boo+(hoo+)+/i;
@@ -280,25 +208,17 @@ console.log(cartoonCrying.test("Boohoooohoohooo"));
 
 {{index crying}}
 
-The first and second `+` characters apply only to the second _o_ in
-_boo_ and _hoo_, respectively. The third `+` applies to the whole
-group `(hoo+)`, matching one or more sequences like that.
+Primul și al doilea caracter `+` din exemplul de mai sus se aplică doar asupra celui de-al doilea _o_ din _boo_ și _hoo_. Cel de-al treilea `+` se aplică întregului grup `(hoo+)`, potrivind una sau mai multe secvențe de acest fel.
 
 {{index "case sensitivity", capitalization, ["regular expression", flags]}}
 
-The `i` at the end of the expression in the example makes this regular
-expression case insensitive, allowing it to match the uppercase _B_ in
-the input string, even though the pattern is itself all lowercase.
+Caracterul `i` de la sfârșitul expresiei din exemplu specifică faptul că nu se va face diferența dintre literele mari și mici (case insensitive), ceea ce permite potrivirea _B_ din stringul de intrare, deși sablonul este format doar cu litere mici.
 
-## Matches and groups
+## Potriviri și grupuri
 
 {{index ["regular expression", grouping], "exec method", [array, "RegExp match"]}}
 
-The `test` method is the absolute simplest way to match a regular
-expression. It tells you only whether it matched and nothing else.
-Regular expressions also have an `exec` (execute) method that will
-return `null` if no match was found and return an object with
-information about the match otherwise.
+Metoda `test` este cel mai simplu mod de a potrivi o expresie regulată. Ea doar returnează dacă expresia a fost potrivită sau nu și nimic altceva. Expresie regulate au și o metodă `exec` care va returna `null` dacă nu a găsit nici o potrivire și un obiect cu informații despre potrivire, dacă aceasta a reușit.
 
 ```
 let match = /\d+/.exec("one two 100");
@@ -310,15 +230,11 @@ console.log(match.index);
 
 {{index "index property", [string, indexing]}}
 
-An object returned from `exec` has an `index` property that tells us
-_where_ in the string the successful match begins. Other than that,
-the object looks like (and in fact is) an array of strings, whose
-first element is the string that was matched. In the previous example,
-this is the sequence of ((digit))s that we were looking for.
+Un obiect returnat de către `exec` are o proprietate `index` care ne spune _unde_ în string se află începutul potrivirii. În rest, obiectul arată ca un array de stringuri, al cărui prim element este stringul care a fost potrivit. În exemplul de mai sus, se returnează secvența de cifre pe care o căutam.
 
 {{index [string, methods], "match method"}}
 
-String values have a `match` method that behaves similarly.
+Valorile de tip string au o metodă `match` care se comportă similar.
 
 ```
 console.log("one two 100".match(/\d+/));
@@ -327,12 +243,7 @@ console.log("one two 100".match(/\d+/));
 
 {{index grouping, "capture group", "exec method"}}
 
-When the regular expression contains subexpressions grouped with
-parentheses, the text that matched those groups will also show up in
-the array. The whole match is always the first element. The next
-element is the part matched by the first group (the one whose opening
-parenthesis comes first in the expression), then the second group, and
-so on.
+Când expresia regulată conține subexpresii grupate în paranteze, textul care a potrivit acele grupuri va fi și el parte din array. Potrivirea completă este întotdeauna primul element. Următorul element este partea potrivită de către primul grup (cel al cărui paranteză deschisă apare prima în expresie), apoi al doilea grup, și așa mai departe.
 
 ```
 let quotedText = /'([^']*)'/;
@@ -342,10 +253,7 @@ console.log(quotedText.exec("she said 'hello'"));
 
 {{index "capture group"}}
 
-When a group does not end up being matched at all (for example, when
-followed by a question mark), its position in the output array will
-hold `undefined`. Similarly, when a group is matched multiple times,
-only the last match ends up in the array.
+Când un grup nu poate fi potrivit deloc (de exemplu, când este urmat de un simbol `?`), poziția sa în array-ul rezultat va memora `undefined`. Similar, când un grup este potrivit de mai multe ori, numai ultima potrivire va face parte din array.
 
 ```
 console.log(/bad(ly)?/.exec("bad"));
@@ -356,22 +264,15 @@ console.log(/(\d)+/.exec("123"));
 
 {{index "exec method", ["regular expression", methods], extraction}}
 
-Groups can be useful for extracting parts of a string. If we don't
-just want to verify whether a string contains a ((date)) but also
-extract it and construct an object that represents it, we can wrap
-parentheses around the digit patterns and directly pick the date out
-of the result of `exec`.
+Grupurile pot fi utile pentru a extrage părți dintr-un string. Dacă nu vrem doar să verificăm dacă un string conține o dată, ci vrem să o extragem și să construim un obiect care o reprezintă, putem pune paranteze în jurul șablonului de cifre și apoi selectăm data din rezultatul returnat de `exec`.
 
-But first we'll take a brief detour, in which we discuss the built-in way to
-represent date and ((time)) values in JavaScript.
+Dar mai întâi facem un ocol și discutăm modul implicit în care JavaScript reprezintă valorile dată-și-oră.
 
-## The Date class
+## Clasa Date
 
 {{index constructor, "Date class"}}
 
-JavaScript has a standard class for representing ((date))s—or, rather,
-points in ((time)). It is called `Date`. If you simply create a date
-object using `new`, you get the current date and time.
+JavaScript are o clasă standard pentru reprezentarea datelor calendaristice - sau, mai degrabă, a punctelor în timp. Se numește `Date`. Dacă pur și simplu creați un nou obiect de acest tip, folosind `new`, obțineți data și ora curentă.
 
 ```{test: no}
 console.log(new Date());
@@ -380,7 +281,7 @@ console.log(new Date());
 
 {{index "Date class"}}
 
-You can also create an object for a specific time.
+Dar puteți și să creați un obiect pentru o data specificată:
 
 ```
 console.log(new Date(2009, 11, 9));
@@ -391,20 +292,13 @@ console.log(new Date(2009, 11, 9, 12, 59, 59, 999));
 
 {{index "zero-based counting", [interface, design]}}
 
-JavaScript uses a convention where month numbers start at zero (so
-December is 11), yet day numbers start at one. This is confusing and
-silly. Be careful.
+JavaScript utilizează o convenție în care lunile sunt numerotate începând cu zero (December este 11), dar zilele sunt numerotate începând cu 1. Atenție la această confuzie stupidă.
 
-The last four arguments (hours, minutes, seconds, and milliseconds)
-are optional and taken to be zero when not given.
+Ultimele patru argumente (ora, minutul, secunda și milisecundele) sunt opționale și inițializate cu zero dacă nu sunt transmise.
 
 {{index "getTime method"}}
 
-Timestamps are stored as the number of milliseconds since the start of
-1970, in the UTC ((time zone)). This follows a convention set by
-"((Unix time))", which was invented around that time. You can use
-negative numbers for times before 1970. The `getTime` method on a date
-object returns this number. It is big, as you can imagine.
+Timestamp-urile sunt memorate ca și numărul de milisecunde scurse de la începutul anului 1970, în zona UTC. Aceasta urmărește convenția setată de "Unix time", care a fost inventată cam în aceași perioadă. Puteți utiliza valori negative pentru timpi anteriori 1970. Metoda `getTime` a unui obiect returnează acest număr. Este un număr mare, așa cum vă puteți imagina.
 
 ```
 console.log(new Date(2013, 11, 19).getTime());
@@ -415,22 +309,15 @@ console.log(new Date(1387407600000));
 
 {{index "Date.now function", "Date class"}}
 
-If you give the `Date` constructor a single argument, that argument is
-treated as such a millisecond count. You can get the current
-millisecond count by creating a new `Date` object and calling
-`getTime` on it or by calling the `Date.now` function.
+Dacă transmiteți constructorului `Date` un singur argument, acesta este interpretat ca și un contor în milisecunde (timestamp). Valoarea acestui contor pentru momentul curent o puteți determina prin crearea unui nou obiect `Date` și apelarea metodei sale `getTime` sau prin apelarea funcției `Date.now`.
 
 {{index "getFullYear method", "getMonth method", "getDate method", "getHours method", "getMinutes method", "getSeconds method", "getYear method"}}
 
-Date objects provide methods such as `getFullYear`, `getMonth`,
-`getDate`, `getHours`, `getMinutes`, and `getSeconds` to extract their
-components. Besides `getFullYear` there's also `getYear`, which gives
-you the year minus 1900 (`98` or `119`) and is mostly useless.
+Obiectele `Date` au metode cum ar fi `getFullYear`, `getMonth`, `getDate`, `getHours`, `getMinutes`, și `getSeconds` pentru a extrage părți ale lor. Pe lângă `getFullYear` există și `getYear`, care returnează anul minus 1900 (`98` sau `119`) și care este cam inutilă.
 
 {{index "capture group", "getDate method", [parentheses, "in regular expressions"]}}
 
-Putting parentheses around the parts of the expression that we are
-interested in, we can now create a date object from a string.
+Plasând paranteze în jurul părților din expresie care ne interesează, putem să creem un obiect Date dintr-un string.
 
 ```
 function getDate(string) {
@@ -444,35 +331,21 @@ console.log(getDate("1-30-2003"));
 
 {{index destructuring, "underscore character"}}
 
-The `_` (underscore) binding is ignored and used only to skip the
-full match element in the array returned by `exec`.
+Bindingul `_` este ignorat și utilizat doar pentru a prelua elementul ce reprezintă potrivirea completă din array-ul returnat de `exec`.
 
-## Word and string boundaries
+## Limite ale cuvintelor și șirurilor
 
 {{index matching, ["regular expression", boundary]}}
 
-Unfortunately, `getDate` will also happily extract the nonsensical
-date 00-1-3000 from the string `"100-1-30000"`. A match may happen
-anywhere in the string, so in this case, it'll just start at the
-second character and end at the second-to-last character.
+Din păcate, funcția `getDate` de mai sus va extrage și data fără sens 00-1-3000 din stringul `"100-1-30000"`. O potrivire poate avea loc oriunde în string astfel încât va începe la al doilea caracter și se va termina la penultimul.
 
 {{index boundary, "caret character", "dollar sign"}}
 
-If we want to enforce that the match must span the whole string, we
-can add the markers `^` and `$`. The caret matches the start of the
-input string, whereas the dollar sign matches the end. So, `/^\d+$/`
-matches a string consisting entirely of one or more digits, `/^!/`
-matches any string that starts with an exclamation mark, and `/x^/`
-does not match any string (there cannot be an _x_ before the start of
-the string).
+Dacă vrem să specificăm că potrivirea trebuie să aibă loc pe tot stringul, putem adăuga marcajele `^` și `$`. Primul precizează începutul stringului iar cel de-al doilea sfârșitul. Astfel, `/^\d+$/` potrivește un string format doar din cifre, `/^!/` potrivește orice string care începe cu un semn de exclamare, iar `/x^/` nu potrivește nici un string (nu putem avea un _x_ înaintea începutului stringului).
 
 {{index "word boundary", "word character"}}
 
-If, on the other hand, we just want to make sure the date starts and
-ends on a word boundary, we can use the marker `\b`. A word boundary
-can be the start or end of the string or any point in the string that
-has a word character (as in `\w`) on one side and a nonword character
-on the other.
+Dacă, pe de altă parte, vrem doar să ne asigurăm că data începe și se termină la limita unui cuvânt, putem folosi marcajul `\b`. O limită a unui cuvânt poate fi începutul sau sfârșitul string-ului sau orice punct din string care are un caracter alfanumeric într-o parte (ca și în `\w`) și un caracter non-alfanumeric în cealaltă parte.
 
 ```
 console.log(/cat/.test("concatenate"));
@@ -483,22 +356,15 @@ console.log(/\bcat\b/.test("concatenate"));
 
 {{index matching}}
 
-Note that a boundary marker doesn't match an actual character. It just
-enforces that the regular expression matches only when a certain
-condition holds at the place where it appears in the pattern.
+Menționez că un marcaj de limită nu se potrivește peste un anume caracter. Doar obligă potrivirea expresiei regulate doar atunci când o anumită condiție este adevărată în poziția în care apare în șablon.
 
-## Choice patterns
+## Șsabloane alternative
 
 {{index branching, ["regular expression", alternatives], "farm example"}}
 
-Say we want to know whether a piece of text contains not only a number
-but a number followed by one of the words _pig_, _cow_, or _chicken_,
-or any of their plural forms.
+Să presupunem că vrem să știm dacă o anumită bucată de text conține un număr urmat de unul dintre cuvintele _pig_, _cow_ sau _chicken_ sau forma de plural a acestor cuvinte.
 
-We could write three regular expressions and test them in turn, but
-there is a nicer way. The ((pipe character)) (`|`) denotes a
-((choice)) between the pattern to its left and the pattern to its
-right. So I can say this:
+Am putea scrie trei expresii diferite și apoi să le testăm peste string, dar există o modalitate mai simplă. Caracterul `|` denotă o alegere între două variante de potrivire. Deci, am putea scrie:
 
 ```
 let animalCount = /\b\d+ (pig|cow|chicken)s?\b/;
@@ -510,63 +376,37 @@ console.log(animalCount.test("15 pigchickens"));
 
 {{index [parentheses, "in regular expressions"]}}
 
-Parentheses can be used to limit the part of the pattern that the pipe
-operator applies to, and you can put multiple such operators next to
-each other to express a choice between more than two alternatives.
+Putem utiliza paranteze pentru a delimita partea din șsablon pe care se aplică operatorul `|` și putem folosi mai mulți asemenea operatori pentru a exprima o alegere între mai multe alternative.
 
-## The mechanics of matching
+## Mecanica potrivirii
 
 {{index ["regular expression", matching], [matching, algorithm], "search problem"}}
 
-Conceptually, when you use `exec` or `test`, the regular expression
-engine looks for a match in your string by trying to match the
-expression first from the start of the string, then from the second
-character, and so on, until it finds a match or reaches the end of the
-string. It'll either return the first match that can be found or fail
-to find any match at all.
+Conceptual, când utilizați `exec` sau `test`, motorul de expresii regulate caută o potrivire începând cu primul caracter din string, apoi cu al doilea caracter, și așa mai departe, până când găsește o potrivire sau ajunge la sfârșitul stringului. Fie va returna prima potrivire pe care o găsește, fie va eșua în a găsi o potrivire.
 
 {{index ["regular expression", matching], [matching, algorithm]}}
 
-To do the actual matching, the engine treats a regular expression
-something like a ((flow diagram)). This is the diagram for the
-livestock expression in the previous example:
+Pentru a realiza potrivirea propriu-zisă, motorul tratează expresia regulată ca pe o diagramă de flux. În figura de mai jos vă prezint diagrama asociată expresiei anterioare:
 
 {{figure {url: "img/re_pigchickens.svg", alt: "Visualization of /\\b\\d+ (pig|cow|chicken)s?\\b/"}}}
 
 {{index traversal}}
 
-Our expression matches if we can find a path from the left side of the
-diagram to the right side. We keep a current position in the string,
-and every time we move through a box, we verify that the part of the
-string after our current position matches that box.
+Expresia noastră se potrivește dacă putem găsi o cale din partea stângă a diagramei până în partea dreaptă. Păstrăm poziția curentă în string și de câte ori ne deplasăm la o cutie, verificăm că partea din string de după poziția curentă se potrivește cu cutia.
 
-So if we try to match `"the 3 pigs"` from position 4, our progress
-through the flow chart would look like this:
+De exemplu, dacă încercăm să potrivim `"the 3 pigs"` din poziția 4, progresul nostru prin diagrama de flux ar arăta cam așa:
 
- - At position 4, there is a word ((boundary)), so we can move past
-   the first box.
+ - În poziția 4, există o limită de cuvânt, deci putem trece de prima cutie.
 
- - Still at position 4, we find a digit, so we can also move past the
-   second box.
+ - Tot în poziția 4, găsim o cifră, deci putem trece de a doua cutie.
 
- - At position 5, one path loops back to before the second (digit)
-   box, while the other moves forward through the box that holds a
-   single space character. There is a space here, not a digit, so we
-   must take the second path.
+ - În poziția 5, o cale se întoarce înapoi înainte de a doua cutie iar cealaltă merge mai departe spre cutia care reprezintă un singur spațiu. Există un spațiu în string, așa că mergem pe a doua cale.
 
- - We are now at position 6 (the start of _pigs_) and at the three-way
-   branch in the diagram. We don't see _cow_ or _chicken_ here, but we
-   do see _pig_, so we take that branch.
+ - Acum suntem în poziția 6 (începutul _pigs_) și avem trei căi. Nu vedem _cow_ sau _chicken_, dar vedem _pig_, așa că alegem această cale
 
- - At position 9, after the three-way branch, one path skips the _s_
-   box and goes straight to the final word boundary, while the other
-   path matches an _s_. There is an _s_ character here, not a word
-   boundary, so we go through the _s_ box.
+ - În poiziția 9, o cale sare peste cutia _s_ și merge la limita de final de cuvânt, iar cealaltă potrivește un _s_. Există un caracter _s_ așa că vom alege calea prin cutia _s_.
 
- - We're at position 10 (the end of the string) and can match only a
-   word ((boundary)). The end of a string counts as a word boundary,
-   so we go through the last box and have successfully matched this
-   string.
+ - Suntem acum în poziția 10 (sfârșitul stringului) și putem potrivi doar o limită de cuvânt. Sfârșitul stringului este o limită, deci trecem și de ultima cutie și am reușit să potrivim cu succes acest string.
 
 {{id backtracking}}
 
@@ -574,79 +414,39 @@ through the flow chart would look like this:
 
 {{index ["regular expression", backtracking], "binary number", "decimal number", "hexadecimal number", "flow diagram", [matching, algorithm], backtracking}}
 
-The regular expression `/\b([01]+b|[\da-f]+h|\d+)\b/` matches either a
-binary number followed by a _b_, a hexadecimal number (that is, base
-16, with the letters _a_ to _f_ standing for the digits 10 to 15)
-followed by an _h_, or a regular decimal number with no suffix
-character. This is the corresponding diagram:
+Expresia regulată `/\b([01]+b|[\da-f]+h|\d+)\b/` potrivește fie un număr binar, urmat de un _b_, fie un număr hexadecimal (adică în baza 16, cu literele _a_ până la _f_ în locul cifrelor de la 10 la 15) urmat de un _h_, sau un număr zecimal normal, fără caracter de sufix. Diagrama corespunzătoare o puteți consulta în imaginea de mai jos:
 
 {{figure {url: "img/re_number.svg", alt: "Visualization of /\\b([01]+b|\\d+|[\\da-f]+h)\\b/"}}}
 
 {{index branching}}
 
-When matching this expression, it will often happen that the top
-(binary) branch is entered even though the input does not actually
-contain a binary number. When matching the string `"103"`, for
-example, it becomes clear only at the 3 that we are in the wrong
-branch. The string _does_ match the expression, just not the branch we
-are currently in.
+Când potrivim această expresie, prima cale (binar) este parcursă chiar dacă nu avem un număr binar. Când încercăm potrivirea stringului `"103"`, de exemplu, doar când ajungem la 3 ne dăm seama că suntem pe calea greșită. Stringul _potrivește_ expresie, dar nu pe calea pe care suntem.
 
 {{index backtracking, "search problem"}}
 
-So the matcher _backtracks_. When entering a branch, it remembers its
-current position (in this case, at the start of the string, just past
-the first boundary box in the diagram) so that it can go back and try
-another branch if the current one does not work out. For the string
-`"103"`, after encountering the 3 character, it will start trying the
-branch for hexadecimal numbers, which fails again because there is no
-_h_ after the number. So it tries the decimal number branch. This one
-fits, and a match is reported after all.
+Motorul de potrivire va reveni. Când intră pe o anumită cale, reține poziția curentă (care în cazul nostru este începutul stringului, imediat după după prima cutie de limită de cuvânt din diagramă) astfel încât se va putea întoarce și să încerce o altă cale dacă cea curentă nu funcționează. Pentru stringul `"103"`, după detectarea caracterului 3, va trece la începutul căii pentru numere hexadecimale, care va eșua pentru că nu există _h_ după număr. Astfel va ajunge să exploreze calea pentru numere zecimale. Aceasta se va potrivi și se va raporta o potrivire.
 
 {{index [matching, algorithm]}}
 
-The matcher stops as soon as it finds a full match. This means that if
-multiple branches could potentially match a string, only the first one
-(ordered by where the branches appear in the regular expression) is
-used.
+Motorul de potrivire se va opri imediat ce determină o potrivire completă. Aceasta înseamnă că, dacă există mai multe căi care ar putea potrivi un string, doar prima (determinată de ordinea în care căile apar în expresia regulată) va fi utilizată.
 
-Backtracking also happens for ((repetition)) operators like + and `*`.
-If you match `/^.*x/` against `"abcxe"`, the `.*` part will first try
-to consume the whole string. The engine will then realize that it
-needs an _x_ to match the pattern. Since there is no _x_ past the end
-of the string, the star operator tries to match one character less.
-But the matcher doesn't find an _x_ after `abcx` either, so it
-backtracks again, matching the star operator to just `abc`. _Now_ it
-finds an _x_ where it needs it and reports a successful match from
-positions 0 to 4.
+Backtrackingul are loc și pentru operatorii de repetiție `+` și `*`. Dacă potriviți `/^.*x/` peste `"abcxe"`, partea `.*` va încerca mai întâi să consume întregul string. Apoi motorul își va da seama că trebuie să găsească un _x_ pentru a potrivi șablonul. Deoarece nu există nici un _x_ după sfârșitul stringului, operatorul `*` încearcă să potrivească cu un caracter mai puțin. Dar motorul nu găsește nici un `x` după `abcx`, așa că revine cu un caracter mai în față, potrivind `*` cu stringul `abc`. Acum găsește un _x_ unde are nevoie și raportează o potrivire pentru pozițiile de la 0 la 4.
 
 {{index performance, complexity}}
 
-It is possible to write regular expressions that will do a _lot_ of
-backtracking. This problem occurs when a pattern can match a piece of
-input in many different ways. For example, if we get confused while
-writing a binary-number regular expression, we might accidentally
-write something like `/([01]+)+b/`.
+Putem scrie expresii regulate care vor efectua mult backtracking. Această problemă apare atunci când un șablon poate potrivi o parte din input în multe moduri. De exemplu, dacă suntem confuzi când scriem expresia regulată pentru un număr binar, am putea scrie accidental ceva de genul `/([01]+)+b/`.
 
 {{figure {url: "img/re_slow.svg", alt: "Visualization of /([01]+)+b/",width: "6cm"}}}
 
 {{index "inner loop", [nesting, "in regexps"]}}
 
-If that tries to match some long series of zeros and ones with no
-trailing _b_ character, the matcher first goes through the inner
-loop until it runs out of digits. Then it notices there is no _b_, so
-it backtracks one position, goes through the outer loop once, and
-gives up again, trying to backtrack out of the inner loop once more.
-It will continue to try every possible route through these two loops.
-This means the amount of work _doubles_ with each additional
-character. For even just a few dozen characters, the resulting match
-will take practically forever.
+Dacă încercăm să potrivim o serie lungă de zero și unu fără caracterul _b_, motorul mai întâi va executa bucla interioară până când nu mai găsește cifre. Apoi constată că nu există un _b_ și revine pe o poziție anterioară, trece prin bucla anterioară din nou și apoi renunță, încercând să revină din bucla interioară cu încă un caracter. Va continua să încerce fiecare rută posibilă pe aceste două bucle. Prin urmare, efortul se va dubla pentru fiecare caracter adăugat. Chiar și pentru un numar de câteva zeci de caractere, potrivirea va dura extrem de mult.
 
-## The replace method
+## Metoda replace
 
 {{index "replace method", "regular expression"}}
 
-String values have a `replace` method that can be used to replace
-part of the string with another string.
+Valorile de tip string au o metodă `replace` care permite înlocuirea unei părți din string cu un alt string.
 
 ```
 console.log("papa".replace("p", "m"));
@@ -655,10 +455,7 @@ console.log("papa".replace("p", "m"));
 
 {{index ["regular expression", flags], ["regular expression", global]}}
 
-The first argument can also be a regular expression, in which case the
-first match of the regular expression is replaced. When a `g` option
-(for _global_) is added to the regular expression, _all_ matches in
-the string will be replaced, not just the first.
+Primul argument poate fi și o expresie regulată, în care caz se înlocuiește prima potrivire a expresiei regulate. Când opțiunea `g` (_global_) este adăugată expresiei regulate, vor fi înlocuite toate potrivirile, nu doar prima.
 
 ```
 console.log("Borobudur".replace(/[ou]/, "a"));
@@ -669,20 +466,11 @@ console.log("Borobudur".replace(/[ou]/g, "a"));
 
 {{index [interface, design], argument}}
 
-It would have been sensible if the choice between replacing one match
-or all matches was made through an additional argument to `replace` or
-by providing a different method, `replaceAll`. But for some
-unfortunate reason, the choice relies on a property of the regular
-expression instead.
+Ar fi fost inteligent dacă alegerea între înlocuirea primei apariții și înlocuirea tuturor aparițiilor ar fi fost controlată de către un argument opțional al metodei `replace` sau prin implementarea unei alte metode, `replaceAll`. Dintr-un motiv nefericit, alegerea se bazează însă pe o proprietate a expresiei regulate.
 
 {{index grouping, "capture group", "dollar sign", "replace method", ["regular expression", grouping]}}
 
-The real power of using regular expressions with `replace` comes from
-the fact that we can refer to matched groups in the replacement
-string. For example, say we have a big string containing the names of
-people, one name per line, in the format `Lastname, Firstname`. If we
-want to swap these names and remove the comma to get a `Firstname
-Lastname` format, we can use the following code:
+Adevărata putere a utilizării expresiilor regulate cu `replace` derivă din faptul că putem referi grupurile potrivite în stringul de înlocuire. De exemplu, avem un string foarte lung care conține numele unor persoane, câte unul pe linie, în formatul `Lastname, Firstname`. Dacă vrem să schimbăm formatul în `Firstname Lastname`, putem utiliza următorul cod:
 
 ```
 console.log(
@@ -693,19 +481,13 @@ console.log(
 //   Philip Wadler
 ```
 
-The `$1` and `$2` in the replacement string refer to the parenthesized
-groups in the pattern. `$1` is replaced by the text that matched
-against the first group, `$2` by the second, and so on, up to `$9`.
-The whole match can be referred to with `$&`.
+`$1` și `$2`  din stringul de înlocuire se referă la grupurile dintre paranteze din șablon. `$1` se înlocuiește cu textul potrivit pentru primul grup, iar `$2` reprezintă cel de-al doilea grup, și așa mai departe până la `$9`. Potrivirea completă poate fi referită prin `$&`.
 
 {{index [function, "higher-order"], grouping, "capture group"}}
 
-It is possible to pass a function—rather than a string—as the second
-argument to `replace`. For each replacement, the function will be
-called with the matched groups (as well as the whole match) as
-arguments, and its return value will be inserted into the new string.
+Putem transmite o funcție în loc de un string - ca și cel de-al doilea argument al `replace`. Pentru fiecare înlocuire, funcția va fi apelată cu grupurile potrivite (precum și potrivirea completă) ca și argumente și valoarea returnată va fi inserată în noul string.
 
-Here's a small example:
+Iată un scurt exemplu:
 
 ```
 let s = "the cia and fbi";
@@ -714,7 +496,7 @@ console.log(s.replace(/\b(fbi|cia)\b/g,
 // → the CIA and FBI
 ```
 
-Here's a more interesting one:
+Și unul mai interesant:
 
 ```
 let stock = "1 lemon, 2 cabbages, and 101 eggs";
@@ -731,22 +513,15 @@ console.log(stock.replace(/(\d+) (\w+)/g, minusOne));
 // → no lemon, 1 cabbage, and 100 eggs
 ```
 
-This takes a string, finds all occurrences of a number followed by an
-alphanumeric word, and returns a string wherein every such occurrence
-is decremented by one.
+Acesta preia un string, găsește toate aparițiile unor numere urmate de un cuvânt și returnează un string în care fiecare asemenea apariție este decrementată cu 1.
 
-The `(\d+)` group ends up as the `amount` argument to the function,
-and the `(\w+)` group gets bound to `unit`. The function converts
-`amount` to a number—which always works since it matched `\d+`—and
-makes some adjustments in case there is only one or zero left.
+Grupul `(\d+)` devine argumentul `amount` al funcției, iar grupul `(\w+)` va fi transmis în parametrul `unit`. Funcția convertește `amount` la un number - ceea ce va funcționa întotdeauna deoarece a potrivit `\d+` - și apoi ajustează cuvântul în cazul în care numărul este 0 sau 1.
 
-## Greed
+## Lăcomie
 
 {{index greed, "regular expression"}}
 
-It is possible to use `replace` to write a function that removes all
-((comment))s from a piece of JavaScript ((code)). Here is a first
-attempt:
+Putem folosi `replace` pentru a scrie o funcție care elimină toate comentariile dintr-o bucată de cod JavaScript. Iată o primă încercare:
 
 ```{test: wrap}
 function stripComments(code) {
@@ -762,38 +537,17 @@ console.log(stripComments("1 /* a */+/* b */ 1"));
 
 {{index "period character", "slash character", "newline character", "empty set", "block comment", "line comment"}}
 
-The part before the _or_ operator matches two slash characters
-followed by any number of non-newline characters. The part for
-multiline comments is more involved. We use `[^]` (any character that
-is not in the empty set of characters) as a way to match any
-character. We cannot just use a period here because block comments can
-continue on a new line, and the period character does not match
-newline characters.
+Partea din stânga operatorului _or_ potrivește două caractere `/` urmate de oricâte caractere altele decât linie nouă. Cea de a doua parte, pentru comentarii pe mai multe linii, este mai elaborată. Utilizăm `[^]` (orice caracter care nu face parte din setul gol de caractere) ca și o modalitate de a potrivi orice caracter. Nu putem să utilizăm `.` deoarece comentariile de tip block pot continua pe mai multe linii și caracterul `.` nu potrivește caractere linie nouă.
 
-But the output for the last line appears to have gone wrong. Why?
+Însă iețirea de pe ultima linie pare greșită. De ce?
 
 {{index backtracking, greed, "regular expression"}}
 
-The `[^]*` part of the expression, as I described in the section on
-backtracking, will first match as much as it can. If that causes the
-next part of the pattern to fail, the matcher moves back one character
-and tries again from there. In the example, the matcher first tries to
-match the whole rest of the string and then moves back from there. It
-will find an occurrence of `*/` after going back four characters and
-match that. This is not what we wanted—the intention was to match a
-single comment, not to go all the way to the end of the code and find
-the end of the last block comment.
+Partea `[^]*` a expresiei, așa cum am descris în secțiunea despre backtracking, va potrivi mai întâi cât de mult poate. Dacă aceasta cauzează nepotrivirea următoarei părți a șablonului, motorul de potrivire se mută un caracter înapoi și încearcă din nou. În exemplu, motorul încearcă mai întâi să potrivească tot stringul și apoi execută backtracking-ul. Va determina o apariție a `*/` după ce s-a întors 4 caractere și o va potrivi. Dar nu aceasta a fost intenția noastră, ceea ce doream era să identificăm un singur comentariu, nu să mergem până la sfârșitul stringului și să identificăm marcajul de final al ultimului comentariu de tip bloc.
 
-Because of this behavior, we say the repetition operators (`+`, `*`,
-`?`, and `{}`) are _((greed))y_, meaning they match as much as they
-can and backtrack from there. If you put a ((question mark)) after
-them (`+?`, `*?`, `??`, `{}?`), they become nongreedy and start by
-matching as little as possible, matching more only when the remaining
-pattern does not fit the smaller match.
+Din cauza acestui comportament, spunem că operatorii de repetiție (`+`, `*`, `?`, și `{}`) sunt _lacomi_, adică potrivesc cât de mult pot și utilizează backtracking. Dacă plasați un semn de întrebare după operator (`+?`, `*?`, `??`, `{}?`), atunci modificați comportamentul lot și vor încerca să potrivească un string cât mai mic. Vor potrivi un string mai lung doar dacă partea rămasă din șablon nu potrivește un string mai scurt.
 
-And that is exactly what we want in this case. By having the star
-match the smallest stretch of characters that brings us to a `*/`, we
-consume one block comment and nothing more.
+Exact asta ne doream în acest caz. Să potrivim `*` cu cea mai scurtă secvență de caractere care ne conduce la `*/` și astfel să identificăm un singur bloc de comentarii.
 
 ```{test: wrap}
 function stripComments(code) {
@@ -803,24 +557,15 @@ console.log(stripComments("1 /* a */+/* b */ 1"));
 // → 1 + 1
 ```
 
-A lot of ((bug))s in ((regular expression)) programs can be traced to
-unintentionally using a greedy operator where a nongreedy one would
-work better. When using a ((repetition)) operator, consider the
-nongreedy variant first.
+Multe buguri în programele care utilizează expresii regulate pot fi identificate ca utilizare neintenționată a unui operator _lacom (greedy)_. Atunci când utilizați un operator de repetiție, luați în calcul varianta non-greedy mai întâi.
 
-## Dynamically creating RegExp objects
+## Crearea dinamică a obiectelor RegExp
 
 {{index ["regular expression", creation], "underscore character", "RegExp class"}}
 
-There are cases where you might not know the exact ((pattern)) you
-need to match against when you are writing your code. Say you want to
-look for the user's name in a piece of text and enclose it in
-underscore characters to make it stand out. Since you will know the
-name only once the program is actually running, you can't use the
-slash-based notation.
+Există cazuri în care nu cunoașteți șablonul exact pentru potrivire atunci când scrieți codul. Să presupunem că vreți să identificați numele utilizatorului într-o bucată de text și să îl plasați între caractere `_` pentru a-l evidenția. Deoarece veți cunoaște numele doar atunci când programul va fi executat, nu puteți utiliza notația cu `/`.
 
-But you can build up a string and use the `RegExp` ((constructor)) on
-that. Here's an example:
+Dar puteți construi un string și să utilizați constructorul `RegExp` asupra lui. Iată un exemplu:
 
 ```
 let name = "harry";
@@ -832,20 +577,13 @@ console.log(text.replace(regexp, "_$1_"));
 
 {{index ["regular expression", flags], ["backslash character", "in regular expressions"]}}
 
-When creating the `\b` ((boundary)) markers, we have to use two
-backslashes because we are writing them in a normal string, not a
-slash-enclosed regular expression. The second argument to the `RegExp`
-constructor contains the options for the regular expression—in this
-case, `"gi"` for global and case insensitive.
+Când creem markerii `\b` trebuie să îi precizăm `\\b` deoarece îi utilizăm într-un string. Cel de-al doilea argument al constructorului `RegExp` reprezintă opțiunile pentru expresia regulată - în acest caz `gi` pentru global și fără diferență între literele mari și mici.
 
-But what if the name is `"dea+hl[]rd"` because our user is a ((nerd))y
-teenager? That would result in a nonsensical regular expression that
-won't actually match the user's name.
+Dar dacă numele este `"dea+hl[]rd"` pentru că utilizatorul nostru are un "nume de scenă" ciudat? Am obține o expresie regulată fără sens care de fapt nu va detecta potrivirile pentru numele utilizatorului.
 
 {{index ["backslash character", "in regular expressions"], [escaping, "in regexps"], ["regular expression", escaping]}}
 
-To work around this, we can add backslashes before any character that
-has a special meaning.
+O soluție ar fi să adăugăm `\` înaintea oricărui caracter cu semnificație specială.
 
 ```
 let name = "dea+hl[]rd";
@@ -856,14 +594,11 @@ console.log(text.replace(regexp, "_$&_"));
 // → This _dea+hl[]rd_ guy is super annoying.
 ```
 
-## The search method
+## Metoda `search`
 
 {{index ["regular expression", methods], "indexOf method", "search method"}}
 
-The `indexOf` method on strings cannot be called with a regular
-expression. But there is another method, `search`, that does expect a
-regular expression. Like `indexOf`, it returns the first index on
-which the expression was found, or -1 when it wasn't found.
+Metoda `indexOf` pentru stringuri nu poate fi apelată și pentru expresiile regulate. Dar există o altă metodă, `search`, care așteaptă o expresie regulată. Ca și `indexOf`, returnează primul index la care expresia a fost găsită și -1 dacă nu a găsit expresia.
 
 ```
 console.log("  word".search(/\S/));
@@ -872,33 +607,21 @@ console.log("    ".search(/\S/));
 // → -1
 ```
 
-Unfortunately, there is no way to indicate that the match should start
-at a given offset (like we can with the second argument to `indexOf`),
-which would often be useful.
+Din păcate, nu putem preciza un index la care să înceapă căutarea (așa cum utilizăm cel de-al doilea argument al `indexOf`), care ar fi adesea util.
 
-## The lastIndex property
+## Proprietatea `lastIndex`
 
 {{index "exec method", "regular expression"}}
 
-The `exec` method similarly does not provide a convenient way to start
-searching from a given position in the string. But it does provide an
-*in*convenient way.
+Similar, metoda `exec` nu ne oferă un mod convenabil de a începe căutarea dintr-o anumită poziție a stringului. Dar ne oferă o modalitate *ne*convenabilă de a specifica aceasta.
 
 {{index ["regular expression", matching], matching, "source property", "lastIndex property"}}
 
-Regular expression objects have properties. One such property is
-`source`, which contains the string that expression was created from.
-Another property is `lastIndex`, which controls, in some limited
-circumstances, where the next match will start.
+Obiectele de tip expresii regulate au proprietăți. O asemenea proprietate este `source`, care conține stringul din care a fost creată expresia. O altă proprietate este `lastIndex`, care controlează, în anumite circumstanțe limitate, poziția din care se va începe următoarea potrivire.
 
 {{index [interface, design], "exec method", ["regular expression", global]}}
 
-Those circumstances are that the regular expression must have the
-global (`g`) or sticky (`y`) option enabled, and the match must happen
-through the `exec` method. Again, a less confusing solution would have
-been to just allow an extra argument to be passed to `exec`, but
-confusion is an essential feature of JavaScript's regular expression
-interface.
+Acele circumstanțe se referă la faptul că expresia regulată trebuie să aibă opțiunile global (`g`) sau sticky (`y`) activate, iar potrivirea trebuie să se execute prin metoda `exec`. Din nou, o soluție mai puțin creatoare de confuzii ar fi fost adăugarea unui extra-argument care să fie transmis funcției `exec`, dar confuzia este o caracteristică esențială a interfeței JavaScript pentru expresii regulate.
 
 ```
 let pattern = /y/g;
@@ -912,15 +635,9 @@ console.log(pattern.lastIndex);
 
 {{index "side effect", "lastIndex property"}}
 
-If the match was successful, the call to `exec` automatically updates
-the `lastIndex` property to point after the match. If no match was
-found, `lastIndex` is set back to zero, which is also the value it has
-in a newly constructed regular expression object.
+Dacă potrivirea s-a realizat cu succes, apelul către `exec` actualizează automat proprietatea `lastIndexOf` ca să indice după potrivire. Dacă nu s-a găsit nici o potrivire, atunci `lastIndex` se va seta înapoi la zero, care este și valoarea implicită atunci când se construiește un nou obiect de tip expresie regulată.
 
-The difference between the global and the sticky options is that, when
-sticky is enabled, the match will succeed only if it starts directly
-at `lastIndex`, whereas with global, it will search ahead for a
-position where a match can start.
+Diferența dintre opțiunile "global" și "sticky" este că, atunci când "sticky" este permis, potrivirea se va face cu succes numai dacă începe exact după `lastIndex`, în timp ce "global" va căuta în avans o poziție unde potrivirea poate să înceapă.
 
 ```
 let global = /abc/g;
@@ -933,10 +650,7 @@ console.log(sticky.exec("xyz abc"));
 
 {{index bug}}
 
-When using a shared regular expression value for multiple `exec`
-calls, these automatic updates to the `lastIndex` property can cause
-problems. Your regular expression might be accidentally starting at an
-index that was left over from a previous call.
+Când se utilizează o expresie regulată pentru mai multe apeluri ale `exec`, aceste actualizări automate ale proprietății `lastIndex` pot cauza probleme. Expresia regulată ar putea începe accidental la un index setat de către un apel anterior.
 
 ```
 let digit = /\d/g;
@@ -948,29 +662,20 @@ console.log(digit.exec("and now: 1"));
 
 {{index ["regular expression", global], "match method"}}
 
-Another interesting effect of the global option is that it changes the
-way the `match` method on strings works. When called with a global
-expression, instead of returning an array similar to that returned by
-`exec`, `match` will find _all_ matches of the pattern in the string
-and return an array containing the matched strings.
+Un alt efect interesant al opțiunii "global" este modificarea modului în care metoda `match` funcționează pe stringuri. Când va fi apelată cu o expresie globală, în loc să returneze un array similar cu cel returnat de către `exec`, `match` va găsi _toate_ potrivirile șablonului în string și va returna un array ce conține toate stringurile potrivite.
 
 ```
 console.log("Banana".match(/an/g));
 // → ["an", "an"]
 ```
 
-So be cautious with global regular expressions. The cases where they
-are necessary—calls to `replace` and places where you want to
-explicitly use `lastIndex`—are typically the only places where you
-want to use them.
+Deci, aveți grijă cu expresiile regulate globale. Cazurile in care sunt necesare - apeluri ale `replace` și locuri în care intenționați să folosiți explicit `lastIndex` - sunt de regulă singurele locuri în care ați vrea să le utilizați.
 
-### Looping over matches
+### Iterarea peste potriviri
 
 {{index "lastIndex property", "exec method", loop}}
 
-A common thing to do is to scan through all occurrences of a pattern
-in a string, in a way that gives us access to the match object in the
-loop body. We can do this by using `lastIndex` and `exec`.
+O acțiune frecventă este scanarea tuturor aparițiilor unui șablon într-un string, într-un mod care să ne permită accesul la obiectul de potrivire în corpul buclei. Putem realiza aceasta prin utilizarea `lastIndex` și `exec`.
 
 ```
 let input = "A string with 3 numbers in it... 42 and 88.";
@@ -986,23 +691,14 @@ while (match = number.exec(input)) {
 
 {{index "while loop", ["= operator", "as expression"], [binding, "as state"]}}
 
-This makes use of the fact that the value of an ((assignment))
-expression (`=`) is the assigned value. So by using `match =
-number.exec(input)` as the condition in the `while` statement, we
-perform the match at the start of each iteration, save its result in a
-binding, and stop looping when no more matches are found.
+Aceasta utilizează faptul că valoarea unei expresii de atribuire (`=`) este valoarea atribuită. Deci, utilizând `match = number.exec(input)` ca și condișie în instrucțiunea `while`, realizăm potrivirea la începutul fiecărei iterații, salvăm rezultatul într-un binding și ne oprim din repetiție atunci când nu mai găsim potriviri.
 
 {{id ini}}
-## Parsing an INI file
+## Parsarea unui fișier INI
 
 {{index comment, "file format", "enemies example", "INI file"}}
 
-To conclude the chapter, we'll look at a problem that calls for
-((regular expression))s. Imagine we are writing a program to
-automatically collect information about our enemies from the
-((Internet)). (We will not actually write that program here, just the
-part that reads the ((configuration)) file. Sorry.) The configuration
-file looks like this:
+Pentru a finaliza acest capitol, vom analiza o problemă care necesită utilizarea expresiilor regulate. Imaginați-vă că scriem un program pentru colectarea automată a informațiilor despre inamicii noștri de pe Internet. (Nu vom scrie de fapt acest program, ci doar partea care citește fișierul de configurare). Fișierul de configurare ar arăta cam așa:
 
 ```{lang: "text/plain"}
 searchengine=https://duckduckgo.com/?q=$1
@@ -1023,34 +719,19 @@ outputdir=/home/marijn/enemies/davaeorn
 
 {{index grammar}}
 
-The exact rules for this format (which is a widely used format,
-usually called an _INI_ file) are as follows:
+Regulile exacte pentru acest format (care este utilizat pe larg, de regulă denumit fișier_INI_) sunt următoarele:
 
-- Blank lines and lines starting with semicolons are ignored.
+- Liniile goale și liniile care încep cu `;` sunt ignorate.
+- Liniile între `[` și `]` încep o nouă secțiune.
+- Liniile ce conțin un identificator alfanumeric urmat de `=` adaugă o setare la secțiunea curentă.
+- Orice altceva este invalid.
 
-- Lines wrapped in `[` and `]` start a new ((section)).
-
-- Lines containing an alphanumeric identifier followed by an `=`
-  character add a setting to the current section.
-
-- Anything else is invalid.
-
-Our task is to convert a string like this into an object whose
-properties hold strings for settings written before the first
-section header and subobjects for sections, with those subobjects
-holding the section's settings.
+Sarcina noastră este de a converti un string de acest fel într-un obiect ale cărui proprietăți rețin stringuri pentru setările scrise înainte de prima secțiune și subobiecte pentru secțiuni, fiecare subobiect reținând setările secțiunii.
 
 {{index "carriage return", "line break", "newline character"}}
 
-Since the format has to be processed ((line)) by line, splitting up
-the file into separate lines is a good start. We saw
-the `split` method in [Chapter ?](data#split).
-Some operating systems, however, use not just a newline character to
-separate lines but a carriage return character followed by a newline
-(`"\r\n"`). Given that the `split` method also allows a regular
-expression as its argument, we can use a regular expression like
-`/\r?\n/` to split in a way that allows both `"\n"` and `"\r\n"`
-between lines.
+Deoarece acest format trebuie procesat linie cu linie, împărțirea fișierului în linii separate este un start bun. Am studiat deja metoda `split` în [capitolul ?](data#split). Unele sisteme de operare utilizează o combinație de caractere pentru sfârșitul de linie (`"\r\n"`). 
+Fiindcă metoda `split` acceptă și expresii regulate ca și argumente, am putea utiliza expresia regulată `/\r?\n/` pentru a permite atât `"\n"` cât și `"\r\n"` între linii.
 
 ```{startCode: true}
 function parseINI(string) {
@@ -1079,68 +760,33 @@ city=Tessaloniki`));
 
 {{index "parseINI function", parsing}}
 
-The code goes over the file's lines and builds up an object.
-Properties at the top are stored directly into that object, whereas
-properties found in sections are stored in a separate section object.
-The `section` binding points at the object for the current section.
+Codul parcurge liniile fișierului și construiește un obiect. Proprietățile de la început sunt memorate direct în obiect, iar proprietățile identificate în secțiuni sunt stocate în obiecte separate pentru fiecare secțiune. Bindingul `section` se referă la obiectul pentru secțiunea curentă.
 
-There are two kinds of significant lines—section headers or property
-lines. When a line is a regular property, it is stored in the current
-section. When it is a section header, a new section object is created,
-and `section` is set to point at it.
+Există două feluri de linii semnificative - headere de secțiuni și linii care setează proprietăți. Când o linie se referă la o prorietate, este memorată în secțiunea curentă. Când linia reprezintă un header de secțiune, se crează un nou obiect pentru secțiune iar `section` este setat să se refere la acesta.
 
 {{index "caret character", "dollar sign", boundary}}
 
-Note the recurring use of `^` and `$` to make sure the expression
-matches the whole line, not just part of it. Leaving these out results
-in code that mostly works but behaves strangely for some input, which
-can be a difficult bug to track down.
+Observați utilizarea recurentă a `^` și `$` pentru a ne asigura că expresia este potrivită pentru toată linia, nu doar pentru o parte a ei. Dacă le eliminăm, vom obține un cod care de cele mai multe ori funcționează dar care se comportă ciudat pentru anumite date de intrare, ceea ce ar fi un bug dificil de identificat.
 
 {{index "if keyword", assignment, ["= operator", "as expression"]}}
 
-The pattern `if (match = string.match(...))` is similar to the trick
-of using an assignment as the condition for `while`. You often aren't
-sure that your call to `match` will succeed, so you can access the
-resulting object only inside an `if` statement that tests for this. To
-not break the pleasant chain of `else if` forms, we assign the result
-of the match to a binding and immediately use that assignment as the
-test for the `if` statement.
+Șablonul `if (match = string.match(...))` este similar cu trick-ul de a utiliza o atribuire ca și condiție pentru `while`. De multe ori nu sunteți siguri că apelul metodei `match` va avea succes, astfel încât veți putea folosi obiectul rezultat doar în interiorul unei instrucțiuni `if` care testează acest lucru. Pentru a nu distruge plăcutul lanț de forme `else if`, atribuim rezultatul potrivirii unui binding și apoi utilizăm imediat acea atribuire ca și test pentru instrucțiunea `if`.
 
 {{index [parentheses, "in regular expressions"]}}
 
-If a line is not a section header or a property, the function checks
-whether it is a comment or an empty line using the expression
-`/^\s*(;.*)?$/`. Do you see how it works? The part between the
-parentheses will match comments, and the `?` makes sure it also
-matches lines containing only whitespace. When a line doesn't match
-any of the expected forms, the function throws an exception.
+Dacă o linie nu reprezintă un header de ssecțiune sau o proprietate, funcția verifică dacă linia reprezintă un comentariu sau o linie goală cu ajutorul expresiei `/^\s*(;.*)?$/`. Înțegeți cum funcționează? Partea dintre paranteze va potrivi comentariile iar simbolul `?` asigură că va potrivi și liniile care conțin doar spații albe. Când o linie nu potrivește nici una dintre formele așteptate, funcția aruncă o excepție.
 
-## International characters
+## Caractere internaționale
 
 {{index internationalization, Unicode, ["regular expression", internationalization]}}
 
-Because of JavaScript's initial simplistic implementation and the fact
-that this simplistic approach was later set in stone as ((standard))
-behavior, JavaScript's regular expressions are rather dumb about
-characters that do not appear in the English language. For example, as
-far as JavaScript's regular expressions are concerned, a "((word
-character))" is only one of the 26 characters in the Latin alphabet
-(uppercase or lowercase), decimal digits, and, for some reason, the
-underscore character. Things like _é_ or _β_, which most definitely
-are word characters, will not match `\w` (and _will_ match uppercase
-`\W`, the nonword category).
+Urmare a implementării inițiale simpliste din JavaScript și a faptului că aceasta a fost ulterior standardizată, expresiile regulate din JavaScript sunt mai degrabă proaste atunci când au de a face cu caractere care nu fac parte din setul limbii engleze. De exemplu, în contextul expresiilor regulate, un "caracter al unui cuvânt" este doar unul dintre cele 26 de simboluri ale alfabetului latin (litere mari și mici), o cifră zecimală și, din oarecare motiv, simbolul underscore `_`. Caractere cum ar fi _é_ sau _β_, care cu siguranță pot face parte dintr-un cuvânt, nu vor potrivi `\w` (dar vor potrivi `\W`, categoria simbolurilor care nu fac parte dintr-un cuvânt).
 
 {{index [whitespace, matching]}}
 
-By a strange historical accident, `\s` (whitespace) does not have this
-problem and matches all characters that the Unicode standard considers
-whitespace, including things like the ((nonbreaking space)) and the
-((Mongolian vowel separator)).
+Printr-un accident istoric ciudat, `\s` (spații albe) nu are această problemă și potrivește toate caracterele considerate spații albe în standardul Unicode, inclusiv "non-breaking space" și separatorul pentru vocale în scrierea mongolă.
 
-Another problem is that, by default, regular expressions work on code
-units, as discussed in [Chapter ?](higher_order#code_units), not
-actual characters. This means characters that are composed of two
-code units behave strangely.
+O altă problemă este cauzată de faptul că, implicit, expresiile regulate funcționează pe unități de cod, așa cum am discutat în [capitolul ?](higher_order#code_units), și nu pe caracterele propriu-zise. Aceasta înseamnă că acele caractere compuse din două unități de cod se vor comporta ciudat.
 
 ```
 console.log(/🍎{3}/.test("🍎🍎🍎"));
@@ -1151,22 +797,13 @@ console.log(/<.>/u.test("<🌹>"));
 // → true
 ```
 
-The problem is that the 🍎 in the first line is treated as two code
-units, and the `{3}` part is applied only to the second one.
-Similarly, the dot matches a single code unit, not the two that make
-up the rose ((emoji)).
+Problema este cauzată de faptul că 🍎 din prima linie este tratat ca un caracter format din două unități iar `{3}` se aplică doar celei de-a doua unități de cod. Similar, `.` potrivește o singură unitate de cod, nu ambelor unități ce formează codul pentru trandafir.
 
-You must add a `u` option (for ((Unicode))) to your regular
-expression to make it treat such characters properly. The wrong
-behavior remains the default, unfortunately, because changing that
-might cause problems for existing code that depends on it.
+Pentru a trata corect asemenea caractere, trebuie să adăugați opțiunea `u` la expresia regulată (pentru Unicode). Comportamentul greșit rămâne însă cel implicit, deoarece modificarea acestuia ar cauza probleme de compatibilitate cu codul deja existent.
 
 {{index "character category", [Unicode, property]}}
 
-Though this was only just standardized and is, at the time of writing,
-not widely supported yet, it is possible to use `\p` in a regular
-expression (that must have the Unicode option enabled) to match all
-characters to which the Unicode standard assigns a given property.
+Deși încă nu este suportată pe larg și a fost standardizată de curând, puteți folosi opțiunea `\p` într-o expresie regulată (care trebuie să aibă activată opțiunea pentru Unicode) pentru a potrivi toate caracterele cărora standardul Unicode le asociază o anumită proprietate.
 
 ```{test: never}
 console.log(/\p{Script=Greek}/u.test("α"));
@@ -1179,106 +816,68 @@ console.log(/\p{Alphabetic}/u.test("!"));
 // → false
 ```
 
-Unicode defines a number of useful properties, though finding the one
-that you need may not always be trivial. You can use the
-`\p{Property=Value}` notation to match any character that has the
-given value for that property. If the property name is left off, as in
-`\p{Name}`, the name is assumed to be either a binary property such as
-`Alphabetic` or a category such as `Number`.
+Unicode definește câteva proprietăți utile, dar găsirea celei de care aveți nevoie nu este întotdeauna o sarcină trivială, Puteți utiliza notația `\p{Property=Value}` pentru a potrivi orice caracter care are valoarea dată pentru respectiva proprietate. Dacă omiteți numele proprietății, ca și în `\p{Name}`, numele se presupune a fi fie o proprietate binară, cum ar fi `Alphabetic` fie o categorie, cum ar fi `Number`.
 
 {{id summary_regexp}}
 
-## Summary
+## Rezumat
 
-Regular expressions are objects that represent patterns in strings.
-They use their own language to express these patterns.
+Expresiile regulate sunt obiecte care reprezinttă șabloane în stringuri. Ele utilizează propriul limbaj pentru a defini asemenea șabloane.
 
 {{table {cols: [1, 5]}}}
 
-| `/abc/`     | A sequence of characters
-| `/[abc]/`   | Any character from a set of characters
-| `/[^abc]/`  | Any character _not_ in a set of characters
-| `/[0-9]/`   | Any character in a range of characters
-| `/x+/`      | One or more occurrences of the pattern `x`
-| `/x+?/`     | One or more occurrences, nongreedy
-| `/x*/`      | Zero or more occurrences
-| `/x?/`      | Zero or one occurrence
-| `/x{2,4}/`  | Two to four occurrences
-| `/(abc)/`   | A group
-| `/a|b|c/`   | Any one of several patterns
-| `/\d/`      | Any digit character
-| `/\w/`      | An alphanumeric character ("word character")
-| `/\s/`      | Any whitespace character
-| `/./`       | Any character except newlines
-| `/\b/`      | A word boundary
-| `/^/`       | Start of input
-| `/$/`       | End of input
+| `/abc/`     | O secvență de caractere
+| `/[abc]/`   | Orice caracter dintr-un set de caractere
+| `/[^abc]/`  | Orice caracter din afara unui set de caractere
+| `/[0-9]/`   | Orice caracter dintr-un interval de caractere
+| `/x+/`      | Una sau mai multe apariții ale șablonului `x`
+| `/x+?/`     | Una sau mai multe apariții, non-greedy
+| `/x*/`      | Zero sau mai multe apariții
+| `/x?/`      | Zero sau o singură apariție
+| `/x{2,4}/`  | Două până la patru apariții
+| `/(abc)/`   | Un grup
+| `/a|b|c/`   | Oricare dintre mai multe șabloane
+| `/\d/`      | Orice caracter cifră
+| `/\w/`      | Orice caracter alfanumeric ("word character")
+| `/\s/`      | Orice caracter spațiu
+| `/./`       | Orice caracter cu excepția caracterului linie-nouă
+| `/\b/`      | Limita unui cuvânt
+| `/^/`       | Începutul stringului
+| `/$/`       | Sfârșitul stringului
 
-A regular expression has a method `test` to test whether a given
-string matches it. It also has a method `exec` that, when a match is
-found, returns an array containing all matched groups. Such an array
-has an `index` property that indicates where the match started.
+O expresie regulată are o metodă `test` pentru a testa dacă un string dat o potrivește. Mai are și o metodă `exec` care, atunci când găsește o potrivire, returnează un array cu toate grupurile potrivite. Un asemenea array are o proprietate `index` care arată unde a început potrivirea.
 
-Strings have a `match` method to match them against a regular
-expression and a `search` method to search for one, returning only the
-starting position of the match. Their `replace` method can replace
-matches of a pattern with a replacement string or function.
+Stringurile au metoda `match` pentru a le potrivi relativ la o expresie regulată precum și o metodă `search` pentru a căuta o potrivire, care returnează doar poziția de început a potrivirii. Cu ajutorul metodei `replace` putem înlocui potrivirile șablonului cu un string de înlocuire sau cu ajutorul unei funcții.
 
-Regular expressions can have options, which are written after the
-closing slash. The `i` option makes the match case insensitive. The
-`g` option makes the expression _global_, which, among other things,
-causes the `replace` method to replace all instances instead of just
-the first. The `y` option makes it sticky, which means that it will
-not search ahead and skip part of the string when looking for a match.
-The `u` option turns on Unicode mode, which fixes a number of problems
-around the handling of characters that take up two code units.
+Expresiile regulate pot avea opțiuni, care sunt scrise după `/` de final. Opțiunea `i` permite potrivirea fără a face diferența între literele mari și cele mici, opțiunea `g` face ca expresia să fie _globală_, ceea ce , printre altele, cauzează înlocuirea tuturor potrivirilor în metoda `replace`, nu doar a primeia. Opțiunea `y` face ca expresia să devină "sticky", ceea ce înseamnă că nu va căuta în avans sau sări peste părți ale stringului atunci când caută o potrivire. Opțiunea `u` activează modul Unicode, ceea ce fixează mai multe probleme legate de tratarea caracterelor reprezentate pe două unități de cod.
 
-Regular expressions are a sharp ((tool)) with an awkward handle. They
-simplify some tasks tremendously but can quickly become unmanageable
-when applied to complex problems. Part of knowing how to use them is
-resisting the urge to try to shoehorn things that they cannot cleanly
-express into them.
+Expresiile regulate sunt o unealtă bine ascuțită cu un mâner destul de ciudat. Ele simplifică extrem demult anumite sarcini dar pot deveni repede greu de gestionat când sunt aplicate unor probleme complexe. Parte a cunoașterii lor este și cum să le evitați atunci când ele nu pot exprima corect ceea ce doriți.
 
-## Exercises
+## Exerciții
 
 {{index debugging, bug}}
 
-It is almost unavoidable that, in the course of working on these
-exercises, you will get confused and frustrated by some regular
-expression's inexplicable ((behavior)). Sometimes it helps to enter
-your expression into an online tool like
-[_https://debuggex.com_](https://www.debuggex.com/) to see whether its
-visualization corresponds to what you intended and to ((experiment))
-with the way it responds to various input strings.
+Este aproape inevitabil ca, în timp ce lucrați la aceste exerciții, sa deveniți confuzi și frustrați de comportamentul inexplicabil al unora dintre expresiile regulate. Uneori este util să introduceți expresia regulată într-un instrument online cum ar fi [_https://debuggex.com_](https://www.debuggex.com/) pentru a verifica dacă vizualizarea sa corespunde cu ceea ce intenționați și pentru a experimenta modul în care aceasta răspunde la diferitele stringuri de intrare.
 
 ### Regexp golf
 
 {{index "program size", "code golf", "regexp golf (exercise)"}}
 
-_Code golf_ is a term used for the game of trying to express a
-particular program in as few characters as possible. Similarly,
-_regexp golf_ is the practice of writing as tiny a regular expression
-as possible to match a given pattern, and _only_ that pattern.
+_Code golf_ este un termen utilizat pentru jocul de a încerca să exprimați un anume program cu cât mai puține caractere. Similar, _regexp golf_ este practica de a scrie o expresie regulată cât mai scurtă pentru a potrivi un anume șsablon și _doar_ acel șablon.
 
 {{index boundary, matching}}
 
-For each of the following items, write a ((regular expression)) to
-test whether any of the given substrings occur in a string. The
-regular expression should match only strings containing one of the
-substrings described. Do not worry about word boundaries unless
-explicitly mentioned. When your expression works, see whether you can
-make it any smaller.
+Pentru fiecare dintre itemii de mai jos scrieți o expresie regulată pentru a testa dacă oricare dintre substringurile date apare în string. Expresia regulată trebuie să potrivească doar stringurile ce conțin unul dintre substringurile date. Nu vă preocupați despre limitele cuvintelor decât dacă se menționează explicit. După ce reușiți să faceți expresia funcțională, încercați să o scurtați.
 
- 1. _car_ and _cat_
- 2. _pop_ and _prop_
- 3. _ferret_, _ferry_, and _ferrari_
- 4. Any word ending in _ious_
- 5. A whitespace character followed by a period, comma, colon, or semicolon
- 6. A word longer than six letters
- 7. A word without the letter _e_ (or _E_)
+ 1. _car_ și _cat_
+ 2. _pop_ și _prop_
+ 3. _ferret_, _ferry_, și _ferrari_
+ 4. Orice cuvânt ce se termină în _ious_
+ 5. Orice spațiu urmat de punct, virgulă, două puncte sau punct și virgulă.
+ 6. Un cuvânt mai lung de 6 liutere
+ 7. Un cuvânt fără litera _e_ (sau _E_)
 
-Refer to the table in the [chapter summary](regexp#summary_regexp) for
-help. Test each solution with a few test strings.
+Consultați tabelul din [rezumatul capitolului](regexp#summary_regexp) ca ajutor. Testați fiecare soluție cu câteva stringuri.
 
 {{if interactive
 ```
@@ -1327,20 +926,15 @@ function verify(regexp, yes, no) {
 
 if}}
 
-### Quoting style
+### Stilul de citare
 
 {{index "quoting style (exercise)", "single-quote character", "double-quote character"}}
 
-Imagine you have written a story and used single ((quotation mark))s
-throughout to mark pieces of dialogue. Now you want to replace all the
-dialogue quotes with double quotes, while keeping the single quotes
-used in contractions like _aren't_.
+Imaginați-vă că ați scris o poveste și ați folosit apostroafe peste tot pentru a marca o bucată de dialog. Acum vreți să utilizați ghilimele pentru dialoguri dar să păstrați apostroafele în contrageri cum ar fi _aren't_.
 
 {{index "replace method"}}
 
-Think of a pattern that distinguishes these two
-kinds of quote usage and craft a call to the `replace` method that
-does the proper replacement.
+Gândiți-vă la un șablon care distinge între cele două modalități de utilizare a apostroafelor și gândiți un apel către metoda `replace` care realizează înlocuirea.
 
 {{if interactive
 ```{test: no}
@@ -1355,31 +949,19 @@ if}}
 
 {{index "quoting style (exercise)", boundary}}
 
-The most obvious solution is to replace only quotes with a nonword
-character on at least one side—something like `/\W'|'\W/`. But you
-also have to take the start and end of the line into account.
+Cea mai evidentă soluție este să înlocuiți doar apostroafele care au un caracter non-alfanumeric în cel puțin o parte, ceva în genul `/\W'|'\W/`. Dar ar trebui să luați în calcul și începutul sau sfârșitul liniei.
 
 {{index grouping, "replace method", [parentheses, "in regular expressions"]}}
 
-In addition, you must ensure that the replacement also includes the
-characters that were matched by the `\W` pattern so that those are not
-dropped. This can be done by wrapping them in parentheses and
-including their groups in the replacement string (`$1`, `$2`). Groups
-that are not matched will be replaced by nothing.
+În plus, trebuie să vă asigurați că înlocuirea include și caracterele care au fost potrivite de către șablonul `W` astfel încât acestea să nu fie eliminate. Putem realiza aceasta prin utilizarea parantezelor și includerea grupurilor în stringul de înlocuire (`$1`, `$2`). Grupurile care nu sunt potrivite nu vor fi înlocuite.
 
 hint}}
 
-### Numbers again
+### Din nou despre numere
 
 {{index sign, "fractional number", [syntax, number], minus, "plus character", exponent, "scientific notation", "period character"}}
 
-Write an expression that matches only JavaScript-style ((number))s. It
-must support an optional minus _or_ plus sign in front of the number,
-the decimal dot, and exponent notation—`5e-3` or `1E10`—again with an
-optional sign in front of the exponent. Also note that it is not
-necessary for there to be digits in front of or after the dot, but the
-number cannot be a dot alone. That is, `.5` and `5.` are valid
-JavaScript numbers, but a lone dot _isn't_.
+Scrieți o expresie care să potrivească doar numerele scrise în stilul acceptat de către JavaScript. Trebuie să permită un simbol opțional plus sau minus în fața numărului, punctul zecimal, precum și notația cu exponent - `5e-3` sau `1E10` - din nou cu un semn opțional în fața exponentului. De asemenea, de menționat că prezența cifrelor înainte sau după punctul zecimal nu este obligatorie. Adică, `.5` și `5.` sunt numere valide în JavaScript, dar punctul zecimal în sine nu este.
 
 {{if interactive
 ```{test: no}
@@ -1407,23 +989,17 @@ if}}
 
 {{index ["regular expression", escaping], ["backslash character", "in regular expressions"]}}
 
-First, do not forget the backslash in front of the period.
+Mai întâi, nu uitați de `\` în fața punctului.
 
-Matching the optional ((sign)) in front of the ((number)), as well as
-in front of the ((exponent)), can be done with `[+\-]?` or `(\+|-|)`
-(plus, minus, or nothing).
+Potrivirea semnului opțional în fața numărului, precum și în fața exponentului, se poate face cu expresia `[+\-]?` sau `(\+|-|)`
+(plus, minus, sau nici un caracter).
 
 {{index "pipe character"}}
 
-The more complicated part of the exercise is the problem of matching
-both `"5."` and `".5"` without also matching `"."`. For this, a good
-solution is to use the `|` operator to separate the two cases—either
-one or more digits optionally followed by a dot and zero or more
-digits _or_ a dot followed by one or more digits.
+Partea mai complicată a exercițiului este potrivirea `"5."` și `".5"` fără a potrivi și `"."`. Pentru aceasta, o soluție bună ar fi utilizarea operatorului `|` pentru a separa cele două cazuri - fie una sau mai multe cifre urmate de un punct opțional și apoi de zero sau mai multe cifre, fie un punct urmat de una sau mai multe cifre.
 
 {{index exponent, "case sensitivity", ["regular expression", flags]}}
 
-Finally, to make the _e_ case insensitive, either add an `i` option to
-the regular expression or use `[eE]`.
+În final, pentru a potrivi _e_ fără a face diferența față de _E_ folosiți fie opțiunea `i` pentru expresia regulată, fie `[eE]`.
 
 hint}}
