@@ -1,194 +1,104 @@
 {{meta {load_files: ["code/packages_chapter_10.js", "code/chapter/07_robot.js"]}}}
 
-# Modules
+# Module
 
 {{quote {author: "Tef", title: "Programming is Terrible", chapter: true}
 
-Write code that is easy to delete, not easy to extend.
+Scrieți cod care este ușor de șters, nu ușor de extins.
 
 quote}}
 
 {{index "Yuan-Ma", "Book of Programming"}}
 
-{{figure {url: "img/chapter_picture_10.jpg", alt: "Picture of a building built from modular pieces", chapter: framed}}}
+{{figure {url: "img/chapter_picture_10.jpg", alt: "Imaginea unei construcții din piese modulare", chapter: framed}}}
 
 {{index organization, [code, "structure of"]}}
 
-The ideal program has a crystal-clear structure. The way it works is
-easy to explain, and each part plays a well-defined role.
+Programul ideal are o structură clară ca a unui cristal. Modul în care funcționează este ușor de explicat și fiecare parte are un rol bine definit.
 
 {{index "organic growth"}}
 
-A typical real program grows organically. New pieces of functionality
-are added as new needs come up. Structuring—and preserving
-structure—is additional work. It's work that will pay off only in the
-future, the _next_ time someone works on the program. So it is
-tempting to neglect it and allow the parts of the program to become
-deeply entangled.
+Un program tipic are o creștere organică. Noile piese de funcționalitate sunt adăugate pe măsură ce sunt necesare. Structurarea - și păstrarea structurii - sunt eforturi suplimentare. Este un efort care va fi recompensat doar în viitor, următoarea dată când cineva va lucra asupra programului. Astefel că este tentant să ignorăm aecastă parte și să permitem ca părți ale programului să devină profund încâlcite.
 
 {{index readability, reuse, isolation}}
 
-This causes two practical issues. First, understanding such a system
-is hard. If everything can touch everything else, it is difficult to
-look at any given piece in isolation. You are forced to build up a
-holistic understanding of the entire thing. Second, if you want to
-use any of the functionality from such a program in another situation,
-rewriting it may be easier than trying to disentangle it from its
-context.
+Aceasta cauzează două probleme din punct de vedere practic. Mai întâi, înțelegerea unui asemenea sistem este dificilă. Dacă orice poate influența orice altă parte este dificil să privim orice piesă dată în izolare. Trebuie să dezvoltați o înțelegere holistică asupra întregului sistem. Apoi, dacă încercați să utilizați orice funcționalitate dintr-un asemenea program într-o altă situație, rescrierea ei ar putea fi mai ușoară decât încercarea de a descâlci piesa din contextul în care se află.
 
-The phrase "((big ball of mud))" is often used for such large,
-structureless programs. Everything sticks together, and when you try
-to pick out a piece, the whole thing comes apart, and your hands get
-dirty.
+Expresia "o mare minge de noroi (big ball of mud)" este adesea utilizată pentru asemenea programe mari și fără structură. Totul este lipit împreună iar atunci când încercați să extrageți o piesă, totul vine după ea și vă "murdăriți pe mâini".
 
-## Modules
+## Module
 
 {{index dependency, [interface, module]}}
 
-_Modules_ are an attempt to avoid these problems. A ((module)) is a
-piece of program that specifies which other pieces it relies on
-and which functionality it provides for other modules
-to use (its _interface_).
+_Modulele_ sunt o încercare de a evita aceste probleme. Un _modul_ este o bucată de program care specifică pe ce alte piese se bazează și ce funcționalitate oferă pentru a fi utilizată de către alte module (_interfața_ sa).
 
 {{index "big ball of mud"}}
 
-Module interfaces have a lot in common with object interfaces, as we
-saw them in [Chapter ?](object#interface). They make part of the
-module available to the outside world and keep the rest private. By
-restricting the ways in which modules interact with each other, the
-system becomes more like ((LEGO)), where pieces interact through
-well-defined connectors, and less like mud, where everything mixes
-with everything.
+Interfețele modulellor au multe în comun cu interfețele obiectelor, așa cum am văzut în [capitolul ?](object#interface). Ele permit ca o parte a modulului să fie disponibilă lumii exterioare și păstrează restul funcționalității privată. Prin restricționarea modului în care modulele pot interacționa între ele, sistemul începe să semene cu un LEGO, în care piesele interacționează prin conectori bine definiți.
 
 {{index dependency}}
 
-The relations between modules are called _dependencies_. When a module
-needs a piece from another module, it is said to depend on that
-module. When this fact is clearly specified in the module itself, it
-can be used to figure out which other modules need to be present to be
-able to use a given module and to automatically load dependencies.
+Relațiile dintre module se numesc _dependențe_. Când un modul are nevoie de o piesă din alt modul, spunem că depinde de acel modul. Atunci când acest fapt este clar specificat în modul, poate fi utilizat pentru a determina ce alte module trebuie să fie prezente pentru a putea utiliza un anumit modul, dar și pentru a încărca automat dependențele.
 
-To separate modules in that way, each needs its own private ((scope)).
+Pentru a separa modulele în acest mod, fiecare are nevoie de propriul său domeniu de vizibilitate privat.
 
-Just putting your JavaScript code into different ((file))s does not
-satisfy these requirements. The files still share the same global
-namespace. They can, intentionally or accidentally, interfere with
-each other's bindings. And the dependency structure remains unclear.
-We can do better, as we'll see later in the chapter.
+Doar plasarea codului JavaScript în fișiere diferite nu satisface aceste cerințe. Fișierele încă partajează același spațiu de nume global. Ele pot, intenționat sau accidental, să interfere la nivelul bindingurilor. Iar structura dependențelor rămâne neclară. Putem găsi soluții mai bune, așa cum vom vedea în acest capitol.
 
 {{index design}}
 
-Designing a fitting module structure for a program can be difficult.
-In the phase where you are still exploring the problem, trying 
-different things to see what works, you might want to not worry about
-it too much since it can be a big distraction. Once you have
-something that feels solid, that's a good time to take a step back and
-organize it.
+Conceperea unei structuri modulare adecvate pentru un program poate fi dificilă. În faza în care încă explorați problema, încercând diferite abordări pentru a vedea dacă acestea funcționează, ar putea fi o idee bună să nu vă concentrați prea mult pe modularitate deoarece acesta poate fi un factor major de distragere. Imediat ce aveți o abordare ce pare solidă, puteți începe să o organizați pe module.
 
-## Packages
+## Pachete (Packages)
 
 {{index bug, dependency, structure, reuse}}
 
-One of the advantages of building a program out of separate pieces,
-and being actually able to run those pieces on their own, is that you
-might be able to apply the same piece in different programs.
+Unul dintre avantajele construirii unui program din piese separate, și al abilității de a rula acele piese independent, este că ați putea utiliza aceeași piese în programe diferite.
 
 {{index "parseINI function"}}
 
-But how do you set this up? Say I want to use the `parseINI` function
-from [Chapter ?](regexp#ini) in another program. If it is clear what
-the function depends on (in this case, nothing), I can just copy all the
-necessary code into my new project and use it. But then, if I find a
-mistake in that code, I'll probably fix it in whichever program 
-I'm working with at the time and forget to also fix it in the other
-program.
+Dar cum ați putea realiza asta? Să presupunem că aș dori să utilizez funcția `parseINI` din [capitolul ?](regexp#ini) într-un alt program. Dacă este clar de ce depinde funcția (în acest caz, nimic), pot doar să copiez codul necesar în noul meu proiect și apoi să îl utilizez. Dar apoi, dacă descopăr o greșeală în acel cod, probabil că o voi repara în programul în care lucrez pe moment și voi uita să o repar și în celălat program.
 
 {{index duplication, "copy-paste programming"}}
 
-Once you start duplicating code, you'll quickly find yourself wasting
-time and energy moving copies around and keeping them up-to-date.
+Când începeți să duplicați codul, veți descoperi rapid că pierdeți timp și energie cu mutarea copiilor și actualizarea lor.
 
-That's where _((package))s_ come in. A package is a chunk of code that
-can be distributed (copied and installed). It may contain one or more
-modules and has information about which other packages it depends on.
-A package also usually comes with documentation explaining what it
-does so that people who didn't write it might still be able to use
-it.
+Aici este locul în care se vede utilitatea _pachetelor (packages)_. Un pachet este o bucată de cod care poate fi distribuită (copiată și instalată). Ar putea conține unul sau mai multe module și conține informații despre alte pachete de care depinde. De asemenea, un pachet este de obicei însoțit de documentație care explică ce funcționalitate conține astfel încât să fie ușor de utilizat de către alții.
 
-When a problem is found in a package or a new feature is added, the
-package is updated. Now the programs that depend on it (which may also
-be packages) can upgrade to the new ((version)).
+Atunci când se descoperă o problemă într-un pachet sau se adaugă nouă funcționalitate, pachetul este actualizat. Acum, programele care depind de el (care pot să fie la rândul lor pachete), pot fi actualizate la noua versiune.
 
 {{id modules_npm}}
 
 {{index installation, upgrading, "package manager", download, reuse}}
 
-Working in this way requires ((infrastructure)). We need a place to
-store and find packages and a convenient way to install and upgrade
-them. In the JavaScript world, this infrastructure is provided by
-((NPM)) ([_https://npmjs.org_](https://npmjs.org)).
+Acest mod de lucru necesită o infrastructură. Avem nevoie de un loc în care să reținem și să căutăm pachete și de un mod convenabil de a le instala și actualiza. În ecosistemul JavaScript, această structură este oferită de către NPM ([_https://npmjs.org_](https://npmjs.org)).
 
-NPM is two things: an online service where one can download (and
-upload) packages and a program (bundled with Node.js) that helps you
-install and manage them.
-
-{{index "ini package"}}
-
-At the time of writing, there are more than half a million different
-packages available on NPM. A large portion of those are rubbish, I
-should mention, but almost every useful, publicly available package
-can be found on there. For example, an INI file parser, similar to the
-one we built in [Chapter ?](regexp), is available under the package
-name `ini`.
+NPM înseamnă două lucruri: un serviciu online unde se pot descărca sau încărca pachete, dar și un program (parte din Node.js) care ajută cu instalarea și gestionarea pachetelor.
 
 {{index "command line"}}
 
-[Chapter ?](node) will show how to install such packages locally using
-the `npm` command line program.
+[Capitolul ?](node) vă va arăta cum să instalați astfel de pachete local utilizând programul `npm` în linia de comandă.
 
-Having quality packages available for download is extremely valuable.
-It means that we can often avoid reinventing a program that 100
-people have written before and get a solid, well-tested
-implementation at the press of a few keys.
+Disponibilitatea pentru descărcare a unor pachete de calitate este extrem de valoroasă. Înseamnă că adesea veți putea evita să reinventați un program scris anterior de către 100 de oameni și să aveți o implementare solidă și bine testată la câteva taste distanță.
 
 {{index maintenance}}
 
-Software is cheap to copy, so once someone has written it,
-distributing it to other people is an efficient process. But writing
-it in the first place _is_ work, and responding to people who have
-found problems in the code, or who want to propose new features, is
-even more work.
+Software-ul este ieftin de copiat astfel că, odată ce a fost scris, distribuirea sa către alte persoane este un proces eficient. Dar scrierea sa este muncă și va trebui să răspundeți persoanelor care poate au găsit probleme în cod, sau doresc să propună noi funcționalități, înseamnă și mai multă muncă.
 
-By default, you own the ((copyright)) to the code you write, and other
-people may use it only with your permission. But because some people
-are just nice and because publishing good software can help make you
-a little bit famous among programmers, many packages are published
-under a ((license)) that explicitly allows other people to use it.
+Implicit, dețineți drepturile de autor pentru codul pe care îl scrieți și alte persoane îl pot utiliza doar cu permisiunea voastră. Dar deoarece unele persoane sunt drăguțe și publicarea unui software de calitate vă aduce puțină faimă printre programatori, multe pachete sunt publicate sub o licență care permite explicit utilizarea lor de către alte persoane.
 
-Most code on ((NPM)) is licensed this way. Some licenses require you
-to also publish code that you build on top of the package under the
-same license. Others are less demanding, just requiring that you keep
-the license with the code as you distribute it. The JavaScript
-community mostly uses the latter type of license. When using other
-people's packages, make sure you are aware of their license.
+Majoritatea codului din NPM este licențiat în acest mod. Unele licențe vă solicită să publicați codul pe care îl construiți pe baza unui pachet sub aceați licență. Altele sunt mai puțin pretențioase, solicitându-vă doar să păstrați licența în codul pe care îl distribuiți. Comunitatea JavaScript utilizează cel mai frecvent al doilea tip de licență. Când utilizați pachetele altora, asigurați-vă că sunteți conștienți de licența lor.
 
-## Improvised modules
+## Module improvizate
 
-Until 2015, the JavaScript language had no built-in module system.
-Yet people had been building large systems in JavaScript for more than a decade, and they _needed_ ((module))s.
+Până în 2015, limbajul JavaScript nu avea un sistem de module. Deși oamenii construiau sisteme de mari dimensiuni în JavaScript de mai mult de o decadă și aveau nevoie de module.
 
 {{index [function, scope], [interface, module], [object, as module]}}
 
-So they designed their own ((module system))s on top of the language.
-You can use JavaScript functions to create local scopes and
-objects to represent module interfaces.
+Astfel că au construit propriul lor sistem de module pe baza limbajului. Puteți utiliza funcțiile JavaScript pentru a crea domenii de vizibilitate locale și obiectele pentru a reprezenta interfețele modulelor.
 
 {{index "Date class", "weekDay module"}}
 
-This is a module for going between day names and numbers (as returned
-by `Date`'s `getDay` method). Its interface consists of `weekDay.name`
-and `weekDay.number`, and it hides its local binding `names` inside
-the scope of a function expression that is immediately invoked.
+Acesta este un modul pentru a converti între numele și indexul zilelor săptămânii (similar cu metoda `Date.getDay`). Interfața sa constă din `weekDay.name` și `weekDay.number`, iar bindingul local `names` este ascuns în interiorul domeniului de vizibilitate al unei expresii de tip funcție invocate imediat (IIFE - Immediately Invoked Function Expression).
 
 ```
 const weekDay = function() {
@@ -206,32 +116,21 @@ console.log(weekDay.name(weekDay.number("Sunday")));
 
 {{index dependency, [interface, module]}}
 
-This style of modules provides ((isolation)), to a certain degree, but
-it does not declare dependencies. Instead, it just puts its
-interface into the ((global scope)) and expects its dependencies,
-if any, to do the same. For a long time this was the main approach
-used in web programming, but it is mostly obsolete now.
+Acest stil de a scrie module permite un anumit grad de izolare, dar nu declară dependențele. În loc de aceasta, doar îți plasează interfața în domeniul de vizibilitate global și așteaptă ca dependențele sale, dacă există, să facă același lucru. Mult timp, aceasta a fost principala abordare în web development, dar este o abordare învechită acum.
 
-If we want to make dependency relations part of the code, we'll have
-to take control of loading dependencies. Doing that requires being
-able to execute strings as code. JavaScript can do this.
+Dacă vrem ca relațiile de dependență să facă parte din cod, trebuie să preluăm controlul asupra încărcării dependențelor. Pentru aceasta, avem nevoie de abilitatea de executa stringuri ca și cod. JavaScript poate să facă asta.
 
 {{id eval}}
 
-## Evaluating data as code
+## Evaluarea datelor ca și cod
 
 {{index evaluation, interpretation}}
 
-There are several ways to take data (a string of code) and run it as
-part of the current program.
+Sunt mai multe moduri în care puteți prelua date (un string de cod) și să le rulați ca și parte a programului curent.
 
 {{index isolation, eval}}
 
-The most obvious way is the special operator `eval`, which will
-execute a string in the _current_ ((scope)). This is usually a bad idea
-because it breaks some of the properties that scopes normally have,
-such as it being easily predictable which binding a given name refers
-to.
+Cel mai evident mod este operatorul special `eval`, care va executa un string în domeniul de vizibilitate _curent_. Aceasta este de regulă o idee proastă deoarece încalcă unele dintre proprietățile domeniilor de vizibilitate, cum ar fi predictibilitatea asupra bindingurilor la care se referă un nume.
 
 ```
 const x = 1;
@@ -248,11 +147,7 @@ console.log(x);
 
 {{index "Function constructor"}}
 
-A less scary way of interpreting data as code is to use the `Function`
-constructor. It takes two arguments: a string containing a
-comma-separated list of argument names and a string containing the
-function body. It wraps the code in a function value so that it gets
-its own scope and won't do odd things with other scopes.
+Un mod mai puțin intimidant de a interpreta datele ca și cod este utilizarea constructorului `Function`. Acesta primește două argumente: un string ce conține o listă de nume ale argumentelor, separate prin virgulă, și un string ce conține corpul funcției. Codul va fi împachetat într-o valoare de tip funcție așa că va genera propriul său domeniu de vizibilitate și nu va acționa impredictibil asupra altor domenii de vizibilitate.
 
 ```
 let plusOne = Function("n", "return n + 1;");
@@ -260,9 +155,7 @@ console.log(plusOne(4));
 // → 5
 ```
 
-This is precisely what we need for a module system. We can wrap the
-module's code in a function and use that function's scope as module
-((scope)).
+Cu siguranță este ceea ce ne trebuie pentru un sistem de module. Putem împacheta codul modulului într-o funcție și putem utiliza domeniul de vizibilitate al funcției ca și domeniu de vizibilitate al modulului.
 
 ## CommonJS
 
@@ -270,35 +163,21 @@ module's code in a function and use that function's scope as module
 
 {{index "CommonJS modules"}}
 
-The most widely used approach to bolted-on JavaScript modules is
-called _CommonJS modules_. ((Node.js)) uses it and is the system used
-by most packages on ((NPM)).
+Cea mai frecvent utilizată abordare pentru a construi module în JavaScript sunt _modulele CommonJS_. Node.js o utilizează și acesta este sistemul utilizat de majoritatea pachetelor din NPM.
 
 {{index "require function", [interface, module]}}
 
-The main concept in CommonJS modules is a function called `require`.
-When you call this with the module name of a dependency, it makes sure
-the module is loaded and returns its interface.
+Conceptul principal din modulele CommonJS este o funcție numită `require`. Când apelați această funcție cu numele modulului ce reprezintă o dependență, se asigură că modulul este încărcat și returnează interfața sa.
 
 {{index "exports object"}}
 
-Because the loader wraps the module code in a function, modules
-automatically get their own local scope. All they have to
-do is call `require` to access their dependencies and put their
-interface in the object bound to `exports`.
+Deoarece loader-ul împachetează codul modulului într-o funcție, modulele vor avea automat propriul domeniu de vizibilitate local. Tot ceea ce trebuie să facă este să apeleze `require` pentru a își rezolva propriile dependențe și să își plaseze interfața în obiectul legat de `exports`.
 
 {{index "formatDate module", "Date class", "ordinal package", "date-names package"}}
 
-This example module provides a date-formatting function. It uses two
-((package))s from NPM—`ordinal` to convert numbers to strings like
-`"1st"` and `"2nd"`, and `date-names` to get the English names for
-weekdays and months. It exports a single function, `formatDate`, which
-takes a `Date` object and a ((template)) string.
+Modulul dat mai jos ca și exemplu pune la dispoziție o funcție pentru formatarea datelor. Utilizează două pachete din NPM - `ordinal` pentru a converti numere în stringuri, cum ar fi `"1st"` și `"2nd"`, și `date-names` pentru a obține numele în limba engleză pentru zilele săptămânii și lunile anului. Exportă o singură funcție, `formatDate` care primește ca argumente un obiect `Date` și un string de formatare.
 
-The template string may contain codes that direct the format, such as
-`YYYY` for the full year and `Do` for the ordinal day of the month.
-You could give it a string like `"MMMM Do YYYY"` to get output like
-"November 22nd 2017".
+Stringul de formatare poate conține coduri care determină formatul, cum ar fi `YYYY` pentru anul complet și `Do` pentru numeralul ordinal reprezentând ziua din lună. Puteți specifica un string cum ar fi `"MMMM Do YYYY"` pentru a obține un rezultat "November 22nd 2017".
 
 ```
 const ordinal = require("ordinal");
@@ -318,13 +197,9 @@ exports.formatDate = function(date, format) {
 
 {{index "destructuring binding"}}
 
-The interface of `ordinal` is a single function, whereas `date-names`
-exports an object containing multiple things—`days` and `months` are
-arrays of names. Destructuring is very convenient when creating
-bindings for imported interfaces.
+Interfața `ordinal` este o singură funcție, iar `date-names` exportă un obiect ce conține mai multe lucruri - `days` și `months` sunt array-uri de nume. Destructurarea este foarte convenabilă când se crează bindinguri pentru interfețele importate.
 
-The module adds its interface function to `exports` so that modules
-that depend on it get access to it. We could use the module like this:
+Modulul își adaugă propria interfață în `exports` astfel încât modulele care depind de el primesc acces la aceasta. Am putea utiliza modulul astfel:
 
 ```
 const {formatDate} = require("./format-date");
@@ -338,7 +213,7 @@ console.log(formatDate(new Date(2017, 9, 13),
 
 {{id require}}
 
-We can define `require`, in its most minimal form, like this:
+Am puttea defini `require` într-o formă minimală, astfel:
 
 ```{test: wrap, sandbox: require}
 require.cache = Object.create(null);
@@ -357,53 +232,29 @@ function require(name) {
 
 {{index [file, access]}}
 
-In this code, `readFile` is a made-up function that reads a file and
-returns its contents as a string. Standard JavaScript provides no such
-functionality—but different JavaScript environments, such as the
-browser and Node.js, provide their own ways of accessing files.
-The example just pretends that `readFile` exists.
+În acest cod, `readFile` este o funcție inventată care ar citi dintr-un fișier și ar returna conținutul său ca și string. JavaScript standard nu oferă o asemenea funcționalitate dar diferitele medii JavaScript, cum ar fi browserele și Node.js vă pun la dispoziție modul lor propriu de a accesa fișierele. Exemplul doar "pretinde" că `readFile` există.
 
 {{index cache, "Function constructor"}}
 
-To avoid loading the same module multiple times, `require` keeps a
-store (cache) of already loaded modules. When called, it first checks
-if the requested module has been loaded and, if not, loads it. This
-involves reading the module's code, wrapping it in a function, and
-calling it.
+Pentru a evita încărcarea aceluiași modul de mai multe ori, `require` menține un index (cache) al modulelor deja încărcate. Când va fi apelată, această funcție verifică mai întâi dacă modulul solicitat a fost încărcat și, dacă nu, atunci îl încarcă. Încărcarea presupune citirea codului modulului, împachetarea codului într-o funcție și apelarea acesteia.
 
 {{index "ordinal package", "exports object", "module object", [interface, module]}}
 
-The interface of the `ordinal` package we saw before is not an
-object but a function. A quirk of the CommonJS modules is that,
-though the module system will create an empty interface object for you
-(bound to `exports`), you can replace that with any value by
-overwriting `module.exports`. This is done by many modules to export a
-single value instead of an interface object.
+Interfața pachetului `ordinal` folosit anterior nu este un obiect ci o funcție. Un capriciu al modulelor CommonJS, cu toate că sistemul de module va crea un obiect gol pentru interfață (legat de `exports`), îl puteți înlocui cu orice valoare prin suprascrierea `module.exports`. Acest procedeu este utilizat de multe module pentru a exporta o singură valoare în locul unui obiect pentru interfață.
 
-By defining `require`, `exports`, and `module` as ((parameter))s for
-the generated wrapper function (and passing the appropriate values
-when calling it), the loader makes sure that these bindings are
-available in the module's ((scope)).
+Prin definirea `require`, `exports` și `module` ca și parametrii pentru funcția de împachetare generată (și transmiterea valorilor corespunzătoare la apel), loader-ul se asigură că aceste bindinguri sunt disponibile în domeniul de vizibilitate al modulului.
 
 {{index resolution, "relative path"}}
 
-The way the string given to `require` is translated to an actual
-filename or web address differs in different systems. When it starts with
-`"./"` or `"../"`, it is generally interpreted as relative to the
-current module's filename. So `"./format-date"` would be the file
-named `format-date.js` in the same directory.
+Modul în care stringul transmis la `require` este translatat în numele unui fișier sau o adresă web diferă de la un sistem la altul. Când începe cu `"./"` sau `"../"`, este în general interpretat ca și o cale relativă la numele fișierului ce conține modulul. `"./format-date"` s-a referi la fișierul `format-date.js` din același folder.
 
-When the name isn't relative, Node.js will look for an installed
-package by that name. In the example code in this chapter, we'll
-interpret such names as referring to NPM packages. We'll go into more
-detail on how to install and use NPM modules in [Chapter ?](node).
+Când numele nu este relativ, Node.js va căuta un pachet instalat cu acel nume. În exemplele din acest capitol vom interpreta asemenea nume ca referindu-se la pachete NPM. Vom intra în mai multe detalii despre cum putem instala și utiliza module NPM în [capitolul ?](node).
 
 {{id modules_ini}}
 
 {{index "ini package"}}
 
-Now, instead of writing our own INI file parser, we can use one from
-((NPM)).
+Acum, în loc de a scrie propriul vostru parser pentru fișiere INI, putem utiliza unul din NPM.
 
 ```
 const {parse} = require("ini");
@@ -412,7 +263,7 @@ console.log(parse("x = 10\ny = 20"));
 // → {x: "10", y: "20"}
 ```
 
-## ECMAScript modules
+## Module ECMAScript
 
 ((CommonJS modules)) work quite well and, in combination with NPM, 
 have allowed the JavaScript community to start sharing code on a large
