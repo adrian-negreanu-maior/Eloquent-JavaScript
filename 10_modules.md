@@ -34,7 +34,7 @@ _Modulele_ sunt o încercare de a evita aceste probleme. Un _modul_ este o bucat
 
 {{index "big ball of mud"}}
 
-Interfețele modulellor au multe în comun cu interfețele obiectelor, așa cum am văzut în [capitolul ?](object#interface). Ele permit ca o parte a modulului să fie disponibilă lumii exterioare și păstrează restul funcționalității privată. Prin restricționarea modului în care modulele pot interacționa între ele, sistemul începe să semene cu un LEGO, în care piesele interacționează prin conectori bine definiți.
+Interfețele modulelor au multe în comun cu interfețele obiectelor, așa cum am văzut în [capitolul ?](object#interface). Ele permit ca o parte a modulului să fie disponibilă lumii exterioare și păstrează restul funcționalității privată. Prin restricționarea modului în care modulele pot interacționa între ele, sistemul începe să semene cu un LEGO, în care piesele interacționează prin conectori bine definiți.
 
 {{index dependency}}
 
@@ -265,29 +265,17 @@ console.log(parse("x = 10\ny = 20"));
 
 ## Module ECMAScript
 
-((CommonJS modules)) work quite well and, in combination with NPM, 
-have allowed the JavaScript community to start sharing code on a large
-scale.
+Modulele CommonJS funcționează destul de bine și, în combinație cu NPM, au permis comunității JavaScript să partajeze cod pe scară largă.
 
 {{index "exports object", linter}}
 
-But they remain a bit of a duct-tape ((hack)). The ((notation)) is
-slightly awkward—the things you add to `exports` are not available in
-the local ((scope)), for example. And because `require` is a normal
-function call taking any kind of argument, not just a string literal,
-it can be hard to determine the dependencies of a module without
-running its code.
+Dar ele rămân oarecum un hack. Notația este puțin ciudată - lucrurile pe care le adăugați la `exports` nu sunt disponibile în domeniul de vizibilitate local, de exemplu. Și, deoarece `require` este un apel normal de funcție ce poate accepta orice argument, nu doar un literal de tip string, poate fi dificil să determinați dependențele unui modul fără a-i executa codul.
 
 {{index "import keyword", dependency, "ES modules"}}
 
 {{id es}}
 
-This is why the JavaScript standard from 2015 introduces its own,
-different module system. It is usually called _((ES modules))_, where
-_ES_ stands for ((ECMAScript)). The main concepts of dependencies and
-interfaces remain the same, but the details differ. For one thing, the
-notation is now integrated into the language. Instead of calling a
-function to access a dependency, you use a special `import` keyword.
+Acesta este motivul pentru care standardul din 2015 al JavaScript introduce propriul său sistem de module. De regulă este denumit _module ES_, unde _ES_ provine de la ECMAScript. Conceptele principale ale dependințelor și interfețelor rămân aceleași, dar detaliile diferă. Notația este acum integrată în limbaj. În loc să folosiți o funcție pentru a accesa o dependență, veți utiliza cuvântul cheie `import`.
 
 ```
 import ordinal from "ordinal";
@@ -298,35 +286,23 @@ export function formatDate(date, format) { /* ... */ }
 
 {{index "export keyword", "formatDate module"}}
 
-Similarly, the `export` keyword is used to export things. It may
-appear in front of a function, class, or binding definition (`let`,
-`const`, or `var`).
+Similar, cuvântul cheie `export` este utilizat pentru a exporta lucruri. Poate să apară în fața unei definiții de funcție, clasă sau binding (`let`, `const` sau `var`).
 
 {{index [binding, exported]}}
 
-An ES module's interface is not a single value but a set of named
-bindings. The preceding module binds `formatDate` to a function. When
-you import from another module, you import the _binding_, not the
-value, which means an exporting module may change the value of the
-binding at any time, and the modules that import it will see its new
-value.
+Interfața unui modul ES nu este o singură valoare ci un set de bindinguri. Modului anterior leagă `formatDate` spre o funcție. Când îl importați din alt modul, importați _bindingul_, nu valoarea, ceea ce înseamnă că modulul care o exportă ar putea schimba valoarea bindingului în orice moment, iar modulul care importă va vedea noua valoare.
 
 {{index "default export"}}
 
-When there is a binding named `default`, it is treated as the module's
-main exported value. If you import a module like `ordinal` in the
-example, without braces around the binding name, you get its `default`
-binding. Such modules can still export other bindings under different
-names alongside their `default` export.
+Dacă există un binding denumit `default`, acesta este tratat ca fiind valoarea principală exportată. Dacă importați un modul cum ar fi `ordinal` din exemplu, fără acolade în jurul numelui bindingului, veți obține bindingul `default`. Asemenea module pot să exporte și alte bindinguri sub nume diferite, pe lângă exportul `default`.
 
-To create a default export, you write `export default` before an
-expression, a function declaration, or a class declaration.
+Pentru a crea un export implicit, veți scrie `export default` înaintea unei expresii, a unei declarații de funcție sau a unei declarații de clasă.
 
 ```
 export default ["Winter", "Spring", "Summer", "Autumn"];
 ```
 
-It is possible to rename imported bindings using the word `as`.
+Putem redenumi bindingurile importante folosind cuvântul `as`.
 
 ```
 import {days as dayNames} from "date-names";
@@ -335,167 +311,69 @@ console.log(dayNames.length);
 // → 7
 ```
 
-Another important difference is that ES module imports happen before
-a module's script starts running. That means `import` declarations
-may not appear inside functions or blocks, and the names of
-dependencies must be quoted strings, not arbitrary expressions.
+O altă diferență importantă este că importurile unui modul ES au loc înainte de a începe rularea codului modulului. Înseamnă că declarațiile `import` nu pot fi plasate în interiorul funcțiilor sau blocurilor iar numele dependențelor trebuie să fie stringuri, nu expresii arbitrare.
 
-At the time of writing, the JavaScript community is in the process of
-adopting this module style. But it has been a slow process. It took
-a few years, after the format was specified, for browsers and Node.js
-to start supporting it. And though they mostly support it now, this
-support still has issues, and the discussion on how such modules
-should be distributed through ((NPM)) is still ongoing.
+Multe proiecte sunt scrise folosind module ES și apoi convertite automat în alt format, înainte de publicare. Suntem într-o perioadă de tranziție în care există două sisteme de module și ete util să putem citi și scrie cod în oricare dintre ele.
 
-Many projects are written using ES modules and then automatically
-converted to some other format when published. We are in a
-transitional period in which two different module systems are used
-side by side, and it is useful to be able to read and write code in
-either of them.
-
-## Building and bundling
+## Construirea și împachetarea
 
 {{index compilation, "type checking"}}
 
-In fact, many JavaScript projects aren't even, technically, written in
-JavaScript. There are extensions, such as the type checking
-((dialect)) mentioned in [Chapter ?](error#typing), that are widely
-used. People also often start using planned extensions to the language
-long before they have been added to the platforms that actually run
-JavaScript.
+De fapt, multe proiecte JavaScript nici măcar nu sunt scrise în JavaScript. Există extensii, cum ar fi dialectul care verifică tipurile menționat în [capitolul ?](error#typing), care sunt utilizate pe larg. Oamenii încep să utilizeze extensii planificate ale limbajului cu mult înainte de a fi adăugate la platformele care de fapt rulează JavaScript.
 
-To make this possible, they _compile_ their code, translating it from
-their chosen JavaScript dialect to plain old JavaScript—or even to a
-past version of JavaScript—so that old ((browsers)) can run it.
+Pentru a face posibil acest lucru, își _compilează_ codul, translatându-l din dialectul JavaScript ales în JavaScript standard - sau chiar într-o versiune mai veche de JavaScript, care să suporte browsere mai vechi.
 
 {{index latency, performance, [file, access], [network, speed]}}
 
-Including a modular program that consists of 200 different
-files in a ((web page)) produces its own problems. If fetching a
-single file over the network takes 50 milliseconds, loading
-the whole program takes 10 seconds, or maybe half that if you can
-load several files simultaneously. That's a lot of wasted time.
-Because fetching a single big file tends to be faster than fetching a
-lot of tiny ones, web programmers have started using tools that roll
-their programs (which they painstakingly split into modules) back into
-a single big file before they publish it to the Web. Such tools are
-called _((bundler))s_.
+Includerea unui program modular care constă din 200 de fișiere diferite într-o pagină web produce propriile provocări. Dacă transferarea unui singur fișier în rețea necesită 50 milisecunde, încărcarea întregului program va necesita 10 secunde, poate mai puțin dacă puteți încărca simultan mai multe fișiere. Este mult timp pierdut. Deoarece încărcarea unui singur fișier mare tinde să fie mai rapidă decât încărcarea multor fișiere mici, programatorii web au început să utilizeze unelte care împachetează programele într-un singur fișier mare înainte de a-l publica pe Web. Asemenea instrumente se numesc _bundlere_.
 
 {{index "file size"}}
 
-And we can go further. Apart from the number of files, the _size_ of
-the files also determines how fast they can be transferred over the
-network. Thus, the JavaScript community has invented _((minifier))s_.
-These are tools that take a JavaScript program and make it smaller by
-automatically removing comments and whitespace, renaming bindings, and
-replacing pieces of code with equivalent code that take up less space.
+Și putem merge mai departe. Pe lângă numărul de fișiere, _dimensiunea_ fișierelor determină și ea rapiditatea cu care acestea sunt transferate prin rețea. Prin urmare, comunitatea JavaScript a inventat _minificatoare (minifiers)_. Aceastea sunt instrumente care iau un program JavaScript și îl micșorează prin eliminarea comentariilor și a spațiilor, redenumirea bindingurilor și înlocuirea unor bucăți de cod cu cod echivalent care consumă mai puțin spațiu.
 
 {{index pipeline, tool}}
 
-So it is not uncommon for the code that you find in an NPM package or
-that runs on a web page to have gone through _multiple_ stages of
-transformation—converted from modern JavaScript to historic
-JavaScript, from ES module format to CommonJS, bundled, and minified.
-We won't go into the details of these tools in this book since they
-tend to be boring and change rapidly. Just be aware that the
-JavaScript code you run is often not the code as it was written.
+Prin urmare, nu este deloc neobișnuit ca ceea ce găsiți într-un pachet NPM sau ceea ce rulează într-o pagină web să fie cod care a parcurs mai multe etape de transformare - conversie din cod JavaScript modern în cod istoric, din formatul ES pentru module în formatul CommonJS, împachetat și minificat. Nu vom intra în detalii cu privire la aceste instrumente pentru că sunt plictisitoare și se modifică rapid. Doar conștientizați că programul JavaScript executat este adesea diferit de codul care a fost scris.
 
-## Module design
+## Designul modulelor
 
 {{index [module, design], [interface, module], [code, "structure of"]}}
 
-Structuring programs is one of the subtler aspects of programming. Any
-nontrivial piece of functionality can be modeled in various ways.
+Structurarea programelor este unul dintre aspectele mai subtile ale programării. Orice bucată netrivială de funcționalitate poate fi modelată în mai multe moduri.
 
-Good program design is subjective—there are trade-offs involved and
-matters of taste. The best way to learn the value of well-structured
-design is to read or work on a lot of programs and notice what works
-and what doesn't. Don't assume that a painful mess is "just the way it
-is". You can improve the structure of almost everything by putting
-more thought into it.
+Designul bun al programului este subiectiv - există compromisuri și gusturi. Cea mai bună metodă de a învăța valoarea designului bine structurat este să citiți și să lucrați la multe programe și să observați ce funcționează și ce nu. Nu presupuneți că un program dureros de întreținut este "ceea ce este". Puteți îmbunătăți structura aproape oricărui program cu mai mult efort de analiză.
 
 {{index [interface, module]}}
 
-One aspect of module design is ease of use. If you are designing
-something that is intended to be used by multiple people—or even by
-yourself, in three months when you no longer remember the specifics of
-what you did—it is helpful if your interface is simple and
-predictable.
+Un aspect important al designului modular este ușurința în utilizare. Dacă veți concepe un program care va fi utilizat de către mai multe persoane - sau chiar de către voi, peste trei luni cînd nu mai rețineți detaliile a ceea ce ați făcut, este de mare ajutor ca interfața să fie simplă și predictibilă.
 
 {{index "ini package", JSON}}
 
-That may mean following existing conventions. A good example is the
-`ini` package. This module imitates the standard `JSON` object by
-providing `parse` and `stringify` (to write an INI file) functions,
-and, like `JSON`, converts between strings and plain objects. So the
-interface is small and familiar, and after you've worked with it once,
-you're likely to remember how to use it.
+Aceasta ar putea însemna să respectați convențiile. Un exemplu bun este pachetul `ini`. Acest modul imită obiectul standard `JSON` prin oferirea funcțiilor `parse` și `stringify` (utilă pentru a scrie un fișier INI) și, ca și `JSON`, convertește între stringuri și obiecte. Astfel că interfața este compactă și familiară și, după ce l-ați folosit odată, probabil veți memora cum să îl utilizați.
 
 {{index "side effect", "hard disk", composability}}
 
-Even if there's no standard function or widely used package to
-imitate, you can keep your modules predictable by using simple ((data
-structure))s and doing a single, focused thing. Many of the INI-file
-parsing modules on NPM provide a function that directly reads such a
-file from the hard disk and parses it, for example. This makes it
-impossible to use such modules in the browser, where we don't have
-direct file system access, and adds complexity that would have been
-better addressed by _composing_ the module with some file-reading
-function.
+Chiar dacă nu există o funcție standard sau un pachet utilizat pe larg pe care să îl imitați, puteți scrie module predictibile prin utilizarea unor structuri simple de date și implementarea focalizată a unui singur lucru. Multe module pentru parsarea fișierelor INI, disponibile în NPM, vă pun la dispoziție o funcție care citește direct dintr-un fișier de pe harddisk și parsează rezultatul, de exemplu. Din această cauză, modulele nu pot fi utilizate direct în browser, unde nu avem acces direct la sistemul de fișiere și adaugă complexitate care ar fi fost mai bine adresată prin _compunerea_ modului cu o funcție de citire a unui fișier.
 
 {{index "pure function"}}
 
-This points to another helpful aspect of module design—the ease with
-which something can be composed with other code. Focused modules that
-compute values are applicable in a wider range of programs than bigger
-modules that perform complicated actions with side effects. An INI
-file reader that insists on reading the file from disk is useless in a
-scenario where the file's content comes from some other source.
+Aceasta indică un alt aspect util al arhitecturii modulare - ușurința cu care se poate compune funcționalitatea cu cod din alte module. Modulele țintite care calculează valori sunt aplicabile la un domeniu mai larg de programe decât modulele mai mari care realizează acțiuni complicate, cu efecte secundare. Un cititor de fișiere INI care insistă să citească dintr-un fișier de pe disc este inutil într-un scenariu în care conținutul fișierului provine din altă sursă.
 
 {{index "object-oriented programming"}}
 
-Relatedly, stateful objects are sometimes useful or even necessary,
-but if something can be done with a function, use a function. Several
-of the INI file readers on NPM provide an interface style that
-requires you to first create an object, then load the file into your
-object, and finally use specialized methods to get at the results.
-This type of thing is common in the object-oriented tradition, and
-it's terrible. Instead of making a single function call and moving on,
-you have to perform the ritual of moving your object through various
-states. And because the data is now wrapped in a specialized object
-type, all code that interacts with it has to know about that type,
-creating unnecessary interdependencies.
+În corelație, obiectele ce își păstrează starea sunt uneori utile sau chiar necesare, dar atunci când puteți scrie pur și simplu o funcție, preferați această abordare. Mai multe cititoare de fișiere INI din NPM vă oferă o interfață care vă solicită mai întâi să creați un obiect, apoi să încărcați fișierul în obiect și apoi să utilizați metode specializate pentru a obține rezultatele. Acest mod de lucru face parte din tradiția orientării-obiect și este îngrozitor. În locul unui simplu apel către o funcție, trebuie să parcurgeți întreg ritualul mutării obiectului vostru prin diverse stări. Și, deoarece acum datele sunt împachetate într-un obiect specializat, tot codul care interacționează cu el trebuie acum să fie conștient de tipul acelui obiect, ceea ce crează interdependențe inutile.
 
-Often defining new data structures can't be avoided—only a few 
-basic ones are provided by the language standard, and many types of
-data have to be more complex than an array or a map. But when an
-array suffices, use an array.
+Adesea, definirea unor noi structuri de date nu poate fi evitată - doar câteva structuri de bază sunt disponibile în limbajul standard și multe tipuri de date trebuie să fie mult mai complexe decât un array sau un map. Dar atunci când un array este suficient, folosiți un array.
 
-An example of a slightly more complex data structure is the graph from
-[Chapter ?](robot). There is no single obvious way to represent a
-((graph)) in JavaScript. In that chapter, we used an object whose
-properties hold arrays of strings—the other nodes reachable from that
-node.
+Un exemplu de structură puțin mai complexă este un graf, ca în [capitolul ?](robot). Nu există un mod evident de a reprezenta un graf în JavaScript. În acel capitol, am utilizat un obiect ale cărui proprietăți memorau array-uri de stringuri - nodurile care pot fi atinse din fiecare nod.
 
-There are several different pathfinding packages on ((NPM)), but none
-of them uses this graph format. They usually allow the graph's edges to
-have a weight, which is the cost or distance associated with it. That isn't
-possible in our representation.
+Există mai multe pachete în NPM utile pentru căutarea unei căi, dar nici unul dintre ele nu folosește acest format de graf. Ele permit de regulă asocierea unei ponderi pentru fiecare latură a unui graf (legătură între două noduri), care reprezintă costul sau distanța asociată acesteia. În reprezentarea noastră, acest lucru nu este posibil.
 
 {{index "Dijkstra, Edsger", pathfinding, "Dijkstra's algorithm", "dijkstrajs package"}}
 
-For example, there's the `dijkstrajs` package. A well-known approach
-to pathfinding, quite similar to our `findRoute` function, is called
-_Dijkstra's algorithm_, after Edsger Dijkstra, who first wrote it
-down. The `js` suffix is often added to package names to indicate the
-fact that they are written in JavaScript. This `dijkstrajs` package
-uses a graph format similar to ours, but instead of arrays, it uses
-objects whose property values are numbers—the weights of the edges.
+De exemplu, există un pachet `dijkstrajs`. O abordare bine cunoscută petnru determinarea drumurilor, destul de similară cu funcția noastră `findRoute`, este _algoritmul lui Dijkstra_, denumit după Edgar Dijkstra, care a fost primul care a rezolvat astfel problema. Sufixul `js` este adăugat la numele pachetului pentru a indica faptul că este scris în JavaScript. Acest pachet `dijkstrajs` utilizează un format al grafului asemănător cu formatul nostru, dar în loc de array-uri folosește obiecte ale căror valori ale proprietăților sunt numere - ponderile laturilor.
 
-So if we wanted to use that package, we'd have to make sure that our
-graph was stored in the format it expects. All edges get the same
-weight since our simplified model treats each road as having the
-same cost (one turn).
+Astfel, dacă vrem să utilizăm acest pachet, trebuie să ne asigurăm că graful nostru a fost memorat în formatul așteptat. Toate laturile vor avea aceeași pondere deoarece modelul nostru simplificat tratează fiecare drum ca având același cost (o mutare).
 
 ```
 const {find_path} = require("dijkstrajs");
@@ -512,38 +390,25 @@ console.log(find_path(graph, "Post Office", "Cabin"));
 // → ["Post Office", "Alice's House", "Cabin"]
 ```
 
-This can be a barrier to composition—when various packages are using
-different data structures to describe similar things, combining them
-is difficult. Therefore, if you want to design for composability,
-find out what ((data structure))s other people are using and, when
-possible, follow their example.
+Aceasta poate fi o barieră pentru compoziție - când diferite pachete utilizează structuri de date diferite pentru a descrie același lucru, combinarea lor este dificilă. Prin urmare, dacă vreți să concepeți module pentru compozabilitate, identificați ce structuri de date folosesc ceilalți și, de câte ori este posibil, urmați exemplele.
 
-## Summary
+## Rezumat
 
-Modules provide structure to bigger programs by separating the code
-into pieces with clear interfaces and dependencies. The interface is
-the part of the module that's visible from other modules, and the
-dependencies are the other modules that it makes use of.
+Modulele oferă structură programelor mai mari prin separarea codului în bucăți ce au interfețe și dependețe clare. Interfața este partea din modul care este vizibilă altor module iar dependențele sunt celelalte module care sunt utilizate.
 
-Because JavaScript historically did not provide a module system, the
-CommonJS system was built on top of it. Then at some point it _did_ get
-a built-in system, which now coexists uneasily with the CommonJS
-system.
+Deoarece JavaScript nu oferea un sistem de module, sistemul CommonJS a fost construit pe baza limbajului. Apoi, la un moment dat, a apărut un sistem încorporat, care acum coexistă cu sistemul CommonJS.
 
-A package is a chunk of code that can be distributed on its own. NPM
-is a repository of JavaScript packages. You can download all kinds of
-useful (and useless) packages from it.
+Un pachet este o bucată de cod care poate fi distribuită. NPM este o sursă (repository) de pachete JavaScript. Puteți descărca tot felul de pachete utile (și inutile) din el.
 
-## Exercises
+## Exerciții
 
-### A modular robot
+### Un robot modular
 
 {{index "modular robot (exercise)", module, robot, NPM}}
 
 {{id modular_robot}}
 
-These are the bindings that the project from [Chapter ?](robot)
-creates:
+Acestea sunt bindingurile create în proiectul din [capitolul ?](robot):
 
 ```{lang: "text/plain"}
 roads
@@ -559,93 +424,43 @@ findRoute
 goalOrientedRobot
 ```
 
-If you were to write that project as a modular program, what modules
-would you create? Which module would depend on which other module, and
-what would their interfaces look like?
+Dacă ar fi să scrieți acel proiect ca și un program modular, ce module ați crea? Care ar fi dependențele dintre module și cum ar arăta interfețele lor?
 
-Which pieces are likely to be available prewritten on NPM? Would you
-prefer to use an NPM package or write them yourself?
+Ce părți ar putea disponibile în NPM? Ați prefera să folosiți un pachet NPM sau să le rescrieți?
 
 {{hint
 
 {{index "modular robot (exercise)"}}
 
-Here's what I would have done (but again, there is no single _right_
-way to design a given module):
+Iată ce aș face (dar din nou, nu există un singur mod _corect_ de a concepe un modul dat):
 
 {{index "dijkstrajs package"}}
 
-The code used to build the road graph lives in the `graph` module.
-Because I'd rather use `dijkstrajs` from NPM than our own pathfinding
-code, we'll make this build the kind of graph data that `dijkstrajs`
-expects. This module exports a single function, `buildGraph`. I'd have
-`buildGraph` accept an array of two-element arrays, rather than
-strings containing hyphens, to make the module less dependent on the
-input format.
+Codul utilizat pentru a construi graful drumurilor se află în modulul `graph`. Deoarece aș utiliza mai degrabă `dijkstrajs` din NPM decât codul meu pentru găsirea drumurilor, voi construi tipul de graf pe care îl așteaptă `disjkstrajs`. Modulul `graph` va exporta o singură funcție, `buildGraph`. Această funcție va accepta un array de array-uri de câte două elemente, în loc de stringuri separate prin `-`, pentru ca modulul să fie mai puțin dependent de formatul datelor de intrare.
 
-The `roads` module contains the raw road data (the `roads` array) and
-the `roadGraph` binding. This module depends on `./graph` and exports
-the road graph.
+Modulul `roads` va conține datele brute despre drumuri (array-ul `roads`) și bindingul `roadGraph`. Acest modul ar depinde de `./graph` și ar exporta graful drumurilor.
 
 {{index "random-item package"}}
 
-The `VillageState` class lives in the `state` module. It depends on
-the `./roads` module because it needs to be able to verify that a
-given road exists. It also needs `randomPick`. Since that is a
-three-line function, we could just put it into the `state` module as
-an internal helper function. But `randomRobot` needs it too. So we'd
-have to either duplicate it or put it into its own module. Since this
-function happens to exist on NPM in the `random-item` package, a good
-solution is to just make both modules depend on that. We can add the
-`runRobot` function to this module as well, since it's small and
-closely related to state management. The module exports both the
-`VillageState` class and the `runRobot` function.
+Clasa `VillageState` aș plasa-o în modulul `state`. Ar depinde de modulul `./roads` deoarece trebuie să poată verifica dacă un drum anume există. De asemenea, ar avea nevoie de `randomPick`. Deoarece aceasta este o funcție de trei linii, am putea să o scriem în modulul `state` ca și o funcție helper internă. Dar și `randomRobot` are nevoie de ea. Deci ar trebui fie să o duplicăm, fie să o plasăm în propriul ei modul. Deoarece această funcție există în NPM în pachetul `random-item`, o soluție bună ar fi ca ambele module să depindă de acest pachet. Și funcția `runRobot` am putea să o adăugăm tot în modulul `state` deoarece este scurtă și legată de managementul stării. Modulul ar exporta atât clasa `VillageState` cât și funcția `runRobot`.
 
-Finally, the robots, along with the values they depend on such as
-`mailRoute`, could go into an `example-robots` module, which depends
-on `./roads` and exports the robot functions. To make it possible for
-`goalOrientedRobot` to do route-finding, this module also depends
-on `dijkstrajs`.
+În sfârșit, roboții, împreună cu valorile de care depind, cum ar fi `mailRoute`, pot fi plasați în modulul `example-robots` care depinde de `./roads` și exportă funcțiile pentru roboți. Pentru ca `goalOrientedRobot` să poată să găsească rutele, modulul de exemple va depinde de `dijkstrajs`.
 
-By offloading some work to ((NPM)) modules, the code became a little
-smaller. Each individual module does something rather simple and can
-be read on its own. Dividing code into modules also often suggests
-further improvements to the program's design. In this case, it seems a
-little odd that the `VillageState` and the robots depend on a specific
-road graph. It might be a better idea to make the graph an argument to
-the state's constructor and make the robots read it from the state
-object—this reduces dependencies (which is always good) and makes it
-possible to run simulations on different maps (which is even better).
+Delegând parte din muncă modulelor NPM, codul a devenit mai scurt. Fiecare modul individual realizează ceva simplu și este de sine stătător. Împărțirea codului în module sugerează și moduri suplimentare de a îmbunătăți designul programului. În acest exemplu, este puțin ciudat că `VillageState` și roboții depind de un anume graf al drumurilor. Ar putea fi o idee mai bună ca graful să fie un argument al constructorului și roboții să citească din starea obiectului - ceea ce ar reduce dependențele (un lucru bun, întotdeauna) și ar fi posibilă executarea unor simulări cu hărți diferite (ceea ce e chiar și mai bine).
 
-Is it a good idea to use NPM modules for things that we could have
-written ourselves? In principle, yes—for nontrivial things like the
-pathfinding function you are likely to make mistakes and waste time
-writing them yourself. For tiny functions like `random-item`, writing
-them yourself is easy enough. But adding them wherever you need them
-does tend to clutter your modules.
+Este o idee bună să folosim module NPM pentru lucruri pe care le-am fi putut scrie noi? În principiu, da - pentru lucruri netriviale, cum ar fi funcția de căutare a drumurilor, este posibil să faceți greșeli și să pierdeți timp. Pentru funcții scurte, cum ar fi `random-item`, scrierea codului propriu este destul de ușoară. Dar adăugarea lor în toate locurile în care aveți nevoie tinde să adauge dezordine în modulele proprii.
 
-However, you should also not underestimate the work involved in
-_finding_ an appropriate NPM package. And even if you find one, it
-might not work well or may be missing some feature you need. On top
-of that, depending on NPM packages means you have to make sure they
-are installed, you have to distribute them with your program, and you
-might have to periodically upgrade them.
+Totuși, nu subestimați efortul necesar pentru _găsirea_ unui pachet NPM adecvat. Și chiar dacă găsiți unul, s-ar putea să nu funcționeze corespunzător sau să îi lipsească funcționalitate de care aveți nevoie. În plus, dependența de pachete NPM înseamnă că trebuie să vă asigurați că acestea sunt instalate, trebuie să le distribuiți împreună cu programul vostru și s-ar putea să fiți nevoiți să le actualizați periodic.
 
-So again, this is a trade-off, and you can decide either way depending
-on how much the packages help you.
+Deci, din nou, acesta este un compromis și puteți decide să alegeți oricare variantă, în funcție de cât de utile vă sunt pachetele.
 
 hint}}
 
-### Roads module
+### Modulul `roads`
 
 {{index "roads module (exercise)"}}
 
-Write a ((CommonJS module)), based on the example from [Chapter
-?](robot), that contains the array of roads and exports the graph
-data structure representing them as `roadGraph`. It should depend on a
-module `./graph`, which exports a function `buildGraph` that is used
-to build the graph. This function expects an array of two-element
-arrays (the start and end points of the roads).
+Scrieți un modul CommonJS, bazat pe exemplul din [capitolul ?](robot), care conține array-ul de drumuri și exportă structura de date pentru graf, reprezentându-le ca și `roadGraph`. Va trebui să depindă de un modul `./graph` care exportă o funcție `buildGraph` care este utilizată pentru a construi graful. Această funcție așteaptă un array de array-uri de câte două elemente (începutul și sfârșitul drumului).
 
 {{if interactive
 
@@ -669,51 +484,28 @@ if}}
 
 {{index "roads module (exercise)", "destructuring binding", "exports object"}}
 
-Since this is a ((CommonJS module)), you have to use `require` to
-import the graph module. That was described as exporting a
-`buildGraph` function, which you can pick out of its interface object
-with a destructuring `const` declaration.
+Deoarece acesta este un modul CommonJS, va trebui să folosiți `require` pentru a importa modulul `graph`. Acesta a fost descris ca exportând funcția `buildGraph`, pe care o puteți prelua din obiectul de interfață cu o declarație `const` și destructurare.
 
-To export `roadGraph`, you add a property to the `exports` object.
-Because `buildGraph` takes a data structure that doesn't precisely
-match `roads`, the splitting of the road strings must happen in your
-module.
+Pentru a exporta `roadGraph` veți adăuga o proprietate la obiectul `exports`. Deoarece `buildGraph` preia o structură de date care nu se potrivește exact cu `roads`, ruperea stringurilor ce descriu drumuri va trebui să fie realizată în modulul vostru.
 
 hint}}
 
-### Circular dependencies
+### Dependențe circulare
 
 {{index dependency, "circular dependency", "require function"}}
 
-A circular dependency is a situation where module A depends on B, and
-B also, directly or indirectly, depends on A. Many module systems
-simply forbid this because whichever order you choose for loading such
-modules, you cannot make sure that each module's dependencies have
-been loaded before it runs.
+O dependență circulară este o situație în care modulul A depinde de modulul B, dar modulul B depinde la rîndul său, direct sau indirect de modulul A. Multe sisteme modulare pur și simplu interzic asta deoarece indiferent de ordinea de încărcare pe care o alegeți, nu vă puteți asigura că depepndențele fiecărui modul au fost încărcate înainte de rulare.
 
-((CommonJS modules)) allow a limited form of cyclic dependencies. As
-long as the modules do not replace their default `exports` object and
-don't access each other's interface until after they finish loading,
-cyclic dependencies are okay.
+Modulele CommonJS permit o formă limitată de dependență circulară. Cât timp modulele nu își înlocuiesc obiectul implicit `exports` și nu își accesează reciproc interfețele decât după ce au fost încărcate, dependențele ciclice sunt permise.
 
-The `require` function given [earlier in this
-chapter](modules#require) supports this type of dependency cycle. Can
-you see how it handles cycles? What would go wrong when a module in a
-cycle _does_ replace its default `exports` object?
+Funcția `require` folosită anterior [în acest capitol](modules#require) permite acest ciclu de dependență. Vă dați seama cum gestionează ciclurile? Ce ar putea funcționa greșit atunci când un modul dintr-un ciclu își modifică obiectul implicit `exports`?
 
 {{hint
 
 {{index overriding, "circular dependency", "exports object"}}
 
-The trick is that `require` adds modules to its cache _before_ it
-starts loading the module. That way, if any `require` call made while
-it is running tries to load it, it is already known, and the current
-interface will be returned, rather than starting to load the module
-once more (which would eventually overflow the stack).
+Trucul este că `require` adaugă modulele la propriul cache _înainte_ ca modulul să fie încărcate. Astfel, dacă un apel `require` la rulare încearcă să îl încarce, modulul este deja cunoscut și interfața sa curentă va fi încărcată, în loc să mai fie încărcat încă o dată (ceea ce ar putea duce la depășirea stivei).
 
-If a module overwrites its `module.exports` value, any other module
-that has received its interface value before it finished loading will
-have gotten hold of the default interface object (which is likely
-empty), rather than the intended interface value.
+Dacă un modul își suprascrie valoarea `module.exports`, orice alt modul care a primit deja interfața sa anterior va avea acces la obiectul implicit de interfață (care este probabil gol) și nu la interfața dorită.
 
 hint}}
