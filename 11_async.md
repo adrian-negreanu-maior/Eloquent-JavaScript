@@ -203,29 +203,29 @@ Computațiile JavaScript regulate pot eșua prin aruncarea unei excepții. Compu
 
 {{index "callback function", error}}
 
-One of the most pressing problems with the callback style of asynchronous programming is that it makes it extremely difficult to make sure failures are properly reported to the callbacks.
+Una dintre cele mai presante probleme legate de stilul bazat pe callback-uri în programarea asincronă este dificultatea extremă cu care ne confruntăm pentru a ne asigura că erorile sunt raportate corespunzător către callback-uri.
 
-A widely used convention is that the first argument to the callback is used to indicate that the action failed, and the second contains the value produced by the action when it was successful. Such callback functions must always check whether they received an exception and make sure that any problems they cause, including exceptions thrown by functions they call, are caught and given to the right function.
+O convenție utilizată pe larg este ca primul argument al callback-ului să fie utilizat pentru a indica eșecul acțiunii iar cel de-al doilea să conțină valoarea produsă de acțiune atunci când s-a finalizat cu succes. Aceste funcții callback trebuie să verifice întotdeauna dacă au recepționat o excepție și să se asigure că, indiferent de probleme cauzate, inclusiv excepțiile aruncate de către funcțiile pe care le apelează, sunt prinse și transmise către funcția adecvată.
 
 {{index "rejecting (a promise)", "resolving (a promise)", "then method"}}
 
-Promises make this easier. They can be either resolved (the action finished successfully) or rejected (it failed). Resolve handlers (as registered with `then`) are called only when the action is successful, and rejections are automatically propagated to the new promise that is returned by `then`. And when a handler throws an exception, this automatically causes the promise produced by its `then` call to be rejected. So if any element in a chain of asynchronous actions fails, the outcome of the whole chain is marked as rejected, and no success handlers are called beyond the point where it failed.
+Promisiunile ușurează această muncă. Ele pot să fie rezolvate (acțiunea s-a finalizat cu succes) sau respinse (a eșuat). Handlerele pentru rezolvare (înregistrate cu `then`) sunt apelate doar când acțiunea se încheie cu succes iar respingerile sunt automat propagate către următoarea promisiune returnată de către `then`. Atunci când un handler aruncă o excepție, acesta cauzează automat respingerea promisiunii produse de apelul `then`. Astfel, dacă oricare element al unui lanț de acțiuni asincrone eșuează, rezultatul întregului lanț este marcat ca și respins și nici un handler pentru succes nu va mai fi apelat dincolo de locul eșecului.
 
 {{index "Promise.reject function", "Promise class"}}
 
-Much like resolving a promise provides a value, rejecting one also provides one, usually called the _reason_ of the rejection. When an exception in a handler function causes the rejection, the exception value is used as the reason. Similarly, when a handler returns a promise that is rejected, that rejection flows into the next promise. There's a `Promise.reject` function that creates a new, immediately rejected promise.
+Așa cum rezolvarea unei promisiuni furnizează o valoare, respingerea ei de asemenea va furniza o valoare, de regulă denumită _motivul_ respingerii. Când o excepție într-o funcție handler cauzează o respingere, valoarea excepție este utilizată ca și motiv. Similar, când un handler returnează o promisiune care este respinsă, respingerea continuă spre următoarea promisiune. Există metoda `Promise.reject` care crează o promisiune nouă pe care o respinge imediat.
 
 {{index "catch method"}}
 
-To explicitly handle such rejections, promises have a `catch` method that registers a handler to be called when the promise is rejected, similar to how `then` handlers handle normal resolution. It's also very much like `then` in that it returns a new promise, which resolves to the original promise's value if it resolves normally and to the result of the `catch` handler otherwise. If a `catch` handler throws an error, the new promise is also rejected.
+Pentru a gestiona explicit aceste respingeri, promisiunile au o metoda `catch` care înregistrarea un handler ce va fi apelat când promisiunea este respinsă, similar cu modul în care handlerele `then` gestionează rezolvarea normală. De asemenea, `catch` returnează o nouă promisiune, care este rezolvată cu valoarea promisiunii originale dacă a fost rezolvată normal și cu rezultatul handlerului `catch` în caz contrar. Dacă un handler `catch` aruncă o excepție, noua promisiune va fi și ea respinsă.
 
 {{index "then method"}}
 
-As a shorthand, `then` also accepts a rejection handler as a second argument, so you can install both types of handlers in a single method call.
+Ca și prescurtare, `then` acceptă un handler pentru respingere ca și al doilea argument, astfel că putem preciza ambele tipuri de handlere într-un singur apel.
 
-A function passed to the `Promise` constructor receives a second argument, alongside the resolve function, which it can use to reject the new promise.
+O funcție transmisă constructorului `Promise` primește un al doilea argument, pe lângă funcția pentru rezolvare, care poate fi utilizat pentru a respinge promisiunea.
 
-The chains of promise values created by calls to `then` and `catch` can be seen as a pipeline through which asynchronous values or failures move. Since such chains are created by registering handlers, each link has a success handler or a rejection handler (or both) associated with it. Handlers that don't match the type of outcome (success or failure) are ignored. But those that do match are called, and their outcome determines what kind of value comes next—success when it returns a non-promise value, rejection when it throws an exception, and the outcome of a promise when it returns one of those.
+Succesiunea de promisiuni create de către apelurile către `then` și `catch` poate fi privită ca o conductă prin care valorile asincrone sau eșecurile se deplasează. Deoarece asemenea lanțuri sunt create prin înregistrarea handlerelor, fiecare legătură are un handler pentru succes sau unul pentru respingere (sau amândouă) asociate cu ea. Handlerele care nu potrivesc tipul de ieșire (succes sau eșec) sunt ignorate. Dar cele care îl potrivesc sunt apelate și rezultatul lor determină ce fel de valoare urmează - succes când returnează o valoare care nu este o promisiune, respingere când este aruncată o excepție și rezultatul unei promisiuni când este returnată una.
 
 ```{test: no}
 new Promise((_, reject) => reject(new Error("Fail")))
@@ -241,27 +241,27 @@ new Promise((_, reject) => reject(new Error("Fail")))
 
 {{index "uncaught exception", "exception handling"}}
 
-Much like an uncaught exception is handled by the environment, JavaScript environments can detect when a promise rejection isn't handled and will report this as an error.
+Tot așa cum o excepție netratată este gestionată de către mediu, mediile JavaScript pot detecta dacă respingerea unei promisiuni nu este gestionată și vor raporta aceasta ca fiind o eroare.
 
-## Networks are hard
+## Rețelele sunt dificile
 
 {{index [network, reliability]}}
 
-Occasionally, there isn't enough light for the ((crow))s' mirror systems to transmit a signal or something is blocking the path of the signal. It is possible for a signal to be sent but never received. 
+Ocazional, lumina nu este suficientă în sistemul de oglinzi al ciorilor pentru a transmite un semnal, sau ceva blochează calea semnalului. Este posibil ca un semnal să fie trimis, dar nu și recepționat.
 
 {{index "send method", error, timeout}}
 
-As it is, that will just cause the callback given to `send` to never be called, which will probably cause the program to stop without even noticing there is a problem. It would be nice if, after a given period of not getting a response, a request would _time out_ and report failure.
+Prin urmare, callbackul metodei `send` nu va fi niciodată apelat, ceea ce probabil va cauza oprirea programului fără ca măcar să atenționeze că există o problemă. Ar fi frumos ca, după scurgerea unei anumite perioade de timp fără a recepționa un răspuns, cererea să expire și să raporteze un eșec.
 
-Often, transmission failures are random accidents, like a car's headlight interfering with the light signals, and simply retrying the request may cause it to succeed. So while we're at it, let's make our request function automatically retry the sending of the request a few times before it gives up.
+Adesea, erorile de transmisie sunt accidente întâmplătoare, cum ar fi interferența luminii farurilor cu semnalul luminos și retransmiterea cererii ar putea conduce la succes. Haideți să modificăm funcția de cerere ca să reîncerce să trimită automat cererea de câteva ori înainte de a renunța.
 
 {{index "Promise class", "callback function", [interface, object]}}
 
-And, since we've established that promises are a good thing, we'll also make our request function return a promise. In terms of what they can express, callbacks and promises are equivalent. Callback-based functions can be wrapped to expose a promise-based interface, and vice versa.
+Și, deoarece am stabilit deja că promisiunile sunt un lucru bun, vom modifica funcția de cerere ca să returneze o promisiune. Din punct de vedere al ceea ce pot exprima, callbackurile și promisiunile sunt echivalente. Funcțiile bazate pe callback-uri pot fi împachetate ca să expună o interfață bazată pe promisiuni și invers.
 
-Even when a ((request)) and its ((response)) are successfully delivered, the response may indicate failure—for example, if the request tries to use a request type that hasn't been defined or the handler throws an error. To support this, `send` and `defineRequestType` follow the convention mentioned before, where the first argument passed to callbacks is the failure reason, if any, and the second is the actual result.
+Chiar și atunci când o cerere și răspunsul său au fost livrate cu succes, răspunsul ar putea indica un eșec - de exemplu, dacă cererea încearcă să utilizeze un tip de cerere care nu a fost definit sau dacă handlerul aruncă o excepție. Pentru a suporta aceasta, `send` și `defineRequestType` urmează convenția menționată anterior, în care primul argument transmis către callback este motivul eșecului, dacă există, iar cel de-al doilea este rezultatul propriu-zis.
 
-These can be translated to promise resolution and rejection by our wrapper.
+Acestea pot fi translatate în rezolvarea sau respingerea unei promisiuni.
 
 {{index "Timeout class", "request function", retry}}
 
@@ -290,21 +290,21 @@ function request(nest, target, type, content) {
 
 {{index "Promise class", "resolving (a promise)", "rejecting (a promise)"}}
 
-Because promises can be resolved (or rejected) only once, this will work. The first time `resolve` or `reject` is called determines the outcome of the promise, and further calls caused by a request coming back after another request finished are ignored.
+Deoarece promisiunile pot fi rezovlate sau respinse doar o dată, acest cod va funcționa. La primul apel al `resolve` sau `reject` se determină rezultatul promisunii iar apeluri ulterioare cauzate de o cerere ce revine după ce o altă cerere a fost rezolvată sunt ignorate.
 
 {{index recursion}}
 
-To build an asynchronous ((loop)), for the retries, we need to use a recursive function—a regular loop doesn't allow us to stop and wait for an asynchronous action. The `attempt` function makes a single attempt to send a request. It also sets a timeout that, if no response has come back after 250 milliseconds, either starts the next attempt or, if this was the third attempt, rejects the promise with an instance of `Timeout` as the reason.
+Pentru a construi o buclă asincronă pentru reîncercări, trebuie să folosim o funcție recursivă - o buclă simplă nu ne permite să ne oprim și să așteptăm după o acțiune asincronă. Funcția `attempt` face o singură încercare de a trimite o cerere. De asemenea, setează un timp de expirare. Dacă nu a venit un răspuns după 250 milisecunde, fie încearcă din nou fie, dacă a fost cea de a treia încercare, respinge promisiunea cu o instanță a `Timeout` ca și motiv.
 
 {{index idempotence}}
 
-Retrying every quarter-second and giving up when no response has come in after three-quarter second is definitely somewhat arbitrary. It is even possible, if the request did come through but the handler is just taking a bit longer, for requests to be delivered multiple times. We'll write our handlers with that problem in mind—duplicate messages should be harmless.
+Reîncercarea după fiecare sfert de secundă și renunțarea după ce trei încercări nu au primit răspuns este evident arbitrară. Este chiar posibil ca , dacă răspunsul a venit dar handlerul a luat puțin mai mult timp, cererea să fie livrată de mai multe ori. Vom scrie handlerele ținând cont de această problemă - mesajele duplicate nu ar trebui să dăuneze.
 
-In general, we will not be building a world-class, robust network today. But that's okay—crows don't have very high expectations yet when it comes to computing.
+În general, nu vom construi o rețea foarte robustă. Dar e în regulă, ciorile nu au încă așteptări foarte mari când vine vorba despre computații.
 
 {{index "defineRequestType function", "requestType function"}}
 
-To isolate ourselves from callbacks altogether, we'll go ahead and also define a wrapper for `defineRequestType` that allows the handler function to return a promise or plain value and wires that up to the callback for us.
+Pentru a ne izola de callbackuri, vom defini un wrapper pentru `defineRequestType` care permite ca funcția handler să returneze o promisune sau o valoare obișnuită care va fi legată apoi de callback.
 
 ```{includeCode: true}
 function requestType(name, handler) {
@@ -323,21 +323,21 @@ function requestType(name, handler) {
 
 {{index "Promise.resolve function"}}
 
-`Promise.resolve` is used to convert the value returned by `handler` to a promise if it isn't already.
+`Promise.resolve` este utilizat pentru a converti valoarea returnată de către `handler` într-o promisiune, dacă nu este deja.
 
 {{index "try keyword", "callback function"}}
 
-Note that the call to `handler` had to be wrapped in a `try` block to make sure any exception it raises directly is given to the callback. This nicely illustrates the difficulty of properly handling errors with raw callbacks—it is easy to forget to properly route exceptions like that, and if you don't do it, failures won't get reported to the right callback. Promises make this mostly automatic and thus less error-prone.
+Observați că apelul către `handler` a fost inclus într-un bloc `try` pentru a ne asigura că orice excepție pe care o ridică direct este dată callback-ului. Aceasta ilustrează dificultatea de a gestiona corespunzător erorile cu callback-uri brute - este uțor să uitați să rutați corespunzător excepțiile și, dacă nu o faceți, eșecurile nu vor fi raportate către callbackul corect. Promisiunile fac asta automat și deci, mai puțin expus erorilor.
 
-## Collections of promises
+## Colecții de promisiuni
 
 {{index "neighbors property", "ping request"}}
 
-Each nest computer keeps an array of other nests within transmission distance in its `neighbors` property. To check which of those are currently reachable, you could write a function that tries to send a `"ping"` request (a request that simply asks for a response) to each of them and see which ones come back.
+Computerul din fiecare cuib memorează un array al cuiburilor care se află in raza de transmisie, în proprietatea `neighhbors`. Pentru a verifica dacă un cuib poate fi atins, putem scrie o funcție care să transmită o cerere `"ping"` (o cerere care doar solicită un răspuns) către fiecare dintre cuiburi și să verifice care dintre ele se întoarce.
 
 {{index "Promise.all function"}}
 
-When working with collections of promises running at the same time, the `Promise.all` function can be useful. It returns a promise that waits for all of the promises in the array to resolve and then resolves to an array of the values that these promises produced (in the same order as the original array). If any promise is rejected, the result of `Promise.all` is itself rejected.
+Când folosim colecții de promisiuni ce rulează simultan, metoda `Promise.all` poate fi folositoare. Ea returnează o promisiune care așteaptă ca toate promisiunile din array să se rezolve și apoi se rezolvă la un array de valori produse de acele promisiuni (în aceeați ordine ca și array-ul original). Dacă orice promisune este respinsă, rezultatul `Promise.all` va fi respins.
 
 ```{includeCode: true}
 requestType("ping", () => "pong");
@@ -355,17 +355,17 @@ function availableNeighbors(nest) {
 
 {{index "then method"}}
 
-When a neighbor isn't available, we don't want the entire combined promise to fail since then we still wouldn't know anything. So the function that is mapped over the set of neighbors to turn them into request promises attaches handlers that make successful requests produce `true` and rejected ones produce `false`.
+Când un vecin nu este disponibil, nu vrem ca promisiunea combinată să eșueze deoarece tot nu am avea nici o informație. Astfel că funcția care este mapată peste setul de vecini pentru a-i transforma in promisiuni de cereri atașează handlere care vor produce `true` pentru cererile reușite și `false` pentru cele respinse.
 
 {{index "filter method", "map method", "some method"}}
 
-In the handler for the combined promise, `filter` is used to remove those elements from the `neighbors` array whose corresponding value is false. This makes use of the fact that `filter` passes the array index of the current element as a second argument to its filtering function (`map`, `some`, and similar higher-order array methods do the same).
+În handlerul pentru promisiunea combinată, metoda `filter` se utilizează pentru a elimina din arrayul `neighbors` elementele pentru care valoarea corespunzătoare este false. Aceasta utilizează faptul că metoda `filter` transmite indexul elementului curent ca și cel de-al doilea argument al funcției de filtrare (`map`, `some` și alte câteva metode similare de oridn superior procedează la fel).
 
-## Network flooding
+## Inundarea rețelei
 
-The fact that nests can talk only to their neighbors greatly inhibits the usefulness of this network.
+Faptul că oricare cuib poate comunica doar cu vecinii săi limitează mult utilitatea acestei rețele.
 
-For broadcasting information to the whole network, one solution is to set up a type of request that is automatically forwarded to neighbors. These neighbors then in turn forward it to their neighbors, until the whole network has received the message.
+Pentru a transmite informația în întreaga rețea, o soluție ar fi să construim un tip de cerere care este transmis automat către toți vecinii. Apoi vecinii ar transmite către vecinii lor, până când toată rețeaua ar primi mesajul.
 
 {{index "sendGossip function"}}
 
@@ -394,19 +394,19 @@ requestType("gossip", (nest, message, source) => {
 
 {{index "everywhere function", "gossip property"}}
 
-To avoid sending the same message around the network forever, each nest keeps an array of gossip strings that it has already seen. To define this array, we use the `everywhere` function—which runs code on every nest—to add a property to the nest's `state` object, which is where we'll keep nest-local state.
+Pentru a evita transmiterea infinită a aceluiași mesaj prin rețea, fiecare cuib memorează un array cu mesajele pe care le-a recepționat deja. Pentru a defini acest array folosim funcția `everywhere` care rulează cod în fiecare cuib pentru a adăuga o proprietate la obiectul `state` al cuibului, ce reține starea locală a cuibului.
 
-When a nest receives a duplicate gossip message, which is very likely to happen with everybody blindly resending them, it ignores it. But when it receives a new message, it excitedly tells all its neighbors except for the one who sent it the message.
+Când un cuib primește un mesaj duplicat, ceea ce este foarte probabil să se întâmple de vreme ce toată lumea le transmite orbește, îl ignoră. Dar când primește un nou mesaj, îl retransmite tuturor vecinilor, cu excepția celui de la care l-a primit.
 
-This will cause a new piece of gossip to spread through the network like an ink stain in water. Even when some connections aren't currently working, if there is an alternative route to a given nest, the gossip will reach it through there.
+În acest fel, un mesaj se va răspândi în rețea ca o picătură de cerneală în apă. Chiar și atunci când unele conexiuni nu funcționează temporar, dacă există o rută alternativă către un cuib, mesajul va ajunge acolo.
 
 {{index "flooding"}}
 
-This style of network communication is called _flooding_—it floods the network with a piece of information until all nodes have it.
+Acest mod de comunicare în rețea se numește _inundare (flooding)_ - rețeaua este inundată de către o bucată de informație până când toate nodurile sunt atinse.
 
 {{if interactive
 
-We can call `sendGossip` to see a message flow through the village.
+Putem apela `sendGossip` pentru a vedea cum se propagă un mesaj prin rețea.
 
 ```
 sendGossip(bigOak, "Kids with airgun in the park");
@@ -414,21 +414,21 @@ sendGossip(bigOak, "Kids with airgun in the park");
 
 if}}
 
-## Message routing
+## Rutarea mesajelor
 
 {{index efficiency}}
 
-If a given node wants to talk to a single other node, flooding is not a very efficient approach. Especially when the network is big, that would lead to a lot of useless data transfers.
+Dacă un nod dat vrea să comunice cu un singur alt nod, inundarea nu este o abordare prea eficientă. Mai ales atunci când rețeaua este mare, aceasta va conduce la multe transferuri de date inutile.
 
 {{index "routing"}}
 
-An alternative approach is to set up a way for messages to hop from node to node until they reach their destination. The difficulty with that is it requires knowledge about the layout of the network. To send a request in the direction of a faraway nest, it is necessary to know which neighboring nest gets it closer to its destination. Sending it in the wrong direction will not do much good.
+O abordare alternativă ar fi setarea unui mod prin care mesajul să sară din nod în nod până ajunge la destinație. Dificultatea este legată de faptul că este necesară cunoașterea aspectului rețelei. Pentru a transmite o cerere în direcția unui nod îndepărtat, trebuie să știm care dintre noduri ne va apropia de destinație. Trimiterea mesajului în direcția greșită nu va fi de mare folos.
 
-Since each nest knows only about its direct neighbors, it doesn't have the information it needs to compute a route. We must somehow spread the information about these connections to all nests, preferably in a way that allows it to change over time, when nests are abandoned or new nests are built.
+Deoarece fiecare nod cunoaște doar lista vecinilor săi direcți, nu are informație suficientă pentru a calcula o rută. Cumva ar trebui să răspândim informația despre aceste conexiuni către toate cuiburile, preferabil într-un mod care să permită modificarea în timp, când cuiburile sunt abandonate sau sunt create noi cuiburi.
 
 {{index flooding}}
 
-We can use flooding again, but instead of checking whether a given message has already been received, we now check whether the new set of neighbors for a given nest matches the current set we have for it.
+Putem utiliza din nou inundarea, dar în loc să verificăm dacă un mesaj dat a fost primit deja, verificăm dacă un nou set de vecini pentru un cuib dat potrivește setul curent pe care îl avem.
 
 {{index "broadcastConnections function", "connections binding"}}
 
@@ -461,17 +461,17 @@ everywhere(nest => {
 
 {{index JSON, "== operator"}}
 
-The comparison uses `JSON.stringify` because `==`, on objects or arrays, will return true only when the two are the exact same value, which is not what we need here. Comparing the JSON strings is a crude but effective way to compare their content.
+Comparația utilizează `JSON.stringify` deoarece `==`, pe obiecte și arrayuri, va returna true doar dacă cei doi operanzi sunt exact aceeași valoare, ceea ce nu ne este util în acest caz. Compararea stringurilor JSON este o metodă brutală dar eficientă pentru a le compara conținutul.
 
-The nodes immediately start broadcasting their connections, which should, unless some nests are completely unreachable, quickly give every nest a map of the current network ((graph)).
+Nodurile vor începe imediat să își transmită conexiunile, ceea ce ar trebui, dacă nu cumva câteva cuiburi sunt de neatins, să dea fiecărui cuib o harta a grafului rețelei curente.
 
 {{index pathfinding}}
 
-A thing you can do with graphs is find routes in them, as we saw in [Chapter ?](robot). If we have a route toward a message's destination, we know which direction to send it in.
+Un lucru pe care îl putem face într-un graf este să găsim rute, așa cum am văzut în [capitolul ?](robot). Dacă avem o rută către destinatarul unui mesaj, atunci știm în ce direcție să trimitem mesajul.
 
 {{index "findRoute function"}}
 
-This `findRoute` function, which greatly resembles the `findRoute` from [Chapter ?](robot#findRoute), searches for a way to reach a given node in the network. But instead of returning the whole route, it just returns the next step. That next nest will itself, using its current information about the network, decide where _it_ sends the message.
+Funcția `findRoute` de mai jos, care seamănă foarte bine cu funcția `findRoute` din [capitolul ?](robot#findRoute), caută o modalitate de a atinge un nod dat din rețea. Dar, în loc să returneze toată ruta, returnează doar pasul următor. Următorul cuib va utiliza informația sa curentă despre rețea pentru a decide unde va trimite mesajul.
 
 ```{includeCode: true}
 function findRoute(from, to, connections) {
@@ -489,7 +489,7 @@ function findRoute(from, to, connections) {
 }
 ```
 
-Now we can build a function that can send long-distance messages. If the message is addressed to a direct neighbor, it is delivered asusual. If  not, it is packaged in an object and sent to a neighbor that is closer to the target, using the `"route"` request type, which will cause that neighbor to repeat the same behavior.
+Acum putem construi o funcție care va trimite mesaje la mare distanță. Dacă mesajul este adresat unui vecin direct, este livrat ca de obicei. Dacă nu, este împachetat într-un obiect și transmis unui vecin care este mai aproape de destinatar, utilizând tipul de cerere `"route"` care va determina vecinul să procedeze la fel.
 
 {{index "routeRequest function"}}
 
@@ -513,7 +513,7 @@ requestType("route", (nest, {target, type, content}) => {
 
 {{if interactive
 
-We can now send a message to the nest in the church tower, which is four network hops removed.
+Acum putem trimite un mesaj către cuibul din turnul bisericii care se află la patru pași distanță:
 
 ```
 routeRequest(bigOak, "Church Tower", "note",
@@ -524,17 +524,17 @@ if}}
 
 {{index [network, abstraction], layering}}
 
-We've constructed several layers of functionality on top of a primitive communication system to make it convenient to use. This is a nice (though simplified) model of how real computer networks work.
+Am construit mai multe straturi de funcționalitate în vârful unui sistem de comunicație primitiv pentru a-l putea utiliza convenabil. Acesta este un model simpatic(deși simplificat) al funcționării rețelelor de computere.
 
 {{index error}}
 
-A distinguishing property of computer networks is that they aren't reliable—abstractions built on top of them can help, but you can't abstract away network failure. So network programming is typically very much about anticipating and dealing with failures.
+A poprietate distinctivă a rețelelor de computere este faptul că nu sunt de încredere - abstracțiile construite în vârful lor pot ajuta, dar u puteți abstractiza erorile rețelei. Astfel încât programarea rețelelor este în mare parte despre anticiparea și tratarea eșecurilor.
 
-## Async functions
+## Funcții `async`
 
-To store important information, ((crow))s are known to duplicate it across nests. That way, when a hawk destroys a nest, the information isn't lost.
+Ciorile sunt cunoscute pentru duplicarea informațiilor importante între cuiburi. Astfel, când un șoim distruge un cuib, infromația nu se pierde.
 
-To retrieve a given piece of information that it doesn't have in its own storage bulb, a nest computer might consult random other nests in the network until it finds one that has it.
+Pentru a retturna o informație dată pe care nu o are în propriul spațiu de stocare, computerul dintr-un cuib ar putea consulta la întâmplare alte cuiburi până când o găsește.
 
 {{index "findInStorage function", "network function"}}
 
@@ -572,23 +572,23 @@ function findInRemoteStorage(nest, name) {
 
 {{index "Map class", "Object.keys function", "Array.from function"}}
 
-Because `connections` is a `Map`, `Object.keys` doesn't work on it. It has a `keys` _method_, but that returns an iterator rather than an array. An iterator (or iterable value) can be converted to an array with the `Array.from` function.
+Deoarece `connections` este un `Map`, nu putem folosi `Object.keys`. Are o _metodă_ `keys` dar aceasta returnează un iterator nu un array. Un iterator (valoare iterabilă) poate fi convertit într-un array cu funcția `Array.from`.
 
 {{index "Promise class", recursion}}
 
-Even with promises this is some rather awkward code. Multiple asynchronous actions are chained together in non-obvious ways. We again need a recursive function (`next`) to model looping through the nests.
+Chiar și cu promisiuni, codul ar fi ciudat. Mai multe acțiuni asincrone sunt înlănțuite în moduri nu prea evidente. Din nou avem nevoie de o funcție recursiva (`next`) pentru a modela parcurgerea cuiburilor.
 
 {{index "synchronous programming", "asynchronous programming"}}
 
-And the thing the code actually does is completely linear—it always waits for the previous action to complete before starting the next one. In a synchronous programming model, it'd be simpler to express.
+Iar ceea ce face de fapt codul este complet liniar - întotdeauna așteaptă pentru acțiunea anterioară ca să se încheie înainte de a trece la următoarea acțiune. Într-un model de programare sincron, ar fi mai simplu de exprimat.
 
 {{index "async function", "await keyword"}}
 
-The good news is that JavaScript allows you to write pseudo-synchronous code to describe asynchronous computation. An `async` function is a function that implicitly returns a promise and that can, in its body, `await` other promises in a way that _looks_ synchronous.
+Veștile bune sunt că JavaScript permite scrierea de cod pseudo-asincron pentru a descrie computațiile asincrone. O funcție `async` este o funcție care returnează implicit o promisiune și care poate, în corpul său să aștepte (`await`) alte promisiuni într-un mod care _pare_ sincron.
 
 {{index "findInStorage function"}}
 
-We can rewrite `findInStorage` like this:
+Putem rescrie `findInStorage` astfel:
 
 ```
 async function findInStorage(nest, name) {
@@ -612,7 +612,7 @@ async function findInStorage(nest, name) {
 
 {{index "async function", "return keyword", "exception handling"}}
 
-An `async` function is marked by the word `async` before the `function` keyword. Methods can also be made `async` by writing `async` before their name. When such a function or method is called, it returns a promise. As soon as the body returns something, that promise is resolved. If it throws an exception, the promise is rejected.
+O funcție `async` este marcată prin cuvântul cheie `async` utilizat înainte de cuvântul `function`. Metodele pot și ele să fie scrise `async` prin utilizarea acestui cuvânt în fața numelui lor. Când se apelează o asemenea funcție sau metodă, ea va returna o promisiune. Imediat ce corpul său returnează ceva, acea promisiune este rezolvată. Dacă aruncă o excepție, promisiunea este respinsă.
 
 {{if interactive
 
@@ -625,19 +625,20 @@ if}}
 
 {{index "await keyword", ["control flow", asynchronous]}}
 
-Inside an `async` function, the word `await` can be put in front of an expression to wait for a promise to resolve and only then continue the execution of the function.
+În interiorul unei funcții `async`, cuvântul `await` poate fi folosit în fața unei expresii pentru a aștepta ca o promisiune să fie rezolvată și doar după aceea să continue execuția funcției.
 
-Such a function no longer, like a regular JavaScript function, runs from start to completion in one go. Instead, it can be _frozen_ at any point that has an `await`, and can be resumed at a later time.
+Spre deosebire de o funcție obișnuită, o  asemenea funcție nu se va mai executa de la început la sfârșit într-un singur pas. De fapt, ar putea să _înghețe_ în orice punct unde are un `await` și apoi să își reia execuția la un moment ulterior.
 
-For non-trivial asynchronous code, this notation is usually more convenient than directly using promises. Even if you need to do something that doesn't fit the synchronous model, such as perform multiple actions at the same time, it is easy to combine `await` with the direct use of promises.
+Pentru codul asincron netrivial, această notație este de regulă mai convenabilă decât utilizarea directă a promisiunilor. Chiar dacă trebuie să faceți o operație care nu se potrivește modelului sincron, cum ar fi să executați mai multe operații simultan, este ușor să combinați `await` cu utilizarea directă a promisiunilor.
+such as perform multiple actions at the same time, it is easy to combine `await` with the direct use of promises.
 
-## Generators
+## Generatori
 
 {{index "async function"}}
 
-This ability of functions to be paused and then resumed again is not exclusive to `async` functions. JavaScript also has a feature called _((generator))_ functions. These are similar, but without the promises.
+Această abilitate a funcțiilor de a fi suspendate și apoi reluate nu este exclusivă funcțiilor `async`. JavaScript are și o funcționalitate numită _funcții generator_. Acestea funcționează asemănător dar fără promisiuni.
 
-When you define a function with `function*` (placing an asterisk after the word `function`), it becomes a generator. When you call a generator, it returns an ((iterator)), which we already saw in [Chapter ?](object).
+Când definiți o funcție cu `function*` ea devine un generator. Când apelați un generator, el va returna un iterator, ceea ce am folosit deja în [capitolul ?](object).
 
 ```
 function* powers(n) {
@@ -657,9 +658,9 @@ for (let power of powers(3)) {
 
 {{index "next method", "yield keyword"}}
 
-Initially, when you call `powers`, the function is frozen at its start. Every time you call `next` on the iterator, the function runs until it hits a `yield` expression, which pauses it and causes the yielded value to become the next value produced by the iterator. When the function returns (the one in the example never does), the iterator is done.
+Inițial, când apelați `powers` funcția _îngheață_ la începutul său. De fiecare dată când apelați `next` pe iterator, funcția rulează până când atinge expresia `yield`, care o suspendă și face ca valoarea produsă să devină următoarea valoare produsă de către iterator. Când funcția returnează (ce din exemplu nu o face niciodată), iteratorul își finalizează activitatea.
 
-Writing iterators is often much easier when you use generator functions. The iterator for the `Group` class (from the exercise in [Chapter ?](object#group_iterator)) can be written with this generator:
+Scrierea iteratorilor este adesea mai simplă decât scrierea funcțiilor generator. Iteratorul pentru clasa `Group` (din exercițiul din [capitolul ?](object#group_iterator)) poate fi scris cu acest generator:
 
 {{index "Group class"}}
 
@@ -680,17 +681,19 @@ class Group {
 
 {{index [state, in iterator]}}
 
-There's no longer a need to create an object to hold the iteration state—generators automatically save their local state every time they yield.
+Nu mai este nevoie să creem un obiect care să rețină starea iterației - generatorii își salvează automat starea locală de fiecare dată când produc.
 
-Such `yield` expressions may occur only directly in the generator function itself and not in an inner function you define inside of it. The state a generator saves, when yielding, is only its _local_ environment and the position where it yielded.
+Asemenea expresii `yield` pot apărea doar direct în funcția generator și nu într-o funcție interioară pe care o definiți. Starea generatorului salvează, când produce, doar mediul său _local_ și poziția în care a produs.
 
 {{index "await keyword"}}
 
-An `async` function is a special type of generator. It produces a promise when called, which is resolved when it returns (finishes) and rejected when it throws an exception. Whenever it yields (awaits) a promise, the result of that promise (value or thrown exception) is the result of the `await` expression.
+O funcție `async` este un tip special de generator. Ea produce o promisiune când este apelată, care este rezolvată când returnează (se încheie) sau respinsă când aruncă o excepție. Întotdeauna când produce (așteaptă) o promisune, rezultatul acelei promisiuni (valoare sau excepție aruncată) este rezultatul expresiei `await`.
 
-## The event loop
+## Bucla de evenimente
 
 {{index "asynchronous programming", scheduling, "event loop", timeline}}
+
+
 
 Asynchronous programs are executed piece by piece. Each piece may start some actions and schedule code to be executed when the action finishes or fails. In between these pieces, the program sits idle, waiting for the next action.
 
