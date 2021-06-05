@@ -290,7 +290,7 @@ function request(nest, target, type, content) {
 
 {{index "Promise class", "resolving (a promise)", "rejecting (a promise)"}}
 
-Deoarece promisiunile pot fi rezovlate sau respinse doar o dată, acest cod va funcționa. La primul apel al `resolve` sau `reject` se determină rezultatul promisunii iar apeluri ulterioare cauzate de o cerere ce revine după ce o altă cerere a fost rezolvată sunt ignorate.
+Deoarece promisiunile pot fi rezovlate sau respinse doar o dată, acest cod va funcționa. La primul apel al `resolve` sau `reject` se determină rezultatul promisiunii iar apeluri ulterioare cauzate de o cerere ce revine după ce o altă cerere a fost rezolvată sunt ignorate.
 
 {{index recursion}}
 
@@ -304,7 +304,7 @@ Reîncercarea după fiecare sfert de secundă și renunțarea după ce trei înc
 
 {{index "defineRequestType function", "requestType function"}}
 
-Pentru a ne izola de callbackuri, vom defini un wrapper pentru `defineRequestType` care permite ca funcția handler să returneze o promisune sau o valoare obișnuită care va fi legată apoi de callback.
+Pentru a ne izola de callbackuri, vom defini un wrapper pentru `defineRequestType` care permite ca funcția handler să returneze o promisiune sau o valoare obișnuită care va fi legată apoi de callback.
 
 ```{includeCode: true}
 function requestType(name, handler) {
@@ -337,7 +337,7 @@ Computerul din fiecare cuib memorează un array al cuiburilor care se află in r
 
 {{index "Promise.all function"}}
 
-Când folosim colecții de promisiuni ce rulează simultan, metoda `Promise.all` poate fi folositoare. Ea returnează o promisiune care așteaptă ca toate promisiunile din array să se rezolve și apoi se rezolvă la un array de valori produse de acele promisiuni (în aceeați ordine ca și array-ul original). Dacă orice promisune este respinsă, rezultatul `Promise.all` va fi respins.
+Când folosim colecții de promisiuni ce rulează simultan, metoda `Promise.all` poate fi folositoare. Ea returnează o promisiune care așteaptă ca toate promisiunile din array să se rezolve și apoi se rezolvă la un array de valori produse de acele promisiuni (în aceeați ordine ca și array-ul original). Dacă orice promisiune este respinsă, rezultatul `Promise.all` va fi respins.
 
 ```{includeCode: true}
 requestType("ping", () => "pong");
@@ -687,23 +687,21 @@ Asemenea expresii `yield` pot apărea doar direct în funcția generator și nu 
 
 {{index "await keyword"}}
 
-O funcție `async` este un tip special de generator. Ea produce o promisiune când este apelată, care este rezolvată când returnează (se încheie) sau respinsă când aruncă o excepție. Întotdeauna când produce (așteaptă) o promisune, rezultatul acelei promisiuni (valoare sau excepție aruncată) este rezultatul expresiei `await`.
+O funcție `async` este un tip special de generator. Ea produce o promisiune când este apelată, care este rezolvată când returnează (se încheie) sau respinsă când aruncă o excepție. Întotdeauna când produce (așteaptă) o promisiune, rezultatul acelei promisiuni (valoare sau excepție aruncată) este rezultatul expresiei `await`.
 
 ## Bucla de evenimente
 
 {{index "asynchronous programming", scheduling, "event loop", timeline}}
 
-
-
-Asynchronous programs are executed piece by piece. Each piece may start some actions and schedule code to be executed when the action finishes or fails. In between these pieces, the program sits idle, waiting for the next action.
+Programarea asincron[ se execută bucată cu bucată. Fiecare bucată de cod poate porni o acțiune și să programeze executarea codului când acțiunea se încheie sau eșuează. Între aceste bucăți, execuția programului este suspendată, așteptând pentru următoarea acțiune.
 
 {{index "setTimeout function"}}
 
-So callbacks are not directly called by the code that scheduled them. If I call `setTimeout` from within a function, that function will have returned by the time the callback function is called. And when the callback returns, control does not go back to the function that scheduled it.
+Deci, callback-urile nu sunt executate de către codul care le programează. Dacă apelez `setTimeout` dintr-o funcție, acea funcție va fi returnat în momentul în care se apelează funcția de callback. Iar când callback-ul returnează, controlul nu intră înapoi în funcția care a programat timeout-ul.
 
 {{index "Promise class", "catch keyword", "exception handling"}}
 
-Asynchronous behavior happens on its own empty function ((call stack)). This is one of the reasons that, without promises, managing exceptions across asynchronous code is hard. Since each callback starts with a mostly empty stack, your `catch` handlers won't be on the stack when they throw an exception.
+Comportamentul asincron are loc în propria stivă de apel a unei funcții goale. Acesta este unul dintre motivele pentru care, fără promisiuni, gestiunea excepțiilor în codul asincron este dificilă. Deoarece fiecare callback începe cu o stivă aproape goală, handlerele `catch` nu vor fi pe stivă atunci când se aruncă excepția.
 
 ```
 try {
@@ -718,9 +716,9 @@ try {
 
 {{index thread, queue}}
 
-No matter how closely together events—such as timeouts or incoming requests—happen, a JavaScript environment will run only one program at a time. You can think of this as it running a big loop _around_ your program, called the _event loop_. When there's nothing to be done, that loop is stopped. But as events come in, they are added to a queue, and their code is executed one after the other. Because no two things run at the same time, slow-running code might delay the handling of other events.
+Indiferent cât de apropiate ar fi evenimentele - cum ar fi un timeout sau o cerere, mediul JavaScript va rula doar un singur program la un moment dat. Vă puteți imagina că totul se întâmplă ca și cum s-ar rula o buclă mare _în jurul+ programului, numită _bucla de evenimente (event loop)_. Când nu există nimic de executat, bucla este oprită. Dar, pe măsură ce apar evenimentele, ele sunt adăugate într-o coadă și codul lor va fi executat pe rând. Deoarece nu există două lucruri ce se execută simultan, codul ce se execută lent ar putea întârzia gestiunea altor evenimente.
 
-This example sets a timeout but then dallies until after the timeout's intended point of time, causing the timeout to be late.
+Exemplul de mai jos setează un timeout dar apoi întârzie până după punctul de timp pentru întârzierea timeoutului, ceea ce cauzează timeoutul să întârzie.
 
 ```
 let start = Date.now();
@@ -735,7 +733,7 @@ console.log("Wasted time until", Date.now() - start);
 
 {{index "resolving (a promise)", "rejecting (a promise)", "Promise class"}}
 
-Promises always resolve or reject as a new event. Even if a promise is already resolved, waiting for it will cause your callback to run after the current script finishes, rather than right away.
+Promisiunile întotdeauna sunt rezolvate sau respinse ca un eveniment nou. Chiar dacă o promisiune este întotdeauna rezolvată, așteptarea după ea va determina execuția callback-ului după finalizarea execuției scriptului curent, nu imediat.
 
 ```
 Promise.resolve("Done").then(console.log);
@@ -744,15 +742,15 @@ console.log("Me first!");
 // → Done
 ```
 
-In later chapters we'll see various other types of events that run on the event loop.
+În capitolele următoare vom vedea și alte tipuri de evenimente care rulează în bucla de evenimente.
 
-## Asynchronous bugs
+## Bug-uri în codul asincron
 
 {{index "asynchronous programming", [state, transitions]}}
 
-When your program runs synchronously, in a single go, there are no state changes happening except those that the program itself makes. For asynchronous programs this is different—they may have _gaps_ in their execution during which other code can run.
+Când programul vostru rulează sincron, într-o execuție simplă, nu se întâmplă modificări ale stării altele decât cele provocate de program în sine. În programele asincrone lucrurile stau diferit - ele pot avea _goluri_ în execuție, timpi în care o altă bucată de cod ar putea să fie executată.
 
-Let's look at an example. One of the hobbies of our crows is to count the number of chicks that hatch throughout the village every year. Nests store this count in their storage bulbs. The following code tries to enumerate the counts from all the nests for a given year:
+Să analizăm un exemplu. Una dintre pasiunile ciorilor noastre este să numere cîți pui eclozează în sat în fiecare an. Cuiburile își stochează contorul în propriul spațiu de depozitare. Codul de mai jos încearcă să enumere contoarele din toate cuiburile pentru un an dat:
 
 {{index "anyStorage function", "chicks function"}}
 
@@ -775,13 +773,13 @@ async function chicks(nest, year) {
 
 {{index "async function"}}
 
-The `async name =>` part shows that ((arrow function))s can also be made `async` by putting the word `async` in front of them.
+Partea `async name =>` arată că funcțiile arrow pot la rândul lor să fie asincrone.
 
 {{index "Promise.all function"}}
 
-The code doesn't immediately look suspicious...it maps the `async` arrow function over the set of nests, creating an array of promises, and then uses `Promise.all` to wait for all of these before returning the list they build up.
+Codul nu arată imediat suspicios... el mapează o funcție arrow asincronă peste setul de cuiburi și crează un array de promisiuni, apoi utilizează `Promise.all` pentru a aștepta rezolvarea tuturor promisiunilor înainte de a returna lista construită.
 
-But it is seriously broken. It'll always return only a single line of output, listing the nest that was slowest to respond.
+Însă este greșit complet. Va returna întotdeauna o singură linie la ieșire, reprezentând cuibul care a răspuns cu cea mai mare întârziere.
 
 {{if interactive
 
@@ -791,19 +789,19 @@ chicks(bigOak, 2017).then(console.log);
 
 if}}
 
-Can you work out why?
+Reușiți să înțegeți de ce?
 
 {{index "+= operator"}}
 
-The problem lies in the `+=` operator, which takes the _current_ value of `list` at the time where the statement starts executing and then, when the `await` finishes, sets the `list` binding to be that value plus the added string.
+Problema este legată de operatorul `+=`, care preia valoarea _curentă_ a `list` de la momentul în care instrucțiunea începe să se execute și apoi, când se va termina `await`, setează bindingul `list` ca să reprezinte acea valoare plus stringul adăugat.
 
 {{index "await keyword"}}
 
-But between the time where the statement starts executing and the time where it finishes there's an asynchronous gap. The `map` expression runs before anything has been added to the list, so each of the `+=` operators starts from an empty string and ends up, when its storage retrieval finishes, setting `list` to a single-line list—the result of adding its line to the empty string.
+Dar între momentul în care instrucțiunea începe să se execute și momentul în care se încheie, există un gol asincron. Expresia `map` se execută înainte să se fi adăugat ceva în listă, astfel încât operatorii `+=` încep cu un string gol și se termină, atunci când se returnează valoarea memorată, setând `list` la o singură linie, prin adăugarea rezultatului lor la un string gol.
 
 {{index "side effect"}}
 
-This could have easily been avoided by returning the lines from the mapped promises and calling `join` on the result of `Promise.all`, instead of building up the list by changing a binding. As usual, computing new values is less error-prone than changing existing values.
+Acest comportament putea fi ușor evitat prin returnarea fiecărei linii din promisiunile mapate și apelarea `join` asupra rezultatului lui `Promise.all`, în loc să construim lista prin modificarea unui binding. Ca de obicei, calcularea unor valori noi este mai puțin supusă erorilor decât modificarea unor valori existente.
 
 {{index "chicks function"}}
 
@@ -817,33 +815,33 @@ async function chicks(nest, year) {
 }
 ```
 
-Mistakes like this are easy to make, especially when using `await`, and you should be aware of where the gaps in your code occur. An advantage of JavaScript's _explicit_ asynchronicity (whether through callbacks, promises, or `await`) is that spotting these gaps is relatively easy.
+Asemenea greșeli sunt ușor de făcut, mai ales când se folosește `await` și trebuie să fiți conștienți de golurile de execuție care pot apărea în codul vostru. Un avantaj al asincronicității _explicite_ a JavaScript (fie că utilizați callback-uri, promisiuni sau `await`) este faptul că aceste goluri pot fi identificate relativ ușor.
 
-## Summary
+## Rezumat
 
-Asynchronous programming makes it possible to express waiting for long-running actions without freezing the program during these actions. JavaScript environments typically implement this style of programming using callbacks, functions that are called when the actions complete. An event loop schedules such callbacks to be called when appropriate, one after the other, so that their execution does not overlap.
+Programarea asincronă face posibil să exprimăm așteptarea după acțiuni de lungă durată fără a îngheța programul pe durata acestor acțiuni. Mediile JavaScript de regulă implementează acest stil de programare folosind callback-uri, funcții care se apelează după ce acțiunea este completă. O buclă de evenimente planifică asemenea callback-uri pentru a fi apelate atunci când trebuie, una după alta, astfel încât execuția lor nu va fi suprapusă.
 
-Programming asynchronously is made easier by promises, objects that represent actions that might complete in the future, and `async` functions, which allow you to write an asynchronous program as if it were synchronous.
+Programarea asincronă este ușurată de promisiuni, obiecte care reprezintă acțiuni care ar putea fi completate în viitor, și funcții `async`, care permit scrierea unui program asincron ca și cum ar fi sincron.
 
-## Exercises
+## Exerciții
 
-### Tracking the scalpel
+### Urmărirea scalpelului
 
 {{index "scalpel (exercise)"}}
 
-The village crows own an old scalpel that they occasionally use on special missions—say, to cut through screen doors or packaging. To be able to quickly track it down, every time the scalpel is moved to another nest, an entry is added to the storage of both the nest that ad it and the nest that took it, under the name `"scalpel"`, with its new location as the value.
+Ciorile din sat au un scalpel vechi pe care îl utilizează ocazional în misiuni speciale - cum ar fi tăierea unor geamuri pentru uși sau împachetare. Pentru a putea să îl urmărească, de fiecare dată când scalpelul este mutat la un alt cuib, se adăugă o intrare în spațiul de stocare al ambelor cuiburi, cel care l-a trimis și cel care la primit, sub numele `"scalpel"`, cu noua sa locație ca și valoare.
 
-This means that finding the scalpel is a matter of following the breadcrumb trail of storage entries, until you find a nest where that points at the nest itself.
+Aceasta înseamnă că găsirea scalpelului este o problemă de urmărire a intrărilor din spațiul de stocare, până când găsim un cuib care indică spre el însuși.
 
 {{index "anyStorage function", "async function"}}
 
-Write an `async` function `locateScalpel` that does this, starting at the nest on which it runs. You can use the `anyStorage` function defined earlier to access storage in arbitrary nests. The scalpel has been going around long enough that you may assume that every nest has a `"scalpel"` entry in its data storage.
+Scrieți o funcție `async` numită `locateScalpel` care realizează aceasta, pornind de la cuibul în care rulează. Puteți folosi funcția `anyStorage` definită anterior pentru a accesa spațiul de stocare din orice cuib. Scalpelul a fost mutat de suficient de multe ori astfel încât puteți presupune ca fiecare cuib are o intrare `"scalpel"` în spațiul de stocare a datelor.
 
-Next, write the same function again without using `async` and `await`.
+Apoi, scrieți aceeași funcție fără a folosi `async` și `await`.
 
 {{index "exception handling"}}
 
-Do request failures properly show up as rejections of the returned promise in both versions? How?
+Cererile eșuate apar corect ca și respingeri ale promisiunilor returnate în ambele variante? Cum?
 
 {{if interactive
 
@@ -866,31 +864,31 @@ if}}
 
 {{index "scalpel (exercise)"}}
 
-This can be done with a single loop that searches through the nests, moving forward to the next when it finds a value that doesn't match the current nest's name and returning the name when it finds a matching value. In the `async` function, a regular `for` or `while` loop can be used.
+Soluția poate fi implementată folosind o buclă care caută prin cuiburi, trecând la următorul cuib dacă valoarea din cuibul curent nu este identică cu numele cuibului și returnând numele cuibului atunci când valoarea se potrivește. În funcția `async` putem utiliza un `for` sau `while`.
 
 {{index recursion}}
 
-To do the same in a plain function, you will have to build your loop using a recursive function. The easiest way to do this is to have that function return a promise by calling `then` on the promise that retrieves the storage value. Depending on whether that value matches the name of the current nest, the handler returns that value or a further promise created by calling the loop function again.
+Pentru a face același lucru într-o funcție obișnuită, va trebui să implementați repetiția utilizând o funcție recursivă. Cel mai simplu mod de realiza acest lucru este ca acea funcție să returneze o promisiune apelând `then` pentru promisiunea care returnează valoarea stocată. În funcție de potrivirea dintre valoarea returnată și numele cuibului curent, handlerul returnează acea valoare sau o promisiune creată prin apelarea din nou a funcției.
 
-Don't forget to start the loop by calling the recursive function once from the main function.
+Nu uitați să inițializați bucla prin apelarea funcției recursive din funcția principală.
 
 {{index "exception handling"}}
 
-In the `async` function, rejected promises are converted to exceptions by `await`. When an `async` function throws an exception, its promise is rejected. So that works.
+În funcția `async`, promisiunile respinse sunt convertite în excepții prin `await`. Când funcția `async` aruncă o excepție, promisiunea sa este respinsă. Deci va funcționa și această abordare.
 
-If you implemented the non-`async` function as outlined earlier, the way `then` works also automatically causes a failure to end up in the returned promise. If a request fails, the handler passed to `then` isn't called, and the promise it returns is rejected with the same reason.
+Dacă ați implementat funcția sincronă așa cum am descris anterior, modul în care funcționează `then` va cauza automat finalizarea unui eșec în promisiunea returnată. Dacă cererea eșuează, handlerul transmis către `then` nu este apelat iar promisiunea pe care o returnează este respinsă cu același motiv.
 
 hint}}
 
-### Building Promise.all
+### Construirea Promise.all
 
 {{index "Promise class", "Promise.all function", "building Promise.all (exercise)"}}
 
-Given an array of ((promise))s, `Promise.all` returns a promise that waits for all of the promises in the array to finish. It then succeeds, yielding an array of result values. If a promise in the array fails, the promise returned by `all` fails too, with the failure reason from the failing promise.
+Dat fiind un array de promisiuni, `Promise.all` returnează o promisiune care așteaptă pentru toate promisiunile din array să fie finalizate. Apoi reușește să producă un array cu valorile rezultate. Dacă o promisiune din array eșuează, atunci și promisiunea returnată de `Promise.all` eșuează, cu motivul eșecului identic cu cel al promisiunii eșuate.
 
-Implement something like this yourself as a regular function called `Promise_all`.
+Implementați ceva similar folosind o funcție obișnuită `Promise_all`.
 
-Remember that after a promise has succeeded or failed, it can't succeed or fail again, and further calls to the functions that resolve it are ignored. This can simplify the way you handle failure of your promise.
+Să ne reamintim că o promisiune este rezovată sau respinsă o singură dată iar apelurile ulterioare către funcții care ar putea să o rezolve sunt ignorate. Aceasta poate simplifica modul în care gestionați respingerea promisiunii.
 
 {{if interactive
 
@@ -930,12 +928,12 @@ if}}
 
 {{index "Promise.all function", "Promise class", "then method", "building Promise.all (exercise)"}}
 
-The function passed to the `Promise` constructor will have to call `then` on each of the promises in the given array. When one of them succeeds, two things need to happen. The resulting value needs to be stored in the correct position of a result array, and we must check whether this was the last pending ((promise)) and finish our own promise if it was.
+Funcția transmisă în constructorul `Promise` va trebui să apeleze `then` asupra fiecărei promisiuni din array-ul dat. Când o promisiune este de succes, trebuie să se întâmple două lucruri. Valoarea rezultată trebuie să fie memorată în poziția corectă a array-ului rezultat și trebuie să verificăm dacă aceasta este ultima promisiune după care așteptam și dacă da, să finalizăm propria promisiune.
 
 {{index "counter variable"}}
 
-The latter can be done with a counter that is initialized to the length of the input array and from which we subtract 1 every time a promise succeeds. When it reaches 0, we are done. Make sure you take into account the situation where the input array is empty (and thus no promise will ever resolve).
+Cea de a doua parte poate fi implementată ușor dacă inițializăm un contor cu lungimea array-ului de intrare și apoi scădem 1 pentru fiecare promisiune rezolvată. Când ajungem la 0 suntem gata. Asigurați-vă că luați în calcul situația în care array-ul inițial este gol (și deci nici o promisiune nu va fi vreodată rezolvată).
 
-Handling failure requires some thought but turns out to be extremely simple. Just pass the `reject` function of the wrapping promise to each of the promises in the array as a `catch` handler or as a second argument to `then` so that a failure in one of them triggers the rejection of the whole wrapper promise.
+Gestiunea eșecurilor necesită puțină analiză dar este extrem de simplă. Doar transmiteți funcția `reject` a promisiunii voastre către fiecare promisiune din array, ca și handler `catch` sau ca și al doilea argument al `then` astfel încât un eșec al unei dintre promisiuni va activa respingerea promisiunii voastre.
 
 hint}}
