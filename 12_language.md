@@ -1,44 +1,44 @@
 {{meta {load_files: ["code/chapter/12_language.js"], zip: "node/html"}}}
 
-# Project: A Programming Language
+# Proiect: un limbaj de programare
 
 {{quote {author: "Hal Abelson and Gerald Sussman", title: "Structure and Interpretation of Computer Programs", chapter: true}
 
-The evaluator, which determines the meaning of expressions in a programming language, is just another program.
+Evaluatorul, care determină semnificația unei expresii într-un limbaj de programare, este doar un alt program.
 
 quote}}
 
 {{index "Abelson, Hal", "Sussman, Gerald", SICP, "project chapter"}}
 
-{{figure {url: "img/chapter_picture_12.jpg", alt: "Picture of an egg with smaller eggs inside", chapter: "framed"}}}
+{{figure {url: "img/chapter_picture_12.jpg", alt: "Imaginea unui ou cu mai multe ouă în interior", chapter: "framed"}}}
 
-Building your own ((programming language)) is surprisingly easy (as long as you do not aim too high) and very enlightening.
+Construirea propriului limbaj de programare este surprinzător de ușoară (cât timp nu țintiți prea sus) și foarte revelatoare.
 
-The main thing I want to show in this chapter is that there is no ((magic)) involved in building your own language. I've often felt that some human inventions were so immensely clever and complicated that I'd never be able to understand them. But with a little reading and experimenting, they often turn out to be quite mundane.
+Principalul lucru pe care vreau să vi-l arăt este că nu există magie în construirea propriului limbaj. Adesea am avut senzația că unele invenții au fost atât de inteligente și de complicate încât nu voi fi niciodată capabil să le înțeleg. Dar puțină lectură și câteva experimente le-au transformat în ceva obișnuit.
 
 {{index "Egg language", [abstraction, "in Egg"]}}
 
-We will build a programming language called Egg. It will be a tiny, simple language—but one that is powerful enough to express any computation you can think of. It will allow simple ((abstraction)) based on ((function))s.
+Vom construi un limbaj de programare numit _Egg_. Va fi un limbaj simplu, dar suficient de puternic pentru a putea exprima orice computație la care v-ați putea gândi. Va permite abstracții simple, bazate pe funcții.
 
 {{id parsing}}
 
-## Parsing
+## Parsarea
 
 {{index parsing, validation, [syntax, "of Egg"]}}
 
-The most immediately visible part of a programming language is its _syntax_, or notation. A _parser_ is a program that reads a piece of text and produces a data structure that reflects the structure of the program contained in that text. If the text does not form a valid program, the parser should point out the error.
+Cea mai vizibilă parte a unui limbaj de programare este _sintaxa_, sau notațiile. Un _parser_ este un program care citește o bucată de text și produce o structură de date care reflectă structura programului conținut în acel text. Dacă textul nu formează un program valid, parserul ar trebui să indice eroarea.
 
 {{index "special form", [function, application]}}
 
-Our language will have a simple and uniform syntax. Everything in Egg is an ((expression)). An expression can be the name of a binding, a number, a string, or an _application_. Applications are used for function calls but also for constructs such as `if` or `while`.
+Limbajul nostru va avea o sintaxă simplă și uniformă. Totul în Egg va fi o expresie. O expresie poate fi numele unui binding, un număr, un string sau o _aplicație_. Aplicațiile sunt utilizate pentru apelurile de funcții dar și pentru construcții cum ar fi `if` sau `while`.
 
 {{index "double-quote character", parsing, [escaping, "in strings"], [whitespace, syntax]}}
 
-To keep the parser simple, strings in Egg do not support anything like backslash escapes. A string is simply a sequence of characters that are not double quotes, wrapped in double quotes. A number is a sequence of digits. Binding names can consist of any character that is not whitespace and that does not have a special meaning in the syntax.
+Pentru a păstra lucrurile simple, stringurile în Egg nu vor permite secvențe escape. Un string va fi doar o secvență de caractere care nu sunt ghilimele, plasate între ghilimele. Un număr este o secvență de cifre. Numele bindingurilor pot conține orice caracter care nu este un spațiu și nu are semnificație specială pentru sintaxă.
 
 {{index "comma character", [parentheses, arguments]}}
 
-Applications are written the way they are in JavaScript, by putting parentheses after an expression and having any number of ((argument))s between those parentheses, separated by commas.
+Aplicațiile sunt scrise ca și în JavaScript, prin plasarea parantezelor după o expresie și pot avea oricâte argumente între paranteze, separate prin virgulă.
 
 ```{lang: null}
 do(define(x, 10),
@@ -49,17 +49,17 @@ do(define(x, 10),
 
 {{index block, [syntax, "of Egg"]}}
 
-The ((uniformity)) of the ((Egg language)) means that things that are ((operator))s in JavaScript (such as `>`) are normal bindings in this language, applied just like other ((function))s. And since the syntax has no concept of a block, we need a `do` construct to represent doing multiple things in sequence.
+Uniformitatea limbajului Egg înseamnă că operatorii din JavaScript, cum ar fi (`>`) sunt bindinguri normale în acest limbaj, aplicate ca și alte funcții. Și, deoarece sintaxa nu are conceptul de bloc, avem nevoie de un construct `do` pentru a reprezenta execuția mai multor acțiuni într-o secvență.
 
 {{index "type property", parsing, ["data structure", tree]}}
 
-The data structure that the parser will use to describe a program consists of ((expression)) objects, each of which has a `type` property indicating the kind of expression it is and other properties to describe its content.
+Structura de date pe care parserul o va utiliza pentru a descrie un program constă din obiecte pentru expresii, fiecare având o proprietate `type` ce indică tipul de expresie și alte proprietăți, pentru a descrie conținutul.
 
 {{index identifier}}
 
-Expressions of type `"value"` represent literal strings or numbers. Their `value` property contains the string or number value that they represent. Expressions of type `"word"` are used for identifiers (names). Such objects have a `name` property that holds the identifier's name as a string. Finally, `"apply"` expressions represent applications. They have an `operator` property that refers to the expression that is being applied, as well as an `args` property that holds an array of argument expressions.
+Expresiile de tip `"value"` reprezintă literali de tip string sau număr. Proprietatea `value` conține stringul sau numărul pe care îl reprezintă. Expresiile de tip `"word"` sunt utilizate pentru identificatori (nume). Asemenea obiecte au o proprietate `name` care reține numele idnetificatorului ca și un string. În sfârșit, expresiile `"apply"` reprezintă aplicații. Ele au o proprietate `operator` care se referă la expresia ce va fi aplicată, precum și o proprietate `args` ce reține un array de expresii ca și argumente.
 
-The `>(x, 5)` part of the previous program would be represented like this:
+Partea `>(x, 5)` din programul antrerior va fi reprezentată astfel:
 
 ```{lang: "application/json"}
 {
@@ -74,27 +74,27 @@ The `>(x, 5)` part of the previous program would be represented like this:
 
 {{indexsee "abstract syntax tree", "syntax tree", ["data structure", tree]}}
 
-Such a data structure is called a _((syntax tree))_. If you imagine the objects as dots and the links between them as lines between those dots, it has a ((tree))like shape. The fact that expressions contain other expressions, which in turn might contain more expressions, is similar to the way tree branches split and split again.
+O asemenea structură de date se numește _arbore de sintaxă_. Dacă reprezentați obiectele prin puncte și legăturile dintre ele prin linii, veți obține o structură asemănătoare unui arbore. Faptul că expresiile conțin alte expresii, care ar putea la rândul lor să conțină alte expresii este similar ramificațiilor din coroana unui arbore.
 
-{{figure {url: "img/syntax_tree.svg", alt: "The structure of a syntax tree",width: "5cm"}}}
+{{figure {url: "img/syntax_tree.svg", alt: "Structura unui arbore de sintaxă",width: "5cm"}}}
 
 {{index parsing}}
 
-Contrast this to the parser we wrote for the configuration file format in [Chapter ?](regexp#ini), which had a simple structure: it split the input into lines and handled those lines one at a time. There were only a few simple forms that a line was allowed to have.
+Comparați aceasta cu parserul pe care l-am scris pentru formatul fișierelor de configurare în [capitolul ?](regexp#ini), care avea o structură simplă: împărțea intrarea în linii și prelucra acele linii câte una pe rând. O linie putea avea doar câteva forme simple.
 
 {{index recursion, [nesting, "of expressions"]}}
 
-Here we must find a different approach. Expressions are not separated into lines, and they have a recursive structure. Application expressions _contain_ other expressions.
+Acum trebuie să găsim o abordare diferită. Expresiile nu sunt separate în linii și au o structură recursivă. Expresiile de tip aplicație _conțin_ alte expresii.
 
 {{index elegance}}
 
-Fortunately, this problem can be solved very well by writing a parser function that is recursive in a way that reflects the recursive nature of the language.
+Din fericire, această problemă poate fi rezolvată elegant prin scrierea unei funcții de parsare care să fie recursivă și să reflecte astfel natura recursivă a limbajului.
 
 {{index "parseExpression function", "syntax tree"}}
 
-We define a function `parseExpression`, which takes a string as input and returns an object containing the data structure for the expression at the start of the string, along with the part of the string left after parsing this expression. When parsing subexpressions (the argument to an application, for example), this function can be called again, yielding the argument expression as well as the text that remains. This text may in turn contain more arguments or may be the closing parenthesis that ends the list of arguments.
+Vom defini o funcție `parseExpression`, care va prelua un string ca și intrare și va returna obiectul ce conține structura de date pentru expresia de la începutul stringului, împreună cu partea din string rămasă după parsarea expresiei. Când vom parsa subexpresii (argumentele unei aplicații de exemplu), această funcție va fi apelată din nou, producând expresia argument precum și textul care rămâne. Acest text ar putea conține mai multe argumente sau ar putea fi paranteza de închidere de la finalul listei de argumente.
 
-This is the first part of the parser:
+Acesta este prima parte a parserului:
 
 ```{includeCode: true}
 function parseExpression(program) {
@@ -122,15 +122,15 @@ function skipSpace(string) {
 
 {{index "skipSpace function", [whitespace, syntax]}}
 
-Because Egg, like JavaScript, allows any amount of whitespace between its elements, we have to repeatedly cut the whitespace off the start of the program string. That is what the `skipSpace` function helps with.
+Deoarece Egg, ca și JavaScript, permite oricâte spații între elemente, trebuie să eliminăm repetat spațiile albe de la începutul stringului ce reprezintă programul. Pentru aceasta ne ajută funcția `skipSpace`.
 
 {{index "literal expression", "SyntaxError type"}}
 
-After skipping any leading space, `parseExpression` uses three ((regular expression))s to spot the three atomic elements that Egg supports: strings, numbers, and words. The parser constructs a different kind of data structure depending on which one matches. If the input does not match one of these three forms, it is not a valid expression, and the parser throws an error. We use `SyntaxError` instead of `Error` as the exception constructor, which is another standard error type, because it is a little more specific—it is also the error type thrown when an attempt is made to run an invalid JavaScript program.
+După ce sutn eliminate spațiile albe, `parseExpression` folosește trei expresii regulate pentru a identifica cele trei elemente atomice pe care Egg le suportă: stringuri, numere și cuvinte. Parserul construiește un tip de structură diferit în funcție de expresia pe care o potrivește. Dacă intrarea nu potrivește nici una dintre cele trei forme, expresia nu este validă și parserul va arunca o excepție. Vom utiliza `SyntaxError` ca și constructor, în loc de `Error`, care este un alt tip de eroare standard, deoarece este puțin mai specific - acesta este și tipul de eroare aruncat când se încearcă execuția unui program JavaScript invalid.
 
 {{index "parseApply function"}}
 
-We then cut off the part that was matched from the program string and pass that, along with the object for the expression, to `parseApply`, which checks whether the expression is an application. If so, it parses a parenthesized list of arguments.
+Apoi eliminăm partea care a fost potrivită din stringul programului și transmitem stringul rămas și obiectul pentru expresie către `parseApply`, care verifică dacă expresia este o aplicație. Dacă da, parsează lista de argumente din paranteze.
 
 ```{includeCode: true}
 function parseApply(expr, program) {
@@ -157,17 +157,17 @@ function parseApply(expr, program) {
 
 {{index parsing}}
 
-If the next character in the program is not an opening parenthesis, this is not an application, and `parseApply` returns the expression it was given.
+Dacă următorul caracter din program nu este o paranteză de deschidere, aceasta nu este o aplicație și `parseApply` returnează expresia care i-a fost transmisă.
 
 {{index recursion}}
 
-Otherwise, it skips the opening parenthesis and creates the ((syntax tree)) object for this application expression. It then recursively calls `parseExpression` to parse each argument until a closing parenthesis is found. The recursion is indirect, through `parseApply` and `parseExpression` calling each other.
+Altfel, sare peste paranteza deschisă și crează arborele de sintaxă pentru această expresie de tip aplicație. Apoi apelează recursiv `parseExpression` pentru a parsa fiecare argument până când găsește o paranteză închisă. Recursia este indirectă, `parseApply` și `parseExpression` apelându-se reciproc.
 
-Because an application expression can itself be applied (such as in `multiplier(2)(1)`), `parseApply` must, after it has parsed an application, call itself again to check whether another pair of parentheses follows.
+Deoarece o expresie de tip aplicație poate la rândul său să fie aplicată (ca și în `multiplier(2)(1)`), `parseApply` trebuie să se apeleze din nou după ce a parsat o aplicație pentru a verifica dacă nu cumva urmează o altă pereche de parantteze.
 
 {{index "syntax tree", "Egg language", "parse function"}}
 
-This is all we need to parse Egg. We wrap it in a convenient `parse` function that verifies that it has reached the end of the input string after parsing the expression (an Egg program is a single expression), and that gives us the program's data structure.
+Acum avem tot ce ne trebuie pentru a parsa Egg. Îl împachetăm într-o funcție convenabilă `parse` care verifică dacă a ajuns la sfârșitul stringului parsat după parsarea expresiei (un program Egg este o singură expresie) și ne returnează structura de date reprezentând programul.
 
 ```{includeCode: strip_log, test: join}
 function parse(program) {
@@ -187,13 +187,13 @@ console.log(parse("+(a, 10)"));
 
 {{index "error message"}}
 
-It works! It doesn't give us very helpful information when it fails and doesn't store the line and column on which each expression starts, which might be helpful when reporting errors later, but it's good enough for our purposes.
+Funcționează! Nu ne oferă informații foarte utile când eșuează și nu memorează linia și coloana pe care expresia începe, ceea ce ar putea fi util în raportarea erorilor, dar este suficient pentru scopul nostru.
 
-## The evaluator
+## Evaluatorul
 
 {{index "evaluate function", evaluation, interpretation, "syntax tree", "Egg language"}}
 
-What can we do with the syntax tree for a program? Run it, of course! And that is what the evaluator does. You give it a syntax tree and a scope object that associates names with values, and it will evaluate the expression that the tree represents and return the value that this produces.
+Ce putem face cu arborele de sintaxă al unui program? Să îl rulăm, desigur! Și acesta este rolul evaluatorului. Îi transmiteți un arbore de sintaxă și un obiect care asociază numele cu valori și va evalua expresia reprezentată de către arbore, returnând valoarea produsă.
 
 ```{includeCode: true}
 const specialForms = Object.create(null);
@@ -227,27 +227,27 @@ function evaluate(expr, scope) {
 
 {{index "literal expression", scope}}
 
-The evaluator has code for each of the ((expression)) types. A literal value expression produces its value. (For example, the expression `100` just evaluates to the number 100.) For a binding, we must check whether it is actually defined in the scope and, if it is, fetch the binding's value.
+Evaluatorul are cod pentru fiecare tip de expresie. O expresie reprezentând o valoare literală își produce valoarea. (De exemplu, expresia `100` se evaluează la numărul 100). Pentru un binding, trebuie să verificăm dacă este definit în domeniul de vizibilitate și, dacă da, să extragem valoarea bindingului.
 
 {{index [function, application]}}
 
-Applications are more involved. If they are a ((special form)), like `if`, we do not evaluate anything and pass the argument expressions, along with the scope, to the function that handles this form. If it is a normal call, we evaluate the operator, verify that it is a function, and call it with the evaluated arguments.
+Aplicațiile sunt mai elaborate. Dacă au o formă specială, cum ar fi `if`, nu evaluăm nimic și transmitem expresiile argument împreună cu obiectul ce definește domeniul de vizibilitate, spre funcția care gestionează această formă. Dacă este un apel normal, evaluăm operatorul, verificăm dacă este o funcție și o apelăm cu argumentele evaluate.
 
-We use plain JavaScript function values to represent Egg's function values. We will come back to this [later](language#egg_fun), when the special form called `fun` is defined.
+Utilizăm valori de tip funcție JavaScript pentru a reprezenta valorile de tip funcție în Egg. Vom reveni [mai târziu](language#egg_fun), când vom defini forma specială numită `fun`.
 
 {{index readability, "evaluate function", recursion, parsing}}
 
-The recursive structure of `evaluate` resembles the similar structure of the parser, and both mirror the structure of the language itself. It would also be possible to integrate the parser with the evaluator and evaluate during parsing, but splitting them up this way makes the program clearer.
+Structura recursivă a funcției `evaluate` se aseamănă cu structura similară a parserului și ambele reflectă structura programului în sine. Am putea chiar să integrăm parserul cu evaluatorul și să evaluăm pe durata parsării, dar separând cele două concepte avem o structură mai clară a programului.
 
 {{index "Egg language", interpretation}}
 
-This is really all that is needed to interpret Egg. It is that simple. But without defining a few special forms and adding some useful values to the ((environment)), you can't do much with this language yet.
+Cam de atât avem nevoie pentru a interpreta Egg. Este atât de simplu. Dar fără a defini câteva forme speciale și a adăuga câteva valori utile la mediu, încă nu putem realiza mare lucru cu acest limbaj.
 
-## Special forms
+## Forme speciale
 
 {{index "special form", "specialForms object"}}
 
-The `specialForms` object is used to define special syntax in Egg. It associates words with functions that evaluate such forms. It is currently empty. Let's add `if`.
+Obiectul `specialForms` este utilizat pentru a defini sintaxa specială în Egg. Acesta asociază cuvinte cu funcții care evaluează asemenea forme. Deocamdată este un obiect gol. Haideți să adăugăm `if`.
 
 ```{includeCode: true}
 specialForms.if = (args, scope) => {
@@ -263,17 +263,17 @@ specialForms.if = (args, scope) => {
 
 {{index "conditional execution", "ternary operator", "?: operator", "conditional operator"}}
 
-Egg's `if` construct expects exactly three arguments. It will evaluate the first, and if the result isn't the value `false`, it will evaluate the second. Otherwise, the third gets evaluated. This `if` form is more similar to JavaScript's ternary `?:` operator than to JavaScript's `if`. It is an expression, not a statement, and it produces a value, namely, the result of the second or third argument.
+Construcția `if` a limbajului Egg așteaptă exact trei argumente. Va evalua primul argument și dacă rezultatul nu reprezintă valoarea `false` va evalua cel de-al doilea argument. Altfel, cel de al treilea argument va fi evaluat. Această forma a `if` este asemănătoare operatorului ternar din JavaScript `?:`, și seamănă mai puțin cu `if` din JavaScript. Este o expresie, nu o instrucțiune, și va produce o valoare, rezultatul evaluării celui de-al doilea sau celui de-al treilea argument.
 
 {{index Boolean}}
 
-Egg also differs from JavaScript in how it handles the condition value to `if`. It will not treat things like zero or the empty string as false, only the precise value `false`.
+Egg diferă de JavaScript și prin modul în care gestionează condiția pentru `if`. Nu va trata zero sau stringul gol ca fiind false, doar valoarea exactă `false`.
 
 {{index "short-circuit evaluation"}}
 
-The reason we need to represent `if` as a special form, rather than a regular function, is that all arguments to functions are evaluated before the function is called, whereas `if` should evaluate only _either_ its second or its third argument, depending on the value of the first.
+Motivul pentru care trebuie să reprezentăm `if` ca o formă specială și nu ca o funcție obișnuită este faptul că toate argumentele spre funcții sunt evaluate înainte ca funcțiile să fie apelate, în timp ce `if` trebuie să evalueze doar argumentul relevant dintre cel de-al doilea și cel de-al treilea, în funcție de valoarea evaluată a primului argument.
 
-The `while` form is similar.
+Forma `while` este asemănătoare.
 
 ```{includeCode: true}
 specialForms.while = (args, scope) => {
@@ -290,7 +290,7 @@ specialForms.while = (args, scope) => {
 };
 ```
 
-Another basic building block is `do`, which executes all its arguments from top to bottom. Its value is the value produced by the last argument.
+Un alt bloc de bază este "do", care execută toate argumentele sale de sus în jos.Valoarea sa este valoarea produsă de ultimul argument.
 
 ```{includeCode: true}
 specialForms.do = (args, scope) => {
@@ -304,7 +304,7 @@ specialForms.do = (args, scope) => {
 
 {{index ["= operator", "in Egg"], [binding, "in Egg"]}}
 
-To be able to create bindings and give them new values, we also create a form called `define`. It expects a word as its first argument and an expression producing the value to assign to that word as its second argument. Since `define`, like everything, is an expression, it must return a value. We'll make it return the value that was assigned (just like JavaScript's `=` operator).
+Pentru a putea crea bindinguri și să le dăm valori noi, vom crea o formă numită `define`. Va primi un cuvânt ca și prim argument și o expresie ce produce o valoare ce va fi atribuită acelui cuvânt ca și al doilea argument. Deoarece `define` este și ea o expresie, va trebui să returneze o valoare. O vom construi astfel încât să returneze valoarea atribuită (ca și operatorul `=` din JavaScript).
 
 ```{includeCode: true}
 specialForms.define = (args, scope) => {
@@ -317,13 +317,13 @@ specialForms.define = (args, scope) => {
 };
 ```
 
-## The environment
+## Mediul
 
 {{index "Egg language", "evaluate function", [binding, "in Egg"]}}
 
-The ((scope)) accepted by `evaluate` is an object with properties whose names correspond to binding names and whose values correspond to the values those bindings are bound to. Let's define an object to represent the ((global scope)).
+Domeniul de vizibilitate acceptat de `evaluate` este un obiect cu proprietăți ale căror nume corespund numelor bindingurilor și ale căror valori corespund valorilor de care acele bindinguri sunt legate. Să definim un obiect pentru a reprezenta domeniul de vizibilitate global.
 
-To be able to use the `if` construct we just defined, we must have access to ((Boolean)) values. Since there are only two Boolean values, we do not need special syntax for them. We simply bind two names to the values `true` and `false` and use them.
+Pentru a putea utiliza construcția `if` pe care am declarat-o, trebuie să avem acces la valori booleene. Deoarece avem doar două valori booleene, nu avem nevoie de o sintaxa specială pentru ele. Doar legăm două nume de valorile `true` și `false` și le utilizăm ca atare.
 
 ```{includeCode: true}
 const topScope = Object.create(null);
@@ -332,7 +332,7 @@ topScope.true = true;
 topScope.false = false;
 ```
 
-We can now evaluate a simple expression that negates a Boolean value.
+Acum putem evalua o expresie simplă care neagă o valoare booleană.
 
 ```
 let prog = parse(`if(true, false, true)`);
@@ -342,7 +342,7 @@ console.log(evaluate(prog, topScope));
 
 {{index arithmetic, "Function constructor"}}
 
-To supply basic ((arithmetic)) and ((comparison)) ((operator))s, we will also add some function values to the ((scope)). In the interest of keeping the code short, we'll use `Function` to synthesize a bunch of operator functions in a loop, instead of defining them individually.
+Pentru a defini operatorii de bază pentru operații aritmetice și comparații, vom adăuga de asemenea câteva valori de tip funcție în domeniul de vizibilitate. Pentru a păstra codul scurt, vom utiliza `Function` pentru a defini o serie de operatori într-o buclă, în loc să îi definim individual.
 
 ```{includeCode: true}
 for (let op of ["+", "-", "*", "/", "==", "<", ">"]) {
@@ -350,7 +350,7 @@ for (let op of ["+", "-", "*", "/", "==", "<", ">"]) {
 }
 ```
 
-A way to ((output)) values is also useful, so we'll wrap `console.log` in a function and call it `print`.
+O modalitate de a afișa valori ar fi de asemenea utilă, astfel că vom împacheta `console.log` într-o funcție numită `print`.
 
 ```{includeCode: true}
 topScope.print = value => {
@@ -361,7 +361,7 @@ topScope.print = value => {
 
 {{index parsing, "run function"}}
 
-That gives us enough elementary tools to write simple programs. The following function provides a convenient way to parse a program and run it in a fresh scope:
+Cele de mai sus ne dau suficiente instrumente pentru a scrie programe simple. Funcția de mai jos ne dă o modalitate convenabilă de a parsa un program și a-l rula într-un domeniu de vizibilitate nou:
 
 ```{includeCode: true}
 function run(program) {
@@ -371,7 +371,7 @@ function run(program) {
 
 {{index "Object.create function", prototype}}
 
-We'll use object prototype chains to represent nested scopes so that the program can add bindings to its local scope without changing the top-level scope.
+Vom utiliza lanțuri de prototipuri pentru a reprezenta domeniile de vizibilitate subordonate astfel încât programul va putea adăuga bindinguri în domeniul său de vizibilitate local fără a modifica domeniul de vizibilitate principal.
 
 ```
 run(`
@@ -387,17 +387,17 @@ do(define(total, 0),
 
 {{index "summing example", "Egg language"}}
 
-This is the program we've seen several times before, which computes the sum of the numbers 1 to 10, expressed in Egg. It is clearly uglier than the equivalent JavaScript program—but not bad for a language implemented in less than 150 ((lines of code)).
+Acesta este programul pe care l-am vazut de câteva ori în trecut, care calculează suma numerelor de la 1 la 10, exprimat în Egg. Este evident mai urât decât programul JavaScript echivalent - dar nu e rău pentru un limbaj de programare implementat în mai puțin de 150 de linii de cod.
 
 {{id egg_fun}}
 
-## Functions
+## Funcții
 
 {{index function, "Egg language"}}
 
-A programming language without functions is a poor programming language indeed.
+Un limbaj de programare fără funcții este un limbaj de programare sărac.
 
-Fortunately, it isn't hard to add a `fun` construct, which treats its last argument as the function's body and uses all arguments before that as the names of the function's parameters.
+Din fericire, nu este deloc greu să adăugăm o construcție `fun`, care tratează ultimul argument ca fiind corpul funcției și utilizează toate argumentele anterioare ca și nume ale parametrilor funcției.
 
 ```{includeCode: true}
 specialForms.fun = (args, scope) => {
@@ -427,7 +427,7 @@ specialForms.fun = (args, scope) => {
 
 {{index "local scope"}}
 
-Functions in Egg get their own local scope. The function produced by the `fun` form creates this local scope and adds the argument bindings to it. It then evaluates the function body in this scope and returns the result.
+Funcțiile în Egg vor avea propriul domeniu de vizibilitate local. Funcția produsă de forma `fun` crează acest domeniu de vizibilitate local și își adaugă argumentele pentru bindinguri. Apoi evaluează corpul funcției în acest domeniu de vizibilitate și returnează rezultatul.
 
 ```{startCode: true}
 run(`
@@ -446,39 +446,39 @@ do(define(pow, fun(base, exp,
 // → 1024
 ```
 
-## Compilation
+## Compilarea
 
 {{index interpretation, compilation}}
 
-What we have built is an interpreter. During evaluation, it acts directly on the representation of the program produced by the parser.
+Ceea ce am construit este un interpretor. Pe parcursul evaluării, acesta acționează direct asupra reprezentării programului produsă de către parser.
 
 {{index efficiency, performance, [binding, definition], [memory, speed]}}
 
-_Compilation_ is the process of adding another step between the parsing and the running of a program, which transforms the program into something that can be evaluated more efficiently by doing as much work as possible in advance. For example, in well-designed languages it is obvious, for each use of a binding, which binding is being referred to, without actually running the program. This can be used to avoid looking up the binding by name every time it is accessed, instead directly fetching it from some predetermined memory location.
+_Compilarea_ este procesul prin care se adaugă încă un pas între parsarea și rularea unui program, care transformă programul în ceva ce poate fi evaluat mai eficient prin efectuarea în avans a cât mai mult efort posibil. De exemplu, în limbajele bine concepute, este evident pentru fiecare utilizare a unui binding ce binding este referit, fără a rula programul. Aceasta poate fi utilizată pentru a evita căutarea bindingului după nume de fiecare dată când este accesat, prin extragerea sa directă dintr-o anumită locație de memorie predeterminată.
 
-Traditionally, ((compilation)) involves converting the program to ((machine code)), the raw format that a computer's processor can execute. But any process that converts a program to a different representation can be thought of as compilation.
+Tradițional, compilarea presupune conversia programului în _cod-mașină_, formatul brut pe care procesorul computerului poate să îl execute. Dar orice proces care convertește un program într-o formă diferită poate fi considerat "compilare".
 
 {{index simplicity, "Function constructor", transpilation}}
 
-It would be possible to write an alternative ((evaluation)) strategy for Egg, one that first converts the program to a JavaScript program, uses `Function` to invoke the JavaScript compiler on it, and then runs the result. When done right, this would make Egg run very fast while still being quite simple to implement.
+Am putea scrie o strategie alternativă de evaluare pentru Egg, una care mai întâi convertește programul într-un program JavaScript, utilizează `Function` pentru a invoca compilatorul JavaScript asupra lui și apoi rulează rezultatul. Implementată corect, această abordare ar permite ca programele Egg să ruleze foarte rapid dar să rămână relativ simmplu de scris.
 
-If you are interested in this topic and willing to spend some time on it, I encourage you to try to implement such a compiler as an exercise.
+Dacă sunteți interesați și doriți să petreceți ceva timp, vă încurajez să încercați să implementați un asemenea compilator ca și exercițiu.
 
-## Cheating
+## Înșelăciune
 
 {{index "Egg language"}}
 
-When we defined `if` and `while`, you probably noticed that they were more or less trivial wrappers around JavaScript's own `if` and `while`. Similarly, the values in Egg are just regular old JavaScript values.
+Când am definit `if` și `while`, probabil ați observat că ele sunt împachetări mai mult sau mai puțin triviale ale `if` și `while` din JavaScript. Similar, valorile din Egg sunt doar valori obișnuite din JavaScript. Este
 
-If you compare the implementation of Egg, built on top of JavaScript, with the amount of work and complexity required to build a programming language directly on the raw functionality provided by a machine, the difference is huge. Regardless, this example ideally gave you an impression of the way ((programming language))s work.
+Dacă comparașii implementarea Egg, construită deasupra JavaScript, cu volumul de muncă și complexitatea necesară pentru a construi un limbaj de programare direct peste funcționalitatea brută furnizată de mașină, diferența este imensă. Dar sper că acest exemplu v-a dat o idee solidă despre cum funcționează limbajele de programare.
 
-And when it comes to getting something done, cheating is more effective than doing everything yourself. Though the toy language in this chapter doesn't do anything that couldn't be done better in JavaScript, there _are_ situations where writing small languages helps get real work done.
+Iar când vine vorba despre a vă termina munca, această abordare ar fi cu siguranță mult mai eficientă decât să faceți totul de la zero. Deși limbajul de jucărie pe care l-am construit în acest capitol nu face nimic care nu ar putea fi făcut mai bine în JavaScript, _există_ situații în care scrierea unui mic limbaj de programare ajută la finalizarea muncii în lumea reală.
 
-Such a language does not have to resemble a typical programming language. If JavaScript didn't come equipped with regular expressions, for example, you could write your own parser and evaluator for regular expressions.
+Un asemenea limbaj nu ar trebui să se asemene cu un limbaj de programare tipic. Dacă JavaScript nu ar fi fost echipat cu expresii regulate, de exemplu, ați fi putut scrie propriul parser și evaluator de expresii regulate.
 
 {{index "artificial intelligence"}}
 
-Or imagine you are building a giant robotic ((dinosaur)) and need to program its ((behavior)). JavaScript might not be the most effective way to do this. You might instead opt for a language that looks like this:
+Sau imaginați-vă că aveți de construit un dinozaur robotizat uriaș și trebuie să îi programați comportamentul. JavaScript ar putea să nu fie cel mai eficient mod de a rezolva problema. Ați putea opta pentru un limbaj de programare care ar arăta astfel:
 
 ```{lang: null}
 behavior walk
@@ -498,15 +498,15 @@ behavior attack
 
 {{index expressivity}}
 
-This is what is usually called a _((domain-specific language))_, a language tailored to express a narrow domain of knowledge. Such a language can be more expressive than a general-purpose language because it is designed to describe exactly the things that need to be described in its domain, and nothing else.
+Denumirea consacrată pentru un astfel de limbaj este _limbaj de programare specific domeniului (domain-specific language)_, un limbaj adecvat pentru a descrie un domeniu restrâns al cunoașterii. Un asemenea limbaj poate fi mult mai expresiv decât un limbaj cu aplicare generală deoarece este conceput să descrie exact ceea ce trebuie descris în domeniul său și nimic altceva.
 
-## Exercises
+## Exerciții
 
-### Arrays
+### Array-uri
 
 {{index "Egg language", "arrays in egg (exercise)", [array, "in Egg"]}}
 
-Add support for arrays to Egg by adding the following three functions to the top scope: `array(...values)` to construct an array containing the argument values, `length(array)` to get an array's length, and `element(array, n)` to fetch the n^th^ element from an array.
+Adăugați suport pentru array-uri în Egg prin adăugarea următoarelor trei funcții în domeniul de vizibilitate principal: `array(...values)` pentru a construi un array ce conține valorile argumentului, `length(array)` pentru a determina lungimea unui array, și `element(array, n)` pentru a obține cel de-al n-lea element dintr-un array.
 
 {{if interactive
 
@@ -538,11 +538,11 @@ if}}
 
 {{index "arrays in egg (exercise)"}}
 
-The easiest way to do this is to represent Egg arrays with JavaScript arrays.
+Cel mai simplu mod de a soluționa problema este să reprezentăm array-urile Egg ca și array-uri JavaScript.
 
 {{index "slice method"}}
 
-The values added to the top scope must be functions. By using a rest argument (with triple-dot notation), the definition of `array` can be _very_ simple.
+Valorile adăugate în domeniul de vizibilitate principal trebuie să fie funcții. Utilizând un argument rest (notația cu trei puncte `...`), definția unui `array` poate fi _foarte_ simplă.
 
 hint}}
 
@@ -550,9 +550,9 @@ hint}}
 
 {{index closure, [function, scope], "closure in egg (exercise)"}}
 
-The way we have defined `fun` allows functions in Egg to reference the surrounding scope, allowing the function's body to use local values that were visible at the time the function was defined, just like JavaScript functions do.
+Modul în care am definit `fun` permite funcțiilor din Egg să refere domeniul de vizibilitate înconjurător, permițănd corpului funcției să utilizeze valori locale care erau vizibile atunci când funcția a fost definită, așa cum se întâmplă și cu funcțiile JavaScript.
 
-The following program illustrates this: function `f` returns a function that adds its argument to `f`'s argument, meaning that it needs access to the local ((scope)) inside `f` to be able to use binding `a`.
+Următorul program ilustrează aceasta: funcția `f` returnează o funcție care își adună argumentul la argumentul lui `f`, ceea ce înseamnă că trebuie să acceseze domeniul local din `f` pentru a putea utiliza bindingul `a`.
 
 ```
 run(`
@@ -562,29 +562,29 @@ do(define(f, fun(a, fun(b, +(a, b)))),
 // → 9
 ```
 
-Go back to the definition of the `fun` form and explain which mechanism causes this to work.
+Reveniți la definiția pentru forma `fun` și explicați mecanismul care permite funcționarea codului de mai sus.
 
 {{hint
 
 {{index closure, "closure in egg (exercise)"}}
 
-Again, we are riding along on a JavaScript mechanism to get the equivalent feature in Egg. Special forms are passed the local scope in which they are evaluated so that they can evaluate their subforms in that scope. The function returned by `fun` has access to the `scope` argument given to its enclosing function and uses that to create the function's local ((scope)) when it is called.
+Din nou, ne vom baza pe un mecanism JavaScript pentru a implementa funcționalitatea echivalentă în Egg. Formelor speciale le este transmis domeniul de vizibilitate local în care acestea sunt evaluate astfel că ele își vor putea evalua subformele în acel domeniu de vizibilitate. Funcția returnată de către `fun` are acces la argumentul `scope` transmis funcției care o include și utilizează acest obiect pentru a crea domeniul de vizibilitate local al funcției atunci când este apelată.
 
 {{index compilation}}
 
-This means that the ((prototype)) of the local scope will be the scope in which the function was created, which makes it possible to access bindings in that scope from the function. This is all there is to implementing closure (though to compile it in a way that is actually efficient, you'd need to do some more work).
+Aceasta înseamnă că prototipul domeniului de vizibilitate local este domeniul de vizibilitate în interiorul căruia a fost creată funcția, ceea ce permite accesarea bindingurilor din acel domeniu de vizibilitate din funcție. Cam de atât aveți nevoie pentru a implementa un closure (deși compilarea sa intr-un mod care este de fapt eficient necesită mai multă muncă).
 
 hint}}
 
-### Comments
+### Comentarii
 
 {{index "hash character", "Egg language", "comments in egg (exercise)"}}
 
-It would be nice if we could write ((comment))s in Egg. For example, whenever we find a hash sign (`#`), we could treat the rest of the line as a comment and ignore it, similar to `//` in JavaScript.
+Ar fi util dacă am putea scrie comentarii în Egg. De exemplu, un simbol `#` să ne permită să tratăm restul liniei ca fiind un comentariu pe care să îl putem ignora în execuție, simmilar simbolului `//` din JavaScript.
 
 {{index "skipSpace function"}}
 
-We do not have to make any big changes to the parser to support this. We can simply change `skipSpace` to skip comments as if they are ((whitespace)) so that all the points where `skipSpace` is called will now also skip comments. Make this change.
+Nu avem de făcut nici o modificare majoră în parser pentru a suporta aceasta. Putem doar să modificăm `skipSpace` ca să tratăm comentariile ca și cum ar fi spații albe astfel încât, oriunde se apelează `skipSpace` să ignorăm și comentariile. Realizați această modificare.
 
 {{if interactive
 
@@ -610,29 +610,29 @@ if}}
 
 {{index "comments in egg (exercise)", [whitespace, syntax]}}
 
-Make sure your solution handles multiple comments in a row, with potentially whitespace between or after them. 
+Asigurați-vă că soluția voastră tratează cazul comentariilor multiple pe un singur rând, cu spații între sau după ele.
 
-A ((regular expression)) is probably the easiest way to solve this. Write something that matches "whitespace or a comment, zero or more times". Use the `exec` or `match` method and look at the length of the first element in the returned array (the whole match) to find out how many characters to slice off.
+O expresie regulată este probabil cel mai ușor mod de rezolvare. Scrieți o expresie care potrivește "spațiu alb sau comentariu, de zero sau mai multe ori". Utilizați metoda `exec` sau `match` și verificați lungimea primului element din array-ul returnat (potrivirea completă) pentru a determina câte caractere să eliminați.
 
 hint}}
 
-### Fixing scope
+### Fixarea domeniului de vizibilitate
 
 {{index [binding, definition], assignment, "fixing scope (exercise)"}}
 
-Currently, the only way to assign a binding a value is `define`. This construct acts as a way both to define new bindings and to give existing ones a new value.
+Deocamdată, singurul mod de a atribui o valoare unui binding este `define`. Această construcție acționează atât ca un mod de a defini noi bindinguri cât și de a atribui bindingurilor existente valori noi.
 
 {{index "local binding"}}
 
-This ((ambiguity)) causes a problem. When you try to give a nonlocal binding a new value, you will end up defining a local one with the same name instead. Some languages work like this by design, but I've always found it an awkward way to handle ((scope)).
+Această ambiguitate cauzează o problemă. Când încercați să atribuiți unui binding non-local o nouă valoare, veți defini de fapt un binding local cu același nume. Unele limbaje de programare sunt concepute să funcționeze astfel, dar cred că este o modalitate ciudată de a gestiona vizibilitatea.
 
 {{index "ReferenceError type"}}
 
-Add a special form `set`, similar to `define`, which gives a binding a new value, updating the binding in an outer scope if it doesn't already exist in the inner scope. If the binding is not defined at all, throw a `ReferenceError` (another standard error type). 
+Adăugați o formă specială `set`, similară cu `define`, care atribuie unui binding o valoare nouă, actualizând bindingul dintr-un domeniu de vizibilitate extern dacă acesta nu există deja în domeniul de vizibilitate curent. Dacă bindingul nu este definit deloc, aruncați o excepție `ReferenceError` (un alt tip standard de eroare).
 
 {{index "hasOwnProperty method", prototype, "getPrototypeOf function"}}
 
-The technique of representing scopes as simple objects, which has made things convenient so far, will get in your way a little at this point. You might want to use the `Object.getPrototypeOf` function, which returns the prototype of an object. Also remember that scopes do not derive from `Object.prototype`, so if you want to call `hasOwnProperty` on them, you have to use this clumsy expression:
+Tehnica reprezentării domeniilor de vizibilitate ca și obiecte, care a fost convenabilă până acum, o să vă încurce puțin. Ați putea încerca să utilizați funcția `Object.getPrototypeOf`, care returnează prototipul unui obiect. De asemenea, domeniile de vizibilitate nu derivă din `Object.prototype`, astfel că, dacă vă este util să apelați `hasOwnProperty` asupra lor, va trebui să utilizați această expresie stângace:
 
 ```{test: no}
 Object.prototype.hasOwnProperty.call(scope, name);
@@ -661,10 +661,10 @@ if}}
 
 {{index [binding, "compilation of"], assignment, "getPrototypeOf function", "hasOwnProperty method", "fixing scope (exercise)"}}
 
-You will have to loop through one ((scope)) at a time, using `Object.getPrototypeOf` to go to the next outer scope. For each scope, use `hasOwnProperty` to find out whether the binding, indicated by the `name` property of the first argument to `set`, exists in that scope. If it does, set it to the result of evaluating the second argument to `set` and then return that value.
+Va trebui să ciclați printre domeniile de vizibilitate, pe rând, utilizând `Object.getPrototypeOf` pentru a trece la domeniul de vizibilitate exterior. Pentru fiecare domeniu de vizibilitate, utilizați `hasOwnProperty` pentru a verifica dacă bindingul indicat de proprietatea `name`, primul argument al `set`, există în acel domeniu de vizibilitate. Dacă da, îl setați la rezultatul evaluării celui de-al doilea argument al `set` și returnați acea valoare.
 
 {{index "global scope", "run-time error"}}
 
-If the outermost scope is reached (`Object.getPrototypeOf` returns null) and we haven't found the binding yet, it doesn't exist, and an error should be thrown.
+Dacă s-a atins domeniul de vizibilitate cel mai exterior (`Object.getPrototypeOf` returnează `null`) și încă nu am găsit bindingul, atunci vom arunca o excepție.
 
 hint}}
