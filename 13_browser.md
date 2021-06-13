@@ -1,11 +1,8 @@
-# JavaScript and the Browser
+# JavaScript și browserul
 
 {{quote {author: "Tim Berners-Lee", title: "The World Wide Web: A very short personal history", chapter: true}
 
-The dream behind the Web is of a common information space in which we
-communicate by sharing information. Its universality is essential: the
-fact that a hypertext link can point to anything, be it personal,
-local or global, be it draft or highly polished.
+Visul din spatele web-ului este cel al unui spațiu comun pentru informații în care să comunicăm prin partajarea informațiilor. Universalitatea sa este esențială: faptul că un link poate indica orice, fie personal, fie local sau global, fie schiță sau mult finisat.
 
 quote}}
 
@@ -13,131 +10,69 @@ quote}}
 
 {{figure {url: "img/chapter_picture_13.jpg", alt: "Picture of a telephone switchboard", chapter: "framed"}}}
 
-The next chapters of this book will talk about web browsers. Without
-web ((browser))s, there would be no JavaScript. Or even if there were,
-no one would ever have paid any attention to it.
+În următoarele capitole vom discuta despre browserele web. Fără ele, JavaScript nu ar fi existat. Sau chiar și dacă ar fi existat, nimeni nu i-ar fi acordat atenție.
 
 {{index decentralization, compatibility}}
 
-Web technology has been decentralized from the start, not just
-technically but also in the way it evolved. Various browser vendors
-have added new functionality in ad hoc and sometimes poorly thought-out
-ways, which then, sometimes, ended up being adopted by others—and
-finally set down as in ((standards)).
+Tehnologia web a fost descentralizată de la început, nu doar tehnic dar și din punctul de vedere al modului în care a evoluat. Diferiți producători de browsere au adăugat funcționalitate nouă ad-hoc și uneori slab proiectată, care apoi a fost adoptată de alți, și apoi inclusă în standarde.
 
-This is both a blessing and a curse. On the one hand, it is empowering
-to not have a central party control a system but have it be improved
-by various parties working in loose ((collaboration)) (or occasionally
-open hostility). On the other hand, the haphazard way in which the Web
-was developed means that the resulting system is not exactly a shining
-example of internal ((consistency)). Some parts of it are downright
-confusing and poorly conceived.
+Aceasta este în același timp o binecuvântare și un blestem. Pe de o parte, permite ca sistemul să nu fie controlat de o autoritate centrală, ci să fie îmbunătățit de mai multe părți ce colaborează între anumite limite (sau uneori în ostilitate vădită). Pe de altă parte, modul aleator în care a fost dezvoltat Web-ul înseamnă că sistemul rezultat nu este chiar un exemplu strălucit de consistență internă. Unele părți sunt creatoare de confuzie și slab proiectate.
 
-## Networks and the Internet
+## Rețelele și Internetul
 
-Computer ((network))s have been around since the 1950s. If you put
-cables between two or more computers and allow them to send data back
-and forth through these cables, you can do all kinds of wonderful
-things.
+Rețelele de computere au apărut încă din anii 1950. Dacă montați cabluri între două sau mai multe computere și le permiteți să își transmită date prin aceste cabluri, puteți realiza tot felul de lucruri.
 
-And if connecting two machines in the same building allows us to do
-wonderful things, connecting machines all over the planet should be
-even better. The technology to start implementing this vision was
-developed in the 1980s, and the resulting network is called the
-_((Internet))_. It has lived up to its promise.
+Dacă prin conectarea a două mașini din aceeași clădire putem face lucruri extraordinare, conectarea mașinilor de pe toată planeta ar trebui să fie un lucru și mai bun. Tehnologia pentru a începe implementarea acestei viziuni a fost dezvoltată în anii 1980 și rețeaua rezultată se numește _Internet_. Categoric și-a îndeplinit promisiunea.
 
-A computer can use this network to shoot bits at another computer. For
-any effective ((communication)) to arise out of this bit-shooting, the
-computers on both ends must know what the bits are supposed to
-represent. The meaning of any given sequence of bits depends entirely
-on the kind of thing that it is trying to express and on the
-((encoding)) mechanism used.
+Un computer poate folosi această rețea pentru a transmite biți către un alt computer. Pentru o comunicație eficientă, ambele computere trebuie să fie capabile să înțeleagă ce reprezintă acești biți. Semnificația oricărei secvențe de biți depinde de tipul informației pe care aceasta încearcă să o exprime și de tipul de mecanism de codificare utilizat.
 
 {{index [network, protocol]}}
 
-A _network ((protocol))_ describes a style of communication over a
-((network)). There are protocols for sending email, for fetching email,
-for sharing files, and even for controlling computers that happen to be
-infected by malicious software.
+Un _protocol de rețea_ descrie un stil de comunicare peste o rețea. Există protocoale pentru transmiterea e-mail-urilor, pentru recepționarea lor, pentru distribuirea fișierelor și chiar pentru controlul computerelor care sunt infectate cu software malițios.
 
 {{indexsee "Hypertext Transfer Protocol", HTTP}}
 
-For example, the _Hypertext Transfer Protocol_ (((HTTP))) is
-a protocol for retrieving named ((resource))s (chunks of information,
-such as web pages or pictures). It specifies that the side making the
-request should start with a line like this, naming the resource and
-the version of the protocol that it is trying to use:
+De exemplu, _protocolul de transfer al hipertextului (HTTP)_ este un protocol pentru returnarea resurselor denumite (bucăți de informație cum ar fi pagini web sau imagini). Acesta specifică obligativitatea pentru partea care face o cerere ca să înceapa solicitarea cu o linie asemănătoare celei de mai jos, denumind resursa și versiunea protocolului pe care încearcă să o utilizeze:
 
 ```{lang: "text/plain"}
 GET /index.html HTTP/1.1
 ```
 
-There are a lot more rules about the way the requester can include more
-information in the ((request)) and the way the other side, which
-returns the resource, packages up its content. We'll look at HTTP in a
-little more detail in [Chapter ?](http).
+Există mult mai multe reguli cu privire la modul în care solicitantul poate include mai multe informații în cerere și modul în care cealaltă parte, care returnează resursa, poate să împacheteze conținutul. Vom analiza protocolul HTTP mai în detaliu în [capitolul ?](http).
 
 {{index layering, stream, ordering}}
 
-Most protocols are built on top of other protocols. HTTP treats the
-network as a streamlike device into which you can put bits and have
-them arrive at the correct destination in the correct order. As we saw
-in [Chapter ?](async), ensuring those things is already a rather
-difficult problem.
+Majoritatea protocoalelor sunt construite peste alte protocoale. HTTP tratează rețeaua ca fiind un dispozitiv pentru fluxuri de date, în care se plasează biți care ajung la destinația corectă în ordinea corectă. Așa cum am văzut în [capitolul ?](async), asigurarea acestor aspecte este deja în sine o problemă dificilă.
 
 {{index TCP}}
 
 {{indexsee "Transmission Control Protocol", TCP}}
 
-The _Transmission Control Protocol_ (TCP) is a ((protocol)) that
-addresses this problem. All Internet-connected devices "speak" it, and
-most communication on the ((Internet)) is built on top of it.
+_Protocolul pentru controlul transmisiunii (TCP)_ este un protocol care adresează această problemă. Toate dispozitivele conectate la Internet îl "vorbesc" și majoritatea comunicației pe Internet este construită pe baza acestuia.
 
 {{index "listening (TCP)"}}
 
-A TCP ((connection)) works as follows: one computer must be waiting,
-or _listening_, for other computers to start talking to it. To be able
-to listen for different kinds of communication at the same time on a
-single machine, each listener has a number (called a _((port))_)
-associated with it. Most ((protocol))s specify which port should be
-used by default. For example, when we want to send an email using the
-((SMTP)) protocol, the machine through which we send it is expected to
-be listening on port 25.
+O conexiune TCP funcționează astfel: un computer trebuie să aștepte, sau să _asculte (listening)_, pentru alte computere care ar putea începe să comunice cu el. Pentru a putea asculta pentru diferite tipuri de comunicație în același timp, pe o singură mașină, fiecare listener are un număr asociat lui (numit _port_). Majoritatea protocoalelor specifică portul implicit ce va fi utilizat. De exemplu, când intenționăm să trimitem un email utilizând protocolul SMTP, mașina prin care îl trimitem este așteptată să asculte pe portul 25.
 
-Another computer can then establish a ((connection)) by connecting to
-the target machine using the correct port number. If the target
-machine can be reached and is listening on that port, the connection
-is successfully created. The listening computer is called the
-_((server))_, and the connecting computer is called the _((client))_.
+Un alt computer poate apoi să stabilească o conexiune cu mașina țintă utilizând portul corect. Dacă mașina țintă poate fi atinsă și ascultă pe acel port, conexiunea este creată cu succes. Computerul care ascultă se numește _server_ iar cel care se conectează se numește _client_.
 
 {{index [abtraction, "of the network"]}}
 
-Such a connection acts as a two-way ((pipe)) through which bits can
-flow—the machines on both ends can put data into it. Once the bits are
-successfully transmitted, they can be read out again by the machine on
-the other side. This is a convenient model. You could say that ((TCP))
-provides an abstraction of the network.
+O asemenea conexiune funcționează ca și o "conductă" bidirecțională prin care biții pot să "curgă" - mașinile de la ambele capete pot să pună biți în conductă. Imediat ce biții au fost transmiși cu succes, ei pot fi citiți de către mașina de la celălalt capăt. Acesta este un model convenabil. Putem spune că TCP furnizează o abstracție a rețelei.
 
 {{id web}}
 
-## The Web
+## Web-ul
 
-The _((World Wide Web))_ (not to be confused with the ((Internet)) as
-a whole) is a set of ((protocol))s and formats that allow us to visit
-web pages in a browser. The "Web" part in the name refers to the fact
-that such pages can easily link to each other, thus connecting into a
-huge ((mesh)) that users can move through.
+_World Wide Web_ (a nu se confunda cu Internetul ca și întreg) este un set de protocoale și formate care ne permit să vizităm pagini într-un browser. Cuvântul "Web" din nume se referă la faptul că asemenea pagini pot fi ușor legate între ele, conectându-se astfel într-o rețea imensă prin care utilizatorii pot să se deplaseze.
 
-To become part of the Web, all you need to do is connect a machine to
-the ((Internet)) and have it listen on port 80 with the ((HTTP))
-protocol so that other computers can ask it for documents.
+Pentru a deveni parte din Web, tot ceea ce trebuie să faceți este să conectați o mașină la Internet și să o puneți să asculte pe portul 80 cu protocolul HTTP astfel încât alte computere să îi poată cere documente.
 
 {{index URL}}
 
 {{indexsee "Uniform Resource Locator", URL}}
 
-Each ((document)) on the Web is named by a _Uniform Resource Locator_
-(URL), which looks something like this:
+Fiecare document de pe Web are o denumire bazată pe un URL (_Uniform Resource Locator_), care arată astfel:
 
 ```{lang: null}
   http://eloquentjavascript.net/13_browser.html
@@ -147,30 +82,13 @@ Each ((document)) on the Web is named by a _Uniform Resource Locator_
 
 {{index HTTPS}}
 
-The first part tells us that this URL uses the HTTP ((protocol)) (as
-opposed to, for example, encrypted HTTP, which would be _https://_).
-Then comes the part that identifies which ((server)) we are requesting
-the document from. Last is a path string that identifies the specific
-document (or _((resource))_) we are interested in.
+Prima parte ne spune că acest URL folosește protocolul HTTP (spre deosebire de, de exemplu, HTTP encriptat care ar fi _https://_). Apoi urmează partea care identifică serverul de la care facem solicitarea documentului. Apoi avem un string care identifică documentul specific (sau _resursa_) care ne interesează.
 
-Machines connected to the Internet get an _((IP address))_, which is a
-number that can be used to send messages to that machine, and looks
-something like `149.210.142.219` or `2001:4860:4860::8888`. But lists
-of more or less random numbers are hard to remember and awkward to
-type, so you can instead register a _((domain)) name_ for a specific
-address or set of addresses. I registered _eloquentjavascript.net_ to
-point at the IP address of a machine I control and can thus use that
-domain name to serve web pages.
+Mașinile conectate la Internet primesc o _adresă IP_ care este un număr ce poate fi utilizat pentru a trimite mesaje la aceea mașină și arată cam așa: `149.210.142.219` sau `2001:4860:4860::8888`. Dar aceste numere sunt mai mult sau mai puțin aleatoare și greu de reținut, astfel că putem înregistra un _nume de domeniu_ pentru una sau mai multe adrese. Asocierea unui nume pentru adresa IP face mai ușoară memorarea acestuia de către utilizatori.
 
 {{index browser}}
 
-If you type this URL into your browser's ((address bar)), the browser
-will try to retrieve and display the ((document)) at that URL. First,
-your browser has to find out what address _eloquentjavascript.net_
-refers to. Then, using the ((HTTP)) protocol, it will make a
-connection to the server at that address and ask for the resource
-_/13_browser.html_. If all goes well, the server sends back a
-document, which your browser then displays on your screen.
+Dacă introduceți URL-ul de mai sus în bara de adresă a browserului, browserul va încercă să returneze și să afișeze documentul de la acel URL. Mai întâi, browserul va încerca să identifice la ce se referă adresa _eloquentjavascript.net_. Apoi, utilizând protocolul HTTP, va realiza o conexiune la serverul de la adresa respectivă și va solicita resursa _/13_browser.html_. Dacă totul merge bine, serverul va transmite un document care va fi apoi afișat de către browserul vostru pe ecran.
 
 ## HTML
 
@@ -178,12 +96,9 @@ document, which your browser then displays on your screen.
 
 {{indexsee "Hypertext Markup Language", HTML}}
 
-HTML, which stands for _Hypertext Markup Language_, is the document
-format used for web pages. An HTML document contains ((text)), as well
-as _((tag))s_ that give structure to the text, describing things such
-as links, paragraphs, and headings.
+HTML, prescurtarea de la _Hypertext Markup Language_, este formatul pentru documente utilizat în paginile web. Un document HTML conține text și _tag-uri_ care dau structură textului, descriind lucruri cum ar fi legături, paragrafe sau titluri.
 
-A short HTML document might look like this:
+Un document HTML scurt ar arăta cam așa:
 
 ```{lang: "text/html"}
 <!doctype html>
@@ -203,7 +118,7 @@ A short HTML document might look like this:
 
 {{if book
 
-This is what such a document would look like in the browser:
+Cam așa ar arăta un astfel de document în browser:
 
 {{figure {url: "img/home-page.png", alt: "My home page",width: "6.3cm"}}}
 
@@ -211,69 +126,37 @@ if}}
 
 {{index [HTML, notation]}}
 
-The tags, wrapped in ((angle brackets)) (`<` and `>`, the symbols for
-_less than_ and _greater than_), provide information about the
-((structure)) of the document. The other ((text)) is just plain text.
+Tagurile, plasate între paranteze unghiulare (`<` și `>`), ne dau informații despre structura documentului. Restul conținutului este doar text obișnuit. 
 
 {{index doctype, version}}
 
-The document starts with `<!doctype html>`, which tells the browser to
-interpret the page as _modern_ HTML, as opposed to various dialects
-that were in use in the past.
+Documentul începe cu `<!doctype html>`, ceea ce informează browserul că pagina poate fi interpretată ca și HTML _modern_. În trecut au fost utilizate alte dialecte (versiuni ale HTML)
 
 {{index "head (HTML tag)", "body (HTML tag)", "title (HTML tag)", "h1 (HTML tag)", "p (HTML tag)"}}
 
-HTML documents have a head and a body. The head contains information
-_about_ the document, and the body contains the document itself. In
-this case, the head declares that the title of this document is "My
-home page" and that it uses the UTF-8 encoding, which is a way to
-encode Unicode text as binary data. The document's body contains a
-heading (`<h1>`, meaning "heading 1"—`<h2>` to `<h6>` produce
-subheadings) and two ((paragraph))s (`<p>`).
+Documentele HTML au un antet și un corp. Antetul conține informații despre document iar corpul reprezintă conținutul documentului în sine. În cazul nostru, antetul declară că titlul documentului este "My home page" și că se utilizează codificare UTF-8, care este o modalitate de a codifica textul Unicode ca și date binare. Corpul documentului conține un titlu (`<h1>`, cu semnificația "heading 1"—`<h2>` până la `<h6>` permit definirea unor subtitluri pe mai multe nivele) și două paragrafe (`<p>`).
 
 {{index "href attribute", "a (HTML tag)"}}
 
-Tags come in several forms. An ((element)), such as the body, a
-paragraph, or a link, is started by an _((opening tag))_ like `<p>`
-and ended by a _((closing tag))_ like `</p>`. Some opening tags, such
-as the one for the ((link)) (`<a>`), contain extra information in the
-form of `name="value"` pairs. These are called _((attribute))s_. In
-this case, the destination of the link is indicated with
-`href="http://eloquentjavascript.net"`, where `href` stands for
-"hypertext reference".
+Tagurile au mai multe forme. Un element începe cu un _tag de deschidere_ cum ar fi `<p>` și se termină cu un tag de închidere, cum ar fi `</p>`. Unele taguri conțin informații suplimentare, numite _atribute_, sub forma `name="value"`. De exemplu, legatura creată în documentul anterior prin tag-ul `<a>` are destinația specificată prin atributul `href="http://eloquentjavascript.net"`, în care `href` înseamnă "hypertext reference".
 
 {{index "src attribute", "self-closing tag", "img (HTML tag)"}}
 
-Some kinds of ((tag))s do not enclose anything and thus do not need to
-be closed. The metadata tag `<meta charset="utf-8">` is an example of
-this.
+Unele taguri nu conțin text deci nu trebuie să fie închise. Un exemplul este tagul pentru metadate `<meta charset="utf-8">`.
 
 {{index [escaping, "in HTML"]}}
 
-To be able to include ((angle brackets)) in the text of a document,
-even though they have a special meaning in HTML, yet another form of
-special notation has to be introduced. A plain opening angle bracket
-is written as `&lt;` ("less than"), and a closing bracket is written
-as `&gt;` ("greater than"). In HTML, an ampersand (`&`) character
-followed by a name or character code and a semicolon (`;`) is called an _((entity))_
-and will be replaced by the character it encodes.
+Pentru a putea include parantezele unghiulare în textul documentului, chiar dacă ele au semnificație specială în HTML, există o notație specială. Puteți introduce o paranteză unghiulară deschisă folosind `&lt;` ("less than"), iar o paranteză de închidere o puteți insera cu `&gt;` ("greater than"). În HTML, un caracter ampersand (`&`) urmat de un nume sau un cod de caracter și un punct și virgulă (`;`) se numește _entitate_ și va fi înlocuit de către caracterul pe care îl codifică.
 
 {{index ["backslash character", "in strings"], "ampersand character", "double-quote character"}}
 
-This is analogous to the way backslashes are used in JavaScript
-strings. Since this mechanism gives ampersand characters a special
-meaning, too, they need to be escaped as `&amp;`. Inside attribute
-values, which are wrapped in double quotes, `&quot;` can be used to
-insert an actual quote character.
+Aceasta este o abordare similară celei utilizate de JavaScript pentru stringuri. Deoarece acest mecanism oferă semnificație specială caracterului ampersand, acesta va putea fi introdus folosind `&amp;`. În valorile atributelor, care sunt precizate între ghilimele, puteți utiliza `&quot;` pentru a insera un caracter reprezentând ghilimelele.
 
 {{index "error tolerance", parsing}}
 
-HTML is parsed in a remarkably error-tolerant way. When tags that
-should be there are missing, the browser reconstructs them. The way in
-which this is done has been standardized, and you can rely on all
-modern browsers to do it in the same way.
+HTML se interpretează cu o toleranță remarcabilă la erori. Când taguri care ar trebui să fie prezente lipsesc, browserul le reconstruiește. Modul în care se realizează acest lucru a fost standardizat și puteți fi siguri că toate browserele moderne realizează acest lucru în același mod.
 
-The following document will be treated just like the one shown previously:
+Documentul următor va fi tratat ca și cel prezentat anterior:
 
 ```{lang: "text/html"}
 <!doctype html>
@@ -289,35 +172,21 @@ The following document will be treated just like the one shown previously:
 
 {{index "title (HTML tag)", "head (HTML tag)", "body (HTML tag)", "html (HTML tag)"}}
 
-The `<html>`, `<head>`, and `<body>` tags are gone completely. The
-browser knows that `<meta>` and `<title>` belong in the head and that
-`<h1>` means the body has started. Furthermore, I am no longer
-explicitly closing the paragraphs since opening a new paragraph or
-ending the document will close them implicitly. The quotes around the
-attribute values are also gone.
+Tagurile `<html>`, `<head>` și `<body>` au fost eliminate. Browserul știe că `<meta>` și `<title>` fac parte din antet iar `<h1>` însemnă că începe corpul documentului. Mai mult, nu mai închidem paragrafele pentru că deschiderea unui nou paragraf înseamnă că s-a încheiat paragraful anterior deci acesta este închis implicit.
 
-This book will usually omit the `<html>`, `<head>`, and `<body>` tags
-from examples to keep them short and free of clutter. But I _will_
-close tags and include quotes around attributes.
+Aceasta carte va omite de regulă tagurile `<html>`, `<head>` și `<body>` în exemple, pentru claritate și concizie. Dar vom închide tagurile și vom include valorile atributelor între ghilimele.
 
 {{index browser}}
 
-I will also usually omit the ((doctype)) and `charset` declaration.
-This is not to be taken as an encouragement to drop these from HTML
-documents. Browsers will often do ridiculous things when you forget
-them. You should consider the doctype and the `charset` metadata
-to be implicitly present in examples, even when they are not actually shown
-in the text.
+De asemenea, voi omite declarația `doctype` și `charset`. Dar aceasta nu înseamnă că vă încurajez să le eliminați din documentele HTML. Browserele vor face adesea greșeli ridicole atunci când le omiteți. Mai degrabă considerați că declarațiile `doctype` și `charset` sunt prezente implicit în exemplele prezentate, chiar dacă ele nu apar în text.
 
 {{id script_tag}}
 
-## HTML and JavaScript
+## HTML și JavaScript
 
 {{index [JavaScript, "in HTML"], "script (HTML tag)"}}
 
-In the context of this book, the most important HTML tag is
-`<script>`. This tag allows us to include a piece of JavaScript in a
-document.
+În contextul acestei cărți, cel mai important tag HTML este `<script>`. Acest tag permite introducerea unei bucăți de cod JavaScript în document.
 
 ```{lang: "text/html"}
 <h1>Testing alert</h1>
@@ -326,46 +195,30 @@ document.
 
 {{index "alert function", timeline}}
 
-Such a script will run as soon as its `<script>` tag is encountered
-while the browser reads the HTML. This page will pop up a dialog when
-opened—the `alert` function resembles `prompt`, in that it pops up a
-little window, but only shows a message without asking for input.
+Un asemenea script va fi executat imediat ce browserul identifică tagul `<script>` în timp ce citește HTML.
 
 {{index "src attribute"}}
 
-Including large programs directly in HTML documents is often
-impractical. The `<script>` tag can be given an `src` attribute  to fetch a script file (a text file containing a JavaScript
-program) from a URL.
+Includerea unor programe mai lungi direct în codul HTML este adesea nepractică. Tagul `<script>` are un atribut `src` a cărui valoare reprezintă URL-ul unui fișier script care să fie inclus (un fișier text ce conține cod JavaScript).
 
 ```{lang: "text/html"}
 <h1>Testing alert</h1>
 <script src="code/hello.js"></script>
 ```
 
-The _code/hello.js_ file included here contains the same
-program—`alert("hello!")`. When an HTML page references other URLs as
-part of itself—for example, an image file or a script—web browsers
-will retrieve them immediately and include them in the page.
+Fișierul _code/hello.js_ inclus în exemplul de mai sus conține același program - `alert("hello!")`. Când o pagină HTML se referă la alte URL-uri, cum ar fi un fișier imagine sau un script, browserele web vor descărca imediat resursa și o vor include în pagină.
 
 {{index "script (HTML tag)", "closing tag"}}
 
-A script tag must always be closed with `</script>`, even if it refers
-to a script file and doesn't contain any code. If you forget this, the
-rest of the page will be interpreted as part of the script.
+Un tag script trebuie întotdeauna închis cu `</script>`, chiar dacă se referă la un fișier și nu conține cod. Dacă omiteți acest lucru, restul paginii va fi interpretat ca și parte a scriptului.
 
 {{index "relative path", dependency}}
 
-You can load ((ES modules)) (see [Chapter ?](modules#es)) in the
-browser by giving your script tag a `type="module"` attribute. Such
-modules can depend on other modules by using ((URL))s relative to
-themselves as module names in `import` declarations.
+Puteți încărca module ES (consultați [capitolul ?](modules#es)) în browser prin precizarea atributului `type="module"` pentru tagul `script`. Asemenea module pot să depindă de alte module prin utilizarea unor URL-uri relative la locația lor ca și nume ale unor module în declarațiile `import`
 
 {{index "button (HTML tag)", "onclick attribute"}}
 
-Some attributes can also contain a JavaScript program. The `<button>`
-tag shown next (which shows up as a button) has an `onclick`
-attribute. The attribute's value will be run whenever the button is
-clicked.
+Unele atribute pot la rândul lor să conțină un program JavaScript. Tagul `<button>` din exemplul de mai jos, are un atribut `onclick`. Valoarea atributului este un cod JavaScript ce va fi executat ori de câte ori se efectuează click pe buton.
 
 ```{lang: "text/html"}
 <button onclick="alert('Boom!');">DO NOT PRESS</button>
@@ -373,86 +226,38 @@ clicked.
 
 {{index "single-quote character", [escaping, "in HTML"]}}
 
-Note that I had to use single quotes for the string in the `onclick`
-attribute because double quotes are already used to quote the whole
-attribute. I could also have used `&quot;`.
+Observați că am utilizat apostroafe pentru stringul JavaScript deoarece ghilimele le-am utilizat pentru a specifica valoarea atributului. Dar aș fi putut utiliza și `&quot;`.
 
-## In the sandbox
+## În "sandbox"
 
 {{index "malicious script", "World Wide Web", browser, website, security}}
 
-Running programs downloaded from the ((Internet)) is potentially
-dangerous. You do not know much about the people behind most sites you
-visit, and they do not necessarily mean well. Running programs by
-people who do not mean well is how you get your computer infected by
-((virus))es, your data stolen, and your accounts hacked.
+Rularea programelor descărcate de pe Internet este potențial periculoasă. Nu cunoașteți prea multe despre persoanele din spatele majorității site-urilor pe care le vizitați, și aceste persoane nu sunt neapărat bine intenționate. Programele rulate de către persoane fără intenții prea bune conduce la infectarea computerului vostru, furtul de date și spargerea conturilor voastre.
 
-Yet the attraction of the Web is that you can browse it without
-necessarily ((trust))ing all the pages you visit. This is why browsers
-severely limit the things a JavaScript program may do: it can't look
-at the files on your computer or modify anything not related to the
-web page it was embedded in.
+Totuși atracția web-ului este că puteți să navigați fără a fi obligați să aveți încredere în toate paginile pe care le vizitați. De aceea browserele limitează sever lucrurile pe care un program JavaScript poate să le facă: nu poate să acceseze fișierele din computerul vostru și nici nu poate modifica nimic ce nu este legat de pagina web în care a fost inclus.
 
 {{index isolation}}
 
-Isolating a programming environment in this way is called
-_((sandbox))ing_, the idea being that the program is harmlessly
-playing in a sandbox. But you should imagine this particular kind of
-sandbox as having a cage of thick steel bars over it so that the
-programs playing in it can't actually get out.
+Izolarea unui mediu de programare în acest mod se numește _sandboxing_, ideea fiind că un program poate fi executat astfel fără efecte dăunătoare. Dar imaginați-vă că acest "sandbox" este de fapt o cușcă cu bare groase de oțel, astfel că programul din interior nu are nici o șansă să iasă.
 
-The hard part of sandboxing is allowing the programs enough room to be
-useful yet at the same time restricting them from doing anything
-dangerous. Lots of useful functionality, such as communicating with
-other servers or reading the content of the copy-paste ((clipboard)),
-can also be used to do problematic, ((privacy))-invading things.
+Partea dificilă în "sandboxing" este datorată faptului că programul trebuie să aibă suficientă libertate pentru a fi util dar, în același timp, să fie restricționat în a realiza acțiuni periculoase. Multă funcționalitate utilă, cum ar fi comunicarea cu alte servere sau citirea conținutului din clipboard, poate și ea să fie utilizată pentru a executa operații problematice, care vă pot invada intimitatea.
 
 {{index leak, exploit, security}}
 
-Every now and then, someone comes up with a new way to circumvent the
-limitations of a ((browser)) and do something harmful, ranging from
-leaking minor private information to taking over the whole machine
-that the browser runs on. The browser developers respond by fixing the
-hole, and all is well again—until the next problem is discovered, and
-hopefully publicized, rather than secretly exploited by some
-government agency or ((mafia)).
+Din când în când, cineva vine cu o idee nouă de a ocoli limitările unui browser și a provoca lucruri dăunătoare, mergând de la scurgeri minore de informații private, până la preluarea controlului asupra întregului computer în care rulează browserul. Developerii browserului răspund prin închiderea golului și totul este în regulă din nou, până când este desoperită o altă problemă, care să sperăm că va fi făcută publică în loc să fie exploatată în secret de o agenție guvernamentală sau de către mafie.
 
-## Compatibility and the browser wars
+## Compatibilitatea și războiul browserelor
 
 {{index Microsoft, "World Wide Web"}}
 
-In the early stages of the Web, a browser called ((Mosaic)) dominated
-the market. After a few years, the balance shifted to
-((Netscape)), which was then, in turn, largely supplanted by
-Microsoft's ((Internet Explorer)). At any point where a single
-((browser)) was dominant, that browser's vendor would feel entitled to
-unilaterally invent new features for the Web. Since most users used
-the most popular browser, ((website))s would simply start using those
-features—never mind the other browsers.
+La începutul Web-ului, piața era dominată de către un browser numit _Mosaic_. După câțiva ani, balanța s-a înclinat către _Netscape_, care apoi a fost înlocuit pe larg de către _Internet Explorer_ de la Microsoft. În orice perioadă în care un singur browser a fost dominant, compania dezvoltatoare s-a simțit îndreptățită să inventeze unilateral noi funcționalități pentru Web. Deoarece majoritatea utilizatorilor foloseau cel mai popular browser, site-urile web începeau să folosească aceste funcționalități, ignorând alte browsere.
 
-This was the dark age of ((compatibility)), often called the
-_((browser wars))_. Web developers were left with not one unified Web
-but two or three incompatible platforms. To make things worse, the
-browsers in use around 2003 were all full of ((bug))s, and of course
-the bugs were different for each ((browser)). Life was hard for people
-writing web pages.
+Acesta a fost evul întunecat al compatibilității, denumit _războiul browserelor_. Developerii web nu aveau la îndemână un Web unificat ci două-trei platforme incompatibile. Pentru a înrăutăți lucrurile, browserele utilizate în perioada 2003 erau pline de buguri și bugurile erau diferite pentru fiecare browser. Viața era grea pentru cei care creau pagini web.
 
 {{index Apple, "Internet Explorer", Mozilla}}
 
-Mozilla ((Firefox)), a not-for-profit offshoot of ((Netscape)),
-challenged Internet Explorer's position in the late 2000s. Because
-((Microsoft)) was not particularly interested in staying competitive
-at the time, Firefox took a lot of market share away from it. Around
-the same time, ((Google)) introduced its ((Chrome)) browser, and
-Apple's ((Safari)) browser gained popularity, leading to a situation
-where there were four major players, rather than one.
+Mozilla Firefox, o organizație non-profit a Netscape, a contestat poziția Internet Explorer-ului la sfârșitul anilor 2000. Deoarece Microsoft nu avea nici un interes particular în a rămâne competitiv pe atunci, Firefox a reușit să preia o mare cotă din piață. Cam în aceași perioadă, Google a introdus browserul Chrome iar browserul Safari de la Apple a câștigat popularitate, conducând la o situație în care erau patru jucători majori pe piață.
 
 {{index compatibility}}
 
-The new players had a more serious attitude toward ((standards)) and
-better ((engineering)) practices, giving us less incompatibility and
-fewer ((bug))s. Microsoft, seeing its market share crumble, came
-around and adopted these attitudes in its Edge browser, which replaces
-Internet Explorer. If you are starting to learn web development today,
-consider yourself lucky. The latest versions of the major browsers
-behave quite uniformly and have relatively few bugs.
+Noii jucători au avut o atitudine mai serioasă în privința standardelor și practici de inginerie mai bune, ceea ce a condus la o incompatibilitate mai scăzută și mai puține buguri. Microsoft, văzând o diminuare continuă a cotei sale de piață, a adoptat aceste atitudini pentru dezvoltarea browserului său Edge, care înlocuiește Internet Exporer. Dacă începeți să învățați web development azi, considerați-vă norocoși. Ultimele versiuni ale browserelor majore au un comportament destul de uniform și relativ puține buguri.
