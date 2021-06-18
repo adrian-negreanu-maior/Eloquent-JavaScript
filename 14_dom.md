@@ -1,8 +1,8 @@
-# The Document Object Model
+# Document Object Model
 
 {{quote {author: "Friedrich Nietzsche", title: "Beyond Good and Evil", chapter: true}
 
-Too bad! Same old story! Once you've finished building your house you notice you've accidentally learned something that you really should have known—before you started.
+Păcat! Aceeași poveste! Imediat ce ai terminat construcția casei îți dai seama că ai învățat accidental ceva ce ar fi trebuit să știi înainte de a începe.
 
 quote}}
 
@@ -10,17 +10,17 @@ quote}}
 
 {{index drawing, parsing}}
 
-When you open a web page in your browser, the browser retrieves the page's ((HTML)) text and parses it, much like the way our parser from [Chapter ?](language#parsing) parsed programs. The browser builds up a model of the document's ((structure)) and uses this model to draw the page on the screen.
+Când deschizi o pagină în browser, browserul solicită codul HTML al paginii și apoi îl parsează, cam așa cum parserul nostru din [capitolul ?](language#parsing) parsa programele. Browserul construiește un model al structurii documentului și utilizează acest model pentru a afișa pagina pe ecran.
 
 {{index "live data structure"}}
 
-This representation of the ((document)) is one of the toys that a JavaScript program has available in its ((sandbox)). It is a ((data structure)) that you can read or modify. It acts as a _live_ data structure: when it's modified, the page on the screen is updated to reflect the changes.
+Această reprezentare a documentului este una dintre jucăriile la care are acces programul JavaScript din sandbox-ul său. Este o structură de date care poate fi citită și modificată. Funcționează ca o structură de date _live_: când este modificată, pagina de pe ecran este actualizată pentru a reflecta schimbarea.
 
-## Document structure
+## Structura documentului
 
 {{index [HTML, structure]}}
 
-You can imagine an HTML document as a nested set of ((box))es. Tags such as `<body>` and `</body>` enclose other ((tag))s, which in turn contain other tags or ((text)). Here's the example document from the [previous chapter](browser):
+Vă puteți imagina un document HTML ca un set de cutii plasate unele în altele. Tagurile cum ar fi `<body>` și `</body>` includ alte taguri, care la rândul lor pot conține taguri sau text. Să reluăm documentul dat ca exemplu în [capitolul anterior](browser):
 
 ```{lang: "text/html", sandbox: "homepage"}
 <!doctype html>
@@ -37,97 +37,98 @@ You can imagine an HTML document as a nested set of ((box))es. Tags such as `<bo
 </html>
 ```
 
-This page has the following structure:
+Această pagină are următoarea structură:
+
 
 {{figure {url: "img/html-boxes.svg", alt: "HTML document as nested boxes", width: "7cm"}}}
 
 {{indexsee "Document Object Model", DOM}}
 
-The data structure the browser uses to represent the document follows this shape. For each box, there is an object, which we can interact with to find out things such as what HTML tag it represents and which boxes and text it contains. This representation is called the _Document Object Model_, or ((DOM)) for short.
+Structura de date utilizată de browser pentru a reprezenta documentul urmărește forma de mai sus. Pentru fiecare cutie, există un obiect cu care putem interacționa pentru a descopri lucruri cum ar fi - ce tag HTML este reprezentat și ce cutii și text conține. Această reprezentare poartă numele de _Document Object Model_, sau _DOM_, pe scurt.
 
 {{index "documentElement property", "head property", "body property", "html (HTML tag)", "body (HTML tag)", "head (HTML tag)"}}
 
-The global binding `document` gives us access to these objects. Its `documentElement` property refers to the object representing the `<html>` tag. Since every HTML document has a head and a body, it also has `head` and `body` properties, pointing at those elements.
+Bindingul global `document` ne permite accesul la aceste obiecte. Proprietatea sa `documentElement` se referă la obiectul ce reprezintă tagul `<html>`. Deoarece fiecare document HTML are un antet și un corp, obiectul `document` are și proprietățile `head` și `body` care indică aceste elemente.
 
-## Trees
+## Arbori
 
 {{index [nesting, "of objects"]}}
 
-Think back to the ((syntax tree))s from [Chapter ?](language#parsing) for a moment. Their structures are strikingly similar to the structure of a browser's document. Each _((node))_ may refer to other nodes, _children_, which in turn may have their own children. This shape is typical of nested structures where elements can contain subelements that are similar to themselves.
+Să revenim puțin la arborii de sintaxă din [capitolul ?](language#parsing). Structura lor este foarte similară cu cea a unui document în browser. Fiecare _nod_ poate să refere alte noduri _descendente (children)_, care pot avea la rândul lor noduri descendente. O asemenea formă este clasică pentru structurile în care elementele pot conține subelemente similare lor.
 
 {{index "documentElement property", [DOM, tree]}}
 
-We call a data structure a _((tree))_ when it has a branching structure, has no ((cycle))s (a node may not contain itself, directly or indirectly), and has a single, well-defined _((root))_. In the case of the DOM, `document.documentElement` serves as the root.
+O structură de date se numește _arbore (tree)_ când are o reprezentare ramificată, nu are cicluri (un nod nu se poate include pe el însuși, direct sau indirect) și are o _rădăcină_ unică și bine definită. În cazul DOM, `document.documentElement` are rolul de rădăcină.
 
 {{index sorting, ["data structure", "tree"], "syntax tree"}}
 
-Trees come up a lot in computer science. In addition to representing recursive structures such as HTML documents or programs, they are often used to maintain sorted ((set))s of data because elements can usually be found or inserted more efficiently in a tree than in a flat array.
+Arborii sunt frecvent utilizați în computer science. Pe lângă reprezentarea structurilor recursive, cum ar fi documentele HTML sau programele, sunt adesea folosiți pentru a stoca seturi sortate de date, deoarece regăsirea sau inserarea elementelor într-un arbore este mai eficientă decât în cazul utilizării unui array.
 
 {{index "leaf node", "Egg language"}}
 
-A typical tree has different kinds of ((node))s. The syntax tree for [the Egg language](language) had identifiers, values, and application nodes. Application nodes may have children, whereas identifiers and values are _leaves_, or nodes without children.
+Un arbore tipic are tipuri diferite de noduri. Arborele de sintaxa pentru [limbajul Egg](language) are identificatori, valori și aplicații. Nodurile pentru aplicații pot avea descendenți, în timp ce identificatorii și valorile sunt _frunze_ (noduri fără descendenți).
 
 {{index "body property", [HTML, structure]}}
 
-The same goes for the DOM. Nodes for _((element))s_, which represent HTML tags, determine the structure of the document. These can have ((child node))s. An example of such a node is `document.body`. Some of these children can be ((leaf node))s, such as pieces of ((text)) or ((comment)) nodes.
+Același lucru este valid și pentru DOM. Nodurile pentru _elemente_, care reprezintă taguri HTML, determină structura documentului. Acestea pot avea descendenți. Un exemplu este `document.body`. Unii dintre acești descendenți pot fi frunze, cum ar fi o bucată de text sau un nod de comentariu.
 
 {{index "text node", element, "ELEMENT_NODE code", "COMMENT_NODE code", "TEXT_NODE code", "nodeType property"}}
 
-Each DOM node object has a `nodeType` property, which contains a code (number) that identifies the type of node. Elements have code 1, which is also defined as the constant property `Node.ELEMENT_NODE`. Text nodes, representing a section of text in the document, get code 3 (`Node.TEXT_NODE`). Comments have code 8 (`Node.COMMENT_NODE`).
+Fiecare obiect din DOM are o proprietate `nodeType`, ce conține un cod numeric ce identifică tipul acelui nod. Elementele au codul 1, care este definit și sub forma constantei `Node.ELEMENT_NODE`. Nodurile text, reprezentând o secțiune de text din cadrul documentului, primesc codul 3 (`Node.TEXT_NODE`). Comentariile au codul 8 (`Node.COMMENT_NODE`).
 
-Another way to visualize our document ((tree)) is as follows:
+Un alt mod de a vizualiza arborele documentului este cel din figura de mai jos:
 
 {{figure {url: "img/html-tree.svg", alt: "HTML document as a tree",width: "8cm"}}}
 
-The leaves are text nodes, and the arrows indicate parent-child relationships between nodes.
+Frunzele sunt noduri text iar săgețile indică relația părinte-copil dintre noduri.
 
 {{id standard}}
 
-## The standard
+## Standardul
 
 {{index "programming language", [interface, design], [DOM, interface]}}
 
-Using cryptic numeric codes to represent node types is not a very JavaScript-like thing to do. Later in this chapter, we'll see that other parts of the DOM interface also feel cumbersome and alien. The reason for this is that the DOM wasn't designed for just JavaScript. Rather, it tries to be a language-neutral interface that can be used in other systems as well—not just for HTML but also for ((XML)), which is a generic ((data format)) with an HTML-like syntax.
+Utilizarea unor coduri numerice criptice pentru a reprezenta tipurile nodurilor nu pare a fi aliniată cu stilul JavaScript. Vom vedea mai târziu că și alte părți ale interfeței DOM par ciudate. Motivul este legat de faptul că DOM nu a fost conceput doar pentru JavaScript. Mai degrabă, DOM încearcă să fie o interfață neutră față de limbajele de programare care ar putea fi folosite în alte sisteme - nu doar pentru HTML dar și pentru XML, care este un format generic pentru date, cu o sintaxa asemănătoare cu cea a HTML.
 
 {{index consistency, integration}}
 
-This is unfortunate. Standards are often useful. But in this case, the advantage (cross-language consistency) isn't all that compelling. Having an interface that is properly integrated with the language you are using will save you more time than having a familiar interface across languages.
+Acest lucru este nefericit. Standardele sunt adesea utile dar în acest caz, avantajul (consistența interfeței) nu este chiar convingător. O interfață integrată corespunzător cu limbajul pe care îl folosiți va economisi mai mult timp decât o interfață familiară în mai multe limbaje.
 
 {{index "array-like object", "NodeList type"}}
 
-As an example of this poor integration, consider the `childNodes` property that element nodes in the DOM have. This property holds an array-like object, with a `length` property and properties labeled by numbers to access the child nodes. But it is an instance of the `NodeList` type, not a real array, so it does not have methods such as `slice` and `map`.
+Ca și exemplu pentru această integrare sărăcăcioasă, să considerăm proprietatea `childNodes` pe care nodurile pentru elemente din DOM o au. Această proprietate memorează un obiect de tip array, cu o proprietate `length` și proprietățile etichetate cu numere pentru a putea accesa nodurile descendente. Însă aceasta este o instanță a tipului `NodeList`, nu un array propri-zis, așa că nu are metoda cum ar fi `slice` sau `map`.
 
 {{index [interface, design], [DOM, construction], "side effect"}}
 
-Then there are issues that are simply poor design. For example, there is no way to create a new node and immediately add children or ((attribute))s to it. Instead, you have to first create it and then add the children and attributes one by one, using side effects. Code that interacts heavily with the DOM tends to get long, repetitive, and ugly.
+Apoi există probleme legate de designul sărăcăcios. De exemplu, nu puteți crea un nod și imemdiat să îi adăugați descendenții sau atributle. Mai întâi va trebui să creați nodul, apoi să adăugați descendenții și atributele, pe rând, utilizând efecte secundare. Codul care interacționează masiv cu DOM tinde să fie lung, repetitiv și urât.
 
 {{index library}}
 
-But these flaws aren't fatal. Since JavaScript allows us to create our own ((abstraction))s, it is possible to design improved ways to express the operations you are performing. Many libraries intended for browser programming come with such tools.
+Dar aceste defecte nu sunt fatale. Deoarece JavaScript ne permite să ne creem propriile abstracții, putem concepe moduri îmbunătățite de a exprima operațiile pe care vrem să le efectuăm. Multe librării pentru programarea în browser vin cu asemenea instrumente.
 
-## Moving through the tree
+## Deplasarea prin arbore
 
 {{index pointer}}
 
-DOM nodes contain a wealth of ((link))s to other nearby nodes. The following diagram illustrates these:
+Nodurile DOM vin cu o multitudine de legături spre alte noduri. Diagrama de mai jos ilustrează acest lucru:
 
 {{figure {url: "img/html-links.svg", alt: "Links between DOM nodes",width: "6cm"}}}
 
 {{index "child node", "parentNode property", "childNodes property"}}
 
-Although the diagram shows only one link of each type, every node has a `parentNode` property that points to the node it is part of, if any. Likewise, every element node (node type 1) has a `childNodes` property that points to an ((array-like object)) holding its children.
+Deși diagrama prezintă doar o singură legătură de fiecare tip, fiecare nod are o proprietate `parentNode` care indică nodul din care nodul curent face parte. Similar, fiecare element (nod de tip 1) are o proprietate `childNodes` care indică spre un obiect asemănător unui array ce reține descendenții săi direcți.
 
 {{index "firstChild property", "lastChild property", "previousSibling property", "nextSibling property"}}
 
-In theory, you could move anywhere in the tree using just these parent and child links. But JavaScript also gives you access to a number of additional convenience links. The `firstChild` and `lastChild` properties point to the first and last child elements or have the value `null` for nodes without children. Similarly, `previousSibling` and `nextSibling` point to adjacent nodes, which are nodes with the same parent that appear immediately before or after the node itself. For a first child, `previousSibling` will be null, and for a last child, `nextSibling` will be null.
+În teorie, puteți să vă deplasați oriunde în arbore folosind doar aceste legături părinte-copil. Dar JavaScript vă pune la dispoziție și alte legături, pentru comoditate. Proprietățile `firstChild` și `lastChild` indică primul și ultimul element copil sau au valoarea `null` pentru elementele care nu au descendenți. Similar, `previousSibling` și `nextSibling` indică nodurile adiacente, care sunt noduri ce au același părinte cu nodul consultat și apar imediat înainte sau imediat după acest nod. Pentru primul descendent, `previousSibling` va fi `null`, iar pentru ultimul descendent, `nextSibling` va fi `null`.
 
 {{index "children property", "text node", element}}
 
-There's also the `children` property, which is like `childNodes` but contains only element (type 1) children, not other types of child nodes. This can be useful when you aren't interested in text nodes.
+Avem la dispoziție și proprietatea `children`, similară cu `childNodes`, dar care conține doar descendenții direcți de tip 1 (elemente), nu și alte tipuri de noduri. Această proprietate poate fi utilă dacă nu vă interesează nodurile de tip text.
 
 {{index "talksAbout function", recursion, [nesting, "of objects"]}}
 
-When dealing with a nested data structure like this one, recursive functions are often useful. The following function scans a document for ((text node))s containing a given string and returns `true` when it has found one:
+Atunci când aveți de a face cu structuri de date imbricate, funcțiile recursive își dovedesc adesea utilitatea. Funcția de mai jos scanează un document pentru un nod text ce conține un anume string și returnează `true` dacă îl găsește:
 
 {{id talksAbout}}
 
@@ -151,17 +152,17 @@ console.log(talksAbout(document.body, "book"));
 
 {{index "nodeValue property"}}
 
-The `nodeValue` property of a text node holds the string of text that it represents.
+Proprietatea `nodeValue` a unui nod text memorează stringul ce reprezintă textul respectiv.
 
-## Finding elements
+## Căutarea elementelor
 
 {{index [DOM, querying], "body property", "hard-coding", [whitespace, "in HTML"]}}
 
-Navigating these ((link))s among parents, children, and siblings is often useful. But if we want to find a specific node in the document, reaching it by starting at `document.body` and following a fixed path of properties is a bad idea. Doing so bakes assumptions into our program about the  precise structure of the document—a structure you might want to change later. Another complicating factor is that text nodes are created even for the whitespace between nodes. The example document's `<body>` tag does not have just three children (`<h1>` and two `<p>` elements) but actually has seven: those three, plus the spaces before, after, and between them.
+Navigarea legăturilor dintre noduri este adesea utilă. Dar dacă vrem să găsim un anumit nod în document, pornirea din `document.body` și urmarea unei căi fixe de proprietăți este o idee proastă. Procedând astfel, facem presupuneri despre structura exactă a documentului - o structură pe care poate că o vom schimba mai târziu. Un alt motiv pentru care ne complicăm este că se vor crea noduri chiar și pentru spațiile albe dintre noduri. În exemplul de document, tagul `<body>` nu are doar trei copii (`<h1>` și două elemente `<p>`) ci șapte: cele trei, plus spațiile înainte, după și dintre ele.
 
 {{index "search problem", "href attribute", "getElementsByTagName method"}}
 
-So if we want to get the `href` attribute of the link in that document, we don't want to say something like "Get the second child of the sixth child of the document body". It'd be better if we could say "Get the first link in the document". And we can.
+Deci, dacă vrem să determinăm atributul `href` al linkului din document, nu vrem să ne exprimăm "Obține cel de-al doilea copil al celui de-al șaselea copil al tagului `<body>`. Ar fi mai bine dacă am putea spune "Găsește primul link din document", ceea ce de altfel putem face.
 
 ```{sandbox: "homepage"}
 let link = document.body.getElementsByTagName("a")[0];
@@ -170,11 +171,11 @@ console.log(link.href);
 
 {{index "child node"}}
 
-All element nodes have a `getElementsByTagName` method, which collects all elements with the given tag name that are descendants (direct or indirect children) of that node and returns them as an ((array-like object)).
+Toate elementele au o metodă `getElementsByTagName`, care colectează toate elementele descendente (direct sau indirect) ale respectivului nod, care potrivesc numele dat pentru tag și le returnează într-o structură asemănătoare unui array.
 
 {{index "id attribute", "getElementById method"}}
 
-To find a specific _single_ node, you can give it an `id` attribute and use `document.getElementById` instead.
+Pentru a identifica un _singur_ nod, îi puteți preciza un atribut `id` și apoi să folosiți metoda `document.getElementById`.
 
 ```{lang: "text/html"}
 <p>My ostrich Gertrude:</p>
@@ -188,13 +189,13 @@ To find a specific _single_ node, you can give it an `id` attribute and use `doc
 
 {{index "getElementsByClassName method", "class attribute"}}
 
-A third, similar method is `getElementsByClassName`, which, like `getElementsByTagName`, searches through the contents of an element node and retrieves all elements that have the given string in their `class` attribute.
+O a treia metodă similară este `getElementsByClassName` care, ca și `getElementsByTagName`, caută prin conținutul unui element de tip nod și returnează toate elementele care au stringul dat ca parametru în atributul `class`.
 
-## Changing the document
+## Modificarea documentului
 
 {{index "side effect", "removeChild method", "appendChild method", "insertBefore method", [DOM, construction], [DOM, modification]}}
 
-Almost everything about the DOM data structure can be changed. The shape of the document tree can be modified by changing parent-child relationships. Nodes have a `remove` method to remove them from their current parent node. To add a child node to an element node, we can use `appendChild`, which puts it at the end of the list of children, or `insertBefore`, which inserts the node given as the first argument before the node given as the second argument.
+Putem modifica aproape orice în structura de date DOM. Forma arborelui documentului poate fi modificată prin modificarea relațiilor de legătură părinte-copil. Nodurile au o metodă `remove` prin care le putem elimina din părintele curent. Pentru a adăuga un copil la un nod de tip element, putem utiliza `appendChild`, care plasează nodul la sfârșitul istei de copii a nodului, sau `insertBefore` care inserează nodul dat ca prim argument înaintea nodului reprezentat de al doilea argument.
 
 ```{lang: "text/html"}
 <p>One</p>
@@ -207,21 +208,21 @@ Almost everything about the DOM data structure can be changed. The shape of the 
 </script>
 ```
 
-A node can exist in the document in only one place. Thus, inserting paragraph _Three_ in front of paragraph _One_ will first remove it from the end of the document and then insert it at the front, resulting in _Three_/_One_/_Two_. All operations that insert a node somewhere will, as a ((side effect)), cause it to be removed from its current position (if it has one).
+Un nod poate exista în document într-un singur loc. Prin urmare, inserarea paragrafului _Three_ în fața paragrafului _One_ va elimina mai întâi paragraful de la sfârșitul documentului și apoi îl va insera la început. Toate operațiile care inserează un nod existent undeva în document vor cauza, ca și efect secundar, eliminarea nodului din poziția curentă.
 
 {{index "insertBefore method", "replaceChild method"}}
 
-The `replaceChild` method is used to replace a child node with another one. It takes as arguments two nodes: a new node and the node to be replaced. The replaced node must be a child of the element the method is called on. Note that both `replaceChild` and `insertBefore` expect the _new_ node as their first argument.
+Metoda `replaceChild` poate fi utilizată pentru a înlocui un nod cu altul. Ea primește ca argumente două noduri: un nod nou și nodul ce urmează a fi înlocuit. Nodul ce urmează a fi înlocuit trebuie să fie copil al elementului pentru care a fost apelată metoda. Atât `replaceChild` cât și `insertBefore` așteaptă _noul_ nod ca și prim argument.
 
-## Creating nodes
+## Crearea nodurilor
 
 {{index "alt attribute", "img (HTML tag)"}}
 
-Say we want to write a script that replaces all ((image))s (`<img>` tags) in the document with the text held in their `alt` attributes, which specifies an alternative textual representation of the image.
+Să presupunem că vrem să scriem un script care înlocuiește toate imaginile (taguri `<img>`) din document cu textul memorat în atributul lor alt, care reprezintă reprezentarea textuală alternativă a imaginii.
 
 {{index "createTextNode method"}}
 
-This involves not only removing the images but adding a new text node to replace them. Text nodes are created with the `document.createTextNode` method.
+Aceasta presupune nu doar eliminarea imaginii ci și înlocuirea ei cu un nod nou de tip text. Nodurile de tip text pot fi create cu metoda `document.createTextNode`.
 
 ```{lang: "text/html"}
 <p>The <img src="img/cat.png" alt="Cat"> in the
@@ -245,15 +246,15 @@ This involves not only removing the images but adding a new text node to replace
 
 {{index "text node"}}
 
-Given a string, `createTextNode` gives us a text node that we can insert into the document to make it show up on the screen.
+Pentru un string dat, `createTextNode` ne returnează un nod text pe care îl putem insera în document pentru a îl face să apară pe ecran.
 
 {{index "live data structure", "getElementsByTagName method", "childNodes property"}}
 
-The loop that goes over the images starts at the end of the list. This is necessary because the node list returned by a method like `getElementsByTagName` (or a property like `childNodes`) is _live_. That is, it is updated as the document changes. If we started from the front, removing the first image would cause the list to lose its first element so that the second time the loop repeats, where `i` is 1, it would stop because the length of the collection is now also 1.
+Bucla care parcurge imaginile începe de la sfârșitul listei. Este necesar să procedăm astfel deoarce lista de noduri returnată de metoda cum ar fi `getElementsByTagName` (sau o proprietate cum ar fi `childNodes`) este _live_. Adică, va fi actualizată la schimbarea documentului. Dacă porneam de la început, eliminarea primei imagini ar fi produs eliminarea din listă a primului element, astfel încât a doua iterație din buclă, când `i` este 1, nu ar fi fost executată pentru că am fi avut o colecție de lungime 1.
 
 {{index "slice method"}}
 
-If you want a _solid_ collection of nodes, as opposed to a live one, you can convert the collection to a real array by calling `Array.from`.
+Dacă preferați o colecție de noduri _solidă_ în locul uneia _live_, puteți converti colecția într-un array real, folosind un apel către `Array.from`.
 
 ```
 let arrayish = {0: "one", 1: "two", length: 2};
@@ -264,13 +265,13 @@ console.log(array.map(s => s.toUpperCase()));
 
 {{index "createElement method"}}
 
-To create ((element)) nodes, you can use the `document.createElement` method. This method takes a tag name and returns a new empty node of the given type.
+Pentru a crea noduri de tip element, puteți utiliza metoda `document.createElement`. Această metodă primește numele unui tag și returnează un nod gol de tip element.
 
 {{index "Popper, Karl", [DOM, construction], "elt function"}}
 
 {{id elt}}
 
-The following example defines a utility `elt`, which creates an element node and treats the rest of its arguments as children to that node. This function is then used to add an attribution to a quote.
+Exemplul care urmează definește o funcție `elt`, care crează un nod de tip element și tratează restul argumentelor ca și copii ai acestui nod. Apoi utilizăm aceasă funcție pentru a atribui autorului un citat.
 
 ```{lang: "text/html"}
 <blockquote id="quote">
@@ -300,21 +301,21 @@ The following example defines a utility `elt`, which creates an element node and
 
 {{if book
 
-This is what the resulting document looks like:
+Documentul rezultat arată astfel:
 
 {{figure {url: "img/blockquote.png", alt: "A blockquote with attribution",width: "8cm"}}}
 
 if}}
 
-## Attributes
+## Atribute
 
 {{index "href attribute", [DOM, attributes]}}
 
-Some element ((attribute))s, such as `href` for links, can be accessed through a property of the same name on the element's ((DOM)) object. This is the case for most commonly used standard attributes.
+Atributele unor elemente, cum ar fi `href` pentru hiperlegături, pot fi accesate printr-o proprietate cu același nume a obiectului din DOM corespunzător elementului. Acesta este cazul pentru majoritatea atributelor standard frecvent utilizate.
 
 {{index "data attribute", "getAttribute method", "setAttribute method", attribute}}
 
-But HTML allows you to set any attribute you want on nodes. This can be useful because it allows you to store extra information in a document. If you make up your own attribute names, though, such attributes will not be present as properties on the element's node. Instead, you have to use the `getAttribute` and `setAttribute` methods to work with them.
+Dar HTML ne permite să setăm orice atribute dorim awsupra nodurilor. Ceea ce este util deoarece ne permită să stocăm informații suplimentare în document. Dacă vă creați propriile nume pentru atribute, acestea nu vor fi disponibile ca și proprietăți în nodul elementului. Prin urmare, va trebui să folosiți metodele `getAttribute` și `setAttribute` pentru a le putea utiliza.
 
 ```{lang: "text/html"}
 <p data-classified="secret">The launch code is 00000000.</p>
@@ -330,27 +331,27 @@ But HTML allows you to set any attribute you want on nodes. This can be useful b
 </script>
 ```
 
-It is recommended to prefix the names of such made-up attributes with `data-` to ensure they do not conflict with any other attributes.
+O practică recomandată este utilizarea prefixului `data-` pentru asemenea atribute, pentru a vă asigura că nu intrați în conflict cu alte atribute.
 
 {{index "getAttribute method", "setAttribute method", "className property", "class attribute"}}
 
-There is a commonly used attribute, `class`, which is a ((keyword)) in the JavaScript language. For historical reasons—some old JavaScript implementations could not handle property names that matched keywords—the property used to access this attribute is called `className`. You can also access it under its real name, `"class"`, by using the `getAttribute` and `setAttribute` methods.
+Un atribut utilizat frecvent, `class`, este de asemenea un cuvânt-cheie în limbajul JavaScript. Din motive istorice - unele implementări mai vechi ale JavaScript nu pot gestiona numele proprietăților care sunt și cuvinte-cheie. Proprietatea utilizată pentru a accesa acest atribut se numește `className`. Dar o puteți accesa și cu numele său real, `"class"`, dacă utilizați metodele `getAttribute` și `setAttribute`.
 
-## Layout
+## Layout - aspectul
 
 {{index layout, "block element", "inline element", "p (HTML tag)", "h1 (HTML tag)", "a (HTML tag)", "strong (HTML tag)"}}
 
-You may have noticed that different types of elements are laid out differently. Some, such as paragraphs (`<p>`) or headings (`<h1>`), take up the whole width of the document and are rendered on separate lines. These are called _block_ elements. Others, such as links (`<a>`) or the `<strong>` element, are rendered on the same line with their surrounding text. Such elements are called _inline_ elements.
+Probabil ați remarcat că diferitele tipuri de elemente sunt poziționate diferit. Unele, cum ar fi paragrafele (`<p>`) sau titlurile (`<h1>`), ocupă toată lățimea documentului și sunt redate pe linii separate. Acestea sunt elemente de tip _bloc_. Altele, cum ar fi legăturile (`<a>`) sau marcajul `<strong>`, sunt redate pe aceeași linie cu textul în care sunt plasate. Asemenea elemente sunt elemente _inline_.
 
 {{index drawing}}
 
-For any given document, browsers are able to compute a layout, which gives each element a size and position based on its type and content. This layout is then used to actually draw the document.
+Pentru orice document dat, browserele pot calcula un aspect, care dă fiecărui element o dimensiune și o poziție pe baza tipului său și a conținutului. Apoi aceste calcule sunt utilizate pentru a desena documentul pe ecran.
 
 {{index "border (CSS)", "offsetWidth property", "offsetHeight property", "clientWidth property", "clientHeight property", dimensions}}
 
-The size and position of an element can be accessed from JavaScript. The `offsetWidth` and `offsetHeight` properties give you the space the element takes up in _((pixel))s_. A pixel is the basic unit of measurement in the browser. It traditionally corresponds to the smallest dot that the screen can draw, but on modern displays, which can draw _very_ small dots, that may no longer be the case, and a browser pixel may span multiple display dots.
+Dimensiunea și poziția unui element pott fi accesate din JavaScript. Proprietățile `offsetWidth` și `offsetHeight` returnează dimensiunile unui element în _pixeli_. Pixelul este unitatea de măsură în browser. Tradițional, el corespunde celui mai mic punct pe care un ecran îl poate afișa, dar pe ecranele moderne, care pot afișa puncte foarte mici, situația ar putea să fie modificată și un pixel în browser să reprezinte mai multe puncte de pe ecran.
 
-Similarly, `clientWidth` and `clientHeight` give you the size of the space _inside_ the element, ignoring border width.
+Similar, `clientWidth` și `clientHeight` vă returnează dimensiunea spațiului din interiorul elementului, ignorând lățimea bordurii elementului.
 
 ```{lang: "text/html"}
 <p style="border: 3px solid red">
@@ -366,7 +367,7 @@ Similarly, `clientWidth` and `clientHeight` give you the size of the space _insi
 
 {{if book
 
-Giving a paragraph a border causes a rectangle to be drawn around it.
+Dacă pentru un paragraf setăm proprietatea `border` (în atributul `style` de exemplu), va fi desenat un dreptunghi în jurul lui.
 
 {{figure {url: "img/boxed-in.png", alt: "A paragraph with a border",width: "8cm"}}}
 
@@ -376,15 +377,16 @@ if}}
 
 {{id boundingRect}}
 
-The most effective way to find the precise position of an element on the screen is the `getBoundingClientRect` method. It returns an object with `top`, `bottom`, `left`, and `right` properties, indicating the pixel positions of the sides of the element relative to the top left of the screen. If you want them relative to the whole document, you must add the current scroll position, which you can find in the `pageXOffset` and `pageYOffset` bindings.
+Cel mai eficient mod de a determina poziția exactă a unui element pe ecran este apelarea metodei `getBoundingClientRect`.
+Aceasta returnează proprietățile `top`, `bottom`, `left` și `right`, relativ la colțul stânga sus al ecranului. Dacă vreți să le determinați relativ la întregul document, trebuie să țineți cont de poziția curentă de scroll, pe care o puteți determina din bindigurile `pageXOffset` și `pageYOffset`.
 
 {{index "offsetHeight property", "getBoundingClientRect method", drawing, laziness, performance, efficiency}}
 
-Laying out a document can be quite a lot of work. In the interest of speed, browser engines do not immediately re-layout a document every time you change it but wait as long as they can. When a JavaScript program that changed the document finishes running, the browser will have to compute a new layout to draw the changed document to the screen. When a program _asks_ for the position or size of something by reading properties such as `offsetHeight` or calling `getBoundingClientRect`, providing correct information also requires computing a ((layout)).
+Punerea în pagină a unui document poate presupune un efort considerabil. Pentru rapidizare, motoarele browserelor nu reașează documentul în pagină de fiecare dată când îl modificați ci așteaptă cât de mult pot. Când un program JavaScript care a schimbat documentul își încheie execuția, browserul va trebui să calculeze un nou aspect pentru a desena documentul modificat pe ecran. Când un program _cere_ poziția sau dimensiunea unui element prin citirea unor proprietăți cum ar fi `offsetHeight` sau apelul metodei `getBoundingClientRect`, returnarea informațiilor corecte presupune de asemenea recalcularea aspectului.
 
 {{index "side effect", optimization, benchmark}}
 
-A program that repeatedly alternates between reading DOM layout information and changing the DOM forces a lot of layout computations to happen and will consequently run very slowly. The following code is an example of this. It contains two different programs that build up a line of _X_ characters 2,000 pixels wide and measures the time each one takes.
+Un program care alternează în mod repetat citirea informațiilor despre aspectul DOM cu modificarea DOM implică o mulțime de calcule și, prin urmare, va rula foarte încet. Codul de mai jos este un exemplu. Acesta conține două programe diferite care construiesc o linie de caractere _X_ cu lățimea de 2000 pixeli și măsoară durata fiecărei construcții.
 
 ```{lang: "text/html", test: nonumbers}
 <p><span id="one"></span></p>
@@ -415,15 +417,15 @@ A program that repeatedly alternates between reading DOM layout information and 
 </script>
 ```
 
-## Styling
+## Stilizarea
 
 {{index "block element", "inline element", style, "strong (HTML tag)", "a (HTML tag)", underline}}
 
-We have seen that different HTML elements are drawn differently. Some are displayed as blocks, others inline. Some add styling—`<strong>` makes its content ((bold)), and `<a>` makes it blue and underlines it.
+Am văzut că diferitele elemente HTML sunt desenate diferit. Unele sunt afișate ca blocuri, altele inline. Unele au stilizare suplimentară - `<strong>` va avea conținutul _bold_, iar `<a>` îl va avea albastru și subliniat.
 
 {{index "img (HTML tag)", "default behavior", "style attribute"}}
 
-The way an `<img>` tag shows an image or an `<a>` tag causes a link to be followed when it is clicked is strongly tied to the element type. But we can change the styling associated with an element, such as the text color or underline. Here is an example that uses the `style` property:
+Modul în care este afișat tagul `<img>` sau `<a>` este direct legat de tipul elementului. Dar putem modifica stilizarea asociată cu un element. Iată un exemplu de utilizare a proprietății `style`:
 
 ```{lang: "text/html"}
 <p><a href=".">Normal link</a></p>
@@ -432,7 +434,7 @@ The way an `<img>` tag shows an image or an `<a>` tag causes a link to be follow
 
 {{if book
 
-The second link will be green instead of the default link color.
+Cea de a doua legătură va fi afișată cu culoarea verde în locul culorii implicite.
 
 {{figure {url: "img/colored-links.png", alt: "A normal and a green link",width: "2.2cm"}}}
 
@@ -440,11 +442,11 @@ if}}
 
 {{index "border (CSS)", "color (CSS)", CSS, "colon character"}}
 
-A style attribute may contain one or more _((declaration))s_, which are a property (such as `color`) followed by a colon and a value (such as `green`). When there is more than one declaration, they must be separated by ((semicolon))s, as in `"color: red; border: none"`.
+Atributul `style` poate conține una sau mai mutle _declarații_, fiecare sub forma `proprietate: valoare` (`color: green`). Atunci când vrem să precizăm mai multe asemenea declarații, le separăm prin `;`, ca și în `"color: red; border: none"`.
 
 {{index "display (CSS)", layout}}
 
-A lot of aspects of the document can be influenced by styling. For example, the `display` property controls whether an element is displayed as a block or an inline element.
+Multe aspecte ale documentului pot fi influențate prin stilizare. De exemplu, proprietatea `display` controlează dacă un element este afișat sub formă de bloc sau inline.
 
 ```{lang: "text/html"}
 This text is displayed <strong>inline</strong>,
@@ -454,7 +456,7 @@ This text is displayed <strong>inline</strong>,
 
 {{index "hidden element"}}
 
-The `block` tag will end up on its own line since ((block element))s are not displayed inline with the text around them. The last tag is not displayed at all—`display: none` prevents an element from showing up on the screen. This is a way to hide elements. It is often preferable to removing them from the document entirely because it makes it easy to reveal them again later.
+Elementul afișat ca și bloc va fi afișat pe propria sa linie, nu aliniat cu textul care îl înconjoară. Iar un element pentru care setăm `display: none` nu va fi afișat deloc pe ecran. Astfel putem ascunde elemente, ceea ce este adesea preferabil în loc să le eliminăm, deorece le putem afișa ulterior cu ușurință.
 
 {{if book
 
@@ -464,7 +466,7 @@ if}}
 
 {{index "color (CSS)", "style attribute"}}
 
-JavaScript code can directly manipulate the style of an element through the element's `style` property. This property holds an object that has properties for all possible style properties. The values of these properties are strings, which we can write to in order to change a particular aspect of the element's style. 
+Codul JavaScript poate manipula direct stilul unui element prin proprietatea `style` a elementului respectiv. Această proprietate este un obiect care are proprietăți definite pentru toate regulile de stilizare posibile. Valorile acestor proprietăți sunt stringuri, pe care le putem seta pentru a modifica anumite aspecte ale unui element.
 
 ```{lang: "text/html"}
 <p id="para" style="color: purple">
@@ -480,16 +482,16 @@ JavaScript code can directly manipulate the style of an element through the elem
 
 {{index "camel case", capitalization, "hyphen character", "font-family (CSS)"}}
 
-Some style property names contain hyphens, such as `font-family`. Because such property names are awkward to work with in JavaScript (you'd have to say `style["font-family"]`), the property names in the `style` object for such properties have their hyphens removed and the letters after them capitalized (`style.fontFamily`).
+Unele nume de proprietăți conțin caractere nepermise în obiecte, cum ar fi `font-family`. Din această cauză, în JavaScript suntem obligați să folosim sintaxa cu paranteze drepte(`style["font-family"]`), dar numele proprietăților în obiectul `style` sunt modificate în scrierea "camelCase" (`style.fontFamily`).
 
-## Cascading styles
+## Cascadarea stilurilor
 
 {{index "rule (CSS)", "style (HTML tag)"}}
 
 {{indexsee "Cascading Style Sheets", CSS}}
 {{indexsee "style sheet", CSS}}
 
-The styling system for HTML is called ((CSS)), for _Cascading Style Sheets_. A _style sheet_ is a set of rules for how to style elements in a document. It can be given inside a `<style>` tag.
+Sistemul de stilizare pentru HTML se numește CSS, de la _Cascading Style Sheets_. O _foaie de stil_ este un set de reguli pentru stilizarea elementelor dintr-un document. Putem preciza regulile în interiorul unui tag `<style>`.
 
 ```{lang: "text/html"}
 <style>
@@ -503,15 +505,15 @@ The styling system for HTML is called ((CSS)), for _Cascading Style Sheets_. A _
 
 {{index "rule (CSS)", "font-weight (CSS)", overlay}}
 
-The _((cascading))_ in the name refers to the fact that multiple such rules are combined to produce the final style for an element. In the example, the default styling for `<strong>` tags, which gives them `font-weight: bold`, is overlaid by the rule in the `<style>` tag, which adds `font-style` and `color`.
+_Cascadarea_ se referă la faptul că mai multe asemenea reguli sunt combinate pentru a produce stilul final pentru un element. În exemplu, stilizarea implicită pentru taguri `<strong>`, care le aplică `font-weight: bold`, este suprapusă cu regula din tagul `<style>`, care adaugă `font-style` și `color`.
 
 {{index "style (HTML tag)", "style attribute"}}
 
-When multiple rules define a value for the same property, the most recently read rule gets a higher ((precedence)) and wins. So if the rule in the `<style>` tag included `font-weight: normal`, contradicting the default `font-weight` rule, the text would be normal, _not_ bold. Styles in a `style` attribute applied directly to the node have the highest precedence and always win.
+Când mai multe reguli definesc o valoare pentru aceeași proprietate, cea mai recent citită primește o prioritate mai mare și câștigă. Astfel, dacă regula din tag-ul `<style>` ar fi inclus `font-weight: normal`, ce contrazice regula implicită `font-weight`, textul s-ar fi afișat normal, _nu_ bold. Stilurile aplicate prin atributul `style`, direct asupra nodului au cea mai mare prioritate și întotdeauna câștigă.
 
 {{index uniqueness, "class attribute", "id attribute"}}
 
-It is possible to target things other than ((tag)) names in CSS rules. A rule for `.abc` applies to all elements with `"abc"` in their `class` attribute. A rule for `#xyz` applies to the element with an `id` attribute of `"xyz"` (which should be unique within the document).
+Este posibil să selectăm în regulile CSS și altfel elementele. O regulă pentru `.abc` se aplică tuturor elementelor care au `"abc"` în atributul pentru `class`. O regulă pentru `#xyz` se aplică elementului ce are atributul `id` cu valoarea `"xyz"` (care ar trebui să fie unic în document).
 
 ```{lang: "text/css"}
 .subtle {
@@ -530,25 +532,25 @@ p#main.a.b {
 
 {{index "rule (CSS)"}}
 
-The ((precedence)) rule favoring the most recently defined rule applies only when the rules have the same _((specificity))_. A rule's specificity is a measure of how precisely it describes matching elements, determined by the number and kind (tag, class, or ID) of element aspects it requires. For example, a rule that targets `p.a` is more specific than rules that target `p` or just `.a` and would thus take precedence over them.
+Regula de precedență ce favorizează cea mai recentă regulă CSS se aplică doar atunci când regulile CSS au aceeași _specificitate_. Specificitatea unei reguli CSS se referă la precizia cu care aceasta descrie elementele ce se potrivesc, determinată de număr și tip (tag, clasă sau id) al aspectelor pe care le conține în selector. De exemplu, o regulă care selectează `p.a` este mai specifică decât una care selectează `p` sau `.a` și va avea prioritate.
 
 {{index "direct child node"}}
 
-The notation `p > a {…}` applies the given styles to all `<a>` tags that are direct children of `<p>` tags. Similarly, `p a {…}` applies to all `<a>` tags inside `<p>` tags, whether they are direct or indirect children.
+Notația `p > a {…}` aplică regulile de stilizare tagurilor `<a>` care sunt descendenți direcți ai unui tag `<p>`. Iar `p a {…}` se aplică tuturor tagurilor `<a>` aflate în interiorul unui tag `<p>`, indiferent dacă acestea sunt descendenți direcți sau indirecți.
 
 ## Query selectors
 
 {{index complexity, CSS}}
 
-We won't be using style sheets all that much in this book. Understanding them is helpful when programming in the browser, but they are complicated enough to warrant a separate book.
+Nu vom utiliza pre mult foile de stil în această carte. Înțelegerea lor este utilă când programați în browser, dar sunt destul de complicate pentru a face subiectul unei alte cărți.
 
 {{index "domain-specific language", [DOM, querying]}}
 
-The main reason I introduced _((selector))_ syntax—the notation used in style sheets to determine which elements a set of styles apply to—is that we can use this same mini-language as an effective way to find DOM elements.
+Motivul principal pentru care am introdus sintaxa pentru _selectori_ - notația utilizată în foile de stil pentru a determina căror elemente li se aplică un anume set de reguli - este că putem utiliza același mini-limbaj ca și o modalitate eficientă de a găsi elemente în DOM.
 
 {{index "querySelectorAll method", "NodeList type"}}
 
-The `querySelectorAll` method, which is defined both on the `document` object and on element nodes, takes a selector string and returns a `NodeList` containing all the elements that it matches.
+Metoda `querySelectorAll`, care este definită atât pentru obiectul `document` cât și pentru nodurile de tip element, primește ca parametru un string selector și returnează un `NodeList` ce conține toate elementele potrivite.
 
 ```{lang: "text/html"}
 <p>And if you go chasing
@@ -575,23 +577,24 @@ The `querySelectorAll` method, which is defined both on the `document` object an
 
 {{index "live data structure"}}
 
-Unlike methods such as `getElementsByTagName`, the object returned by `querySelectorAll` is _not_ live. It won't change when you change the document. It is still not a real array, though, so you still need to call `Array.from` if you want to treat it like one.
+Spre deosebire de metode cum ar fi `getElementsByTagName`, obiectul returnat de către `querySelectorAll` _nu_ este live. Nu se va modifica odată cu modificarea documentului. Dar nu este nici un array și va trebui să apelați `Array.from` dacă vreți să îl tratați ca pe un array.
 
 {{index "querySelector method"}}
 
-The `querySelector` method (without the `All` part) works in a similar way. This one is useful if you want a specific, single element. It will return only the first matching element or null when no element matches.
+Metoda `querySelector` (fără `All`) funcționează similar. Aceasta este utilă dacă aveți de căutat un singur element, specific. Ea va returna doar primul element pe care îl potrivește sau` null` în cazul în care nu găsește nici o potrivire.
 
 {{id animation}}
 
-## Positioning and animating
+## Poziționarea și animarea
 
 {{index "position (CSS)", "relative positioning", "top (CSS)", "left (CSS)", "absolute positioning"}}
 
-The `position` style property influences layout in a powerful way. By default it has a value of `static`, meaning the element sits in its normal place in the document. When it is set to `relative`, the element still takes up space in the document, but now the `top` and `left` style properties can be used to move it relative to that normal place. When `position` is set to `absolute`, the element is removed from the normal document flow—that is, it no longer takes up space and may overlap with other elements. Also, its `top` and `left` properties can be used to absolutely position it relative to the top-left corner of the nearest enclosing element whose `position` property isn't `static`, or relative to the document if no such enclosing element exists.
+Proprietatea de stil `position` influențează mult aspectul. Implicit, ea are valoarea `static`, însemnând că elementul se află în poziția sa normală în cadrul documentului. Dacă este setată la valoarea `relative`, elementul va continua să ocupe spațiu în document, dar acum vom putea utiliza proprietățile `top` și `left` pentru a îl muta relativ la poziția sa normală. Când `position` se setează ca `absolute`, elementul este eliminat din fluxul normal al documentului - adică nu mai ocupă spațiu și poate fi suprapus peste alte elemente. Proprietățile `top` și `left` vor putea fi acum folosite pentru a poziționa absolut elementul relativ la colțul stânga-sus al celui mai apropiat părinte a cărui proprietate `position` nu are valoarea static sau relativ la colțul stânga-sus al documentului, în cazul în care un asemenea element nu există.
 
 {{index [animation, "spinning cat"]}}
 
-We can use this to create an animation. The following document displays a picture of a cat that moves around in an ((ellipse)):
+Putem utiliza acest comportament pentru a crea o animație. Documentul de mai jos afișează imaginea unei pisici care se mișcă pe o traiectorie eliptică:
+
 
 ```{lang: "text/html", startCode: true}
 <p style="text-align: center">
@@ -614,7 +617,7 @@ We can use this to create an animation. The following document displays a pictur
 
 {{if book
 
-The gray arrow shows the path along which the image moves.
+Săgeata gri arată traiectoria imaginii.
 
 {{figure {url: "img/cat-animation.png", alt: "A moving cat head",width: "8cm"}}}
 
@@ -622,63 +625,64 @@ if}}
 
 {{index "top (CSS)", "left (CSS)", centering, "relative positioning"}}
 
-Our picture is centered on the page and given a `position` of `relative`. We'll repeatedly update that picture's `top` and `left` styles to move it.
+Imaginea noastră este centrată în pagină și are `position` setat la `relative`. Actualizăm repetat proprietățile `top` și `left` ale imaginii pentru a o mișca.
 
 {{index "requestAnimationFrame function", drawing, animation}}
 
 {{id animationFrame}}
 
-The script uses `requestAnimationFrame` to schedule the `animate` function to run whenever the browser is ready to repaint the screen. The `animate` function itself again calls `requestAnimationFrame` to schedule the next update. When the browser window (or tab) is active, this will cause updates to happen at a rate of about 60 per second, which tends to produce a good-looking animation.
+Scriptul folosește `requestAnimationFrame` pentru a programa execuția funcției `animate` atunci când browserul este pregătit să redeseneze ecranul. Funcția `animate` va apela din nou `requestAnimationFrame` pentru a programa următoarea actualizare. Când fereastra sau tabul browserului sunt active, actualizările se vor realiza cu o rată de aproximativ 60 cadre pe secundă, ceea ce va produce o animație bună.
 
 {{index timeline, blocking}}
 
-If we just updated the DOM in a loop, the page would freeze, and nothing would show up on the screen. Browsers do not update their display while a JavaScript program is running, nor do they allow any interaction with the page. This is why we need `requestAnimationFrame`—it lets the browser know that we are done for now, and it can go ahead and do the things that browsers do, such as updating the screen and responding to user actions.
+Dacă doar actualizăm DOM-ul într-o buclă, pagina va îngheța și nu se va afișa nimic pe ecran. Browserele nu își actualizează ecranul cât timp există un program JavaScript care rulează și nici nu permit interacțiunea cu pagina. De aceea avem nevoie de `requestAnimationFrame` - aceasta informează browserul că suntem gata și poate să facă ceea ce are de făcut, inclusiv actualizarea ecranului și răspunsul la acțiunile utilizatorului.
 
 {{index "smooth animation"}}
 
-The animation function is passed the current ((time)) as an argument. To ensure that the motion of the cat per millisecond is stable, it bases the speed at which the angle changes on the difference between the current time and the last time the function ran. If it just moved the angle by a fixed amount per step, the motion would stutter if, for example, another heavy task running on the same computer were to prevent the function from running for a fraction of a second.
+Funcției de animație i se transmite timpul curent ca și argument. Pentru a ne asigura că mișcarea imaginii este stabilă, viteza de modificare a unghiului se calculează pe baza diferenței dintre timpul curent și momentul de timp la care funcția a fost executată pentru ultima dată. Dacă am fi ales să modificăm unghiul cu o valoare fixă pe fiecare pas, mișcarea ar fi sacadat dacă, de exemplu, o altă sarcină intensivă ar fi blocat execuția funcției de animare pentru o fracțiune de secundă.
 
 {{index "Math.cos function", "Math.sin function", cosine, sine, trigonometry}}
 
 {{id sin_cos}}
 
-Moving in ((circle))s is done using the trigonometry functions `Math.cos` and `Math.sin`. For those who aren't familiar with these, I'll briefly introduce them since we will occasionally use them in this book.
+Mișcarea pe un cerc este realizată cu funcțiile trigonometrice `Math.cos` și `Math.sin`. Pentru cei care nu sunt familiari, le vom discuta pe scurt, deoarece le folosim ocazional în această carte.
 
 {{index coordinates, pi}}
 
-`Math.cos` and `Math.sin` are useful for finding points that lie on a circle around point (0,0) with a radius of one. Both functions interpret their argument as the position on this circle, with zero denoting the point on the far right of the circle, going clockwise until 2π (about 6.28) has taken us around the whole circle. `Math.cos` tells you the x-coordinate of the point that corresponds to the given position, and `Math.sin` yields the y-coordinate. Positions (or angles) greater than 2π or less than 0 are valid—the rotation repeats so that _a_+2π refers to the same ((angle)) as _a_.
+`Math.cos` și `Math.sin` sunt utile pentru a găsi puncte pe un cerc cu centrul în punctul (0,0) și raza 1. Ambele funcții interpretează argumentul ca fiind poziția pe acest cerc, 0 reprezentând punctul cel mai din dreapta al cercului pe direcția orizontală și parcurgearea în sensul acelor de ceas până la 2π (cam 6.28) ne permite să parcurgem întreg cercul. `Math.cos` ne returnează coordonata x a poziției date iar `Math.sin` ne dă coordonata y. Pozițiile sau unghiurile mai mari decât 2π sau mai mici decât zero sunt valide - rotația se repetă astfel încât _a_+2π referă acelați unghi ca și _a_.
 
 {{index "PI constant"}}
 
-This unit for measuring angles is called ((radian))s—a full circle is 2π radians, similar to how it is 360 degrees when measuring in degrees. The constant π is available as `Math.PI` in JavaScript.
+Această unitate de măsură pentru unghiuri se numește _radian_ - un cerc complet reprezintă 2π radiani, sau 360 de grade. Constanta π este disponibilă ca `Math.PI` în JavaScript.
 
 {{figure {url: "img/cos_sin.svg", alt: "Using cosine and sine to compute coordinates",width: "6cm"}}}
 
 {{index "counter variable", "Math.sin function", "top (CSS)", "Math.cos function", "left (CSS)", ellipse}}
 
-The cat animation code keeps a counter, `angle`, for the current angle of the animation and increments it every time the `animate` function is called. It can then use this angle to compute the current position of the image element. The `top` style is computed with `Math.sin` and multiplied by 20, which is the vertical radius of our ellipse. The `left` style is based on `Math.cos` and multiplied by 200 so that the ellipse is much wider than it is high.
+Codul animației menține un contor, `angle` pentru unghiul curent al animației și îl incrementează la fiecare apel al funcției `animate`. Apoi utilizează acest unghi pentru a calcula poziția curentă a elementului. Proprietatea `top` este calculată folosinf `Math.sin` și multiplicând cu 20 (raza verticală a elipsei noastre). Proprietatea `left` se bazează pe `Math.cos` și folosește o multiplicare cu 200, astfel că elipsa este mult aplatizată pe verticală.
 
 {{index "unit (CSS)"}}
 
-Note that styles usually need _units_. In this case, we have to append `"px"` to the number to tell the browser that we are counting in ((pixel))s (as opposed to centimeters, "ems", or other units). This is easy to forget. Using numbers without units will result in your style being ignored—unless the number is 0, which always means the same thing, regardless of its unit.
+Propreitățile au nevoie de _unități_. În acest caz am adăugat `"px"` numărului pentru a informa browserul că am calculat în pixeli (puteam folosi și alte unități utilizate în CSS). E ușor să uitați să specificați unitățile. Dar dacă utilizați numere fără unități, regula de stil va fi ignorată - cu excepția cazului în care numărul este 0, ce are aceeași semnificație indiferent de unitatea folosită.
 
-## Summary
+## Rezumat
 
-JavaScript programs may inspect and interfere with the document that the browser is displaying through a data structure called the DOM. This data structure represents the browser's model of the document, and a JavaScript program can modify it to change the visible document.
+Programele JavaScript pot inspecta și interfera cu documentul afișat de către browser printr-o structură de date numită DOM. Această structură reprezintă modelul în browser al documentului și programul JavaScript o poate modifica pentru a schimba aspectul documentului vizibil.
 
-The DOM is organized like a tree, in which elements are arranged hierarchically according to the structure of the document. The objects representing elements have properties such as `parentNode` and `childNodes`, which can be used to navigate through this tree.
+DOM este organizat ca un arbore, în care elementele sunt aranjate ierarhic, conform structurii documentului. Obiectele ce reprezintă elemente au proprietăți cum ar fi `parentNode` și `childNodes`, care pot fi utilizate pentru a naviga prin acest arbore.
 
-The way a document is displayed can be influenced by _styling_, both by attaching styles to nodes directly and by defining rules that match certain nodes. There are many different style properties, such as `color` or `display`. JavaScript code can manipulate an element's style directly through its `style` property.
+Modul în care este afișat un document poate fi influențat prin _stilizare_, atât prin atașarea unor stiluri direct nodurilor cât și prin definirea unor reguli care potrivesc anumite noduri. Există multe proprietăți de stil, cum ar fi `color` sau `display`. Codul JavaScript poate manipula stilul unui element direct prin proprietatea `style` a acestuia.
 
-## Exercises
+## Exerciții
 
 {{id exercise_table}}
 
-### Build a table
+### Construirea unui tabel
 
 {{index "table (HTML tag)"}}
 
-An HTML table is built with the following tag structure:
+Un tabel HTML este construit cu următoarea structură de taguri:
+
 
 ```{lang: "text/html"}
 <table>
@@ -697,17 +701,17 @@ An HTML table is built with the following tag structure:
 
 {{index "tr (HTML tag)", "th (HTML tag)", "td (HTML tag)"}}
 
-For each _((row))_, the `<table>` tag contains a `<tr>` tag. Inside of these `<tr>` tags, we can put cell elements: either heading cells (`<th>`) or regular cells (`<td>`).
+Pentru fiecare _rând_, tagul `<table>` conține un tag `<tr>`. În interiorul tagurilor `<tr>` putem insera celule: fie antete (`<th>`) fie celule obișnuite (`<td>`).
 
-Given a data set of mountains, an array of objects with `name`, `height`, and `place` properties, generate the DOM structure for a table that enumerates the objects. It should have one column per key and one row per object, plus a header row with `<th>` elements at the top, listing the column names.
+Fiind dat un set de munți, un array de obiecte cu proprietățile `name`, `height` și `place`, generați structura DOM a unui tabel ce enumeră obiectele. Acesta trebuie să conțină câte o coloană pentru fiecare cheie și câte un rând pentru fiecare obiect, precum și un rând de antet cu elemente `<th>` ce conțin ca și text numele coloanelor.
 
-Write this so that the columns are automatically derived from the objects, by taking the property names of the first object in the data.
+Scrieți codul astfel încât coloanele sunt deduse automat din structura obiectelor. Pentru aceasta, folosiți numele proprietăților din primul obiect din setul de date.
 
-Add the resulting table to the element with an `id` attribute of `"mountains"` so that it becomes visible in the document.
+Adăugați tabelul rezultat la elementul al cărui atribut `id` are valoarea `"mountains"` astfel încât acesta să fie vizibil în document.
 
 {{index "right-aligning", "text-align (CSS)"}}
 
-Once you have this working, right-align cells that contain number values by setting their `style.textAlign` property to `"right"`.
+După ce ați reușit, aliniați la dreapta celulele care conțin valori numerice prin setarea proprietății lor `style.textAlign` la valoarea `"right"`.
 
 {{if interactive
 
@@ -737,27 +741,27 @@ if}}
 
 {{index "createElement method", "table example", "appendChild method"}}
 
-You can use `document.createElement` to create new element nodes, `document.createTextNode` to create text nodes, and the `appendChild` method to put nodes into other nodes.
+Puteți utiliza `document.createElement` pentru a crea noi noduri pentru elemente și `document.createTextNode` pentru a crea noduri text, apoi cu metoda `appendChild` veți putea plasa nodurile în interiorul altor noduri.
 
 {{index "Object.keys function"}}
 
-You'll want to loop over the key names once to fill in the top row and then again for each object in the array to construct the data rows. To get an array of key names from the first object, `Object.keys` will be useful.
+Veți itera numele cheilor pentru a completa rândul de antet și apoi, pentru fiecare obiect din array veți construi un rând ân tabel. Pentru a obține numele cheilor din primul obiect, puteți folosi `Object.keys`.
 
 {{index "getElementById method", "querySelector method"}}
 
-To add the table to the correct parent node, you can use `document.getElementById` or `document.querySelector` to find the node with the proper `id` attribute.
+Pentru a putea adăuga tabelul la părintele corect puteți utiliza `document.getElementById` sau `document.querySelector` pentru a găsi nodul cu atributul `id` menționat.
 
 hint}}
 
-### Elements by tag name
+### Elemente după numele tag-ului
 
 {{index "getElementsByTagName method", recursion}}
 
-The `document.getElementsByTagName` method returns all child elements with a given tag name. Implement your own version of this as a function that takes a node and a string (the tag name) as arguments and returns an array containing all descendant element nodes with the given tag name.
+Metoda `document.getElementsByTagName` returnează toate elementele descendente cu un tag dat. Implementați propria versiune a acestei funcții care primește un nod și un string (numele tagului) și returnează un array ce conține toți descendenții nodului cu numele de tag dat.
 
 {{index "nodeName property", capitalization, "toLowerCase method", "toUpperCase method"}}
 
-To find the tag name of an element, use its `nodeName` property. But note that this will return the tag name in all uppercase. Use the `toLowerCase` or `toUpperCase` string methods to compensate for this.
+Pentru a determina numele tagului unui element folosiți proprietatea `nodeName`. Dar atenție că aceasta va returna numele tagului cu litere mari. Utilizați metodele `toLowerCase` sau `toUpperCase` pentru stringuri ca să compensați.
 
 {{if interactive
 
@@ -786,29 +790,29 @@ if}}
 
 {{index "getElementsByTagName method", recursion}}
 
-The solution is most easily expressed with a recursive function, similar to the [`talksAbout` function](dom#talksAbout) defined earlier in this chapter.
+Soluția poate fi exprimată cel mai ușor cu o funcție recursivă, similar cu [funcția `talksAbout`](dom#talksAbout) definită anterior în acest capitol.
 
 {{index concatenation, "concat method", closure}}
 
-You could call `byTagname` itself recursively, concatenating the resulting arrays to produce the output. Or you could create an inner function that calls itself recursively and that has access to an array binding defined in the outer function, to which it can add the matching elements it finds. Don't forget to call the ((inner function)) once from the outer function to start the process.
+Puteți apela `byTagname` recursiv și să concatenați array-urile rezultate pentru a produce rezultatul final. Sau ați putea crea o funcție internă care se apelează recursiv și care are acces la un binding de tip array definit în funcția exterioară, la care va putea adăuga elementele pe care le găsește. Nu uitați că funcția interioară trebuie apelată din funcția exterioară pentru a începe procesul.
 
 {{index "nodeType property", "ELEMENT_NODE code"}}
 
-The recursive function must check the node type. Here we are interested only in node type 1 (`Node.ELEMENT_NODE`). For such nodes, we must loop over their children and, for each child, see whether the child matches the query while also doing a recursive call on it to inspect its own children.
+Funcția recursivă trebuie să verifice tipul nodului. Ne interesează doar nodurile de tip 1 (`Node.ELEMENT_NODE`). Pentru asemenea noduri, trebuie să iterăm copiii și, pentru fiecare copil, să verificăm dacă potrivește interogarea dar și un apel recursiv pentru a verifica descendenții fiecărui nod.
 
 hint}}
 
-### The cat's hat
+### Pălăria pisicii
 
 {{index "cat's hat (exercise)", [animation, "spinning cat"]}}
 
-Extend the cat animation defined [earlier](dom#animation) so that both the cat and his hat (`<img src="img/hat.png">`) orbit at opposite sides of the ellipse.
+Extindeți animația definită [anterior](dom#animation) astfel încât atât pisica cât și pălăria ei (`<img src="img/hat.png">`) orbitează pe elipsă.
 
-Or make the hat circle around the cat. Or alter the animation in some other interesting way.
+Sau pălăria să se miște în jurul pisicii. Sau modificați animația într-un alt mod interesant.
 
 {{index "absolute positioning", "top (CSS)", "left (CSS)", "position (CSS)"}}
 
-To make positioning multiple objects easier, it is probably a good idea to switch to absolute positioning. This means that `top` and `left` are counted relative to the top left of the document. To avoid using negative coordinates, which would cause the image to move outside of the visible page, you can add a fixed number of pixels to the position values.
+Pentru a poziționa mai multe obiecte mai ușor, probail e o idee bună să utilizați poziționarea absolută. Aceasta înseamnă că proprietățile `top` și `left` sunt calculate relativ la colțul stânga-sus al documentului. Pentru a evita utilizarea unor coordonate negative, puteți adăuga un număr fix de pixeli la valorile pentru poziție.
 
 {{if interactive
 
@@ -841,6 +845,6 @@ if}}
 
 {{hint
 
-`Math.cos` and `Math.sin` measure angles in radians, where a full circle is 2π. For a given angle, you can get the opposite angle by adding half of this, which is `Math.PI`. This can be useful for putting the hat on the opposite side of the orbit.
+`Math.cos` și `Math.sin` folosesc unghiurile în radiani, un cerc complet are 2π radiani. Pentru un unghi dat, puteți determina unghiul opus adăugand jumătate din această valoare, ceea ce este `Math.PI`. Aceasta vă ajută ca să plasați pălăria pe partea opusă a orbitei.
 
 hint}}
