@@ -1,8 +1,8 @@
-# Handling Events
+# Gestiunea evenimentelor
 
 {{quote {author: "Marcus Aurelius", title: Meditations, chapter: true}
 
-You have power over your mind—not outside events. Realize this, and you will find strength.
+Poți să îți influențezi mintea - nu evenimentele exterioare. Realizează aceasta și îți vei găsi puterea.
 
 quote}}
 
@@ -10,23 +10,23 @@ quote}}
 
 {{figure {url: "img/chapter_picture_15.jpg", alt: "Picture a Rube Goldberg machine", chapter: "framed"}}}
 
-Some programs work with direct user input, such as mouse and keyboard actions. That kind of input isn't available as a well-organized data structure—it comes in piece by piece, in real time, and the program is expected to respond to it as it happens.
+Unele programe funcționează direct cu intrarea de la utilizator, cum ar fi acțiunile cu mouse-ul sau tastatura. Acest tip de intrare nu este disponibil sub forma unei structuri de date bine organizate - el apare bucată cu bucată, în timp real și așteptările sunt ca programul să răspundă tot în timp real.
 
-## Event handlers
+## Event handler-e 
 
 {{index polling, button, "real-time"}}
 
-Imagine an interface where the only way to find out whether a key on the ((keyboard)) is being pressed is to read the current state of that key. To be able to react to keypresses, you would have to constantly read the key's state so that you'd catch it before it's released again. It would be dangerous to perform other time-intensive computations since you might miss a keypress.
+Imaginați-vă o interfață în care singura modalitate de a afla dacă o tastă a fost apăsată este de a citi starea curentă a acelei chei. Pentru a putea reacționa la apăsările de taste, ar trebui să citiți constant starea tastelor astfel încât să interceptați înainte de eliberarea tastei. Ar fi periculos să efectuați și alte operații consumatoare de timp deoarece ați putea rata o apăsare de tastă.
 
-Some primitive machines do handle input like that. A step up from this would be for the hardware or operating system to notice the keypress and put it in a queue. A program can then periodically check the queue for new events and react to what it finds there.
+Unele mașini primitive gestionau astfel intrarea. Un pas înainte ar fi ca harware-ul sau sistemul de operare să notifice apăsarea tastei și să o plaseze într-o coadă. Un program ar putea apoi verifica periodic acea coadă pentru apariția unor noi evenimente și apoi să reacționeze la ceea ce găsește acolo.
 
 {{index responsiveness, "user experience"}}
 
-Of course, it has to remember to look at the queue, and to do it often, because any time between the key being pressed and the program noticing the event will cause the software to feel unresponsive. This approach is called _((polling))_. Most programmers prefer to avoid it.
+Desigur, ar trebui să își amintească să consulte coada și să o facă destul de frecvent, deoarece orice întârziere între apăsarea tastei și observarea de către program a acelui eveniment va determina ca sotware-ul să pară ne-reactiv. Această abordare se numește _polling_ și mulți programatori preferă să o evite.
 
 {{index "callback function", "event handling"}}
 
-A better mechanism is for the system to actively notify our code when an event occurs. Browsers do this by allowing us to register functions as _handlers_ for specific events.
+Un mecanism mai bun presupune ca sistemul să notifice activ codul nostru atunci când apare un eveniment. Browserele fac asta prin a ne permite să înregistrăm funcții ca și _handler-e_ pentru evvenimente specifice.
 
 ```{lang: "text/html"}
 <p>Click this document to activate the handler.</p>
@@ -39,13 +39,13 @@ A better mechanism is for the system to actively notify our code when an event o
 
 {{index "click event", "addEventListener method", "window object", [browser, window]}}
 
-The `window` binding refers to a built-in object provided by the browser. It represents the browser window that contains the document. Calling its `addEventListener` method registers the second argument to be called whenever the event described by its first argument occurs.
+Bindingul `window` este un obiect implicit furnizat de către browser. El reprezintă fereastra browserului care conține documentul. Apelând metoda `addEventListener` putem înregistra cod ce se va executa ori de câte ori evenimentul descris de primul argument apare.
 
-## Events and DOM nodes
+## Evenimente și noduri DOM
 
 {{index "addEventListener method", "event handling", "window object", browser, [DOM, events]}}
 
-Each browser event handler is registered in a context. In the previous example we called `addEventListener` on the `window` object to register a handler for the whole window. Such a method can also be found on DOM elements and some other types of objects. Event listeners are called only when the event happens in the context of the object they are registered on.
+Fiecare handler pentru evenimente este înregistrat într-un anumit context. În exemplul anterior, am apelat `addEventListener` pentru obiectul `window` cu scopul de a înregistra un handler pentru întreaga fereastră. O metodă similară este disponibilă și pentru elementele DOM și alte câteva tipuri de obiecte. Codul pentru tratarea evenimentului (event listener) este apelat doar când evenimentul pentru care a fost înregistrat are loc, în contextul obiectului pentru care a fost înregistrat.
 
 ```{lang: "text/html"}
 <button>Click me</button>
@@ -60,17 +60,17 @@ Each browser event handler is registered in a context. In the previous example w
 
 {{index "click event", "button (HTML tag)"}}
 
-That example attaches a handler to the button node. Clicks on the button cause that handler to run, but clicks on the rest of the document do not.
+Exemplul de mai sus atașează un handler la nodul ce reprezintă butonul. Click-urile pe buton vor conduce la executarea handlerului, dar clickurile în restul documentului nu vor provoca reacție.
 
 {{index "onclick attribute", encapsulation}}
 
-Giving a node an `onclick` attribute has a similar effect. This works for most types of events—you can attach a handler through the attribute whose name is the event name with `on` in front of it. 
+Utilizarea atributului `onclick` al nodului duce la același efect. Aceasta poate fi utilizată pentru majoritatea tipurilor de evenimente - puteți atașa un handler prin atributul al cărui nume este numele evenimentului, prefixat de `on`.
 
-But a node can have only one `onclick` attribute, so you can register only one handler per node that way. The `addEventListener` method allows you to add any number of handlers so that it is safe to add handlers even if there is already another handler on the element.
+Dar un nod poate avea un singur atribut `onclick`, ceea ce înseamnă că veți putea înregistra un singur handler. Metoda `addEventListener` vă permite să înregistrați oricâte handlere, astfel că puteți adăuga un nou handler la un element chiar dacă deja a fost înregistrat un handler.
 
 {{index "removeEventListener method"}}
 
-The `removeEventListener` method, called with arguments similar to `addEventListener`, removes a handler.
+Metoda `removeEventListener`, apelată similar cu `addEventListener`, elimină un handler.
 
 ```{lang: "text/html"}
 <button>Act-once button</button>
@@ -86,13 +86,13 @@ The `removeEventListener` method, called with arguments similar to `addEventList
 
 {{index [function, "as value"]}}
 
-The function given to `removeEventListener` has to be the same function value that was given to `addEventListener`. So, to unregister a handler, you'll want to give the function a name (`once`, in the example) to be able to pass the same function value to both methods.
+Funcția dată pentru `removeEventListener` trebuie să fie aceeași valoare de tip funcție pe care ați transmis-o anterior către `addEventListener`. Deci, pentru a elimina un handler, trebuie ca funcția să aibă un nume (`once` - în exemplu) pentru a putea transmite aceeași valoare către ambele metode.
 
-## Event objects
+## Obiectul evenimentului
 
 {{index "button property", "event handling"}}
 
-Though we have ignored it so far, event handler functions are passed an argument: the _((event object))_. This object holds additional information about the event. For example, if we want to know _which_ ((mouse button)) was pressed, we can look at the event object's `button` property.
+Deși am ignorat până acum, funcțiile pentru gestiunea evenimentelor primesc un argument: _obiectul evenimentului_. Acest obiect reține informație suplimentară despre eveniment. De exemplu, dacă vrem să știm _care_ dintre butoanele mouse-ului a fost apăsat, putem consulta proprietatea `button` a obiectului evenimentului.
 
 ```{lang: "text/html"}
 <button>Click me any way you want</button>
@@ -112,9 +112,9 @@ Though we have ignored it so far, event handler functions are passed an argument
 
 {{index "event type", "type property"}}
 
-The information stored in an event object differs per type of event. We'll discuss different types later in the chapter. The object's `type` property always holds a string identifying the event (such as `"click"` or `"mousedown"`).
+Informația stocată în obiectul evenimentului diferă în funcție de tipul evenimentului. Vom discuta despre aceasta mai târziu în capitolul curent. Proprietatea `type` a obiectului memorează întodeauna un string ce identifică evenimentul (cum ar fi `"click"` sau `"mousedown"`).
 
-## Propagation
+## Propagarea
 
 {{index "event propagation", "parent node"}}
 
@@ -122,19 +122,19 @@ The information stored in an event object differs per type of event. We'll discu
 
 {{indexsee propagation, "event propagation"}}
 
-For most event types, handlers registered on nodes with children will also receive events that happen in the children. If a button inside a paragraph is clicked, event handlers on the paragraph will also see the click event.
+Pentru majoritatea tipurilor de evenimente, handlerele înregistrate pe noduri ce au descendenți vor fi notificate și pentru evenimente ce au loc la nivelul descendenților. Dacă se efectuează un click pe un buton din interiorul unui paragraf, event handlerele înregistrate pentru paragraf vor "vedea" și ele evenimentul de click.
 
 {{index "event handling"}}
 
-But if both the paragraph and the button have a handler, the more specific handler—the one on the button—gets to go first. The event is said to _propagate_ outward, from the node where it happened to that node's parent node and on to the root of the document. Finally, after all handlers registered on a specific node have had their turn, handlers registered on the whole ((window)) get a chance to respond to the event.
+Dar dacă atât paragraful cât și butonul au un handler, cel mai specific dintre ele (cel pentru buton) va fi primul apelat. Spunem că evenimentul se _propagă_ spre exterior, de la nodul în care a avut loc spre nodul părinte, până la rădăcina documentului. În final, după ce toate handlerele înregistrate pe noduri s-au executat, handlerele înregistrate pentru întreaga fereastră vor avea șansa să răspundă la eveniment.
 
 {{index "stopPropagation method", "click event"}}
 
-At any point, an event handler can call the `stopPropagation` method on the event object to prevent handlers further up from receiving the event. This can be useful when, for example, you have a button inside another clickable element and you don't want clicks on the button to activate the outer element's click behavior.
+În orice moment, un handler de evenimente poate apela metoda `stopPropagation` asupra obiectului evenimentului pentru a nu mai fi notificate handlerele ulterioare cu privire la producerea evenimentului. Aceasta este utilă atunci când, de exemplu, aveți un buton în interiorul altui element pe care se poate da click și nu doriți ca un click pe buton să declanșeze și reacția la click a elementului părinte.
 
 {{index "mousedown event", "pointer event"}}
 
-The following example registers `"mousedown"` handlers on both a button and the paragraph around it. When clicked with the right mouse button, the handler for the button calls `stopPropagation`, which will prevent the handler on the paragraph from running. When the button is clicked with another ((mouse button)), both handlers will run. 
+În exemplul de mai jos înregistrăm handlere pentru evenimentul `"mousedown"` atât pentru buton cât și pentru paragraful care îl conține. Când se execută un click dreapta, handlerul pentru buton apelează `stopPropagation` care previn execuția handlerului pentru paragraf. Când se execută click cu alt buton al mouse-ului, se vor executa ambele handlere.
 
 ```{lang: "text/html"}
 <p>A paragraph with a <button>button</button>.</p>
@@ -153,9 +153,9 @@ The following example registers `"mousedown"` handlers on both a button and the 
 
 {{index "event propagation", "target property"}}
 
-Most event objects have a `target` property that refers to the node where they originated. You can use this property to ensure that you're not accidentally handling something that propagated up from a node you do not want to handle.
+Majoritatea obiectelor pentu evenimente au o proprietate `target` care se referă la nodul de origine. Puteți utiliza această proprietate pentru a vă asigura că nu tratați accidental un eveniment propagat într-un nod în care nu ați dori să îl tratați.
 
-It is also possible to use the `target` property to cast a wide net for a specific type of event. For example, if you have a node containing a long list of buttons, it may be more convenient to register a single click handler on the outer node and have it use the `target` property to figure out whether a button was clicked, rather than register individual handlers on all of the buttons.
+De asemenea, puteți utiliza proprietatea `target` pentru a distribui unei rețele un anumit tip de eveniment. De exemplu, dacă aveți un nod ce conține o listă lungă de butoane, ar putea fi mai convenabil să înregistrați un singur handler pentru click pentru nodul părinte și să utilizați proprietatea `target` pentru a determina dacă un anume buton a fost apăsat, decât să înregistrați handlere la nivelul fiecărui buton în parte.
 
 ```{lang: "text/html"}
 <button>A</button>
@@ -170,19 +170,19 @@ It is also possible to use the `target` property to cast a wide net for a specif
 </script>
 ```
 
-## Default actions
+## Acțiuni implicite
 
 {{index scrolling, "default behavior", "event handling"}}
 
-Many events have a default action associated with them. If you click a ((link)), you will be taken to the link's target. If you press the down arrow, the browser will scroll the page down. If you right-click, you'll get a context menu. And so on.
+Multe evenimente au o acțiune implicită asociată cu ele. Dacă executați click pe un link, veți naviga la adresa linkului. Dacă apăsați săgeata-jos, veți naviga în jos în pagină. Dacă executați click-dreapta vi se afișează un meniu contextual, șamd.
 
 {{index "preventDefault method"}}
 
-For most types of events, the JavaScript event handlers are called _before_ the default behavior takes place. If the handler doesn't want this normal behavior to happen, typically because it has already taken care of handling the event, it can call the `preventDefault` method on the event object.
+Pentru majoritatea tipurilor de evenimente, handlere de eveniment înregistrate se execută _înainte_ de a se executa comportamentul implicit. Dacă handlerul nu dorește să permită execuția acestui comportament predefinit, de regulă deoarece deja s-a tratat evenimentul, se poate apela metoda `preventDefault` asupra obiectului evenimentului.
 
 {{index expectation}}
 
-This can be used to implement your own ((keyboard)) shortcuts or ((context menu)). It can also be used to obnoxiously interfere with the behavior that users expect. For example, here is a link that cannot be followed:
+De exemplu, puteți utiliza aceasta pentru a crea propriile combinații de taste de accelerare sau meniuri contextuale. Dar se poate utiliza și pentru a surprinde neplăcut utilizatorul. De exemplu, linkul de mai jos nu poate fi navigat:
 
 ```{lang: "text/html"}
 <a href="https://developer.mozilla.org/">MDN</a>
@@ -197,15 +197,15 @@ This can be used to implement your own ((keyboard)) shortcuts or ((context menu)
 
 {{index usability}}
 
-Try not to do such things unless you have a really good reason to. It'll be unpleasant for people who use your page when expected behavior is broken.
+Încercați să nu folosiți asemenea cod, dacă nu aveți un motiv foarte bun. Va fi neplăcut pentru utilizator ca pagina să nu se comporte așa cum se așteaptă.
 
-Depending on the browser, some events can't be intercepted at all. On Chrome, for example, the ((keyboard)) shortcut to close the current tab ([control]{keyname}-W or [command]{keyname}-W) cannot be handled by JavaScript.
+În funcție de browser, anumite evenimente nu pot fi interceptate. De exemplu, în Chrome, combinația de taste pentru închiderea tab-ului curent ([control]{keyname}-W sau [command]{keyname}-W) nu poate fi tratată în JavaScript.
 
-## Key events
+## Evenimente de la tastatură
 
 {{index keyboard, "keydown event", "keyup event", "event handling"}}
 
-When a key on the keyboard is pressed, your browser fires a `"keydown"` event. When it is released, you get a `"keyup"` event.
+Când se apasă o tastă, browserul generează un eveniment `"keydown"`. La eliberarea tastei, se va genera un eveniment `"keyup"`.
 
 ```{lang: "text/html", focus: true}
 <p>This page turns violet when you hold the V key.</p>
@@ -225,15 +225,15 @@ When a key on the keyboard is pressed, your browser fires a `"keydown"` event. W
 
 {{index "repeating key"}}
 
-Despite its name, `"keydown"` fires not only when the key is physically pushed down. When a key is pressed and held, the event fires again every time the key _repeats_. Sometimes you have to be careful about this. For example, if you add a button to the DOM when a key is pressed and remove it again when the key is released, you might accidentally add hundreds of buttons when the key is held down longer.
+În pofida numelui, `"keydown"` este generat nu doar când tasta este apăsată fizic. Când mențineți apăsată tasta, evenimentul este generat pentru fiecare _repetiție_ a tastei. Uneori trebuie să fiți atenți la acest aspect. De exemplu, dacă adăugați un buton la DOM când tasta este apăsată și îl eliminați când tasta este eliberată, s-ar putea să adăugați o mulțime de butoane când tasta este menținută apăsată pentru mai mult timp.
 
 {{index "key property"}}
 
-The example looked at the `key` property of the event object to see which key the event is about. This property holds a string that, for most keys, corresponds to the thing that pressing that key would type. For special keys such as [enter]{keyname}, it holds a string that names the key (`"Enter"`, in this case). If you hold [shift]{keyname} while pressing a key, that might also influence the name of the key—`"v"` becomes `"V"`, and `"1"` may become `"!"`, if that is what pressing [shift]{keyname}-1 produces on your keyboard.
+În exemplu am consultat proprietatea `key` a obiectului pentru eveniment pentru a determina despre ce tasta este vorba. Această proprietate memorează un string ce corespunde caracterului pe care l-ar genera apăsarea tastei, pentru majoritatea tastelor. Pentru tastele speciale, cum ar fi [enter]{keyname}, memorează numele tastei (`"Enter"`, în acest caz). Dacă apăsați [shift]{keyname} împreună cu o tastă, numele cheii ar putea fi influențat - `"v"` devine `"V"`, și `"1"` ar putea fi `"!"`, dacă asta produce apăsarea [shift]{keyname}-1 pe tastatură.
 
 {{index "modifier key", "shift key", "control key", "alt key", "meta key", "command key", "ctrlKey property", "shiftKey property", "altKey property", "metaKey property"}}
 
-Modifier keys such as [shift]{keyname}, [control]{keyname}, [alt]{keyname}, and [meta]{keyname} ([command]{keyname} on Mac) generate key events just like normal keys. But when looking for key combinations, you can also find out whether these keys are held down by looking at the `shiftKey`, `ctrlKey`, `altKey`, and `metaKey` properties of keyboard and mouse events.
+Cheile modificatoare, cum sunt [shift]{keyname}, [control]{keyname}, [alt]{keyname} și [meta]{keyname} ([command]{keyname} pe Mac) generează evenimente ca și cheile normale. Dar când verificați combinațiile de taste, puteți consulta proprietățile `shiftKey`, `ctrlKey`, `altKey` și `metaKey` ale evenimentelor pentru tastatură și mouse.
 
 ```{lang: "text/html", focus: true}
 <p>Press Control-Space to continue.</p>
@@ -248,39 +248,39 @@ Modifier keys such as [shift]{keyname}, [control]{keyname}, [alt]{keyname}, and 
 
 {{index "button (HTML tag)", "tabindex attribute", [DOM, events]}}
 
-The DOM node where a key event originates depends on the element that has ((focus)) when the key is pressed. Most nodes cannot have focus unless you give them a `tabindex` attribute, but things like ((link))s, buttons, and form fields can. We'll come back to form ((field))s in [Chapter ?](http#forms). When nothing in particular has focus, `document.body` acts as the target node of key events.
+Nodul DOM de origine al unui eveniment de tastatură depinde de elementul care are _focus-ul_ atunci când tasta este apăsată. Majoritatea elementelor nu pot deține focusul decât dacă le asociați un atribut `tabindex`, dar linkurile, butoanele și câmpurile formularelor au această posibilitate. Vom reveni la câmpurile din formulare în [capitolul ?](http#forms). Când nici un element nu are focusul,  `document.body` este nodul țintă pentru evenimentele tastaturii.
 
-When the user is typing text, using key events to figure out what is being typed is problematic. Some platforms, most notably the ((virtual keyboard)) on ((Android)) ((phone))s, don't fire key events. But even when you have an old-fashioned keyboard, some types of text input don't match key presses in a straightforward way, such as _input method editor_ (((IME))) software used by people whose scripts don't fit on a keyboard, where multiple key strokes are combined to create characters.
+Când utilizatorul introduce text, utilizarea evenimentelor pentru taste cu scopul de a identifica ce se introduce este problematică. Unele platforme, cum ar fi tastatura virtuală de pe telefoanele Android, nu generează evenimente de tastatură. Dar chiar și atunci când dispuneți de o tastatură fizică, unele tipuri de text nu se potrivesc cu tastele apăsate, cum ar fi cazul programelor IME (Input Method Editor) utilizate pentru scripturi care nu au o tastatură și pentru care trebuie apăsate mai multe taste pentru generarea caracterelor.
 
-To notice when something was typed, elements that you can type into, such as the `<input>` and `<textarea>` tags, fire `"input"` events whenever the user changes their content. To get the actual content that was typed, it is best to directly read it from the focused field. [Chapter ?](http#forms) will show how.
+Pentru a identifica introducerea unui text, elementele în care puteți introduce textul, cum ar fi tagurile `<input>` și `<textarea>`, generează evenimente `"input"` de fiecare dată când utiolizatorul le modifică textul conținut. Pentru a obține valoarea introdusă, este cel mai bine să citiți direct din câmpul care are focusul. [Capitolul ?](http#forms) vă va arăta cum să faceți asta.
 
-## Pointer events
+## Evenimente de pointer
 
-There are currently two widely used ways to point at things on a screen: mice (including devices that act like mice, such as touchpads and trackballs) and touchscreens. These produce different kinds of events.
+Sunt două metode de a indica lucruri pe ecran, frecvent utilizate: mouși (inclusiv dispozitive care acționează similar moușilor, cum ar fi track-pad-uri și track-ball-uri) și ecrane tactile. Acestea produc tipuri diferite de evenimente.
 
-### Mouse clicks
+### Clickuri de mouse
 
 {{index "mousedown event", "mouseup event", "mouse cursor"}}
 
-Pressing a ((mouse button)) causes a number of events to fire. The `"mousedown"` and `"mouseup"` events are similar to `"keydown"` and `"keyup"` and fire when the button is pressed and released. These happen on the DOM nodes that are immediately below the mouse pointer when the event occurs.
+Apăsarea butonului unui mouse declanșează mai multe evenimente. Evenimentele `"mousedown"` și `"mouseup"` sunt similare cu `"keydown"` și `"keyup"` și se declanșează când butonul este apăsat și eliberat. Aceasta au loc asupra nodurilor DOM aflate imediat sub indicatorul mouseului atunci când se declanșează evenimentul.
 
 {{index "click event"}}
 
-After the `"mouseup"` event, a `"click"` event fires on the most specific node that contained both the press and the release of the button. For example, if I press down the mouse button on one paragraph and then move the pointer to another paragraph and release the button, the `"click"` event will happen on the element that contains both those paragraphs.
+După evenimentul `"mouseup"` se declanșează un eveniment `"click"` asupra celui mai specific nod care conține atât apăsarea cât și eliberarea butonului. De exemplu, dacă apăs butonul mouse-ului pe un paragraf și apoi mut pointerul peste un alt paragraf, după care eliberez butonul, evenimentul `"click"` se va declanșa asupra elementului care conține ambele paragrafe.
 
 {{index "dblclick event", "double click"}}
 
-If two clicks happen close together, a `"dblclick"` (double-click) event also fires, after the second click event.
+Dacă două click-uri au loc la scurt timp, unul după altul, se va declanșa un eveniment `"dblclick"` (double-click) după al doilea eveniment de click.
 
 {{index pixel, "clientX property", "clientY property", "pageX property", "pageY property", "event object"}}
 
-To get precise information about the place where a mouse event happened, you can look at its `clientX` and `clientY` properties, which contain the event's ((coordinates)) (in pixels) relative to the top-left corner of the window, or `pageX` and `pageY`, which are relative to the top-left corner of the whole document (which may be different when the window has been scrolled).
+Pentru a obține informații precise despre locul în care a fost declanșat evenimentul de mouse, putem consulta proprietățile `clientX` și `clientY`, care conțion coordonatele evenimentului (în pixeli) relativ la colțul stânga-sus al ferestrei, sau `pageX` și `pageY`, care sunt relative la colțul stânga-sus al întregului document (valori care ar putea diferite, dacă s-a derulat pagina).
 
 {{index "border-radius (CSS)", "absolute positioning", "drawing program example"}}
 
 {{id mouse_drawing}}
 
-The following implements a primitive drawing program. Every time you click the document, it adds a dot under your mouse pointer. See [Chapter ?](paint) for a less primitive drawing program.
+În exemplul de mai jos construim un program primitiv de desenare. De fiecare dată când executați click pe document, este adăugat un punct sub pointerul mouseului. Pentru un program mai puțin primitiv, consultați [capitolul ?](paint).
 
 ```{lang: "text/html"}
 <style>
@@ -306,15 +306,15 @@ The following implements a primitive drawing program. Every time you click the d
 </script>
 ```
 
-### Mouse motion
+### Mișcarea mouse-ului
 
 {{index "mousemove event"}}
 
-Every time the mouse pointer moves, a `"mousemove"` event is fired. This event can be used to track the position of the mouse. A common situation in which this is useful is when implementing some form of mouse-((dragging)) functionality.
+De fiecare dată când pointerul mouse-ului se mișcă, este declanșat un eveniment `"mousemove"`. Acest eveniment poate fi folosit pentru a urmări poziția mouse-ului. Acest lucru poate fi util pentru situațiile în care implementăm funcționalitate pentru tragerea obiectelor cu mouse-ul.
 
 {{index "draggable bar example"}}
 
-As an example, the following program displays a bar and sets up event handlers so that dragging to the left or right on this bar makes it narrower or wider:
+Ca și exemplu, programul de mai jos afișează o bară și setează handlere pentru evenimente astfel încât tragerea de laturile stânga sau dreapta măresc sau micșorează bara:
 
 ```{lang: "text/html", startCode: true}
 <p>Drag the bar to change its width:</p>
@@ -346,7 +346,7 @@ As an example, the following program displays a bar and sets up event handlers s
 
 {{if book
 
-The resulting page looks like this:
+Pagina rezultată arată astfel:
 
 {{figure {url: "img/drag-bar.png", alt: "A draggable bar",width: "5.3cm"}}}
 
@@ -354,33 +354,33 @@ if}}
 
 {{index "mouseup event", "mousemove event"}}
 
-Note that the `"mousemove"` handler is registered on the whole ((window)). Even if the mouse goes outside of the bar during resizing, as long as the button is held we still want to update its size.
+Observați că handlerul `"mousemove"` este înregistrat la nivelul întregii ferestre. Chiar dacă pointerul mouseului părăsește bara în timpul redimensionării, cât timp este menținut apăsat butonul, vrem să actualizăm dimensiunea barei.
 
 {{index "buttons property", "button property", "bitfield"}}
 
-We must stop resizing the bar when the mouse button is released. For that, we can use the `buttons` property (note the plural), which tells us about the buttons that are currently held down. When this is zero, no buttons are down. When buttons are held, its value is the sum of the codes for those buttons—the left button has code 1, the right button 2, and the middle one 4. With the left and right buttons held, for example, the value of `buttons` will be 3.
+Trebuie să oprim redimensionarea barei la eliberarea butonului mouse-ului. Pentru aceasta, putem utiliza proprietatea `buttons` (atenție, la plural), care ne spune ce butoane sunt apăsate la un moment dat. Dacă aceasta are valoarea 0, atunci nu este apăsat nici un buton. Când butoanele sunt apăsate, valoarea acestei proprietăți este suma codurilor pentru fiecare dintre butoane - butonul stânga are codul 1, cel din dreapta codul 2 iar cel din mijloc codul 4. Dacă sunt menținute apăsate butoanele stânga și dreapta simultan, valoarea pentru proprietatea `buttons` va fi 3.
 
-Note that the order of these codes is different from the one used by `button`, where the middle button came before the right one. As mentioned, consistency isn't really a strong point of the browser's programming interface.
+Remarcați că ordinea acestor coduri este diferită de cea utilizată pentru `button`, unde butonul din mijloc avea cod mai mic decât cel din dreapta. Așa cum am mai menționat, consistența nu este chiar un punct forte al interfeței de programare a browserului.
 
-### Touch events
+### Evenimente pentru touch
 
 {{index touch, "mousedown event", "mouseup event", "click event"}}
 
-The style of graphical browser that we use was designed with mouse interfaces in mind, at a time where touchscreens were rare. To make the Web "work" on early touchscreen phones, browsers for those devices pretended, to a certain extent, that touch events were mouse events. If you tap your screen, you'll get `"mousedown"`, `"mouseup"`, and `"click"` events.
+Tipul de browser grafic pe care îl utilizăm a fost conceput cu interfețele de tip mouse în minte, într-o perioadă când ecranele tactile erau rare. Pentru a face ca Web-ul să funcționeze pentru primele telefoane cu ecrane tactile, browserele de pe acele dispozitive pretindeau, până la un punct, că evenimentele de touch erau evenimente de mouse. Dacă atingeați ecranul, se declanșau evenimente `"mousedown"`, `"mouseup"` și `"click"`.
 
-But this illusion isn't very robust. A touchscreen works differently from a mouse: it doesn't have multiple buttons, you can't track the finger when it isn't on the screen (to simulate `"mousemove"`), and it allows multiple fingers to be on the screen at the same time.
+Dar această iluzie nu este foarte robustă. Un ecran tactil funcționează diferit de un mouse: nu are mai multe butoane, nu puteți urmări degetul dacă acesta nu este pe ecran (pentru a simula `mousemove`) și permite ca mai multe degete să fie pe ecran în același timp.
 
-Mouse events cover touch interaction only in straightforward cases—if you add a `"click"` handler to a button, touch users will still be able to use it. But something like the resizeable bar in the previous example does not work on a touchscreen.
+Evenimentele de mouse acoperă interacțiunea tactilă doar pentru situațiile evidente - dacă adăugați un handler pentru `"click"` la un buton, utilizatorii ecranelor tactile îl vor putea folosi. Dar o funcționalitate similară cu redimensionarea barei din exemplul anterior nu va funcționa.
 
 {{index "touchstart event", "touchmove event", "touchend event"}}
 
-There are specific event types fired by touch interaction. When a finger starts touching the screen, you get a `"touchstart"` event. When it is moved while touching, `"touchmove"` events fire. Finally, when it stops touching the screen, you'll see a `"touchend"` event.
+Există evenimente specifice declanșate de interacțiunea prin intermediul ecranelor tactile. Când un deget începe să atingă ecranul, se va declanșa un eveniment `"touchstart"`. Când mișcăm degetul în timp ce atingem ecranul, se declanșează evenimentul `"touchmove"`. În sfârșit, când ridicăm degetul de pe ecran, va apărea evenimentul `"touchend"`.
 
 {{index "touches property", "clientX property", "clientY property", "pageX property", "pageY property"}}
 
-Because many touchscreens can detect multiple fingers at the same time, these events don't have a single set of coordinates associated with them. Rather, their ((event object))s have a `touches` property, which holds an ((array-like object)) of points, each of which has its own `clientX`, `clientY`, `pageX`, and `pageY` properties.
+Deoarece multe ecrane tactile pot detecta mai multe atingeri simultane, aceste evenimente nu au un singur set de coordonate asociate cu ele. În loc de asta, obiectul evenimentului pentru ele are o proprietate `touches`, care reține un obiect similar unui array, cu punctele de atingere și fiecare punct are propriile proprietăți `clientX`, `clientY`, `pageX` și `pageY`.
 
-You could do something like this to show red circles around every touching finger:
+Ați putea proceda ca și în exemplul de mai jos, pentru a afișa cercuri roșii în jurul fiecărui punct de atingere:
 
 ```{lang: "text/html"}
 <style>
@@ -410,15 +410,15 @@ You could do something like this to show red circles around every touching finge
 
 {{index "preventDefault method"}}
 
-You'll often want to call `preventDefault` in touch event handlers to override the browser's default behavior (which may include scrolling the page on swiping) and to prevent the mouse events from being fired, for which you may _also_ have a handler.
+Foarte frecvent veți avea nevoie să apelați `preventDefault` în evenimentele tactile, pentru a suprascrie comportamentul implicit al browserului și pentru a preveni declanșarea evenimentelor de mouse, care ar putea să aibă și ele asociate handlere.
 
-## Scroll events
+## Evenimente de scroll (derularea paginilor sau a elementelor)
 
 {{index scrolling, "scroll event", "event handling"}}
 
-Whenever an element is scrolled, a `"scroll"` event is fired on it. This has various uses, such as knowing what the user is currently looking at (for disabling off-screen ((animation))s or sending ((spy)) reports to your evil headquarters) or showing some indication of progress (by highlighting part of a table of contents or showing a page number).
+Atunci când se derulează un element, se va declanșa un eveniment `"scroll"` pentru acesta. Acesta are diverse utilizări, cum ar fi să identificăm ce privește utilizatorul (pentru a dezactiva animații pe ecran, de exemplu) sau pentru a afișa un indicator de progres.
 
-The following example draws a ((progress bar)) above the document and updates it to fill up as you scroll down:
+Exemplul de mai jos desenează o bară de progres în partea de sus a unui document și o actualizează pe măsură ce derulați în jos pagina:
 
 ```{lang: "text/html"}
 <style>
@@ -445,29 +445,29 @@ The following example draws a ((progress bar)) above the document and updates it
 
 {{index "unit (CSS)", scrolling, "position (CSS)", "fixed positioning", "absolute positioning", percentage, "repeat method"}}
 
-Giving an element a `position` of `fixed` acts much like an `absolute` position but also prevents it from scrolling along with the rest of the document. The effect is to make our progress bar stay at the top. Its width is changed to indicate the current progress. We use `%`, rather than `px`, as a unit when setting the width so that the element is sized relative to the page width.
+Atunci când un element are `position` setat la `fixed`, efectul este similar cu setarea poziției `absolute` dar elementul va rămâne vizibil în poziția sa chiar dacă se derulează pagina. În acest fel, bara de progres rămâne tot timpul vizibilă. Pentru a indica progresul, modificăm proprietatea `width`. Utilizăm `%` în loc de pixeli pentru a îi seta dimensiunea relativ la lățimea paginii.
 
 {{index "innerHeight property", "innerWidth property", "pageYOffset property"}}
 
-The global `innerHeight` binding gives us the height of the window, which we have to subtract from the total scrollable height—you can't keep scrolling when you hit the bottom of the document. There's also an `innerWidth` for the window width. By dividing `pageYOffset`, the current scroll position, by the maximum scroll position and multiplying by 100, we get the percentage for the progress bar.
+Bindingul global `innerHeight` ne returnează înălțimea ferestrei, pe care trebuie să o scădem din înălțimea totală de derulare - nu mai putem derula când ajungem la sfârșitul documentului. Există și o proprietate `innerWidth` pentru lățimea ferestrei. Împărțind `pageYOffset`, poziția curentă în derulare, cu poziția maximă de derulare și înmulțind cu 100, obținem procentul necesar pentru lățimea barei de progress.
 
 {{index "preventDefault method"}}
 
-Calling `preventDefault` on a scroll event does not prevent the scrolling from happening. In fact, the event handler is called only _after_ the scrolling takes place.
+Apelând `preventDefault` intr-un handler pentru evenimentul de derulare, nu va preveni derularea. De fapt, handlerul de eveniment va fi apelat doar _după_ ce a avut loc derularea.
 
-## Focus events
+## Evenimente pentru focus
 
 {{index "event handling", "focus event", "blur event"}}
 
-When an element gains ((focus)), the browser fires a `"focus"` event on it. When it loses focus, the element gets a `"blur"` event.
+Atunci când un element are primește focusul, browserul declanșează un eveniment `"focus"` asupra sa. Când elementul pierde focusul, acesta primește un eveniment `"blur"`.
 
 {{index "event propagation"}}
 
-Unlike the events discussed earlier, these two events do not propagate. A handler on a parent element is not notified when a child element gains or loses focus.
+Spre deosebire de evenimentele discutate anterior, aceste două evenimente nu se propagă. Un handler de pe elementul părinte nu va fi notificat atunci când un element descendent câștigă sau pierde focusul.
 
 {{index "input (HTML tag)", "help text example"}}
 
-The following example displays help text for the ((text field)) that currently has focus:
+Exemplul de mai jos afișează un text explicativ pentru câmpul de text care are focusul:
 
 ```{lang: "text/html"}
 <p>Name: <input type="text" data-help="Your full name"></p>
@@ -491,7 +491,7 @@ The following example displays help text for the ((text field)) that currently h
 
 {{if book
 
-This screenshot shows the help text for the age field.
+Imaginea de mai jos ilustrează textul explicativ pentru câmpul de vârstă.
 
 {{figure {url: "img/help-field.png", alt: "Providing help when a field is focused",width: "4.4cm"}}}
 
@@ -499,35 +499,35 @@ if}}
 
 {{index "focus event", "blur event"}}
 
-The ((window)) object will receive `"focus"` and `"blur"` events when the user moves from or to the browser tab or window in which the document is shown.
-
-## Load event
+Obiectul `window` va recepționa evenimentele `"focus"` și `"blur"` atunci când userul schimbă tab-ul sau fereastra în care documentul este afișat.
+## Evenimentul "load"
 
 {{index "script (HTML tag)", "load event"}}
 
-When a page finishes loading, the `"load"` event fires on the window and the document body objects. This is often used to schedule ((initialization)) actions that require the whole ((document)) to have been built. Remember that the content of `<script>` tags is run immediately when the tag is encountered. This may be too soon, for example when the script needs to do something with parts of the document that appear after the `<script>` tag.
+
+Când se termină încărcarea unei pagini, se va declanșa evenimentul `"load"` pentru fereastră și obiectele din corpul documentului. Acesta este adesea utilizat pentru a programa acțiuni care necesită ca întregul document să fie construit. Amintiți-vă că, imediat ce se întâlnește un tag `<script>`, conținutul acestuia este executat. Ar putea fi prea devreme, de exemplu atunci când scriptul trebuie să acționeze asupra unor elemente din document care apar după tag-ul `<script>`.
 
 {{index "event propagation", "img (HTML tag)"}}
 
-Elements such as ((image))s and script tags that load an external file also have a `"load"` event that indicates the files they reference were loaded. Like the focus-related events, loading events do not propagate.
+Elementele cum ar fi tagurile pentru imagini și script-uri care încarcă un fișier extern, au asociat un eveniment `"load"` care indică finalizarea încărcării fișierelor respective. Ca și evenimentele legate de focus, aceste evenimente nu se propagă.
 
 {{index "beforeunload event", "page reload", "preventDefault method"}}
 
-When a page is closed or navigated away from (for example, by following a link), a `"beforeunload"` event fires. The main use of this event is to prevent the user from accidentally losing work by closing a document. If you prevent the default behavior on this event _and_ set the `returnValue` property on the event object to a string, the browser will show the user a dialog asking if they really want to leave the page. That dialog might include your string, but because some malicious sites try to use these dialogs to confuse people into staying on their page to look at dodgy weight loss ads, most browsers no longer display them.
+Când o pagină este închisă sau părăsită ( prin urmarea unei hiperlegături, de exemplu), se declanșează un eveniment `"beforeunload"`. Principala utilizare a acestui eveniment este de a preveni pierderea accidentală de date atunci când utilizatorul a făcut modificări într-un document pe care vrea să îl închidă. Dacă preveniți comportamentul implicit al acestui eveniment _și_ setați proprietatea `returnValue` a obiectului evenimentului la un string, browserul va afișa un dialog în care va întreba utilizatorul dacă intr-adevăr dorește să părăsească pagina. Acest dialog ar putea conține stringul vostru dar, deoarece unele site-uri malițioase încearcă să utilizeze aceste dialoguri pentru a introduce confuzie utilizatorului, majoritatea browserelor nu le mai afișează.
 
 {{id timeline}}
 
-## Events and the event loop
+## Evenimente și bucla de evenimente
 
 {{index "requestAnimationFrame function", "event handling", timeline, "script (HTML tag)"}}
 
-In the context of the event loop, as discussed in [Chapter ?](async), browser event handlers behave like other asynchronous notifications. They are scheduled when the event occurs but must wait for other scripts that are running to finish before they get a chance to run.
+În contextul buclei de evenimente, așa cum am discutat în [capitolul ?](async), handlerele petnru evenimente ale browserului se comportă ca și celelalte notificări asincrone. Ele sunt programate când se produc evenimentele dar trebui să aștepte pentru alte scripturi să își termine execuția înainte de a avea șansa să se execute.
 
-The fact that events can be processed only when nothing else is running means that, if the event loop is tied up with other work, any interaction with the page (which happens through events) will be delayed until there's time to process it. So if you schedule too much work, either with long-running event handlers or with lots of short-running ones, the page will become slow and cumbersome to use.
+Faptul că evenimentele pot fi procesate doar când nimic altceva nu se execută înseamnă că, dacă bucla de evenimente este legată cu alte lucruri, orice interacțiune cu pagina (care se întâmplă prin evenimente) va fi întârziată până în momentul în care poate fi executată. Astfel, dacă veți programa prea multă muncă, fie prin handlere care au durată mare de execuție, fie prin multe handlere scurte, pagina va deveni lentă și greu de utilizat.
 
-For cases where you _really_ do want to do some time-consuming thing in the background without freezing the page, browsers provide something called _((web worker))s_. A worker is a JavaScript process that runs alongside the main script, on its own timeline.
+Pentru cazurile în care vreți să executați un cod consumator de timp în fundal, fără să înghețați pagina, browserele vă pun la dispoziție _web worker-i_. Un "worker" este un proces JavaScript care rulează în paralel cu scriptul principal, pe propria sa linie temporală.
 
-Imagine that squaring a number is a heavy, long-running computation that we want to perform in a separate ((thread)). We could write a file called `code/squareworker.js` that responds to messages by computing a square and sending a message back.
+Imaginați-vă că ridicarea la pătrat a unui număr este un calcul de durată pe care vrem să îl executăm pe un thread separat. Am putea scrie codul într-un fișier numit `code/squareworker.js` care răspunde la mesaje prin calcularea pătratului și returnarea unui mesaj.
 
 ```
 addEventListener("message", event => {
@@ -535,9 +535,9 @@ addEventListener("message", event => {
 });
 ```
 
-To avoid the problems of having multiple ((thread))s touching the same data, workers do not share their ((global scope)) or any other data with the main script's environment. Instead, you have to communicate with them by sending messages back and forth.
+Pentru a evita problema de a avea mai multe thread-uri ce modifică aceleași date, worker-ii nu își partajează domeniul de vizibilitate global sau orice alte date cu mediul scriptului principal. Comunicarea cu ei se realizează prin mesaje.
 
-This code spawns a worker running that script, sends it a few messages, and outputs the responses.
+Codul de mai jos crează un worker ce va rula acel script, îi trimite mai multe mesaje și afișează răspunsurile.
 
 ```{test: no}
 let squareWorker = new Worker("code/squareworker.js");
@@ -550,17 +550,17 @@ squareWorker.postMessage(24);
 
 {{index "postMessage method", "message event"}}
 
-The `postMessage` function sends a message, which will cause a `"message"` event to fire in the receiver. The script that created the worker sends and receives messages through the `Worker` object, whereas the worker talks to the script that created it by sending and listening directly on its ((global scope)). Only values that can be represented as JSON can be sent as messages—the other side will receive a _copy_ of them, rather than the value itself.
+Funcția `postMessage` trimite un mesaj, ceea ce va declanșa un eveniment `"message"` la destinatar. Scriptul care a creat worker-ul trimite și primește mesaje prin intermediul obiectului `Worker`, în timp ce workerul discută cu scriptul care l-a creat prin observarea directă a propriului domeniu de vizibilitate global. Doar valorile care pot fi reprezentate în JSON pot fi trimise ca și mesaje - cealaltă parte va primi o _copie_, nu valoarea însăși.
 
-## Timers
+## Timere
 
 {{index timeout, "setTimeout function"}}
 
-We saw the `setTimeout` function in [Chapter ?](async). It schedules another function to be called later, after a given number of milliseconds.
+Am lucrat cu funcția `setTimeout` în [capitolul ?](async). Ea programează apelul ulterior al unei funcții, după un număr dat de milisecunde.
 
 {{index "clearTimeout function"}}
 
-Sometimes you need to cancel a function you have scheduled. This is done by storing the value returned by `setTimeout` and calling `clearTimeout` on it.
+Uneori trebuie să renunțați la execuția unei funcții anterior programate. Puteți realiza aceasta cu ajutorul valorii returnate de către `setTimeout` și să apelați `clearTimeout` asupra ei.
 
 ```
 let bombTimer = setTimeout(() => {
@@ -575,11 +575,11 @@ if (Math.random() < 0.5) { // 50% chance
 
 {{index "cancelAnimationFrame function", "requestAnimationFrame function"}}
 
-The `cancelAnimationFrame` function works in the same way as `clearTimeout`—calling it on a value returned by `requestAnimationFrame` will cancel that frame (assuming it hasn't already been called).
+Funcția `cancelAnimationFrame` se execută în același mod ca și `clearTimeout` - apelarea ei asupra rezultatului returnat de  `requestAnimationFrame` va renunța la acel cadru (presupunând că nu a fost deja apelat).
 
 {{index "setInterval function", "clearInterval function", repetition}}
 
-A similar set of functions, `setInterval` and `clearInterval`, are used to set timers that should _repeat_ every _X_ milliseconds.
+Uns et similar de funcții, `setInterval` și `clearInterval`, sunt utilizate pentru a seta timere care se vor _repeta_ după fiecare _X_ milisecunde.
 
 ```
 let ticks = 0;
@@ -592,19 +592,19 @@ let clock = setInterval(() => {
 }, 200);
 ```
 
-## Debouncing
+## Dezactivarea (debouncing)
 
 {{index optimization, "mousemove event", "scroll event", blocking}}
 
-Some types of events have the potential to fire rapidly, many times in a row (the `"mousemove"` and `"scroll"` events, for example). When handling such events, you must be careful not to do anything too time-consuming or your handler will take up so much time that interaction with the document starts to feel slow.
+Unele tipuri de evenimente au potențialul de a se declanșa rapid, de mai mutle ori (cum ar fi `"mousemove"` și `"scroll"`). Când gestionăm asemenea evenimente, trebuie să avem grijă să nu executăm cod consumator de timp. În caz contrar, handlerul va consuma atât de mult timp încât interacțiunea cu documentul va fi încetinită.
 
 {{index "setTimeout function"}}
 
-If you do need to do something nontrivial in such a handler, you can use `setTimeout` to make sure you are not doing it too often. This is usually called _((debouncing))_ the event. There are several slightly different approaches to this.
+Dacă trebuie să executați o operație non-trivială într-un asemenea handler, puteți utiliza `setTimeout` pentru a vă asigura că nu o executați prea frecvent. Aceasta înseamnă _deazctivarea (debouncing)_ evenimentului. Există câteva abordări ușor diferite pentru a realiza această sarcină.
 
 {{index "textarea (HTML tag)", "clearTimeout function", "keydown event"}}
 
-In the first example, we want to react when the user has typed something, but we don't want to do it immediately for every input event. When they are ((typing)) quickly, we just want to wait until a pause occurs. Instead of immediately performing an action in the event handler, we set a timeout. We also clear the previous timeout (if any) so that when events occur close together (closer than our timeout delay), the timeout from the previous event will be canceled.
+În primul exemplu, vrem să reacționăm la inputul utilizatorului, dar nu vrem să reacționăm imediat la fiecare eveniment de intrare. Când utilizatorul tastează rapid, vrem să așteptăm până când apare o pauză. În loc să executăm imediat o acțiune în handler, setăm un timeout. De asemenea, renunțăm la timeout-ul anterior (dacă există) astfel încât, dacă două evenimente apar aproape unul de altul (mai aproape decât întârzierea setată în timeout), timeout-ul din evenimentul anterior va fi eliminat.
 
 ```{lang: "text/html"}
 <textarea>Type something here...</textarea>
@@ -620,11 +620,11 @@ In the first example, we want to react when the user has typed something, but we
 
 {{index "sloppy programming"}}
 
-Giving an undefined value to `clearTimeout` or calling it on a timeout that has already fired has no effect. Thus, we don't have to be careful about when to call it, and we simply do so for every event.
+Transmiterea unei valori nedefinite către `clearTimeout` sau apelul acestei funcții asupra unui timeout care deja a fost declanșat, nu are nici un efect. Astfel, nu trebuie să ne preocupe apelul și doar îl executăm pentru fiecare eveniment.
 
 {{index "mousemove event"}}
 
-We can use a slightly different pattern if we want to space responses so that they're separated by at least a certain length of ((time)) but want to fire them _during_ a series of events, not just afterward. For example, we might want to respond to `"mousemove"` events by showing the current coordinates of the mouse but only every 250 milliseconds.
+Putem folosi un șablon diferit dacă vrem să spațiem răspunsurile astfel încât ele să fie separate de cel puțin un anumit interval de timp dar vrem să le declanșăm _pe parcursul_ unei serii de evenimente, nu doar la sfârșitul ei. De exemplu, vrem să răspundem la evenimentele  `"mousemove"` prin afișarea coordonatelor curente ale mouseului, dar doar la fiecare 250 milisecunde.
 
 ```{lang: "text/html"}
 <script>
@@ -642,33 +642,33 @@ We can use a slightly different pattern if we want to space responses so that th
 </script>
 ```
 
-## Summary
+## Rezumat
 
-Event handlers make it possible to detect and react to events happening in our web page. The `addEventListener` method is used to register such a handler.
+Handlerele pentru evenimente ne permit detectarea și reacția la evenimente ce au loc în pagina noastră web. Metoda `addEventListener` este utilizată pentru a înregistra un asemenea handler.
 
-Each event has a type (`"keydown"`, `"focus"`, and so on) that identifies it. Most events are called on a specific DOM element and then _propagate_ to that element's ancestors, allowing handlers associated with those elements to handle them.
+Fiecare eveniment are un tip (`"keydown"`, `"focus"` etc), care îl identifică. Majoritatea evenimentelor sunt declanșate asupra unui element specific din DOM și apoi se propagă la ancestorii acestuia, permițând handlere-lor asociate cu acele elemente să le trateze.
 
-When an event handler is called, it is passed an event object with additional information about the event. This object also has methods that allow us to stop further propagation (`stopPropagation`) and prevent the browser's default handling of the event (`preventDefault`).
+Când este apelat un handler de eveniment, i se transmite un obiect de eveniment cu informații suplimentare despre eveniment. Acest obiect are și metode care ne permit să stopăm propagarea (`stopPropagation`) sau să prevenim tratarea implicită a evenimentului de către browser (`preventDefault`).
 
-Pressing a key fires `"keydown"` and `"keyup"` events. Pressing a mouse button fires `"mousedown"`, `"mouseup"`, and `"click"` events. Moving the mouse fires `"mousemove"` events. Touchscreen interaction will result in `"touchstart"`, `"touchmove"`, and `"touchend"` events.
+Apăsarea unei taste declanșează evenimentele `"keydown"` și `"keyup"`. Apăsarea unui buton al mouse-ului declanșează evenimentele  `"mousedown"`, `"mouseup"` și `"click"`. Mișcarea mouseului declanșează evenimente `"mousemove"`. Interacțiunea cu un ecran tactil va declanșa evenimente `"touchstart"`, `"touchmove"` și `"touchend"`.
 
-Scrolling can be detected with the `"scroll"` event, and focus changes can be detected with the `"focus"` and `"blur"` events. When the document finishes loading, a `"load"` event fires on the window.
+Derularea poate fi detectată prin intermdiul evenimentului `"scroll"` iar schimbările de focus pot fi detectate prin evenimentele  `"focus"` și `"blur"`. Când se finalizează încărcarea documentului, este declanșat un eveniment `"load"` în fereastră.
 
-## Exercises
+## Exerciții
 
-### Balloon
+### Balonul
 
 {{index "balloon (exercise)", "arrow key"}}
 
-Write a page that displays a ((balloon)) (using the balloon ((emoji)), 🎈). When you press the up arrow, it should inflate (grow) 10 percent, and when you press the down arrow, it should deflate (shrink) 10 percent.
+Scrieți o pagină care afișează un balon (folosind emoji-ul 🎈). Când apăsați săgeata-sus trebuie să se umfle cu 10 procente iar când apăsați săgeata în jos să se dezumfle cu 10 procente.
 
 {{index "font-size (CSS)"}}
 
-You can control the size of text (emoji are text) by setting the `font-size` CSS property (`style.fontSize`) on its parent element. Remember to include a unit in the value—for example, pixels (`10px`). 
+Puteți controla dimensiunea textului (emoji sunt text) prin setarea proprietății CSS `font-size` (`style.fontSize` în JavaScript) asupra elementului părinte. Includeți si o unitate pentru dimensiune, de exemplu pixeli (`10px`). 
 
-The key names of the arrow keys are `"ArrowUp"` and `"ArrowDown"`. Make sure the keys change only the balloon, without scrolling the page.
+Numele tastelor pentru cele două taste menționate sunt `"ArrowUp"` și `"ArrowDown"`. Cheile trebuie să schimbe doar dimensiunea balonului, fără a derula pagina.
 
-When that works, add a feature where, if you blow up the balloon past a certain size, it explodes. In this case, exploding means that it is replaced with an 💥 emoji, and the event handler is removed (so that you can't inflate or deflate the explosion).
+După ce reușiți să implementați cele de mai sus, adăugați o funcționalitate în care, dacă umflați balonul peste o anumită dimensiune, acesta va exploda, adică v-a fi înlocuit de un emoji 💥, și handler-ul pentru eveniment va fi eliminat (nu veți putea umfla sau dezumfla explozia).
 
 {{if interactive
 
@@ -686,31 +686,31 @@ if}}
 
 {{index "keydown event", "key property", "balloon (exercise)"}}
 
-You'll want to register a handler for the `"keydown"` event and look at `event.key` to figure out whether the up or down arrow key was pressed.
+Va trebui să înregistrați un handler pentru evenimentul `"keydown"` și să consultați `event.key` pentru a determina dacă au fost apăsate tastele săgeata-sus sau săgeata-jos.
 
-The current size can be kept in a binding so that you can base the new size on it. It'll be helpful to define a function that updates the size—both the binding and the style of the balloon in the DOM—so that you can call it from your event handler, and possibly also once when starting, to set the initial size.
+Dimensiunea curentă poate fi stocată într-un binding, astfel încât se va putea determina noua dimensiune. Ar fi util să definiți o funcție care actualizează dimensiunea - atât bindingul cât și stilul balonului în DOM - pe care o veți putea apela din handlerul pentru eveniment și poate încă o dată la început, pentru a seta dimensiunea inițială.
 
 {{index "replaceChild method", "textContent property"}}
 
-You can change the balloon to an explosion by replacing the text node with another one (using `replaceChild`) or by setting the `textContent` property of its parent node to a new string.
+Puteți schimba balonul într-o explozie prin înlocuirea nodului text cu un alt nod (utilizând `replaceChild`) sau setând proprietatea `textContent` a nodului său părinte la o nouă valoare de tip string.
 
 hint}}
 
-### Mouse trail
+### Urma mouse-ului
 
 {{index animation, "mouse trail (exercise)"}}
 
-In JavaScript's early days, which was the high time of ((gaudy home pages)) with lots of animated images, people came up with some truly inspiring ways to use the language.
+La începuturile JavaScript, o perioadă cu multe imagini animate, programatorii au descoperit multe moduri creative de a utiliza limbajul.
 
-One of these was the _mouse trail_—a series of elements that would follow the mouse pointer as you moved it across the page.
+Una dintre acestea era _urma mouseului_ - o serie de elemente care ar urma pointerul mouseului în mișcarea acestuia în pagină.
 
 {{index "absolute positioning", "background (CSS)"}}
 
-In this exercise, I want you to implement a mouse trail. Use absolutely positioned `<div>` elements with a fixed size and background color (refer to the [code](event#mouse_drawing) in the "Mouse Clicks" section for an example). Create a bunch of such elements and, when the mouse moves, display them in the wake of the mouse pointer.
+În acest exercițiu, aș vrea să implementați ceva similar. Utilizați elemente `<div>` poziționate absolut, cu dimensiune fixă și o anumită culoare de fundal (consultați [codul](event#mouse_drawing) din secțiunea "Mouse Clicks" pentru un exemplu). Creați mai multe astfel de elemente, iar când mouse-ul se mișcă, afișați-le în poziția pointerului.
 
 {{index "mousemove event"}}
 
-There are various possible approaches here. You can make your solution as simple or as complex as you want. A simple solution to start with is to keep a fixed number of trail elements and cycle through them, moving the next one to the mouse's current position every time a `"mousemove"` event occurs.
+Puteți folosi mai multe abordări. Puteți construi soluția cât de complexă doriți. O soluție simplă, pentru a începe, este să rețineți un număr fix de elemente de urmărire și să ciclați printre ele, mutându-l pe următorul în poziția curentă a mouse-ului de fiecare dată când este declanșat un eveniment `"mousemove"`.
 
 {{if interactive
 
@@ -738,29 +738,29 @@ if}}
 
 {{index "mouse trail (exercise)"}}
 
-Creating the elements is best done with a loop. Append them to the document to make them show up. To be able to access them later to change their position, you'll want to store the elements in an array.
+Elementele se pot crea într-o buclă. Apoi le adăugați la document pentru ca acestea să apară. Pentru a le putea accesa ulterior și a le modifica pooziția, probabil că ați vrea să le memorați într-un array.
 
 {{index "mousemove event", [array, indexing], "remainder operator", "% operator"}}
 
-Cycling through them can be done by keeping a ((counter variable)) and adding 1 to it every time the `"mousemove"` event fires. The remainder operator (`% elements.length`) can then be used to get a valid array index to pick the element you want to position during a given event.
+Ciclarea printre ele se poate realiza cu ajutorul unei variabile cu rol de contor și incrementarea acesteia la fiecare declanșare a unui eveniment `"mousemove"`. Operatorul pentru calculul restului (`% elements.length`) poate fi utilizat apoi pentru a obține un index valid pe array pentru a selecta elementul pe care să îl deplasați la un eveniment dat.
 
 {{index simulation, "requestAnimationFrame function"}}
 
-Another interesting effect can be achieved by modeling a simple ((physics)) system. Use the `"mousemove"` event only to update a pair of bindings that track the mouse position. Then use `requestAnimationFrame` to simulate the trailing elements being attracted to the position of the mouse pointer. At every animation step, update their position based on their position relative to the pointer (and, optionally, a speed that is stored for each element). Figuring out a good way to do this is up to you.
+Un alt efect interesant poate fi obținut dacă modelați un sistem simplu. Utilizați evenimentul `"mousemove"` doar petnru a actualiza o pereche de bindinguri care urmăresc poziția mouseului. Apoi utilizați `requestAnimationFrame` pentru a simula că elementele sunt atrase spre poziția pointerului mouseului. În fiecare pas al animației, actualizați-le poziția pe baza locației relativ la pointerul mouseului (eventual având și o viteză memorată pentru fiecare element). Cum să realizați acest lucru este complet la latiudinea voastră.
 
 hint}}
 
-### Tabs
+### Tab-uri
 
 {{index "tabbed interface (exercise)"}}
 
-Tabbed panels are widely used in user interfaces. They allow you to select an interface panel by choosing from a number of tabs "sticking out" above an element.
+Panourile tabulare sunt utilizate pe larg în interfețele utilizator. Ele permit selectarea unui panou prin alegerea dintre un set tab-uri ce sunt plasate deasupra unui element.
 
 {{index "button (HTML tag)", "display (CSS)", "hidden element", "data attribute"}}
 
-In this exercise you must implement a simple tabbed interface. Write a function, `asTabs`, that takes a DOM node and creates a tabbed interface showing the child elements of that node. It should insert a list of `<button>` elements at the top of the node, one for each child element, containing text retrieved from the `data-tabname` attribute of the child. All but one of the original children should be hidden (given a `display` style of `none`). The currently visible node can be selected by clicking the buttons.
+În acest exercițiu trebuie să impleemntați o interfață tabulară simplă. Scrieți o funcție `asTabs`, care primește un nod DOM și crează o interfață tabulară ce afișează copiii acelui nod. Trebuie să insereze o listă de elemente `<button>` la începutul nodului, câte unul pentru fiecare element copil, conținând textul din atributul `data-tabname` al copilului. Toate elementele copil originale, cu excepția primului trebuie să fie ascunse (stilul pentru `display` să fie `none`). Elementul vizibil trebuie să poată fi selectat prin click-uri pe butoane.
 
-When that works, extend it to style the button for the currently selected tab differently so that it is obvious which tab is selected. 
+Când reușiți, continuați cu stilizarea diferită a butonului pentru tabul selectat astfel încât să fie clar ce tab este selectat.
 
 {{if interactive
 
@@ -784,14 +784,14 @@ if}}
 
 {{index "text node", "childNodes property", "live data structure", "tabbed interface (exercise)", [whitespace, "in HTML"]}}
 
-One pitfall you might run into is that you can't directly use the node's `childNodes` property as a collection of tab nodes. For one thing, when you add the buttons, they will also become child nodes and end up in this object because it is a live data structure. For another, the text nodes created for the whitespace between the nodes are also in `childNodes` but should not get their own tabs. You can use `children` instead of `childNodes` to ignore text nodes.
+Nu veți putea utiliza direct proprietatea `childNodes` a nodului ca și colecție pentru nodurile tabulare. Atunci când veți adăuga butoanele, acestea vor fi tot noduri copil și vor fi adăugate la acest obiect deoarece este o structură de date "live". Pe de altă parte, nodurile text create pentru spațiile albe dintre noduri fac și ele parte din `childNodes` dar nu trebuie să li se creeze un tab. Puteți utiliza `children` în loc de `childNodes` pentru a ignora nodurile text.
 
 {{index "TEXT_NODE code", "nodeType property"}}
 
-You could start by building up an array of tabs so that you have easy access to them. To implement the styling of the buttons, you could store objects that contain both the tab panel and its button.  
+Puteți începe prin a construi un array de taburi, astfel încât să aveți ușor acces la ele. Pentru a implementa stilizarea butoanelor, puteți stoca obiecte care conțin atât panoul tabului cât și butonul.
 
-I recommend writing a separate function for changing tabs. You can either store the previously selected tab and change only the styles needed to hide that and show the new one, or you can just update the style of all tabs every time a new tab is selected.
+Vă recomand să scrieți o funcție separată pentru comutarea între taburi. Puteți fie să stocați tabul selectat anterior și să modificați doar stilurile necesare pentru a-l ascunde și a afișa unul nou, sau să actualizați stilurile tuturor taburilor de fiecare dată când este selectat unul nou.
 
-You might want to call this function immediately to make the interface start with the first tab visible.
+Probabil că ar trebui să apelați această funcție imediat pentru ca interfața să se afișeze cu primul tab vizibil.
 
 hint}}
