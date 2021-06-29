@@ -1,10 +1,10 @@
 {{meta {load_files: ["code/chapter/16_game.js", "code/levels.js"], zip: "html include=[\"css/game.css\"]"}}}
 
-# Project: A Platform Game
+# Proiect: Un joc de platformă
 
 {{quote {author: "Iain Banks", title: "The Player of Games", chapter: true}
 
-All reality is a game.
+Toată realitatea este un joc.
 
 quote}}
 
@@ -12,64 +12,63 @@ quote}}
 
 {{figure {url: "img/chapter_picture_16.jpg", alt: "Picture of a game character jumping over lava", chapter: "framed"}}}
 
-Much of my initial fascination with computers, like that of many nerdy kids, had to do with computer ((game))s. I was drawn into the tiny simulated ((world))s that I could manipulate and in which stories (sort of) unfolded—more, I suppose, because of the way I projected my ((imagination)) into them than because of the possibilities they actually offered.
+Mare parte din fascinația mea inițială relativ la computere, ca și a multor altor copii tocilari, era legată de jocurile pe computer. Am fost atras de micile lumi simulate pe care le puteam manipula și în care poveștile se desfășurau, mai degrabă datorită modului în care îmi proiectam imaginația asupra lor decât datorită posibilităților pe care le ofereau.
 
-I don't wish a ((career)) in game programming on anyone. Much like the ((music)) industry, the discrepancy between the number of eager young
-people wanting to work in it and the actual demand for such people creates a rather unhealthy environment. But writing games for fun is amusing.
+Nu-i doresc nimănui o carieră în programarea jocurilor. Ca și în industria muzicii, discrepanța dintre numărul mare de tineri care doresc să intre în acest domeniu și cererea reală pentru asemenea persoane crează un mediu nesănătos. Dar scrierea jocurilor pentru distracție este amuzantă.
 
 {{index "jump-and-run game", dimensions}}
 
-This chapter will walk through the implementation of a small ((platform game)). Platform games (or "jump and run" games) are games that expect the ((player)) to move a figure through a ((world)), which is usually two-dimensional and viewed from the side, while jumping over and onto things.
+Acest capitol vă va introduce în implementarea unui mic joc de platformă. Jocurile de platformă (sau "jump and run") sunt jocuri în care jucătorul deplasează un personaj printr-o lume, de regulă bidimensională și privită din lateral, personajul făcând salturi pe și peste lucruri.
 
-## The game
+## Jocul
 
 {{index minimalism, "Palef, Thomas", "Dark Blue (game)"}}
 
-Our ((game)) will be roughly based on [Dark Blue](http://www.lessmilk.com/games/10)[(_www.lessmilk.com/games/10_)]{if book} by Thomas Palef. I chose that game because it is both entertaining and minimalist and because it can be built without too much ((code)). It looks like this:
+Jocul nostru se va baza pe [Dark Blue](http://www.lessmilk.com/games/10)[(_www.lessmilk.com/games/10_)]{if book} by Thomas Palef. Am ales acest joc deoarece este angajant și minimalist și poate fi construit fără a scrie prea mult cod. Jocul arată cam așa:
 
 {{figure {url: "img/darkblue.png", alt: "The game Dark Blue"}}}
 
 {{index coin, lava}}
 
-The dark ((box)) represents the ((player)), whose task is to collect the yellow boxes (coins) while avoiding the red stuff (lava). A ((level)) is completed when all coins have been collected.
+Cutia neagră reprezintă jucătorul, a cărui sarcină este de a colecta cutiile galbene (monede), evitând zonele roții (lava). Un nivel este completat când au fost colectate toate monedele.
 
 {{index keyboard, jumping}}
 
-The player can walk around with the left and right arrow keys and can jump with the up arrow. Jumping is a specialty of this game character. It can reach several times its own height and can change direction in midair. This may not be entirely realistic, but it helps give the player the feeling of being in direct control of the on-screen ((avatar)).
+Jucătorul se poate mișca în scenă din tastele săgeți stânga-dreapta și poate sări cu tasta săgeată sus. Saltul este o specialitate a personajului din acest joc. Personajul poate sări de câteva ori înălțimea sa și poate să își schimbe direcția în aer. Acesta nu este un comportament foarte realist, dar dă jucătorului senzația de control complet asupra personajului de pe ecran.
 
 {{index "fractional number", discretization, "artificial life", "electronic life"}}
 
-The ((game)) consists of a static ((background)), laid out like a ((grid)), with the moving elements overlaid on that background. Each field on the grid is either empty, solid, or ((lava)). The moving elements are the player, coins, and certain pieces of lava. The positions of these elements are not constrained to the grid—their coordinates may be fractional, allowing smooth ((motion)).
+Jocul constă dintr-un fundal static, afișat ca un grid, elementele în mișcare fiind plasate peste acest fundal. Fiecare câmp al gridului este fie gol, fie solid, fie lava. Elementele în mișcare sunt personajul, monedele și anumite bucăți de lavă. Poziția acestor elemente nu este constrânsă de grid - coordonatele lor pot să fie fracționare, permițând o mișcare lină.
 
-## The technology
+## Tehnologia
 
 {{index "event handling", keyboard, [DOM, graphics]}}
 
-We will use the ((browser)) DOM to display the game, and we'll read user input by handling key events.
+Vom utiliza DOM-ul browserului pentru a afișa jocul și vom citi intrarea de la utilizator prin gestiunea evenimentelor de tastatură.
 
 {{index rectangle, "background (CSS)", "position (CSS)", graphics}}
 
-The screen- and keyboard-related code is only a small part of the work we need to do to build this ((game)). Since everything looks like colored ((box))es, drawing is uncomplicated: we create DOM elements and use styling to give them a background color, size, and position. 
+Codul legat de ecran și tastatură este doar o mică parte din ceea ce avem de făcut pentru a construi acest joc. Deoarece totul este format din cutii colorate, desenarea nu este complicată: vom crea elemente DOM și le vom stiliza pentru a seta culoarea de fundal, dimensiunile și poziția.
 
 {{index "table (HTML tag)"}}
 
-We can represent the background as a table since it is an unchanging ((grid)) of squares. The free-moving elements can be overlaid using absolutely positioned elements.
+Putem reprezenta fundalul sub forma unui tabel deoarece este un grid de pătrate care nu se modifică. Elementele care se mișcă liber pot fi suprapuse ca elemente poziționate absolut.
 
 {{index performance, [DOM, graphics]}}
 
-In games and other programs that should animate ((graphics)) and respond to user ((input)) without noticeable delay, ((efficiency)) is important. Although the DOM was not originally designed for high-performance graphics, it is actually better at this than you would expect. You saw some ((animation))s in [Chapter ?](dom#animation). On a modern machine, a simple game like this performs well, even if we don't worry about ((optimization)) very much.
+În jocuri și alte programe care animă grafica și răspund la intrarea utilizatorului fără întârzieri remarcabile, eficiența este importantă. Deși DOM nu a fost conceput inițial pentru grafică de performanță înaltă, este de fapt mai bun decât v-ați aștepta la aceasta. Ați văzut câteva animații în [capitolul ?](dom#animation). Pe o mașină modernă, un joc simplu ca și acesta va performa bine, deși nu ne vom preocupa prea mult de optimizări.
 
 {{index canvas, [DOM, graphics]}}
 
-In the [next chapter](canvas), we will explore another ((browser)) technology, the `<canvas>` tag, which provides a more traditional way to draw graphics, working in terms of shapes and ((pixel))s rather than DOM elements.
+În [capitolul următor](canvas), vom explora o altă tehnologie în browser, tagul `<canvas>`, care permite un mod mai tradițional de a desena, funcționând cu forme și pixeli, în loc de elemente DOM.
 
-## Levels
+## Nivele
 
 {{index dimensions}}
 
-We'll want a human-readable, human-editable way to specify levels. Since it is okay for everything to start out on a grid, we could use big strings in which each character represents an element—either a part of the background grid or a moving element.
+Ne dorim o modalitate lizibilă și editabilă de a defini nivelele. Deoarece am stabilit că totul va începe pe un grid, putem utiliza stringuri în care fiecare caracter reprezintă un element - fie parte din gridul din fundal, fie element în mișcare.
 
-The plan for a small level might look like this:
+Planul pentru un nivel mic ar putea arăta astfel:
 
 ```{includeCode: true}
 let simpleLevelPlan = `
@@ -86,21 +85,21 @@ let simpleLevelPlan = `
 
 {{index level}}
 
-Periods are empty space, hash (`#`) characters are walls, and plus signs are lava. The ((player))'s starting position is the ((at sign)) (`@`). Every O character is a coin, and the equal sign (`=`) at the top is a block of lava that moves back and forth horizontally. 
+`.` reprezintă un spațiu liber, `#` reprezintă pereții iar `+` reprezintă lava. Poziția de început a jucătorului este reprezentată prin `@`. Fiecare `0` este o monedă iar semnul `=` reprezintă un bloc de lavă care se mișcă orizontal.
 
 {{index bouncing}}
 
-We'll support two additional kinds of moving ((lava)): the pipe character (`|`) creates vertically moving blobs, and `v` indicates _dripping_ lava—vertically moving lava that doesn't bounce back and forth but only moves down, jumping back to its start position when it hits the floor.
+Vom avea încă două tipuri de blocuri pentru lava în mișcare: `|` pentru blocuri de lavă care se mișcă vertical, `v` pentru blocuri de lavă care se mișcă doar în jos și apoi încep din nou din poziția lor de start după ce ajung la bază (picuri de lavă)
 
-A whole ((game)) consists of multiple ((level))s that the ((player)) must complete. A level is completed when all ((coin))s have been collected. If the player touches ((lava)), the current level is restored to its starting position, and the player may try again.
+Un joc complet constă din mai multe nivele pe care jucătorul trebuie să le completeze. Un nivel este complet atunci când toate monedele au fost colectate. Dacă jucătorul atinge lava, nivelul curent este restartat în poziția inițială și jucătorul poate încerca din nou.
 
 {{id level}}
 
-## Reading a level
+## Citirea unui nivel
 
 {{index "Level class"}}
 
-The following ((class)) stores a ((level)) object. Its argument should be the string that defines the level.
+Clasa de mai jos memorează obiectul ce descrie un nivel. Argumentul său este stringul care definește nivelul.
 
 ```{includeCode: true}
 class Level {
@@ -125,27 +124,27 @@ class Level {
 
 {{index "trim method", "split method", [whitespace, trimming]}}
 
-The `trim` method is used to remove whitespace at the start and end of the plan string. This allows our example plan to start with a newline so that all the lines are directly below each other. The remaining string is split on ((newline character))s, and each line is spread into an array, producing arrays of characters. 
+Utilizăm metoda `trim` pentru a elimina spațiile albe de la începutul și de la sfârșitul unui string. Astfel putem începe cu o linie goală și toate celelalte linii ale planului unui nivel vor fi aliniate una sub alta. Stringul rezultat este împărțit pe linii și fiecare linie este distribuită într-un array, astfel încât va fi un array de caractere.
 
 {{index [array, "as matrix"]}}
 
-So `rows` holds an array of arrays of characters, the rows of the plan. We can derive the level's width and height from these. But we must still separate the moving elements from the background grid. We'll call moving elements _actors_. They'll be stored in an array of objects. The background will be an array of arrays of strings, holding field types such as `"empty"`, `"wall"`, or `"lava"`.
+Prin urmare, `rows` memorează un array de array-uri de caractere, rândurile planului. De aici putem determina lățimea și înălțimea unui nivel. Dar trebui să separăm elementele în mișcare de elementele gridului. Elementele în mișcare le vom denumi _actori_. Ele vor fi stocate într-un array de obiecte. Fundalul va fi un array de array-uri de stringuri, fiecare având un tip al câmpului, cum ar fi `"empty"`, `"wall"` sau `"lava"`.
 
 {{index "map method"}}
 
-To create these arrays, we map over the rows and then over their content. Remember that `map` passes the array index as a second argument to the mapping function, which tells us the x- and y-coordinates of a given character. Positions in the game will be stored as pairs of coordinates, with the top left being 0,0 and each background square being 1 unit high and wide.
+Pentru a crea aceste array-uri, mai întâi mapăm rândurile și apoi conținutul lor. Vă reamintesc că `map` transmite indexul din array ca și al doilea argument al funcției de mapare, ceea ce ne permite să determinăm coordonatele x și y ale unui caracter dat. Pozițiile în joc vor fi memorate ca și perechi de coordonate, colțul stânga sus fiind (0,0) și fiecare pătrat din fundal având lățimea și înălțimea egale cu o unitate.
 
 {{index "static method"}}
 
-To interpret the characters in the plan, the `Level` constructor uses the `levelChars` object, which maps background elements to strings and actor characters to classes. When `type` is an actor class, its static `create` method is used to create an object, which is added to `startActors`, and the mapping function returns `"empty"` for this background square.
+Pentru a interpreta caracterele din plan, constructorul clasei `Level` utilizează obictul `levelChars` care mapează elementele fundalului în stringuri și caracterele-actori în clase. Când `type` este o clasă actor, metoda sa statică `create` este apelată pentru a crea un obiect, care este adăugat la `startActors` iar funcția de mapare returnează `"empty"` pentru pătratul de fundal.
 
 {{index "Vec class"}}
 
-The position of the actor is stored as a `Vec` object. This is a two-dimensional vector, an object with `x` and `y` properties, as seen in the exercises of [Chapter ?](object#exercise_vector).
+Poziția actorului este memorată ca un obiect `Vec`. Acvesta este un vector bidimensional, un obiect cu proprietăți `x` și `y`, așa cum am văzut în exercițiul din [capitolul ?](object#exercise_vector).
 
 {{index [state, in objects]}}
 
-As the game runs, actors will end up in different places or even disappear entirely (as coins do when collected). We'll use a `State` class to track the state of a running game.
+Pe măsură ce jocul rulează, actorii vor avea poziții diferite sau chiar vor dispărea (cum se întâmplă cu monedele după ce sunt colectate). Vom utiliza o clasă `State` pentru a urmări starea jocului.
 
 ```{includeCode: true}
 class State {
@@ -165,25 +164,25 @@ class State {
 }
 ```
 
-The `status` property will switch to `"lost"` or `"won"` when the game has ended.
+Proprietatea `status` va comuta la `"lost"` sau `"won"` la sfârșitul jocului.
 
-This is again a persistent data structure—updating the game state creates a new state and leaves the old one intact.
+Aceasta este tot o structură de date persistentă - actualizarea stării jocului crează o nouă stare și o lasă pe cea veche nemodificată.
 
-## Actors
+## Actorii
 
 {{index actor, "Vec class", [interface, object]}}
 
-Actor objects represent the current position and state of a given moving element in our game. All actor objects conform to the same interface. Their `pos` property holds the coordinates of the element's top-left corner, and their `size` property holds its size.
+Obiectele actori reprezintă poziția și starea curentă a unui element în mișcare din jocul nostru. Toate obiectele actori se conformează aceleiași interfețe. Proprietatea `pos` memorează coordonatele colțului stânga-sus al unui element iar proprietatea `size` reține dimensiunea.
 
-Then they have an `update` method, which is used to compute their new state and position after a given time step. It simulates the thing the actor does—moving in response to the arrow keys for the player and bouncing back and forth for the lava—and returns a new, updated actor object.
+Apoi, aceste obiecte au o metodă `update`, care este utilizată pentru a calcula noua lor stare și poziție, după un anumit interval de timp. Aceasta simulează ceea ce face actorul - se deplasează ca și răspuns la tastele săgeți (pentru jucător) sau se plimbă pe ecran (pentru lavă) - și returnează un nou obiect actor, actualizat.
 
-A `type` property contains a string that identifies the type of the actor—`"player"`, `"coin"`, or `"lava"`. This is useful when drawing the game—the look of the rectangle drawn for an actor is based on its type.
+Proprietatea `type` conține un string care identifică tipul actorului - `"player"`, `"coin"` sau `"lava"`. Aceasta este utilă pentru desenarea actorului - aspectul dreptunghiului pentru jucător este bazat pe tipul său.
 
-Actor classes have a static `create` method that is used by the `Level` constructor to create an actor from a character in the level plan. It is given the coordinates of the character and the character itself, which is needed because the `Lava` class handles several different characters.
+Clasele actor au o metodă statică `create` care este utilizată de constructorul clasei `Level` pentru a crea un actor pe baza caracterului din planul nivelului. Primește ca argumente coordonatele unui caracter și caracterul însuși, ceea ce este necesar pentru că în clasa `Lava` gestionăm mai multe caractere diferite.
 
 {{id vector}}
 
-This is the `Vec` class that we'll use for our two-dimensional values, such as the position and size of actors.
+Mai jos puteți vedea clasa `Vec` pe care o vom utiliza pentru valorile noastre bidimensionale, cum ar fi poziția și dimensiunea fiecărui actor.
 
 ```{includeCode: true}
 class Vec {
@@ -201,13 +200,13 @@ class Vec {
 
 {{index "times method", multiplication}}
 
-The `times` method scales a vector by a given number. It will be useful when we need to multiply a speed vector by a time interval to get the distance traveled during that time.
+Metoda `times` scalează un vector cu un factor dat. Va fi utilă când vom avea nevoie să multiplicăm un vector de viteze cu o durată pentru a determina distanța străbătută în acel interval de timp.
 
-The different types of actors get their own classes since their behavior is very different. Let's define these classes. We'll get to their `update` methods later.
+Diferitele tipuri de actori au fiecare propria clasă, deoarece comportamentul lor este foarte diferit. Să definim aceste clase. Vom scrie metodele lor `update` puțin mai târziu.
 
 {{index simulation, "Player class"}}
 
-The player class has a property `speed` that stores its current speed to simulate momentum and gravity.
+Proprietatea `speed` a clasei `Player` memorează viteza curentă a jucătorului pentru a simula gravitația.
 
 ```{includeCode: true}
 class Player {
@@ -227,15 +226,15 @@ class Player {
 Player.prototype.size = new Vec(0.8, 1.5);
 ```
 
-Because a player is one-and-a-half squares high, its initial position is set to be half a square above the position where the `@` character appeared. This way, its bottom aligns with the bottom of the square it appeared in.
+Deoarece dreptunghiul pentru jucător are inălțimea de 1.5 pătrate, poziția sa inițială este setată cu 0.5 pătrate mai sus decât poziția în care a apărut caracterul `@`. Astfel, baza va fi aliniată cu baza pătratului în care este afișat.
 
-The `size` property is the same for all instances of `Player`, so we store it on the prototype rather than on the instances themselves. We could have used a ((getter)) like `type`, but that would create and return a new `Vec` object every time the property is read, which would be wasteful. (Strings, being ((immutable)), don't have to be re-created every time they are evaluated.)
+Proprietatea `size` este aceași pentru toate instanțele `Player` astfel că o memorăm în prototip, nu în instanțe. Am fi putut utiliza un getter pentru `type`, dar astfel am fi creat și returnat un nou obiect `Vec` de fiecare dată când am fi citit proprietatea, ceea ce ar fi fost un consum inutil de resurse. (Stringurile, fiind imutabile, nu trebuie să fie recreate de fiecare dată când sunt evaluate.)
 
 {{index "Lava class", bouncing}}
 
-When constructing a `Lava` actor, we need to initialize the object differently depending on the character it is based on. Dynamic lava moves along at its current speed until it hits an obstacle. At that point, if it has a `reset` property, it will jump back to its start position (dripping). If it does not, it will invert its speed and continue in the other direction (bouncing).
+Când construim un actor `Lava`, trebuie să inițializăm obiectul diferit în funcție de caracterul pe baza căruia este construit. Lava dinamică se mișcă la viteza sa curentă până când ajunge la un obstacol. Apoi, dacă are o proprietate `reset`, va sări înapoi în poziția sa inițială (picura). Dacă nu, își va inversa sensul de mișcare și va continua în direcția opusă (bouncing).
 
-The `create` method looks at the character that the `Level` constructor passes and creates the appropriate lava actor.
+Metoda `create` consultă caracterul transmis de constructorul `Level` și crează un actor `Lava` corespunzător.
 
 ```{includeCode: true}
 class Lava {
@@ -263,7 +262,7 @@ Lava.prototype.size = new Vec(1, 1);
 
 {{index "Coin class", animation}}
 
-`Coin` actors are relatively simple. They mostly just sit in their place. But to liven up the game a little, they are given a "wobble", a slight vertical back-and-forth motion. To track this, a coin object stores a base position as well as a `wobble` property that tracks the ((phase)) of the bouncing motion. Together, these determine the coin's actual position (stored in the `pos` property).
+Actorii `Coin` sunt relativ simpli. Ei sunt statici în poziția setată. Dar pentru a face jocul puțin mai atractiv, îi animăm printr-o vibrație ușoară pe verticală. Pentru aceasta, un obiect `Coin` memorează o poziție de bază precum și o proprietate `wobble` care urmărește faza mișcării. Împreună, acestea determină poziția monedei (memorată în proprietatea `pos`).
 
 ```{includeCode: true}
 class Coin {
@@ -287,15 +286,15 @@ Coin.prototype.size = new Vec(0.6, 0.6);
 
 {{index "Math.random function", "random number", "Math.sin function", sine, wave}}
 
-In [Chapter ?](dom#sin_cos), we saw that `Math.sin` gives us the y-coordinate of a point on a circle. That coordinate goes back and forth in a smooth waveform as we move along the circle, which makes the sine function useful for modeling a wavy motion. 
+În [capitolul ?](dom#sin_cos), am văzut că `Math.sin` determină coordonata y a unui punct pe un cerc. Această coordonată se deplaseză sus-jos pe măsură ce efectuăm rotația pe cerc, ceea ce face funcția "sinus" utilă pentru modelarea unei mișcări de unduire.
 
 {{index pi}}
 
-To avoid a situation where all coins move up and down synchronously, the starting phase of each coin is randomized. The period of `Math.sin`'s wave, the width of a wave it produces, is 2π. We multiply the value returned by `Math.random` by that number to give the coin a random starting position on the wave.
+Pentru a evita situația în care toate monedele se mișcă sincron în sus și în jos, faza inițială a fiecărei monede este setată aleator. Perioada undei `Math.sin`, lățimea undei pe care o produce, este 2π. Dacă multiplicăm valoarea returnată de `Math.random` cu acest număr, putem aloca fiecărei monede, o aleator, o poziție de start pe această undă.
 
 {{index map, [object, "as map"]}}
 
-We can now define the `levelChars` object that maps plan characters to either background grid types or actor classes. 
+Acum putem defini obiectul `levelChars`, care mapează caracterele planului fie la tipuri de elemente pentru gridul de fundal, fie la clase-actor.
 
 ```{includeCode: true}
 const levelChars = {
@@ -305,7 +304,7 @@ const levelChars = {
 };
 ```
 
-That gives us all the parts needed to create a `Level` instance. 
+Astfel, avem toate părțile de care avem nevoie pentru a crea o instanță `Level`. 
 
 ```{includeCode: strip_log}
 let simpleLevel = new Level(simpleLevelPlan);
@@ -313,39 +312,39 @@ console.log(`${simpleLevel.width} by ${simpleLevel.height}`);
 // → 22 by 9
 ```
 
-The task ahead is to display such levels on the screen and to model time and motion inside them.
+Sarcina următoare este de a afișa asemenea nivele pe ecran și a modela timpul și mișcarea pentru ele.
 
-## Encapsulation as a burden
+## Încapsularea ca o povară
 
 {{index "programming style", "program size", complexity}}
 
-Most of the code in this chapter does not worry about ((encapsulation)) very much for two reasons. First, encapsulation takes extra effort. It makes programs bigger and requires additional concepts and interfaces to be introduced. Since there is only so much code you can throw at a reader before their eyes glaze over, I've made an effort to keep the program small.
+Majoritatea codului din acest capitol nu se preocupă prea mult de încapsulare, din două motive. Mai întâi, încapsularea necesită efort suplimentar. Ea crește dimensiunea programelor și necesită introducerea unor concepte și interfețe suplimentare. Deoarece cantitatea de cod care poate fi pusă în fața cititorului nu este prea mare, am făcut efortul de a menține programul la o dimensiune mică.
 
 {{index [interface, design]}}
 
-Second, the various elements in this game are so closely tied together that if the behavior of one of them changed, it is unlikely that any of the others would be able to stay the same. Interfaces between the elements would end up encoding a lot of assumptions about the way the game works. This makes them a lot less effective—whenever you change one part of the system, you still have to worry about the way it impacts the other parts because their interfaces wouldn't cover the new situation.
+În al doilea rând, diferitele elemente în acest joc sunt atât de puternic legate unele de altele încât dacă s-ar schimba comportamentul unuia dintre ele este puțin probabil ca oricare dintre celelalte să rămână nemodificat. Interfețele dintre elemente ar codifica multe presupuneri despre modul în care jocul funcționează. Aceasta le-ar face mult mai ineficiente - oricând modificați o parte din sistem, va trebui să vă preocupe impacvtul asupra celorlalte părți deoarece interfețele lor nu vor acoperi noua situație.
 
-Some _((cutting point))s_ in a system lend themselves well to separation through rigorous interfaces, but others don't. Trying to encapsulate something that isn't a suitable boundary is a sure way to waste a lot of energy. When you are making this mistake, you'll usually notice that your interfaces are getting awkwardly large and detailed and that they need to be changed often, as the program evolves.
+Unele _puncte cheie_ dintr-un sistem beneficiază mult de separarea prin interfețe riguroase, dar altele nu. Încercarea de a încapsula ceva ce nu reprezintă o graniță adecvată este o modalitate sigură de a pierde multă energie. Când faceți această greșeală, veți observa de regulă că interfețele voastre devin anormal de mari și detaliate și suferă frecvent modificări, pe măsură ce programul evoluează.
 
 {{index graphics, encapsulation, graphics}}
 
-There is one thing that we _will_ encapsulate, and that is the ((drawing)) subsystem. The reason for this is that we'll ((display)) the same game in a different way in the [next chapter](canvas#canvasdisplay). By putting the drawing behind an interface, we can load the same game program there and plug in a new display ((module)).
+Totuți vom încapsula o parte, și anume subsistemul de desenare. Motivul pentru această decizie este legat de faptul că vom afișa același joc într-un mod diferit în [capitolul următor](canvas#canvasdisplay). Plasând desenarea în spatele unei interfețe, vom putea încărca același program al jocului și să conectăm un nou modul pentru afișare. 
 
 {{id domdisplay}}
 
-## Drawing
+## Desenarea
 
 {{index "DOMDisplay class", [DOM, graphics]}}
 
-The encapsulation of the ((drawing)) code is done by defining a _((display))_ object, which displays a given ((level)) and state. The display type we define in this chapter is called `DOMDisplay` because it uses DOM elements to show the level.
+Încapsularea codului pentru desenare este realizată prin definirea unui obiect pentru afișare, care va afișa un nivel dat și starea acestui. Tipul de afișare pe care îl definim în acest capitol se numește `DOMDisplay` deoarece utilizează elemente DOM pentru a afișa nivelul jocului.
 
 {{index "style attribute", CSS}}
 
-We'll be using a style sheet to set the actual colors and other fixed properties of the elements that make up the game. It would also be possible to directly assign to the elements' `style` property when we create them, but that would produce more verbose programs.
+Vom utiliza o foaie de stil pentru a seta culorile și alte proprietăți fixe ale elementelor din joc. De asemenea, vom putea atribui direct valori prin proprietatea `style` a elementelor, la momentul creerii lor, dar programul ar crește în dimensiune.
 
 {{index "class attribute"}}
 
-The following helper function provides a succinct way to create an element and give it some attributes and child nodes:
+Următoarea funcție helper oferă o modalitate succintă de a crea un element și a îi asocia unele atribute, precum și noduri copil:
 
 ```{includeCode: true}
 function elt(name, attrs, ...children) {
@@ -360,7 +359,7 @@ function elt(name, attrs, ...children) {
 }
 ```
 
-A display is created by giving it a parent element to which it should append itself and a ((level)) object.
+O afișare este creată prin transmiterea unui element părinte la care să se adauge și un obiect pentru descrierea nivelului de joc.
 
 ```{includeCode: true}
 class DOMDisplay {
@@ -376,11 +375,11 @@ class DOMDisplay {
 
 {{index level}}
 
-The level's ((background)) grid, which never changes, is drawn once. Actors are redrawn every time the display is updated with a given state. The `actorLayer` property will be used to track the element that holds the actors so that they can be easily removed and replaced.
+Gridul din fundalul nivelului, care nu se modifică niciodată, este desenat o singură dată. Actorii sunt redesenați de fiecare dată când afișarea este actualizată pe baza unei anumite stări. Proprietatea `actorLayer` va fi utilizată pentru a urmări elementul care conține actorii, astfel încât aceștia vor putea fi ușor eliminați sau înlocuiți.
 
 {{index scaling, "DOMDisplay class"}}
 
-Our ((coordinates)) and sizes are tracked in ((grid)) units, where a size or distance of 1 means one grid block. When setting ((pixel)) sizes, we will have to scale these coordinates up—everything in the game would be ridiculously small at a single pixel per square. The `scale` constant gives the number of pixels that a single unit takes up on the screen.
+Coordonatele și dimensiunile sunt setate în unități ale gridului, adică o dimensiune sau o distanță de 1 înseamnă un bloc al gridului. Dacă am lucra în pixeli, ar trebui să scalăm în sus aceste coordonate - toate elementele jocului ar fi ridicol de mici daca fiecare pătrat ar avea latura de un pixel. Constanta `scale` reprezintă numărul de pixeli pentru o singură unitate, pe ecran.
 
 ```{includeCode: true}
 const scale = 20;
@@ -398,11 +397,11 @@ function drawGrid(level) {
 
 {{index "table (HTML tag)", "tr (HTML tag)", "td (HTML tag)", "spread operator"}}
 
-As mentioned, the background is drawn as a `<table>` element. This nicely corresponds to the structure of the `rows` property of the level—each row of the grid is turned into a table row (`<tr>` element). The strings in the grid are used as class names for the table cell (`<td>`) elements. The spread (triple dot) operator is used to pass arrays of child nodes to `elt` as separate arguments.
+După cum am menționat, fundalul este desenat ca un element `<table>`. O astfel de structură corespunde cu proprietatea `rows` a nivelului - fiecare rând al grilei este transformat într-un rând al tabelului (element `<tr>`). Stringurile din grilă sunt utilizate ca și nume ale claselor pentru celulele tabelului (elemente `<td>`). Operatorul `...` este utilizat pentru a transmite array-uri de noduri-copil către `elt` ca și argumente separate.
 
 {{id game_css}}
 
-The following ((CSS)) makes the table look like the background we want:
+Regulile CSS de mai jos setează aspectul tabelului așa cum îl dorim:
 
 ```{lang: "text/css"}
 .background    { background: rgb(52, 166, 251);
@@ -415,15 +414,11 @@ The following ((CSS)) makes the table look like the background we want:
 
 {{index "padding (CSS)"}}
 
-Some of these (`table-layout`, `border-spacing`, and `padding`) are used to suppress unwanted default behavior. We don't want the layout of the ((table)) to depend upon the contents of its cells, and we don't want space between the ((table)) cells or padding inside them.
-
-{{index "background (CSS)", "rgb (CSS)", CSS}}
-
-The `background` rule sets the background color. CSS allows colors to be specified both as words (`white`) or with a format such as `rgb(R, G, B)`, where the red, green, and blue components of the color are separated into three numbers from 0 to 255. So, in `rgb(52, 166, 251)`, the red component is 52, green is 166, and blue is 251. Since the blue component is the largest, the resulting color will be bluish. You can see that in the `.lava` rule, the first number (red) is the largest.
+Unele dintre acestea (`table-layout`, `border-spacing` și `padding`) sunt utilizate pentru a suprima comportament nedorit implicit. Nu vrem ca aspectul tabelului să depindă de conținutul său și nu vrem spații între celulele tabelului, sau padding în interiorul acestora.
 
 {{index [DOM, graphics]}}
 
-We draw each ((actor)) by creating a DOM element for it and setting that element's position and size based on the actor's properties. The values have to be multiplied by `scale` to go from game units to pixels.
+Desenăm fiecare actor prin crearea unui element DOM pentru el și setarea poziției și a dimensiunii pe baza proprietăților actorului. Valorile trebuie să fie multiplicate cu `scale` pentru a trece de la unitățile jocului la pixeli.
 
 ```{includeCode: true}
 function drawActors(actors) {
@@ -440,7 +435,7 @@ function drawActors(actors) {
 
 {{index "position (CSS)", "class attribute"}}
 
-To give an element more than one class, we separate the class names by spaces. In the ((CSS)) code shown next, the `actor` class gives the actors their absolute position. Their type name is used as an extra class to give them a color. We don't have to define the `lava` class again because we're reusing the class for the lava grid squares we defined earlier.
+Pentru a seta mai multe clase pentru un element, separăm numele lor prin spații. În codul CSS care urmează, clasa `actor` setează poziționare absolută pentru elemente. Tipul lor este utilizat ca și o clasă suplimentară pentru a le seta culoarea. Nu trebuie să definim clasa `lava` din nou deoarece reutilizăm clasa pentru pătratele din grilă pe care am definit-o anterior.
 
 ```{lang: "text/css"}
 .actor  { position: absolute;            }
@@ -450,7 +445,7 @@ To give an element more than one class, we separate the class names by spaces. I
 
 {{index graphics, optimization, efficiency, [state, "of application"], [DOM, graphics]}}
 
-The `syncState` method is used to make the display show a given state. It first removes the old actor graphics, if any, and then redraws the actors in their new positions. It may be tempting to try to reuse the DOM elements for actors, but to make that work, we would need a lot of additional  bookkeeping to associate actors with DOM elements and to make sure we remove elements when their actors vanish. Since there will typically be only a handful of actors in the game, redrawing all of them is not expensive.
+Metoda `syncState` este utilizată pentru a afișa o anumită stare. Mai întâi se elimină vechile obiecte pentru actori, apoi se redesenează actorii în noile lor poziții. Ar putea fi tentant să încercăm să reutilizăm elementele DOM pentru actori, dar pentru ca această abordare să funcționeze ar trebui să facem multă contabilitate în plus pentru a asocia actorii cu elementele DOM și pentru a ne asigura că eliminăm elementele când dispar actorii asociați cu ele. Deoarece numărul actorilor din scenă va fi relativ mic, redesenarea tuturor actorilor nu este costisitoare.
 
 ```{includeCode: true}
 DOMDisplay.prototype.syncState = function(state) {
@@ -464,7 +459,7 @@ DOMDisplay.prototype.syncState = function(state) {
 
 {{index level, "class attribute"}}
 
-By adding the level's current status as a class name to the wrapper, we can style the player actor slightly differently when the game is won or lost by adding a ((CSS)) rule that takes effect only when the player has an ((ancestor element)) with a given class.
+Adăugând starea curentă a nivelului ca și nume de clasă, putem stiliza actorul-jucător ușor diferit când jocul a fost câștigat sau pierdut prin adăugarea unei reguli CSS care se aplică doar dacă elementul pentru jucător are un element ancestor cu o anumită clasă.
 
 ```{lang: "text/css"}
 .lost .player {
@@ -477,13 +472,13 @@ By adding the level's current status as a class name to the wrapper, we can styl
 
 {{index player, "box shadow (CSS)"}}
 
-After touching ((lava)), the player's color turns dark red, suggesting scorching. When the last coin has been collected, we add two blurred white shadows—one to the top left and one to the top right—to create a white halo effect.
+După ce atinge lava, culoarea jucătorului se modifică. Când a fost colectată ultima monedă, adăugăm două umbre albe - în partea de sus, în stânga și în dreapta, pentru a crea un efect de halo.
 
 {{id viewport}}
 
 {{index "position (CSS)", "max-width (CSS)", "overflow (CSS)", "max-height (CSS)", viewport, scrolling, [DOM, graphics]}}
 
-We can't assume that the level always fits in the _viewport_—the element into which we draw the game. That is why the `scrollPlayerIntoView` call is needed. It ensures that if the level is protruding outside the viewport, we scroll that viewport to make sure the player is near its center. The following ((CSS)) gives the game's wrapping DOM element a maximum size and ensures that anything that sticks out of the element's box is not visible. We also give it a relative position so that the actors inside it are positioned relative to the level's top-left corner.
+Nu putem presupune că nivelul încape întotdeauna în _viewport_ - elementul în interiorul căruia desenăm jocul. De aceea este necesar apelul funcției `scrollPlayerIntoView`. Aceasta ne asigură că, dacă nivelul depășește limitele viewportului, repoziționăm viewportul pentru a ne asigura că jucătorul este aproximativ în mijlocul scenei. Regula CSS de mai jos dă elementului DOM care conține scena jocului o dimensiune maximă și ne asigură că tot ceea ce ar fi plasat în afara cutiei elementului nu este vizibil. De asemenea, îi dăm o poziție relativă astfel încât vom putea plasa actorii relativ la colțul stânga-sus al nivelului desenat.
 
 ```{lang: "text/css"}
 .game {
@@ -496,7 +491,7 @@ We can't assume that the level always fits in the _viewport_—the element into 
 
 {{index scrolling}}
 
-In the `scrollPlayerIntoView` method, we find the player's position and update the wrapping element's scroll position. We change the scroll position by manipulating that element's `scrollLeft` and `scrollTop` properties when the player is too close to the edge.
+În metoda `scrollPlayerIntoView` determinăm poziția jucătorului și actualizăm poziția de scroll a elementului ce conține jocul. Schimbăm poziția de scroll prin manipularea proprietăților `scrollLeft` și `scrollTop` când jucătorul este prea aproape de margini.
 
 ```{includeCode: true}
 DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
@@ -527,17 +522,17 @@ DOMDisplay.prototype.scrollPlayerIntoView = function(state) {
 
 {{index center, coordinates, readability}}
 
-The way the player's center is found shows how the methods on our `Vec` type allow computations with objects to be written in a relatively readable way. To find the actor's center, we add its position (its top-left corner) and half its size. That is the center in level coordinates, but we need it in pixel coordinates, so we then multiply the resulting vector by our display scale.
+Modul în care este determinat centrul jucătorului demonstrează cum putem folosi metodele de pe tipul nostru `Vec` pentru a descrie calculele pe obiecte într-un mod relativ lizibil. Pentru a determina centrul unui actor, adunăm la poziția sa (colțul său stânga-sus) jumătate din dimensiunea sa. Acesta este centrul în coordonate ale jocului, dar trebuie să îl calculăm în pixeli, deci va trebui să înmulțim vectorul resultat cu factorul de scală pe care îl folosim în afișare.
 
 {{index validation}}
 
-Next, a series of checks verifies that the player position isn't outside of the allowed range. Note that sometimes this will set nonsense scroll coordinates that are below zero or beyond the element's scrollable area. This is okay—the DOM will constrain them to acceptable values. Setting `scrollLeft` to -10 will cause it to become 0.
+Apoi, o serie de verificări validează că poziția jucătorului nu este în afara domeniului permis. Uneori, vom seta coordonate pentru scroll care nu fac sens (negative sau dincolo de zona derulabilă). Nu este nici o problemă, DOM le va constrânge la valori acceptabile. Dacă setăm `scrollLeft` la -10 va deveni 0.
 
-It would have been slightly simpler to always try to scroll the player to the center of the ((viewport)). But this creates a rather jarring effect. As you are jumping, the view will constantly shift up and down. It is more pleasant to have a "neutral" area in the middle of the screen where you can move around without causing any scrolling.
+Ar fi fost mai simplu dacă am fi derulat tot timpul jucătorul în centrul viewportului. Dar efectul vizual ar fi fost enervant. Când ar sări, view-ul s-a deplasa sus și jos. Este mai plăcut să avem o zonă "neutră" în centrul ecranului în care jucătorul se poate deplasa fără a cauza scroll.
 
 {{index [game, screenshot]}}
 
-We are now able to display our tiny level.
+Acum putem afișa nivelul nostru.
 
 ```{lang: "text/html"}
 <link rel="stylesheet" href="css/game.css">
@@ -557,33 +552,33 @@ if}}
 
 {{index "link (HTML tag)", CSS}}
 
-The `<link>` tag, when used with `rel="stylesheet"`, is a way to load a CSS file into a page. The file `game.css` contains the styles necessary for our game.
+Tagul `<link>`, utilizat cu `rel="stylesheet"`, este o metodă de a încărca un fișier CSS în pagină. Fișierul `game.css` conține toate regulile de stil necesare pentru jocul nostru.
 
-## Motion and collision
+## Mișcare și coliziuni
 
 {{index physics, [animation, "platform game"]}}
 
-Now we're at the point where we can start adding motion—the most interesting aspect of the game. The basic approach, taken by most games like this, is to split ((time)) into small steps and, for each step, move the actors by a distance corresponding to their speed multiplied by the size of the time step. We'll measure time in seconds, so speeds are expressed in units per second.
+Acum suntem în punctul în care putem adăuga mișcare - cel mai interesant aspect al jocului. Abordarea de bază, utilizată de toate jocurile de acest gen, este de a împărți linia de timp a jocului în mici pași și, pentru fiecare pas, deplasează actorii pe o distanță ce corespunde vitezei lor, multiplicată cu durata pasului de timp. Vom măsura timpul în secunde, astfel încât vitezele vor fi exprimate în unități pe secundă.
 
 {{index obstacle, "collision detection"}}
 
-Moving things is easy. The difficult part is dealing with the interactions between the elements. When the player hits a wall or floor, they should not simply move through it. The game must notice when a given motion causes an object to hit another object and respond accordingly. For walls, the motion must be stopped. When hitting a coin, it must be collected. When touching lava, the game should be lost.
+Deplasarea lucrurilor este simplă. Partea dificilă este gestionarea interacțiunilor dintre elemente. Când jucătorul atinge un perete sau podeaua, nu ar trebui să se deplaseze prin ea. Jocul trebuie să detecteze atunci când mișcarea cauzează o ciocnire a unui obiect cu un alt obiect și să reacționeze corespunzător. Pentru pereți, deplasarea trebuie să fie blocată. Când este lovită o monedă, aceasta trebuie să fie colectată. Când se atinge lava, jocul va fi pierdut.
 
-Solving this for the general case is a big task. You can find libraries, usually called _((physics engine))s_, that simulate interaction between physical objects in two or three ((dimensions)). We'll take a more modest approach in this chapter, handling only collisions between rectangular objects and handling them in a rather simplistic way.
+Rezolvarea acestei probleme în general este o sarcină dificilă. Dar puteți găsi librării, numite _physics engines_ care simulează interacțiunea dintre obiectele fizice în două sau trei dimensiuni. Abordarea noastră va fi mai modestă în acest capitol, gestionând doar coliziuni între obiecte dreptunghiulare, într-un mod simplu.
 
 {{index bouncing, "collision detection", [animation, "platform game"]}}
 
-Before moving the ((player)) or a block of ((lava)), we test whether the motion would take it inside of a wall. If it does, we simply cancel the motion altogether. The response to such a collision depends on the type of actor—the player will stop, whereas a lava block will bounce back.
+Înainte de a muta jucătorul sau un bloc de lava, testăm dacă mișcarea îl va duce în interiorul unui perete. Dacă da, renunțăm la deplasare. Răspunsul la o astfel de coliziune depinde de tipul actorului - jucătorul se va opri, blocul de lavă își va schimba sensul mișcării.
 
 {{index discretization}}
 
-This approach requires our ((time)) steps to be rather small since it will cause motion to stop before the objects actually touch. If the time steps (and thus the motion steps) are too big, the player would end up hovering a noticeable distance above the ground. Another approach, arguably better but more complicated, would be to find the exact collision spot and move there. We will take the simple approach and hide its problems by ensuring the animation proceeds in small steps.
+Această abordare necesită ca pasul temporal să fie relativ mic deoarece mișcarea va fi oprită înainte ca obiectele să se atingă. Dacă pasul temporal (ți în consecință, pasul mișcării) este prea mare, jucătorul va ajunge să se oprească plutin la o distanță observabilă de podea. O altă abordare, mai bună dar și mai complicată, ar fi să determinăm punctul de coliziune și să mutăm jucătorul în acel punct înainte de a-l opri. Vom considera abordarea mai simplă și îi vom ascunde problemele prin utilizarea unor pași mici în animație.
 
 {{index obstacle, "touches method", "collision detection"}}
 
 {{id touches}}
 
-This method tells us whether a ((rectangle)) (specified by a position and a size) touches a grid element of the given type.
+Metoda de mai jos determină dacă un dreptunghi (specificat prin poziție și dimensiune) atinge un element al gridului de un anume tip.
 
 ```{includeCode: true}
 Level.prototype.touches = function(pos, size, type) {
@@ -606,13 +601,13 @@ Level.prototype.touches = function(pos, size, type) {
 
 {{index "Math.floor function", "Math.ceil function"}}
 
-The method computes the set of grid squares that the body ((overlap))s with by using `Math.floor` and `Math.ceil` on its ((coordinates)). Remember that ((grid)) squares are 1 by 1 units in size. By ((rounding)) the sides of a box up and down, we get the range of ((background)) squares that the box touches.
+Metoda calculează setul de pătrate ale gridului pe care se suprapune corpul, utilizând pentru aceasta `Math.floor` și `Math.ceil` asupra coordonatelor sale. Gridul folosește pătrate cu dimensiunea 1 pe 1. Rotunjind lungimile laturilor cutiei (în sus și în jos), determinăm domeniul pătratelor din fundal pe care cutia le atinge.
 
 {{figure {url: "img/game-grid.svg", alt: "Finding collisions on a grid",width: "3cm"}}}
 
-We loop over the block of ((grid)) squares found by ((rounding)) the ((coordinates)) and return `true` when a matching square is found. Squares outside of the level are always treated as `"wall"` to ensure that the player can't leave the world and that we won't accidentally try to read outside of the bounds of our `rows` array.
+Ciclăm printre aceste pătrate determinate prin rotunjirea coordonatelor și returnăm `true` dacă găsim un pătrat care se potrivește. Pătratele din afara nivelului sunt întotdeauna tratate ca și `"wall"` pentru a ne asigura că jucătorul nu poate părăsi lumea jocului și că nu vom încerca să citim accidental din afara limitelor array-ului nostru `rows`.
 
-The state `update` method uses `touches` to figure out whether the player is touching lava.
+Metoda `update` pentru actualizarea stării utilizează `touches` pentru a determina dacă jucătorul atinge lava.
 
 ```{includeCode: true}
 State.prototype.update = function(time, keys) {
@@ -636,11 +631,11 @@ State.prototype.update = function(time, keys) {
 };
 ```
 
-The method is passed a time step and a data structure that tells it which keys are being held down. The first thing it does is call the `update` method on all actors, producing an array of updated actors. The actors also get the time step, the keys, and the state, so that they can base their update on those. Only the player will actually read keys, since that's the only actor that's controlled by the keyboard.
+Acestei metode i se transmite un pas temporal și o structură de date care comunică ce taste sunt apăsate. Primul lucru pe care îl face este să apeleze metoda `update` asupra tuturor actorilor, producând un array de actori actualizați. Actorii primesc și ei pasul temporal, tastele și starea, astfel încât își vor putea actualiza starea pe baza acestora. Doar jucătorul va citi de fapt tastele deoarece el este singurul actor controlat de la tastatură.
 
-If the game is already over, no further processing has to be done (the game can't be won after being lost, or vice versa). Otherwise, the method tests whether the player is touching background lava. If so, the game is lost, and we're done. Finally, if the game really is still going on, it sees whether any other actors overlap the player.
+Dacă jocul s-a încheiat, nu se mai face nici o prelucrare (jocul nu poate fi câștigat după ce a fost pierdut, sau invers). Altfel, metoda testează dacă jucătorul atinge lava de pe fundal. Dacă da, jocul a fost pierdut și suntem gata. În sfârșit, dacă jocul trebuie să continue, se testează dacă oricare dintre ceilalți actori se suprapune cu jucătorul.
 
-Overlap between actors is detected with the `overlap` function. It takes two actor objects and returns true when they touch—which is the case when they overlap both along the x-axis and along the y-axis.
+Suprapunerea dintre actori este detectată în funcția `overlap`. Aceasta primește două obiecte de tip actor și returnează `true` dacă ei se ating - ceea ce se întâmplă dacă ei se suprapun atât pe axa x cât și pe axa y.
 
 ```{includeCode: true}
 function overlap(actor1, actor2) {
@@ -651,7 +646,7 @@ function overlap(actor1, actor2) {
 }
 ```
 
-If any actor does overlap, its `collide` method gets a chance to update the state. Touching a lava actor sets the game status to `"lost"`. Coins vanish when you touch them and set the status to `"won"` when they are the last coin of the level.
+Dacă oricare actor se suprapune, metoda sa `collide` are o șansă să actualizeze starea. Atingerea unui actor lava setează starea jocului la `"lost"`. Monedele dispar când sunt atinse și starea este actualizată la `"won"` când s-a atins ultima dintre monede.
 
 ```{includeCode: true}
 Lava.prototype.collide = function(state) {
@@ -668,11 +663,11 @@ Coin.prototype.collide = function(state) {
 
 {{id actors}}
 
-## Actor updates
+## Actualizările actorului
 
 {{index actor, "Lava class", lava}}
 
-Actor objects' `update` methods take as arguments the time step, the state object, and a `keys` object. The one for the `Lava` actor type ignores the `keys` object.
+Metodele `update` ale obiectelor actor primesc ca și argumente pasul temporal, starea obiectului și un obiect `keys`. Cele pentru actori `Lava` ignoră obiectul `keys`.
 
 ```{includeCode: true}
 Lava.prototype.update = function(time, state) {
@@ -689,11 +684,11 @@ Lava.prototype.update = function(time, state) {
 
 {{index bouncing, multiplication, "Vec class", "collision detection"}}
 
-This `update` method computes a new position by adding the product of the ((time)) step and the current speed to its old position. If no obstacle blocks that new position, it moves there. If there is an obstacle, the behavior depends on the type of the ((lava)) block—dripping lava has a `reset` position, to which it jumps back when it hits something. Bouncing lava inverts its speed by multiplying it by -1 so that it starts moving in the opposite direction.
+Metoda `update` de mai sus calculează o nouă poziție prin adăugarea produsului dintre pasul temporal și viteza curentă la vechea poziție. Dacă nu există un obstacol care să blocheze noua poziție, se deplasează acolo. Dacă există un obstacol, comportamentul depinde de tipul blocului de lavă. Blocurile de lavă care se mișcă pe verticală au o funcție `reset` care le mută în poziția inițială, iar cele care se mișcă pe direcție orizontală își inversează sensul de mișcare prin multiplicarea vitezei cu -1.
 
 {{index "Coin class", coin, wave}}
 
-Coins use their `update` method to wobble. They ignore collisions with the grid since they are simply wobbling around inside of their own square.
+Monedele își utilizează mettoda `update` pentru a oscila. Ele ignoră coliziunile cu gridul deoarece ele oscilează în interiorul propriului lor pătrat din grid.
 
 ```{includeCode: true}
 const wobbleSpeed = 8, wobbleDist = 0.07;
@@ -708,11 +703,11 @@ Coin.prototype.update = function(time) {
 
 {{index "Math.sin function", sine, phase}}
 
-The `wobble` property is incremented to track time and then used as an argument to `Math.sin` to find the new position on the ((wave)). The coin's current position is then computed from its base position and an offset based on this wave.
+Proprietatea `wobble` este incrementată pentru a urmări timpul și apoi este utilizată ca și argument pentru `Math.sin` pentru a determina noua poziție pe undă. Poziția curentă a monedei este apoi calculată folosind poziția sa de bază și un offset bazat pe unda generată de funcția sinus.
 
 {{index "collision detection", "Player class"}}
 
-That leaves the ((player)) itself. Player motion is handled separately per ((axis)) because hitting the floor should not prevent horizontal motion, and hitting a wall should not stop falling or jumping motion.
+Așa că ne mai rămâne doar jucătorul. Mișcarea jucătorului este gestionată separat pe cele două axe, deoarece atingerea podelei nu trebuie să blocheze mișcarea pe orizontală, iar atingerea unui perete nu ar trebui să influențeze căderea sau saltul pe verticală.
 
 ```{includeCode: true}
 const playerXSpeed = 7;
@@ -744,31 +739,31 @@ Player.prototype.update = function(time, state, keys) {
 
 {{index [animation, "platform game"], keyboard}}
 
-The horizontal motion is computed based on the state of the left and right arrow keys. When there's no wall blocking the new position created by this motion, it is used. Otherwise, the old position is kept.
+Mișcarea pe orizontală este calculată pe baza stării cheilor pentru săgeata stânga și săgeata dreapta. Când nu există un bloc care să blocheze mișcarea, noua poziție este utilizată. Altfel, se păstrează vechea poziție.
 
 {{index acceleration, physics}}
 
-Vertical motion works in a similar way but has to simulate ((jumping)) and ((gravity)). The player's vertical speed (`ySpeed`) is first accelerated to account for ((gravity)).
+Mișcarea pe verticală funcționează asemănător dar trebuie să simuleze saltul și gravitația. Viteza pe verticală a jucătorului (`ySpeed`) este accelerată pentru a ține cont de gravitație.
 
 {{index "collision detection", keyboard, jumping}}
 
-We check for walls again. If we don't hit any, the new position is used. If there _is_ a wall, there are two possible outcomes. When the up arrow is pressed _and_ we are moving down (meaning the thing we hit is below us), the speed is set to a relatively large, negative value. This causes the player to jump. If that is not the case, the player simply bumped into something, and the speed is set to zero.
+Din nouă verificăm pereții. Dacă nu atingem vreunul, noua poziție este utilizată. Dacă există un perete, avem două rezultate posibile. Când a fost apăsată tasta săgeată sus _și_ ne mișcăm în jos (adică obiectul lovit se află sub jucător), viteza este setată la o valoare mare, negativă. Aceasta face ca jucătorul să sară. Dacă nu acesta este cazul, înseamnă că jucătorul s-a lovit de ceva și viteza este setată la zero.
 
-The gravity strength, ((jumping)) speed, and pretty much all other ((constant))s in this game have been set by ((trial and error)). I tested values until I found a combination I liked.
+Tăria gravitației, viteza de salt și cam toate celelalte constante din acest joc au fost setate prin "trial and error". Adică am tot testat diverse valori până când am obținut o combinație satisfăcătoare.
 
-## Tracking keys
+## Urmărirea tastelor
 
 {{index keyboard}}
 
-For a ((game)) like this, we do not want keys to take effect once per keypress. Rather, we want their effect (moving the player figure) to stay active as long as they are held.
+Pentru un joc ca și acesta, nu vrem să avem efectul tastelor doar o singură dată pentru apăsarea unei taste. Am vrea ca efectul (deplasarea jucătorului) să rămână cât timp tastele sunt menținute apăsate.
 
 {{index "preventDefault method"}}
 
-We need to set up a key handler that stores the current state of the left, right, and up arrow keys. We will also want to call `preventDefault` for those keys so that they don't end up ((scrolling)) the page.
+Trebuie să setăm un handler de eveniment pentru taste care stochează starea curentă a tastelor stânga, dreapta și sus. De asemenea, vom apela `preventDefault` pentru aceste taste, pentru a evita efectul implicit de derulare a paginii.
 
 {{index "trackKeys function", "key code", "event handling", "addEventListener method"}}
 
-The following function, when given an array of key names, will return an object that tracks the current position of those keys. It registers event handlers for `"keydown"` and `"keyup"` events and, when the key code in the event is present in the set of codes that it is tracking, updates the object.
+Funcția ce urmează primește un array cu numele unor taste și va returna un obiect care urmărește poziția curentă a acelor taste. Vom înregistra handlere de eveniment pentru `"keydown"` și `"keyup"` și, dacă codul tastei din eveniment este prezent în setul de coduri care sunt urmărite, obiectul va fi actualizat.
 
 ```{includeCode: true}
 function trackKeys(keys) {
@@ -790,19 +785,19 @@ const arrowKeys =
 
 {{index "keydown event", "keyup event"}}
 
-The same handler function is used for both event types. It looks at the event object's `type` property to determine whether the key state should be updated to true (`"keydown"`) or false (`"keyup"`).
+Aceeași funcție handler este utilizată pentru ambele tipuri de evenimente. Ea consultă proprietatea `type` a obiectului evenimentului pentru a determina dacă starea tastei trebuie actualizată la `true` (`"keydown"`) sau `false` (`"keyup"`).
 
 {{id runAnimation}}
 
-## Running the game
+## Rularea jocului
 
 {{index "requestAnimationFrame function", [animation, "platform game"]}}
 
-The `requestAnimationFrame` function, which we saw in [Chapter ?](dom#animationFrame), provides a good way to animate a game. But its interface is quite primitive—using it requires us to track the time at which our function was called the last time around and call `requestAnimationFrame` again after every frame.
+Funcția `requestAnimationFrame`, pe care am utilizat-o în [capitolul ?](dom#animationFrame), este o modalitate bună pentru a anima un joc. Dar interfața sa este destul de primitivă - utilizarea ei necesită să urmărim momentul de timp la care funcția a fost apelată ultima dată și să apelăm `requestAnimationFrame` din nou, după fiecare cadru.
 
 {{index "runAnimation function", "callback function", [function, "as value"], [function, "higher-order"], [animation, "platform game"]}}
 
-Let's define a helper function that wraps those boring parts in a convenient interface and allows us to simply call `runAnimation`, giving it a function that expects a time difference as an argument and draws a single frame. When the frame function returns the value `false`, the animation stops.
+Haideți să definim o funcție helper care împachetează aceste părți plictisitoare într-o interfață convenabilă și ne permite să apelăm pur și simplu `runAnimation`, care primește o funcție care așteaptă o diferență de timp și desenează un singur cadru. Când această funcție returnează valoarea `false`, animația se oprește.
 
 ```{includeCode: true}
 function runAnimation(frameFunc) {
@@ -821,13 +816,13 @@ function runAnimation(frameFunc) {
 
 {{index time, discretization}}
 
-I have set a maximum frame step of 100 milliseconds (one-tenth of a second). When the browser tab or window with our page is hidden, `requestAnimationFrame` calls will be suspended until the tab or window is shown again. In this case, the difference between `lastTime` and `time` will be the entire time in which the page was hidden. Advancing the game by that much in a single step would look silly and might cause weird side effects, such as the player falling through the floor.
+Am setat un pas maxim între două cadre de 100 milisecunde (o zecime de secundă). Când tabul sau fereastra browserului este ascuns, apelurile către `requestAnimationFrame` vor fi suspendate până când tabul sau fereastra vor fi afișate din nou. În acest caz, diferența dintre `lastTime` și `time` va fi durata de timp în care pagina a fost ascunsă. Avansarea jocului cu o asemenea cantitate într-un singur pas ar arăta prostesc și ar putea cauza efecte secundare ciudate, cum ar fi jucătorul care cade prin podea.
 
-The function also converts the time steps to seconds, which are an easier quantity to think about than milliseconds.
+Funcția convertește pașii de timp în secunde, care sunt o cantitate mai ușor de perceput decât milisecundele.
 
 {{index "callback function", "runLevel function", [animation, "platform game"]}}
 
-The `runLevel` function takes a `Level` object and a ((display)) constructor and returns a promise. It displays the level (in `document.body`) and lets the user play through it. When the level is finished (lost or won), `runLevel` waits one more second (to let the user see what happens) and then clears the display, stops the animation, and resolves the promise to the game's end status.
+Funcția `runLevel` primește un obiect `Level` și un constructor pentru afișare și returnează o promisiune. Ea afișează un nivel (în `document.body`) și permite utilizatorului să îl joace. Când nivelul se termină (pierdut sau câștigat), `runLevel` așteaptă încă o secundă (pentru a permite utilizatorului să vadă ceea ce se întâmplă) și apoi curăță afișajul, oprește animația și rezolvă promisiune cu starea finală a nivelului.
 
 ```{includeCode: true}
 function runLevel(level, Display) {
@@ -855,7 +850,7 @@ function runLevel(level, Display) {
 
 {{index "runGame function"}}
 
-A game is a sequence of ((level))s. Whenever the ((player)) dies, the current level is restarted. When a level is completed, we move on to the next level. This can be expressed by the following function, which takes an array of level plans (strings) and a ((display)) constructor:
+Un joc este o secvență de nivele. De fiecare dată când jucătorul "moare", nivelul curent este repornit. Când un nivel este completat, trecem la nivelul următor. Aceasta poate fi exprimată prin următoarea funcție, care primește un array de planuri pentru nivele (stringuri) și un constructor pentru afișare:
 
 ```{includeCode: true}
 async function runGame(plans, Display) {
@@ -870,11 +865,11 @@ async function runGame(plans, Display) {
 
 {{index "asynchronous programming", "event handling"}}
 
-Because we made `runLevel` return a promise, `runGame` can be written using an `async` function, as shown in [Chapter ?](async). It returns another promise, which resolves when the player finishes the game. 
+Deoarece `runLevel` returnează o promisiune, `runGame` poate fi scris ca o funcție `async`, așa cum am discutat în [capitolul ?](async). Această funcție va returna o altă promisiune, care se rezolvă când jucătorul finalizează jocul.
 
 {{index game, "GAME_LEVELS data set"}}
 
-There is a set of ((level)) plans available in the `GAME_LEVELS` binding in [this chapter's sandbox](https://eloquentjavascript.net/code#16)[([_https://eloquentjavascript.net/code#16_](https://eloquentjavascript.net/code#16))]{if book}. This page feeds them to `runGame`, starting an actual game.
+Găsiți mai multe planuri pentru nivele în bindingul `GAME_LEVELS` [în sandbox-ul acestui capitol](https://eloquentjavascript.net/code#16)[([_https://eloquentjavascript.net/code#16_](https://eloquentjavascript.net/code#16))]{if book}. Această pagină le încarcă în `runGame`, pentru a începe un joc.
 
 ```{sandbox: null, focus: yes, lang: "text/html", startCode: true}
 <link rel="stylesheet" href="css/game.css">
@@ -888,21 +883,21 @@ There is a set of ((level)) plans available in the `GAME_LEVELS` binding in [thi
 
 {{if interactive
 
-See if you can beat those. I had quite a lot of fun building them.
+Vedeți dacă le puteți trece. A fost distractiv să le construiesc.
 
 if}}
 
-## Exercises
+## Exerciții
 
 ### Game over
 
 {{index "lives (exercise)", game}}
 
-It's traditional for ((platform game))s to have the player start with a limited number of _lives_ and subtract one life each time they die. When the player is out of lives, the game restarts from the beginning.
+Este o tradiție pentru jocurile de platformă ca jucătorul să înceapă cu un număr limitat de vieți și să scădem câte una de fiecare dată când "moare". Când jucătorul nu mai are vieți. jocul repornește de la început.
 
 {{index "runGame function"}}
 
-Adjust `runGame` to implement lives. Have the player start with three. Output the current number of lives (using `console.log`) every time a level starts.
+Ajustați `runGame` pentru a implementa "viețile". Jucătorul să înceapă cu trei vieți. Afișați numărul de vieți rămase (cu `console.log`) la începutul fiecărui nivel.
 
 {{if interactive
 
@@ -927,23 +922,23 @@ Adjust `runGame` to implement lives. Have the player start with three. Output th
 
 if}}
 
-### Pausing the game
+### Puneți jocul pe pauză
 
 {{index "pausing (exercise)", "escape key", keyboard}}
 
-Make it possible to pause (suspend) and unpause the game by pressing the Esc key.
+Faceți posibilă suspendarea și reactivarea jocului prin apăsarea tastei Esc.
 
 {{index "runLevel function", "event handling"}}
 
-This can be done by changing the `runLevel` function to use another keyboard event handler and interrupting or resuming the animation whenever the Esc key is hit.
+Aceasta se poate implementa prin modificarea funcție `runLevel` ca să mai utilizeze încă un handler de evenimente de la tastatură care întrerupe și reia afișsarea ori de câte ori este apăsată tasta Esc.
 
 {{index "runAnimation function"}}
 
-The `runAnimation` interface may not look like it is suitable for this at first glance, but it is if you rearrange the way `runLevel` calls it.
+Interfața `runAnimation` ar putea să nu pară adecvată pentru acest scop, dar va fi, dacă rearanjați modul în care `runLevel` o apelează.
 
 {{index [binding, global], "trackKeys function"}}
 
-When you have that working, there is something else you could try. The way we have been registering keyboard event handlers is somewhat problematic. The `arrowKeys` object is currently a global binding, and its event handlers are kept around even when no game is running. You could say they _((leak))_ out of our system. Extend `trackKeys` to provide a way to unregister its handlers and then change `runLevel` to register its handlers when it starts and unregister them again when it is finished.
+După ce reușiți să implementați, puteți încerca și altceva. Modul în care am înregistrat handlerele pentru evenimentele de la tastatură este oarecum problematic. Obiectul `arrowKeys` este deocamdată un binding global și handlerele sale pentru evenimente sunt menținute chiar și atunci când nu rulează nici un joc. Putem spune că s-au _scurs (leak)_ în afara sistemului nostru. Extindeți `trackKeys` pentru a oferi o modalitate de a deînregistra handlerele sale și apoi modificați `runLevel` pentru a își înregistra handlerele atunci când începe și să le deînregistreze după ce se termină execuția.
 
 {{if interactive
 
@@ -985,29 +980,29 @@ if}}
 
 {{index "pausing (exercise)", [animation, "platform game"]}}
 
-An animation can be interrupted by returning `false` from the function given to `runAnimation`. It can be continued by calling `runAnimation` again.
+O animație poate fi întreruptă prin returnarea valorii `false` din funcția transmisă către `runAnimation`. Și apoi poate fi reluată prin apelarea `runAnimation` din nou.
 
 {{index closure}}
 
-So we need to communicate the fact that we are pausing the game to the function given to `runAnimation`. For that, you can use a binding that both the event handler and that function have access to.
+Deci, trebuie să comunicăm faptul că întrerupem jocul către funcția transmisă spre `runAnimation`. Pentru aceasta, putem folosi un binding la care au acces atât handlerul de eveniment cât și funcția respectivă.
 
 {{index "event handling", "removeEventListener method", [function, "as value"]}}
 
-When finding a way to unregister the handlers registered by `trackKeys`, remember that the _exact_ same function value that was passed to `addEventListener` must be passed to `removeEventListener` to successfully remove a handler. Thus, the `handler` function value created in `trackKeys` must be available to the code that unregisters the handlers.
+Când căutați o modalitate de a deînregistra handlerele înregistrate de către `trackKeys`, amintiți-vă că exact acceași funcție care a fost transmisă către `addEventListener` trebuie să fie transmisă către `removeEventListener` pentru a elimina cu succes un handler. Prin urmare, valoarea de tip funcție `handler` creată în `trackKeys` trebuie să fie disponibilă și codului care deînregistrează handlerele.
 
-You can add a property to the object returned by `trackKeys`, containing either that function value or a method that handles the unregistering directly.
+Puteți adăuga o proprietate la obiectul returnat de către `trackKeys`, care să conțină fie acea valoare de tip funcție fie o metodă care gestionează direct deînregistrarea.
 
 hint}}
 
-### A monster
+### Un monstru
 
 {{index "monster (exercise)"}}
 
-It is traditional for platform games to have enemies that you can jump on top of to defeat. This exercise asks you to add such an actor type to the game.
+Este o tradiție în jocurile de tip platformă să avem dușmani pe care să putem sări pentru a îi învinge. Acest exercițiu vă cere să adăugați un asemenea tip de actor în joc.
 
-We'll call it a monster. Monsters move only horizontally. You can make them move in the direction of the player, bounce back and forth like horizontal lava, or have any movement pattern you want. The class doesn't have to handle falling, but it should make sure the monster doesn't walk through walls.
+Îl vom denumi "monstru". Monștrii se vor mișca doar pe direcție orizontală. Îi puteți face să se miște în direcția jucătorului, să se miște stânga-dreapta ca și blocurile de lavă orizontale, sau să aibă orice alt comportament dinamic vreți. Clasa nu va trebui să implementeze căderea, dar monștrii nu trebuie să treacă prin pereți.
 
-When a monster touches the player, the effect depends on whether the player is jumping on top of them or not. You can approximate this by checking whether the player's bottom is near the monster's top. If this is the case, the monster disappears. If not, the game is lost.
+Când un monstru atinge jucătorul, efectul este influențat de faptul că jucătorul a sărit pe el sau nu. Puteți aproxima aceasta prin a verifica dacă marginea de jos a jucătorului este în apropierea marginii de sus a monstrului. Dacă da, monstrul va dispărea. Dacă nu, jocul este pierdut.
 
 {{if interactive
 
@@ -1060,12 +1055,12 @@ if}}
 
 {{index "monster (exercise)", "persistent data structure"}}
 
-If you want to implement a type of motion that is stateful, such as bouncing, make sure you store the necessary state in the actor object—include it as constructor argument and add it as a property.
+Dacă vreți să implementați un tip de mișcare care este realistă, cum ar fi mișcarea stânga-dreapta, asigurați-vă că rețineți starea necesară în obiectul-actor - includeți-o ca și argument în constructor și adăugați-o ca și proprietate.
 
-Remember that `update` returns a _new_ object, rather than changing the old one.
+Vă reamintesc că `update` returnează un _nou_ obiect, în loc să îl modifice pe cel vechi.
 
 {{index "collision detection"}}
 
-When handling collision, find the player in `state.actors` and compare its position to the monster's position. To get the _bottom_ of the player, you have to add its vertical size to its vertical position. The creation of an updated state will resemble either `Coin`'s `collide` method (removing the actor) or `Lava`'s (changing the status to `"lost"`), depending on the player position.
+Când gestionați coliziunile, căutați jucătorul în `state.actors` și comparați poziția sa cu poziția mosntrului. Pentru a determina marginea de jos a jucătorului trebuie să îi adăugați dimensiunea sa verticală la poziția sa pe verticală. Crearea unei stări actualizate va fi asemănătoare fie cu metoda `collide` pentru `Coin` (eliminarea actorului), fie cu cu cea din clasa `Lava` (schimbarea stării la `"lost"`), în funcție de poziția jucătorului.
 
 hint}}
