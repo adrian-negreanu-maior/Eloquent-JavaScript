@@ -1,10 +1,10 @@
 {{meta {load_files: ["code/chapter/16_game.js", "code/levels.js", "code/chapter/17_canvas.js"], zip: "html include=[\"img/player.png\", \"img/sprites.png\"]"}}}
 
-# Drawing on Canvas
+# Desenarea pe Canvas
 
 {{quote {author: "M.C. Escher", title: "cited by Bruno Ernst in The Magic Mirror of M.C. Escher", chapter: true}
 
-Drawing is deception.
+Desenarea este decepție.
 
 quote}}
 
@@ -14,23 +14,23 @@ quote}}
 
 {{index CSS, "transform (CSS)", [DOM, graphics]}}
 
-Browsers give us several ways to display ((graphics)). The simplest way is to use styles to position and color regular DOM elements. This can get you quite far, as the game in the [previous chapter](game) showed. By adding partially transparent background ((image))s to the nodes, we can make them look exactly the way we want. It is even possible to rotate or skew nodes with the `transform` style.
+Browserele ne permit mai multe moduri de a afișa imagini. Cel mai simplu mod este de a utiliza reguli de stil pentru a pozționa și colora elemente din DOM. Puteți ajunge destul de departe, așa cum am văzut în [capitolul anterior](game). Adăugând imagini parțial transparente la noduri, le putem afișa exact cum ne dorim. Putem chiar să rotim sau să deformăm cu proprietatea de stil `transform`.
 
-But we'd be using the DOM for something that it wasn't originally designed for. Some tasks, such as drawing a ((line)) between arbitrary points, are extremely awkward to do with regular HTML elements.
+Dar am utiliza DOM pentru un scop pentru care nu a fost conceput. Unele sarcini, cum ar fi desenarea unei linii între două puncte oarecare, sunt extrem de ciudat de realizat cu elemente HTML obișnuite.
 
 {{index SVG, "img (HTML tag)"}}
 
-There are two alternatives. The first is DOM-based but utilizes _Scalable Vector Graphics_ (SVG), rather than HTML. Think of SVG as a ((document))-markup dialect that focuses on ((shape))s rather than text. You can embed an SVG document directly in an HTML document or include it with an `<img>` tag.
+Avem două alternative. Prima se bazează pe DOM dar utilizează _Scalable Vector Graphics (SVG)_. SVG este un dialect de marcare a documentelor care se concentrează pe figuri geometrice, nu pe text. Puteți încorpora un document SVG direct în orice document HTML sau să îl includeți cu tagul `<img>`.
 
 {{index clearing, [DOM graphics], [interface, canvas]}}
 
-The second alternative is called a _((canvas))_. A canvas is a single DOM element that encapsulates a ((picture)). It provides a programming interface for drawing ((shape))s onto the space taken up by the node. The main difference between a canvas and an SVG picture is that in SVG the original description of the shapes is preserved so that they can be moved or resized at any time. A canvas, on the other hand, converts the shapes to ((pixel))s (colored dots on a raster) as soon as they are drawn and does not remember what these pixels represent. The only way to move a shape on a canvas is to clear the canvas (or the part of the canvas around the shape) and redraw it with the shape in a new position.
+A două alternativă este numită _canvas_. Un canvas este un singur element DOM care încpsulează o pictură. El expune o interfață de programare pentru desenarea figurilor geometrice în spațiul ocupat de către nod. Principala diferență dintre o imagine pe canvas și una in SVG este că descrierea originală în SVG a figurilor geometrice este păstrată astfel încât ele pot fi mutate sau redimensionate fără pierderi de calitate. Un canvas, pe de altă parte, convertește formele la pixeli (puncte colorate pe o grilă) imediat ce au fost desenate și nu își amintește ce reprezintă acești pixeli. Singura modalitate de a muta o figură pe canvas este de a curăța canvasul (sau partea din canvas aflată în jurul figurii) și apoi să redesenăm cu figura în noua poziție.
 
 ## SVG
 
-This book will not go into ((SVG)) in detail, but I will briefly explain how it works. At the [end of the chapter](canvas#graphics_tradeoffs), I'll come back to the trade-offs that you must consider when deciding which ((drawing)) mechanism is appropriate for a given application.
+Această carte nu va intra în detalii despre SVG, dar voi explica pe scurt cum funcționează. La sfârșitul [acestui capitol](canvas#graphics_tradeoffs), voi reveni asupra compromisurilor pe care trebuie să le aveți în vedere când decideți care mecanism de desenare este adecvat pentru o anume aplicație.
 
-This is an HTML document with a simple SVG ((picture)) in it:
+Acesta este un document HTML cu o imagine SVG simplă în el:
 
 ```{lang: "text/html", sandbox: "svg"}
 <p>Normal HTML here.</p>
@@ -43,11 +43,11 @@ This is an HTML document with a simple SVG ((picture)) in it:
 
 {{index "circle (SVG tag)", "rect (SVG tag)", "XML namespace", XML, "xmlns attribute"}}
 
-The `xmlns` attribute changes an element (and its children) to a different _XML namespace_. This namespace, identified by a ((URL)), specifies the dialect that we are currently speaking. The `<circle>` and `<rect>` tags, which do not exist in HTML, do have a meaning in SVG—they draw shapes using the style and position specified by their attributes.
+Atributul `xmlns` schimbă un element (și descendenții săi) la un _XML namespace_ diferit. Acest spațiu de nume, identificat printr-un URL, specifică dialectul pe care îl vorbim. Tagurile `<circle>` și `<rect>`, care nu există în HTML, au o semnificație în SVG - ele desenează figuri geometrice utilizând stilul și poziția specificate de atributele lor.
 
 {{if book
 
-The document is displayed like this:
+Documentul este afișat astfel:
 
 {{figure {url: "img/svg-demo.png", alt: "An embedded SVG image",width: "4.5cm"}}}
 
@@ -55,32 +55,32 @@ if}}
 
 {{index [DOM, graphics]}}
 
-These tags create DOM elements, just like HTML tags, that scripts can interact with. For example, this changes the `<circle>` element to be ((color))ed cyan instead:
+Aceste taguri crează elemente DOM, ca și tagurile HTML, iar scripturile pot interacționa cu ele. De exemplu, codul de mai jos schimbă culoarea de umplere a elementului `<circle>`:
 
 ```{sandbox: "svg"}
 let circle = document.querySelector("circle");
 circle.setAttribute("fill", "cyan");
 ```
 
-## The canvas element
+## Elementul canvas
 
 {{index [canvas, size], "canvas (HTML tag)"}}
 
-Canvas ((graphics)) can be drawn onto a `<canvas>` element. You can give such an element `width` and `height` attributes to determine its size in ((pixel))s.
+Imaginile canvas pot fi desenate pe un element `<canvas>`. Pentru un asemenea element, putem seta atributele `width` și `height` pentru a îi specifica dimensiunea în pixeli.
 
-A new canvas is empty, meaning it is entirely ((transparent)) and thus shows up as empty space in the document.
+Un canvas nou este gol, adică este complet transparent și astfel, va fi afișat ca un spațiu gol în document.
 
 {{index "2d (canvas context)", "webgl (canvas context)", OpenGL, [canvas, context], dimensions, [interface, canvas]}}
 
-The `<canvas>` tag is intended to allow different styles of ((drawing)). To get access to an actual drawing interface, we first need to create a _((context))_, an object whose methods provide the drawing interface. There are currently two widely supported drawing styles: `"2d"` for  two-dimensional graphics and `"webgl"` for three-dimensional graphics through the OpenGL interface.
+Scopul tag-ului `<canvas>` este de a permite diferite tipuri de desenare. Pentru a avea acces la o interfață de desenare, trebuie mai înâi să creem un _context_, un obiect ale cărui metode oferă interfața de desenare. În prezent sunt suportate pe larg două stiluri de desenare: `"2d"` pentru grafică bidimensională, și `"webgl"` pentru grafică tridimensională prin interfața OpenGL.
 
 {{index rendering, graphics, efficiency}}
 
-This book won't discuss WebGL—we'll stick to two dimensions. But if you are interested in three-dimensional graphics, I do encourage you to look into WebGL. It provides a direct interface to graphics hardware and allows you to render even complicated scenes efficiently, using JavaScript.
+În această carte nu vom discuta despre WebGL - vom rămâne în două dimensiuni. Dar dacă sunteți interesați de grafica tridimensională, vă încurajez să studiați despre WebGL. Acesta furnizează o interfață directă către hardware-ul pentru grafică și vă permite să randați chiar și scene mai complicate în mod eficient, utilizând JavaScript.
 
 {{index "getContext method", [canvas, context]}}
 
-You create a ((context)) with the `getContext` method on the `<canvas>` DOM element.
+Creați un context prin apelarea metodei `getContext` a elementului DOM `<canvas>`.
 
 ```{lang: "text/html"}
 <p>Before canvas.</p>
@@ -94,7 +94,7 @@ You create a ((context)) with the `getContext` method on the `<canvas>` DOM elem
 </script>
 ```
 
-After creating the context object, the example draws a red ((rectangle)) 100 ((pixel))s wide and 50 pixels high, with its top-left corner at coordinates (10,10).
+După ce crează obiectul context, exemplul desenează un dreptunghi roșu cu lățimea de 100 pixeli și înălțimea de 50 pixeli, al cărui colț stânga-sus este în poziția (10,10).
 
 {{if book
 
@@ -104,31 +104,31 @@ if}}
 
 {{index SVG, coordinates}}
 
-Just like in HTML (and SVG), the coordinate system that the canvas uses puts (0,0) at the top-left corner, and the positive y-((axis)) goes down from there. So (10,10) is 10 pixels below and to the right of the top-left corner.
+Ca și în HTML (și SVG), sistemul de coordonate al canvasului plasează (0,0) în colțul stânga-sus iar axa y este orientată în jos. Prin urmare, (10,10) înseamnă 10 pixeli la stânga și 10 pixeli în jos, față de colțul stânga-sus.
 
 {{id fill_stroke}}
 
-## Lines and surfaces
+## Linii și suprafețe
 
 {{index filling, stroking, drawing, SVG}}
 
-In the ((canvas)) interface, a shape can be _filled_, meaning its area is given a certain color or pattern, or it can be _stroked_, which means a ((line)) is drawn along its edge. The same terminology is used by SVG.
+In interfața pentru canvas, o figură poate fi _umplută_, adică suprafața sa să aibă o anumită culoare sau un șablon, sau poate fi _schițată_, ceea ce înseamnă desenarea conturului pe laturile sale. Aceeași terminologie este utilizată în SVG.
 
 {{index "fillRect method", "strokeRect method"}}
 
-The `fillRect` method fills a ((rectangle)). It takes first the x- and y-((coordinates)) of the rectangle's top-left corner, then its width, and then its height. A similar method, `strokeRect`, draws the ((outline)) of a rectangle.
+Metoda `fillRect` umple un dreptunghi. Primește ca argumente coordonatele x și y ale colțului stânga-sus, apoi lățimea și înălțimea. O metodă similară, `strokeRect` desenează conturul unui dreptunghi.
 
 {{index [state, "of canvas"]}}
 
-Neither method takes any further parameters. The color of the fill, thickness of the stroke, and so on, are not determined by an argument to the method (as you might reasonably expect) but rather by properties of the context object.
+Nici una dintre metode nu are parametri suplimentari. Culoarea de umplere, grosimea liniilor și așa mai departe nu sunt determinate de către argumente transmise acestor funcții (așa cum ar fi rezonabil să vă așteptați) ci de către proprietăți ale obiectului context.
 
 {{index filling, "fillStyle property"}}
 
-The `fillStyle` property controls the way shapes are filled. It can be set to a string that specifies a ((color)), using the color notation used by ((CSS)).
+Proprietatea `fillStyle` controlează modul de umplere a figurilor. Poate fi setată la un string ce definește o culoare, utiliând denumirile utilizate în CSS.
 
 {{index stroking, "line width", "strokeStyle property", "lineWidth property", canvas}}
 
-The `strokeStyle` property works similarly but determines the color used for a stroked line. The width of that line is determined by the `lineWidth` property, which may contain any positive number.
+Proprietatea `strokeStyle` funcționează similar dar determină culoarea utilizată pentru contururi. Lățimea acelei linii este determinată de către proprietatea `lineWidth` property, care poate fi orice număr pozitiv.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -143,7 +143,7 @@ The `strokeStyle` property works similarly but determines the color used for a s
 
 {{if book
 
-This code draws two blue squares, using a thicker line for the second one.
+Codul de mai sus desenează două pătrate albastre, utilizând un contur mai gros pentru cel de al doilea.
 
 {{figure {url: "img/canvas_stroke.png", alt: "Two stroked squares",width: "5cm"}}}
 
@@ -151,13 +151,13 @@ if}}
 
 {{index "default value", [canvas, size]}}
 
-When no `width` or `height` attribute is specified, as in the example, a canvas element gets a default width of 300 pixels and height of 150 pixels.
+Când nu se specifică atributele `width` sau `height`, ca și în exemplu, elementul canvas primește o lățime implicită de 300 pixeli și o înălțime de 150 pixeli.
 
-## Paths
+## Căi
 
 {{index [path, canvas], [interface, design], [canvas, path]}}
 
-A path is a sequence of ((line))s. The 2D canvas interface takes a peculiar approach to describing such a path. It is done entirely through ((side effect))s. Paths are not values that can be stored and passed around. Instead, if you want to do something with a path, you make a sequence of method calls to describe its shape.
+O "cale" este o succesiune de linii. Interfața 2D a obiectului canvas are o abordare specifică pentru descrierea sa. Este implementată complet prin efecte secundare. Căile nu sunt valori care pot fi memorate și transmise. În loc de asta, dacă vreți să construiți ceva cu o asemenea linie poligonală, veți executa o secvență de apeluri către metoda pentru a descrie forma.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -174,11 +174,11 @@ A path is a sequence of ((line))s. The 2D canvas interface takes a peculiar appr
 
 {{index canvas, "stroke method", "lineTo method", "moveTo method", shape}}
 
-This example creates a path with a number of horizontal ((line)) segments and then strokes it using the `stroke` method. Each segment created with `lineTo` starts at the path's _current_ position. That position is usually the end of the last segment, unless `moveTo` was called. In that case, the next segment would start at the position passed to `moveTo`.
+Exemplul de mai sus crează o cale cu câteva segmente orizontale și apoi îl schițează folosind metoda `stroke`. Fiecare segment creat cu `lineTo` începe de la poziția curentă. Acea poziție este de regulă finalul ultimului segment, dacă nu a fost apelat `moveTo`. În acel caz, următorul segment începe din poziția transmisă către `moveTo`.
 
 {{if book
 
-The path described by the previous program looks like this:
+Calea descrisă de către programul anterior arată cam așa:
 
 {{figure {url: "img/canvas_path.png", alt: "Stroking a number of lines",width: "2.1cm"}}}
 
@@ -186,7 +186,7 @@ if}}
 
 {{index [path, canvas], filling, [path, closing], "fill method"}}
 
-When filling a path (using the `fill` method), each ((shape)) is filled separately. A path can contain multiple shapes—each `moveTo` motion starts a new one. But the path needs to be _closed_ (meaning its start and end are in the same position) before it can be filled. If the path is not already closed, a line is added from its end to its start, and the shape enclosed by the completed path is filled. 
+Când umplem o cale (utilizând metoda `fill`), fiecare figură este umplută separat. O cale poate conține mai multe figuri - fiecare deplasare `moveTo` începe cu o nouă figură. Dar calea trebuie să fie _închisă_ (adică poziția de început și cea de sfârșit trebuie să fie identice) pentru a putea fi umplută. Dacă calea nu este închisă, se adaugă o linie de la sfârșitul la începutul său și figura formată de calea închisă este umplută.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -200,7 +200,7 @@ When filling a path (using the `fill` method), each ((shape)) is filled separate
 </script>
 ```
 
-This example draws a filled triangle. Note that only two of the triangle's sides are explicitly drawn. The third, from the bottom-right corner back to the top, is implied and wouldn't be there when you stroke the path.
+Exemplul de mai sus desenează un triunghi umplut. Observați că doar două dintre laturile triunghiului sunt desenate explicit. Cea de a treia este implicită și nu ar fi definită dacă ați utiliza `stroke`.
 
 {{if book
 
@@ -210,17 +210,17 @@ if}}
 
 {{index "stroke method", "closePath method", [path, closing], canvas}}
 
-You could also use the `closePath` method to explicitly close a path by adding an actual ((line)) segment back to the path's start. This segment _is_ drawn when stroking the path.
+Ați putea să apelați metoda `closePath` pentru a închide explicit o cale prin adăugarea unui segment înapoi spre începutul căii. Acest segment ar fi desenat când ați apela metoda `stroke`.
 
-## Curves
+## Curbe
 
 {{index [path, canvas], canvas, drawing}}
 
-A path may also contain ((curve))d ((line))s. These are unfortunately a bit more involved to draw. 
+O cale poate să conțină și linii curbe. Acestea se desenează puțin mai complicat.
 
 {{index "quadraticCurveTo method"}}
 
-The `quadraticCurveTo` method draws a curve to a given point. To determine the curvature of the line, the method is given a ((control point)) as well as a destination point. Imagine this control point as _attracting_ the line, giving it its curve. The line won't go through the control point, but its direction at the start and end points will be such that a straight line in that direction would point toward the control point. The following example illustrates this:
+Metoda `quadraticCurveTo` desenează o curbă către un punct. Pentru a determina curbura liniei, metodei i se transmite un punct de control precum și un punct de destinație. Punctul de control _atrage_ linia, determinându-i curbura. Linia curbă nu va trece prin punctul de control, dar direcția sa în punctele de început și sfârșit va indica spre punctul de control. Exemplul de mai jos ilustrează aceasta:
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -238,7 +238,7 @@ The `quadraticCurveTo` method draws a curve to a given point. To determine the c
 
 {{if book
 
-It produces a path that looks like this:
+Se va produce o cale care va arăta cam așa:
 
 {{figure {url: "img/canvas_quadraticcurve.png", alt: "A quadratic curve",width: "2.3cm"}}}
 
@@ -246,11 +246,11 @@ if}}
 
 {{index "stroke method"}}
 
-We draw a ((quadratic curve)) from the left to the right, with (60,10) as control point, and then draw two ((line)) segments going through that control point and back to the start of the line. The result somewhat resembles a _((Star Trek))_ insignia. You can see the effect of the control point: the lines leaving the lower corners start off in the direction of the control point and then ((curve)) toward their target.
+Desenăm o curbă pătratică de la stânga la dreapta și apoi desenăm două segmente de dreaptă care trec prin punctul de control și capetele curbei. Rezultatul se aseamănă cu o insignă _Star Trek_. Puteți observa efectul punctului de control: linia curba pleacă spre punctul de control dar apoi se curbează pentru a se întoarce spre punctul de destinație.
 
 {{index canvas, "bezierCurveTo method"}}
 
-The `bezierCurveTo` method draws a similar kind of curve. Instead of a single ((control point)), this one has two—one for each of the ((line))'s endpoints. Here is a similar sketch to illustrate the behavior of such a curve:
+Metoda `bezierCurveTo` desenează o curbă similară. Dar în loc de un singur punct de control, aceasta are două puncte de control, câte unul pentru fiecare capăt al curbei. Exemplul de mai jos ilustrează comportamentul unei astfel de curbe:
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -267,7 +267,7 @@ The `bezierCurveTo` method draws a similar kind of curve. Instead of a single ((
 </script>
 ```
 
-The two control points specify the direction at both ends of the curve. The farther they are away from their corresponding point, the more the curve will "bulge" in that direction.
+Cele două puncte de control definesc direcția curbei la cele două capete. Cu cât sunt mai departe de punctul corespunzător, cu atât mai mult curba se va "bomba" în acea direcție.
 
 {{if book
 
@@ -277,15 +277,15 @@ if}}
 
 {{index "trial and error"}}
 
-Such ((curve))s can be hard to work with—it's not always clear how to find the ((control point))s that provide the ((shape)) you are looking for. Sometimes you can compute them, and sometimes you'll just have to find a suitable value by trial and error.
+Este greu de lucrat cu asemenea curbe - nu putem ăntotdeauna determina punctele de control care să ne deseneze curba pe care o vrem. Uneori le puteți calcule, alteori le puteți găsi doar printr-un proces de "trial & error".
 
 {{index "arc method", arc}}
 
-The `arc` method is a way to draw a line that curves along the edge of a circle. It takes a pair of ((coordinates)) for the arc's center, a radius, and then a start angle and end angle.
+Metoda `arc` vă permite să desenați o parte dintr-un cerc. Primește o pereche de coordonate pentru centrul cercului, o rază și unghiurile de început și sfârșit.
 
 {{index pi, "Math.PI constant"}}
 
-Those last two parameters make it possible to draw only part of the circle. The ((angle))s are measured in ((radian))s, not ((degree))s. This means a full ((circle)) has an angle of 2π, or `2 * Math.PI`, which is about 6.28. The angle starts counting at the point to the right of the circle's center and goes clockwise from there. You can use a start of 0 and an end bigger than 2π (say, 7) to draw a full circle.
+Ultimii doi parametri sunt cei care ne permit să desenăm parțial cercul. Unghiurile sunt măsurate în radiani, nu în grade. Un cerc complet are un unghi de 2π, sau `2 * Math.PI`, aproximativ 6.28. Unghiul de 0 grade corespunde unui punct aflat în dreapta centrului cercului și specificarea altor unghiuri se face în sensul acelor de ceasornic. Dacă utilizați unghiul de început 0 și o valoare mai mare decât 2π (sa zicem 7) veți putea desena un cerc complet.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -302,7 +302,7 @@ Those last two parameters make it possible to draw only part of the circle. The 
 
 {{index "moveTo method", "arc method", [path, " canvas"]}}
 
-The resulting picture contains a ((line)) from the right of the full circle (first call to `arc`) to the right of the quarter-((circle)) (second call). Like other path-drawing methods, a line drawn with `arc` is connected to the previous path segment. You can call `moveTo` or start a new path to avoid this.
+Imaginea rezultată conține o curbă de la dreapta cercului complet (primul apel către `arc`), până în dreapta sfertului de cerc (al doilea apel). Ca și alte metode de desenare a căilor, o curbă desenată cu `arc` este conectată la segmentul anterior al căii. Puteți apela `moveTo` sau să începeți o nouă cale pentru a evita acest lucru.
 
 {{if book
 
@@ -312,13 +312,13 @@ if}}
 
 {{id pie_chart}}
 
-## Drawing a pie chart
+## Desenarea unei hărți-plăcintă (pie-chart)
 
 {{index "pie chart example"}}
 
-Imagine you've just taken a ((job)) at EconomiCorp, Inc., and your first assignment is to draw a pie chart of its customer satisfaction ((survey)) results.
+Imaginați-vă ca tocmai ați primit un post la EconomiCorp, Inc., și prima voastră sarcină este să desenați un grafic cu rezultatele sondajului cu privire la satisfacția clienților.
 
-The `results` binding contains an array of objects that represent the survey responses.
+Bindingul `results` conține un array de obiecte care reprezintă răspunsurile sondajului.
 
 ```{sandbox: "pie", includeCode: true}
 const results = [
@@ -331,7 +331,7 @@ const results = [
 
 {{index "pie chart example"}}
 
-To draw a pie chart, we draw a number of pie slices, each made up of an ((arc)) and a pair of ((line))s to the center of that arc. We can compute the ((angle)) taken up by each arc by dividing a full circle (2π) by the total number of responses and then multiplying that number (the angle per response) by the number of people who picked a given choice.
+Pentru a desena un pie-chart vom desena mai multe felii, fiecare cu ajutorul unui arc și a unei perechi de linii către centrul acelui arc. Putem calcula unghiul  fiecărui arc împărțind cercul complet (2π) la numărul total de răspunsuri (unghiul pentru un singur răspuns) și apoi să multiplicăm această valoare cu numărul total de persoane care au făcut o anumită alegere.
 
 ```{lang: "text/html", sandbox: "pie"}
 <canvas width="200" height="200"></canvas>
@@ -358,19 +358,19 @@ To draw a pie chart, we draw a number of pie slices, each made up of an ((arc)) 
 
 {{if book
 
-This draws the following chart:
+Exemplul de mai sus desenează următoarea diagramă:
 
 {{figure {url: "img/canvas_pie_chart.png", alt: "A pie chart",width: "5cm"}}}
 
 if}}
 
-But a chart that doesn't tell us what the slices mean isn't very helpful. We need a way to draw text to the ((canvas)).
+Dar o diagramă care nu ne spune ce reprezintă feliile nu este foarte utilă. Avem nevoie de o modalitate de a plasa text pe canvas.
 
 ## Text
 
 {{index stroking, filling, "fillStyle property", "fillText method", "strokeText method"}}
 
-A 2D canvas drawing context provides the methods `fillText` and `strokeText`. The latter can be useful for outlining letters, but usually `fillText` is what you need. It will fill the outline of the given ((text)) with the current `fillStyle`.
+Contextul de desenare 2D al unui canvas ne pune la dispoziție metodele `fillText` și `strokeText`. Ceaa de a doua este utilă pentru a desena conturul literelor, dar de regulă prima este cea de care aveți nevoie. Ea va umple literele cu setarea curentă pentru `fillStyle`.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -382,25 +382,25 @@ A 2D canvas drawing context provides the methods `fillText` and `strokeText`. Th
 </script>
 ```
 
-You can specify the size, style, and ((font)) of the text with the `font` property. This example just gives a font size and family name. It is also possible to add `italic` or `bold` to the start of the string to select a style.
+Puteți specifica mărimea, stilul și fontul textului în proprietatea `font`. Exemplul de mai sus setează doar mărimea și familia textului. Puteți adăuga `italic` sau `bold` la începutul stringului pentru a seta un stil.
 
 {{index "fillText method", "strokeText method", "textAlign property", "textBaseline property"}}
 
-The last two arguments to `fillText` and `strokeText` provide the position at which the font is drawn. By default, they indicate the position of the start of the text's alphabetic baseline, which is the line that letters "stand" on, not counting hanging parts in letters such as _j_ or _p_. You can change the horizontal position by setting the `textAlign` property to `"end"` or `"center"` and the vertical position by setting `textBaseline` to `"top"`, `"middle"`, or `"bottom"`.
+Ultimele două argumente transmise către `fillText` și `strokeText` determină poziția de început a linie de bază, care este linia pe care se așează literele. Puteți modifica poziția orizontală prin setarea proprietății `textAlign` la valorile `"end"` sau `"center"` și poziția verticală prin setarea `textBaseline` la `"top"`, `"middle"` sau `"bottom"`.
 
 {{index "pie chart example"}}
 
-We'll come back to our pie chart, and the problem of ((label))ing the slices, in the [exercises](canvas#exercise_pie_chart) at the end of the chapter.
+Vom reveni asupra diagramei noastre și a problemei de etichetare a feliilor în [exercițiile](canvas#exercise_pie_chart) de la sfârșitul acestui capitol.
 
-## Images
+## Imagini
 
 {{index "vector graphics", "bitmap graphics"}}
 
-In computer ((graphics)), a distinction is often made between _vector_ graphics and _bitmap_ graphics. The first is what we have been doing so far in this chapter—specifying a picture by giving a logical description of ((shape))s. Bitmap graphics, on the other hand, don't specify actual shapes but rather work with ((pixel)) data (rasters of colored dots).
+În grafica pe computer, se face de regulă distincție între grafica _vectorială_ și grafica _bitmap_. Prima este ceea ce am făcut până acum în acest capitol - specificarea unei imagini prin furnizarea unei descrieri logice a formei sale. Grafica bitmap, pe de altă parte, nu specifică figurile ci funcționează cu date despre pixeli (rastere de puncte colorate).
 
 {{index "load event", "event handling", "img (HTML tag)", "drawImage method"}}
 
-The `drawImage` method allows us to draw ((pixel)) data onto a ((canvas)). This pixel data can originate from an `<img>` element or from another canvas. The following example creates a detached `<img>` element and loads an image file into it. But it cannot immediately start drawing from this picture because the browser may not have loaded it yet. To deal with this, we register a `"load"` event handler and do the drawing after the image has loaded.
+Metoda `drawImage` ne permite să desenăm pixeli pe canvas. Aceste date despre pixeli pot provine dintr-un element `<img>` sau dintr-un alt canvas_pie_chart. Exemplul de mai jos crează un element `<img>` separat și încarcă un fișier imagine în el. Dar nu poate începe imediat să deseneze pe baza acestei imagini deoarece e posibil ca browserul să nu fi terminat încărcarea ei. Pentru a rezolva problema, înregistrăm un handler pentru evenimentul `"load"` și începem desenarea doar după ce imaginea a fost încărcată.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -418,27 +418,27 @@ The `drawImage` method allows us to draw ((pixel)) data onto a ((canvas)). This 
 
 {{index "drawImage method", scaling}}
 
-By default, `drawImage` will draw the image at its original size. You can also give it two additional arguments to set a different width and height.
+Implicit, `drawImage` va desena imaginea la dimensiunea sa originală. Dar putem să transmitem încă două argumente prin care să specificăm o lățime și o înălțime diferite.
 
-When `drawImage` is given _nine_ arguments, it can be used to draw only a fragment of an image. The second through fifth arguments indicate the rectangle (x, y, width, and height) in the source image that should be copied, and the sixth to ninth arguments give the rectangle (on the canvas) into which it should be copied.
+Când `drawImage` primește _nouă_ argumente, ea poate fi utilizată pentru a desena doar un fragment din imagine. Argumentele de la al doilea la al cincilea specifică dreptunghiul din imaginea-sursă (x, y, width, height) care urmează să fie copiat, iar argumentele de la al șaselea la al nouălea specifică dreptunghiul din canvas ân care se va efectua copierea.
 
 {{index "player", "pixel art"}}
 
-This can be used to pack multiple _((sprite))s_ (image elements) into a single image file and then draw only the part you need. For example, we have this picture containing a game character in multiple ((pose))s:
+Această tehnică poate fi utilizată pentru a împacheta mai multe imagini (sprites) într-un singur fișier și apoi să desenați doar partea de care aveți nevoie. De exemplu, iată imaginea unui caracter dintr-un joc în mai multe posturi:
 
 {{figure {url: "img/player_big.png", alt: "Various poses of a game character",width: "6cm"}}}
 
 {{index [animation, "platform game"]}}
 
-By alternating which pose we draw, we can show an animation that looks like a walking character.
+Alternând postura pe care o desenăm, putem genera o animație care simulează deplasarea caracterului.
 
 {{index "fillRect method", "clearRect method", clearing}}
 
-To animate a ((picture)) on a ((canvas)), the `clearRect` method is useful. It resembles `fillRect`, but instead of coloring the rectangle, it makes it ((transparent)), removing the previously drawn pixels.
+Pentru a anima o imagine pe un canvas, metoda `clearRect` se va dovedi utilă. Această metodă se aseamănă cu `fillRect`, dar în loc să coloreze dreptunghiul, șterge pixelii anterior desenați.
 
 {{index "setInterval function", "img (HTML tag)"}}
 
-We know that each _((sprite))_, each subpicture, is 24 ((pixel))s wide and 30 pixels high. The following code loads the image and then sets up an interval (repeated timer) to draw the next ((frame)):
+Știm că fiecare _sprite_, fiecare subimagine, are lățimea de 24 pixeli și înălțimea de 30 de pixeli. Codul de mai jos încarcă imaginea și apoi setează un interval pentru desenarea cadrului următor:
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -464,19 +464,19 @@ We know that each _((sprite))_, each subpicture, is 24 ((pixel))s wide and 30 pi
 
 {{index "remainder operator", "% operator", [animation, "platform game"]}}
 
-The `cycle` binding tracks our position in the animation. For each ((frame)), it is incremented and then clipped back to the 0 to 7 range by using the remainder operator. This binding is then used to compute the x-coordinate that the sprite for the current pose has in the picture.
+Bindingul `cycle` reține poziția în animație. Pentru fiecare cadru, acesta este incrementat și apoi mutat în intervalul 0-7 prin utilizarea operatorului modulo. Apoi, acest binding este utilizat pentru a calcula coordonata x a imaginii pentru postura curentă din imagine.
 
-## Transformation
+## Transformarea
 
 {{index transformation, mirroring}}
 
 {{indexsee flipping, mirroring}}
 
-But what if we want our character to walk to the left instead of to the right? We could draw another set of sprites, of course. But we can also instruct the ((canvas)) to draw the picture the other way round. 
+Dar dacă vrem ca să deplasăm caracterul spre stânga, nu spre dreapta? Am putea desena un alt set de imagini, desigur. Dar am putea modifica exemplul nostru pentru a desena imaginile în ordine inversă.
 
 {{index "scale method", scaling}}
 
-Calling the `scale` method will cause anything drawn after it to be scaled. This method takes two parameters, one to set a horizontal scale and one to set a vertical scale.
+Apelul metodei `scale` determină scalarea a tot ceea ce este desenat ulterior. Această metodă primește doi parametri, unul pentru scala orizontală și celelalt pentru scala verticală.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -492,7 +492,7 @@ Calling the `scale` method will cause anything drawn after it to be scaled. This
 
 {{if book
 
-Because of the call to `scale`, the circle is drawn three times as wide and half as high.
+Din cauza apelului metodei `scale`, cercul va fi de trei ori mai lat și pe jumătate de înalt.
 
 {{figure {url: "img/canvas_scale.png", alt: "A scaled circle",width: "6.6cm"}}}
 
@@ -500,29 +500,29 @@ if}}
 
 {{index mirroring}}
 
-Scaling will cause everything about the drawn image, including the ((line width)), to be stretched out or squeezed together as specified. Scaling by a negative amount will flip the picture around. The flipping happens around point (0,0), which means it will also flip the direction of the coordinate system. When a horizontal scaling of -1 is applied, a shape drawn at x position 100 will end up at what used to be position -100.
+Scalarea va influența toate aspectele imaginii desenate. Scalarea cu un factor negativ va inversa imaginea. Oglindirea se va efectua în raport cu punctul (0,0), adică se va oglindi și sistemul de coordonate. Când se aplică un factor de scală pe orizontală egal cu -1, o imagine desenată în poziția x egală cu 100 va fi desenată în poziția care era referită de -100.
 
 {{index "drawImage method"}}
 
-So to turn a picture around, we can't simply add `cx.scale(-1, 1)` before the call to `drawImage` because that would move our picture outside of the ((canvas)), where it won't be visible. You could adjust the ((coordinates)) given to `drawImage` to compensate for this by drawing the image at x position -50 instead of 0. Another solution, which doesn't require the code that does the drawing to know about the scale change, is to adjust the ((axis)) around which the scaling happens.
+Deci, pentru a oglindi o imagine nu putem doar să adăugăm `cx.scale(-1, 1)` înaintea apelului metodei `drawImage` deoarece imaginea noastră va fi mutată în afara canvasului, unde nu va fi vizibilă. Ați putea ajusta coordonatele transmise către `drawImage` pentru a compensa, desenând imaginea la poziția x -50 în loc de zero. O altă soluție, care nu necesită ca codul de desenare să știe despre scalare, este să ajustați axa în raport cu care se realizează scalarea.
 
 {{index "rotate method", "translate method", transformation}}
 
-There are several other methods besides `scale` that influence the coordinate system for a ((canvas)). You can rotate subsequently drawn shapes with the `rotate` method and move them with the `translate` method. The interesting—and confusing—thing is that these transformations _stack_, meaning that each one happens relative to the previous transformations.
+Există și alte metode, pe lângă `scale` care influențează sistemul de coordonate al canvasului. Puteți roti figurile desenate ulterior prin apelul metodei `rotate` și le puteți muta cu ajutorul metodei `translate`. Faptul interesant - și creator de confuzie - este că aceste transformări sunt _stivuite_, adică fiecare este realizată relativ la transformarea anterioară.
 
 {{index "rotate method", "translate method"}}
 
-So if we translate by 10 horizontal pixels twice, everything will be drawn 20 pixels to the right. If we first move the center of the coordinate system to (50,50) and then rotate by 20 ((degree))s (about 0.1π ((radian))s), that rotation will happen _around_ point (50,50).
+Deci, dacă translatăm de două ori pe orizontală cu 10 pixeli, totul va fi desenat cu 20 pixeli mai spre dreapta. Dacă mai întâi mutăm centrul sistemului de coordonate în (50,50) și apoi rotim cu 20 de grade (aproximativ 0.1π radiani), acea rotație va avea loc în jurul punctului (50,50).
 
 {{figure {url: "img/transform.svg", alt: "Stacking transformations",width: "9cm"}}}
 
 {{index coordinates}}
 
-But if we _first_ rotate by 20 degrees and _then_ translate by (50,50), the translation will happen in the rotated coordinate system and thus produce a different orientation. The order in which transformations are applied matters.
+Dar dacă _mai întâi_ rotim cu 20 de grade și _apoi_ translatăm cu (50,50), translația va avea loc în sistemul de coordonate rotit și deci, va produce o orientare diferită. Ordinea în care se aplică transformările este relevantă.
 
 {{index axis, mirroring}}
 
-To flip a picture around the vertical line at a given x position, we can do the following:
+Pentru a oglindi o imagine relativ la o linie verticală ce trece prin coordonata x putem proceda astfel:
 
 ```{includeCode: true}
 function flipHorizontally(context, around) {
@@ -534,15 +534,15 @@ function flipHorizontally(context, around) {
 
 {{index "flipHorizontally method"}}
 
-We move the y-((axis)) to where we want our ((mirror)) to be, apply the mirroring, and finally move the y-axis back to its proper place in the mirrored universe. The following picture explains why this works: 
+Mutăm axa y în poziția în care vrem să facem oglindirea, aplicăm oglindirea apoi mutăm axa y înapoi în poziția inițială, după oglindire. Imaginea de mai jos explică motivu pentru care această abordare funcționează:
 
 {{figure {url: "img/mirror.svg", alt: "Mirroring around a vertical line",width: "8cm"}}}
 
 {{index "translate method", "scale method", transformation, canvas}}
 
-This shows the coordinate systems before and after mirroring across the central line. The triangles are numbered to illustrate each step. If we draw a triangle at a positive x position, it would, by default, be in the place where triangle 1 is. A call to `flipHorizontally` first does a translation to the right, which gets us to triangle 2. It then scales, flipping the triangle over to position 3. This is not where it should be, if it were mirrored in the given line. The second `translate` call fixes this—it "cancels" the initial translation and makes triangle 4 appear exactly where it should.
+Aceasta prezintă sistemele de coordonate înainte și după oglindirea în raport cu linia centrală. Triunghiurile sunt numerotate pentru a ilustra fiecare pas. Dacă desenăm un triunghi într-o poziție x pozitivă, poziția implicită ar fi cea în care se află triunghiul 1. Un apel către `flipHorizontally` mai întâi efectuează o translatare spre dreapta, prin care obținem triunghiul 2. Apoi se efectuează scalarea, oglindit triunghiul în poziția 3. Aceasta nu este poziția în care ar fi fost plasat dacă am fi oglindit în raport cu linia dată. Al doilea apel către `translate` repară problema - "renunță" la translatarea inițială și triunghiul 4 apare exact în poziția dorită.
 
-We can now draw a mirrored character at position (100,0) by flipping the world around the character's vertical center.
+Acum putem desena un caracter oglindit în poziția (100,0) prin oglindirea lumii din jurul caracterului, relativ la linia verticală ce trece prin centrul său.
 
 ```{lang: "text/html"}
 <canvas></canvas>
@@ -559,23 +559,23 @@ We can now draw a mirrored character at position (100,0) by flipping the world a
 </script>
 ```
 
-## Storing and clearing transformations
+## Stocarea și curățarea transformărilor
 
 {{index "side effect", canvas, transformation}}
 
-Transformations stick around. Everything else we draw after ((drawing)) that mirrored character would also be mirrored. That might be inconvenient.
+Transformările sunt persistente. Tot ceea ce desenăm după ce am desenat caracterul oglindit va fi de asemenea oglindit. Ceea ce ar putea fi inconvenient.
 
-It is possible to save the current transformation, do some drawing and transforming, and then restore the old transformation. This is usually the proper thing to do for a function that needs to temporarily transform the coordinate system. First, we save whatever transformation the code that called the function was using. Then the function does its thing, adding more transformations on top of the  urrent transformation. Finally, we revert to the transformation we started with.
+Putem să salvăm transformarea curentă, apoi să desenăm și să facem alte transformări, iar apoi să restaurăm vechea transformare. De regulă aceasta este abordarea corectă pentru o funcție care trebuie să transforme temporar sistemul de coordonate. Mai întâi, salvăm transformarea pe care o utiliza codul care a apelat funcția. Apoi funcție își execută operațiile, adăugând mai multe transformări peste transformarea curentă. Apoi, resetăm la transformarea inițială.
 
 {{index "save method", "restore method", [state, "of canvas"]}}
 
-The `save` and `restore` methods on the 2D ((canvas)) context do this ((transformation)) management. They conceptually keep a stack of transformation states. When you call `save`, the current state is pushed onto the stack, and when you call `restore`, the state on top of the stack is taken off and used as the context's current transformation. You can also call `resetTransform` to fully reset the transformation.
+Metodele `save` și `restore` ale contextului 2D al canvasului pot fi folosite pentru gestiunea transformărilor. Conceptual, ele gestionează o stivă a stărilor transformărilor. Când apelați `save`, starea curentă este salvată în stivă iar când apelați `restore`, starea din vârful stivei este eliminată și apoi utilizat ca și transformarea curentă a contextului. Puteți apela si `resetTransform` pentru a reseta complet transformarea.
 
 {{index "branching recursion", "fractal example", recursion}}
 
-The `branch` function in the following example illustrates what you can do with a function that changes the transformation and then calls a function (in this case itself), which continues drawing with the given transformation.
+Funcția `branch` din exemplul următor ilustrează ce puteți realiza cu o funcție care modifică transformarea și apoi apelează o altă funcție (în acest caz pe sine), care continuă desenarea cu transformarea dată.
 
-This function draws a treelike shape by drawing a line, moving the center of the coordinate system to the end of the line, and calling itself twice—first rotated to the left and then rotated to the right. Every call reduces the length of the branch drawn, and the recursion stops when the length drops below 8.
+Această funcție desenează o formă asemănătoare unui arbore, mutând centrul sistemului de coordonate la sfârșitul liniei și apoi se apelează de două ori, mai întâi rotită spre stânga și apoi spre dreapta. Fiecare apel reduce lungimea liniei care va fi desenată și recursivitatea se oprește când lungimea liniei este mai mică de 8.
 
 ```{lang: "text/html"}
 <canvas width="600" height="300"></canvas>
@@ -599,7 +599,7 @@ This function draws a treelike shape by drawing a line, moving the center of the
 
 {{if book
 
-The result is a simple fractal.
+Rezultatul este un fractal simplu.
 
 {{figure {url: "img/canvas_tree.png", alt: "A recursive picture",width: "5cm"}}}
 
@@ -607,23 +607,23 @@ if}}
 
 {{index "save method", "restore method", canvas, "rotate method"}}
 
-If the calls to `save` and `restore` were not there, the second recursive call to `branch` would end up with the position and rotation created by the first call. It wouldn't be connected to the current branch but rather to the innermost, rightmost branch drawn by the first call. The resulting shape might also be interesting, but it is definitely not a tree.
+Dacă apelurile către `save` și `restore` ar fi lipsit, cel de al doilea apel al `branch` ar fi fost făcut cu poziția și rotația primului apel. Nu ar fi fost conectat la ramura curentă ci la cea mai interioară și mai din dreapta desenată de primul apel. Forma rezultată ar fi interesantă, dar nu ar fi un arbore.
 
 {{id canvasdisplay}}
 
-## Back to the game
+## Înapoi la joc
 
 {{index "drawImage method"}}
 
-We now know enough about ((canvas)) drawing to start working on a ((canvas))-based ((display)) system for the ((game)) from the [previous chapter](game). The new display will no longer be showing just colored boxes. Instead, we'll use `drawImage` to draw pictures that represent the game's elements.
+Acum știm destule despre desenarea pe canvas ca să începem să lucrăm la un sistem de afișare bazat pe canvas pentru jocul din [capitolul anterior](game). Noul afișaj nu va mai afișa doar dreptunghiuri colorate. În loc de aceasta vom utiliza `drawImage` pentru a desena imagini care reprezintă elementele jocului.
 
 {{index "CanvasDisplay class", "DOMDisplay class", [interface, object]}}
 
-We define another display object type called `CanvasDisplay`, supporting the same interface as `DOMDisplay` from [Chapter ?](game#domdisplay), namely, the methods `syncState` and `clear`. 
+Vom defini un alt tip de obiect pentru afișare, numit `CanvasDisplay` și care va avea aceeași interfață ca și `DOMDisplay` din [capitolul ?](game#domdisplay), adică, va conține metodele `syncState` și `clear`. 
 
 {{index [state, "in objects"]}}
 
-This object keeps a little more information than `DOMDisplay`. Rather than using the scroll position of its DOM element, it tracks its own ((viewport)), which tells us what part of the level we are currently looking at. Finally, it keeps a `flipPlayer` property so that even when the player is standing still, it keeps facing the direction it last moved in.
+Obiectul stochează puțin mai multă informație decât `DOMDisplay`. În loc să utilizeze poziția de derulare a elementului său DOM, acesta își gestionează propriul viewport, ceea ce ne spune la care parte a nivelului privim la un moment dat. În final, menține o proprietate `flipPlayer` astfel încât atunci când jucătorul se oprește, el este orientat în direcția în care a fost efectuată ultima mișcare.
 
 ```{sandbox: "game", includeCode: true}
 class CanvasDisplay {
@@ -650,7 +650,7 @@ class CanvasDisplay {
 }
 ```
 
-The `syncState` method first computes a new viewport and then draws the game scene at the appropriate position.
+Metoda `syncState` mai întâi calculează un nou viewport și apoi desenează scena jocului în poziția corespunzătoare.
 
 ```{sandbox: "game", includeCode: true}
 CanvasDisplay.prototype.syncState = function(state) {
@@ -663,11 +663,11 @@ CanvasDisplay.prototype.syncState = function(state) {
 
 {{index scrolling, clearing}}
 
-Contrary to `DOMDisplay`, this display style _does_ have to redraw the background on every update. Because shapes on a canvas are just ((pixel))s, after we draw them there is no good way to move them (or remove them). The only way to update the canvas display is to clear it and redraw the scene. We may also have scrolled, which requires the background to be in a different position.
+Spre deosbire de `DOMDisplay`, acest tip de display _trebuie_ să redeseneze fundalul la fiecare actualizare. Deoarece figurile de pe canvas sunt doar pixeli, după ce îi desenăm nu avem o modalitate efcieintă de a-i muta (sau elimina). Singura modalitate de a actualiza afișarea canvas este de a curăța și redessena scena. Probabil că am și derulat, ceea ce necesită modificarea poziției fundalului.
 
 {{index "CanvasDisplay class"}}
 
-The `updateViewport` method is similar to `DOMDisplay`'s `scrollPlayerIntoView` method. It checks whether the player is too close to the edge of the screen and moves the ((viewport)) when this is the case.
+Metoda `updateViewport` este similară metodei `scrollPlayerIntoView` a obiectului `DOMDisplay`. Ea verifică dacă jucătorul este prea aproape de margine și deplasează viewportul dacă da.
 
 ```{sandbox: "game", includeCode: true}
 CanvasDisplay.prototype.updateViewport = function(state) {
@@ -692,9 +692,9 @@ CanvasDisplay.prototype.updateViewport = function(state) {
 
 {{index boundary, "Math.max function", "Math.min function", clipping}}
 
-The calls to `Math.max` and `Math.min` ensure that the viewport does not end up showing space outside of the level. `Math.max(x, 0)` makes sure the resulting number is not less than zero. `Math.min` similarly guarantees that a value stays below a given bound.
+Apelurile către `Math.max` și `Math.min` ne asigură că viewportul nu va afișa spațiu în afara nivelului. `Math.max(x, 0)` ne asigură că rezultatul nu este negativ. `Math.min`, în mod simmilar, garantează că valoarea rămâne sub o anumită limită.
 
-When ((clearing)) the display, we'll use a slightly different ((color)) depending on whether the game is won (brighter) or lost (darker).
+Când curățăm afișajul, vom utiliza o culoare ușor diferită, mai luminoasă dacă jocul a fost câștigat sau mai întunecată dacă jocul a fost pierdut.
 
 ```{sandbox: "game", includeCode: true}
 CanvasDisplay.prototype.clearDisplay = function(status) {
@@ -712,7 +712,7 @@ CanvasDisplay.prototype.clearDisplay = function(status) {
 
 {{index "Math.floor function", "Math.ceil function", rounding}}
 
-To draw the background, we run through the tiles that are visible in the current viewport, using the same trick used in the `touches` method from the [previous chapter](game#touches).
+Pentru a desena fundalul, trecem prin pătratele vizibile în viewport, utilizând aceeași tehnică pe care am utilizat-o în metoda `touches` din [capitolul anterior](game#touches).
 
 ```{sandbox: "game", includeCode: true}
 let otherSprites = document.createElement("img");
@@ -742,25 +742,25 @@ CanvasDisplay.prototype.drawBackground = function(level) {
 
 {{index "drawImage method", sprite, tile}}
 
-Tiles that are not empty are drawn with `drawImage`. The `otherSprites` image contains the pictures used for elements other than the player. It contains, from left to right, the wall tile, the lava tile, and the sprite for a coin.
+Pătratele care nu sunt goale for fi desenate cu `drawImage`. Imaginea `otherSprites` conține toate imaginile utilizate pentru elemente, altele decât jucătorul. Ea conține, de la stânga la dreapta, imaginea pentru perete, pentru lava și pentru o monedă.
 
 {{figure {url: "img/sprites_big.png", alt: "Sprites for our game",width: "1.4cm"}}}
 
 {{index scaling}}
 
-Background tiles are 20 by 20 pixels since we will use the same scale that we used in `DOMDisplay`. Thus, the offset for lava tiles is 20 (the value of the `scale` binding), and the offset for walls is 0.
+Pătratele de fundal au dimensiunea de 20 x 20 pixeli deoarece vom utiliza aceeași scală pe care am utilizat-o pentru `DOMDisplay`. Prin urmare, offset-ul pentru pătratele de lava este 20 (valoarea bindingului `scale` iar offsetul pentru pereți este 0.
 
 {{index drawing, "load event", "drawImage method"}}
 
-We don't bother waiting for the sprite image to load. Calling `drawImage` with an image that hasn't been loaded yet will simply do nothing. Thus, we might fail to draw the game properly for the first few ((frame))s, while the image is still loading, but that is not a serious problem. Since we keep updating the screen, the correct scene will appear as soon as the loading finishes.
+Nu ne concentrăm pe a aștepta ca imaginea cu sprite-urile să se încarce. Apelul `drawImage` cu o imagine care nu a fost încă încărcată nu face nimic. Prin urmare, poate că nu reușim să desenăm corespunzător jocul pentru primele câteva cadre, cât timp imaginea încă se încarcă, dar asta nu este o problemă demnă de luat în considerare. Deoarece actualizăm ecranul continuu, scena corectă va apărea imediat ce se termină încărcarea.
 
 {{index "player", [animation, "platform game"], drawing}}
 
-The ((walking)) character shown earlier will be used to represent the player. The code that draws it needs to pick the right ((sprite)) and direction based on the player's current motion. The first eight sprites contain a walking animation. When the player is moving along a floor, we cycle through them based on the current time. We want to switch frames every 60 milliseconds, so the ((time)) is divided by 60 first. When the player is standing still, we draw the ninth sprite. During jumps, which are recognized by the fact that the vertical speed is not zero, we use the tenth, rightmost sprite.
+Caracterul în mișcare prezentat anterior va fi utilizat pentru a reprezenta jucătorul. Codul care îl desenează trebuie să aleagă sprite-ul corect și direcția, pe baza mișcării curente a jucătorului. Primele 8 sprite-uri conțin animația deplasării. Când jucătorul se mișcă de-a lungul unei podele, ciclăm printre ele pe baza timpului curent. Vrem să comutăm imaginea la fiecare 60 milisecunde, astfel că împărțim timpul la 60 mai întâi. Când jucătorul stă, desenăm cel de al nouălea sprite. În timpul salturilor, identificate prin faptul că viteza pe verticală este nenulă, utilizăm cel de al zecelea (și cel mai din dreapta sprite).
 
 {{index "flipHorizontally function", "CanvasDisplay class"}}
 
-Because the ((sprite))s are slightly wider than the player object—24 instead of 16 pixels to allow some space for feet and arms—the method has to adjust the x-coordinate and width by a given amount (`playerXOverlap`).
+Deoarece sprite-urile sunt puțin mai late decât obiectul jucător - 24 în loc de 16 pixeli pentru a adăuga spațiu pentru picioare și mâini - metoda trebuie să ajusteze coordonata x cu o cantitate dată (`playerXOverlap`).
 
 ```{sandbox: "game", includeCode: true}
 let playerSprites = document.createElement("img");
@@ -793,7 +793,7 @@ CanvasDisplay.prototype.drawPlayer = function(player, x, y,
 };
 ```
 
-The `drawPlayer` method is called by `drawActors`, which is responsible for drawing all the actors in the game.
+Metoda `drawPlayer` este apelată din `drawActors`, care are responsabilitatea de a desena toți actorii din joc.
 
 ```{sandbox: "game", includeCode: true}
 CanvasDisplay.prototype.drawActors = function(actors) {
@@ -814,15 +814,15 @@ CanvasDisplay.prototype.drawActors = function(actors) {
 };
 ```
 
-When ((drawing)) something that is not the ((player)), we look at its type to find the offset of the correct sprite. The ((lava)) tile is found at offset 20, and the ((coin)) sprite is found at 40 (two times `scale`).
+Când desenăm altceva decât jucătorul, consultăm tipul pentru a determina offsetul correct al sprite-ului. Pătratu pentru lava este plasat la offset 20 iar pătratul pentru monedă la 40 (dublul `scale`).
 
 {{index viewport}}
 
-We have to subtract the viewport's position when computing the actor's position since (0,0) on our ((canvas)) corresponds to the top left of the viewport, not the top left of the level. We could also have used `translate` for this. Either way works.
+Trebuie să scădem poziția viewportului când calculăm poziția actorului deoarece (0,0) pe canvasul nostru corespunde coordonatelor colțului stânga-sus al viewportului, nu coordonatelor stânga-sus ale nivelului. Am fi putut utiliza și `translate` pentru aceasta. Oricare abordare funcționează.
 
 {{if interactive
 
-This document plugs the new display into `runGame`:
+Documentul de mai jos conectează nou afișaj în `runGame`:
 
 ```{lang: "text/html", sandbox: game, focus: yes, startCode: true}
 <body>
@@ -838,7 +838,7 @@ if}}
 
 {{index [game, screenshot], [game, "with canvas"]}}
 
-That concludes the new ((display)) system. The resulting game looks something like this:
+Cu aceasta am finalizat noul sistem de afișare. Jocul rezultat ar trebui să arate similar cu imaginea de mai jos:
 
 {{figure {url: "img/canvas_game.png", alt: "The game as shown on canvas",width: "8cm"}}}
 
@@ -846,83 +846,83 @@ if}}
 
 {{id graphics_tradeoffs}}
 
-## Choosing a graphics interface
+## Alegerea unei itnerfețe grafice
 
-So when you need to generate graphics in the browser, you can choose between plain HTML, ((SVG)), and ((canvas)). There is no single _best_ approach that works in all situations. Each option has strengths and weaknesses.
+Când aveți de generat grafică în browser, puteți alege între HTML, SVG și canvas. Nu există o abordare unică, cea mai bună în toate situațiile. Fiecare opțiune are propriile puncte tari și puncte slabe.
 
 {{index "text wrapping"}}
 
-Plain HTML has the advantage of being simple. It also integrates well with ((text)). Both SVG and canvas allow you to draw text, but they won't help you position that text or wrap it when it takes up more than one line. In an HTML-based picture, it is much easier to include blocks of text.
+HTML are avantajul de a fi simplu. De asemenea, se integrează bine cu textul. Atât SVG cât și canvas vă permit să adăugați text, dar nu vă ajută să poziționați acel text sau să îl scrieți pe mai multe linii. Într-o imagine HTML este mult mai ușor să includeți blocuri de text.
 
 {{index zooming, SVG}}
 
-SVG can be used to produce ((crisp)) ((graphics)) that look good at any zoom level. Unlike HTML, it is designed for drawing and is thus more suitable for that purpose.
+SVG poate fi utilizat pentru a crea grafică foarte clară, care arată bine la orice nivel de zoom. Spre deosebire de HTML, este conceput pentru desenare și astfel, este mult mai potrivit pentru acest scop.
 
 {{index [DOM, graphics], SVG, "event handling", ["data structure", tree]}}
 
-Both SVG and HTML build up a data structure (the DOM) that represents your picture. This makes it possible to modify elements after they are drawn. If you need to repeatedly change a small part of a big ((picture)) in response to what the user is doing or as part of an ((animation)), doing it in a canvas can be needlessly expensive. The DOM also allows us to register mouse event handlers on every element in the picture (even on shapes drawn with SVG). You can't do that with canvas.
+Atât HTML cât și CSS construiesc o structură de date (DOM) care reprezintă imaginea. Astfel, elementele pot fi modificate după ce au fost desenate. Dacă trebuie să modificați în mod repetat o mică parte dintr-o imagine mai mare, ca și răspuns la acțiunile utilizatorului sau ca și parte a unei animații, utilizarea unui canvas ar putea fi nedorit de costisitoare. DOM permite și înregistrarea unor handlere pentru evenimentele mouseului asupra fiecărui element al imaginii (chiar și pentru formele desenate cu SVG). Acest lucru nu este posibil cu canvas.
 
 {{index performance, optimization}}
 
-But ((canvas))'s ((pixel))-oriented approach can be an advantage when drawing a huge number of tiny elements. The fact that it does not build up a data structure but only repeatedly draws onto the same pixel surface gives canvas a lower cost per shape.
+Dar abordarea bazată pe pixeli a canvasului poate fi un avantaj atunci când avem de desenat un număr imens de elemente mici. Faptul că nu se construiește o structură de date ci doar se redesenează peste aceeași suprafață de pixeli permite un cost computațional mai scăzut pentru canvas.
 
 {{index "ray tracer"}}
 
-There are also effects, such as rendering a scene one pixel at a time (for example, using a ray tracer) or postprocessing an image with JavaScript (blurring or distorting it), that can be realistically handled only by a ((pixel))-based approach.
+Există și efecte, cum ar fi randarea unei scene pixel cu pixel (utilizând tehnica "ray-tracing") sau post procesarea imaginii în JavaScript (blurare sau distorsionare), care nu sunt gestionate realist decât într-o abordare bazată pe pixeli.
 
-In some cases, you may want to combine several of these techniques. For example, you might draw a ((graph)) with ((SVG)) or ((canvas)) but show ((text))ual information by positioning an HTML element on top of the picture.
+În unele cazuri, ați putea dori să combinați aceste tehnici. De exemplu, ați putea alege să desenați cu SVG  sau canvas, dar să afișați informația textuală prin poziționarea unui element HTML peste figură.
 
 {{index display}}
 
-For nondemanding applications, it really doesn't matter much which interface you choose. The display we built for our game in this chapter could have been implemented using any of these three ((graphics)) technologies since it does not need to draw text, handle mouse interaction, or work with an extraordinarily large number of elements.
+Pentru aplicațiile simple, nu prea contează care dintre interfețe o alegeți. Afișajul pe care l-am construit pentru jocul nostru în acest capitol putea fi implementat utilizând oricare dintre aceste trei tehnologii de grafică deoarece nu trebuie să deseneze text, să gestioneze interacțiunea cu mouseul sau să lucreze cu un număr extraordinar de mare de elemente.
 
-## Summary
+## Rezumat
 
-In this chapter we discussed techniques for drawing graphics in the browser, focusing on the `<canvas>` element.
+În acest capitol am discutat despre tehnici de desenare în browser, cu atenție specială pe elementul `<canvas>`.
 
-A canvas node represents an area in a document that our program may draw on. This drawing is done through a drawing context object, created with the `getContext` method.
+Un nod canvas reprezintă o zonă din document în care programul nostru poate desena. Desenarea se realizează cu ajutorul unui obiect pentru contextul desenării, creat de către metoda `getContext`.
 
-The 2D drawing interface allows us to fill and stroke various shapes. The context's `fillStyle` property determines how shapes are filled. The `strokeStyle` and `lineWidth` properties control the way lines are drawn.
+Interfața 2D pentru desenare ne permite să umplem sau să conturăm diferite forme. Proprietatea `fillStyle` a contextului determină modul de umplere a formelor. Proprietățile `strokeStyle` și `lineWidth` controlează modul în care sunt desenate liniile.
 
-Rectangles and pieces of text can be drawn with a single method call. The `fillRect` and `strokeRect` methods draw rectangles, and the `fillText` and `strokeText` methods draw text. To create custom shapes, we must first build up a path.
+Dreptunghiurile și bucățile de text pot fi desenate prin apelul unei singure metode. Metodele `fillRect` și `strokeRect` desenează dreptunghiuri, iar metodele `fillText` și `strokeText` desenează text. Pentru a crea forme neobișnuite, mai întâi trebuie să construim o cale.
 
 {{index stroking, filling}}
 
-Calling `beginPath` starts a new path. A number of other methods add lines and curves to the current path. For example, `lineTo` can add a straight line. When a path is finished, it can be filled with the `fill` method or stroked with the `stroke` method.
+Apelul metodei `beginPath` începe o nouă cale. Aveți la dispoziție metode pentru a adăuga linii si curbe la calea curentă. Când ați terminat de construit o cale, o puteți umple cu metoda `fill` sau o puteți contura cu metoda `stroke`.
 
-Moving pixels from an image or another canvas onto our canvas is done with the `drawImage` method. By default, this method draws the whole source image, but by giving it more parameters, you can copy a specific area of the image. We used this for our game by copying individual poses of the game character out of an image that contained many such poses.
+Copierea pixelilor dintr-o imagine sau din alt canvas în canvasul nostru se poate realiza cu metoda `drawImage`. Implicit, această metodă desenează toată imaginea sursă, dar furnizându-i mai mulți parametri, puteți copia doar o anumită porțiune din imagine. Am utlizat această tehnică în jocul nostru prin copierea posturilor individuale ale personajului din joc dintr-o imagine care conținea mai multe asemenea posturi.
 
-Transformations allow you to draw a shape in multiple orientations. A 2D drawing context has a current transformation that can be changed with the `translate`, `scale`, and `rotate` methods. These will affect all subsequent drawing operations. A transformation state can be saved with the `save` method and restored with the `restore` method.
+Transformările ne permit să desenăm o formă în mai multe orientări. Un context de desenare 2D are o transformare curentă care poate fi modificată cu metodele `translate`, `scale` și `rotate` și restaurată cu metoda `restore`.
 
-When showing an animation on a canvas, the `clearRect` method can be used to clear part of the canvas before redrawing it.
+Când afișăm o animație pe canvas, metoda `clearRect` poate fi folosită pentru a curăța o parte din canvas înainte de a-l redesena.
 
-## Exercises
+## Exerciții
 
-### Shapes
+### Figuri geometrice
 
 {{index "shapes (exercise)"}}
 
-Write a program that draws the following ((shape))s on a ((canvas)):
+Scrieți un program care desenează următoarele figuri geometrice pe un canvas:
 
 {{index rotation}}
 
-1. A ((trapezoid)) (a ((rectangle)) that is wider on one side)
+1. Un trapez (un dreptunghi cu o latură mai lungă decât cea opusă)
 
-2. A red ((diamond)) (a rectangle rotated 45 degrees or ¼π radians)
+2. Un diamant roșu (un pătrat rotit 45 de grade sau ¼π radians)
 
-3. A zigzagging ((line))
+3. O linie în zig-zag
 
-4. A ((spiral)) made up of 100 straight line segments
+4. O spirală formată din 100 de segmente
 
-5. A yellow ((star))
+5. O stea galbenă
 
 {{figure {url: "img/exercise_shapes.png", alt: "The shapes to draw",width: "8cm"}}}
 
-When drawing the last two, you may want to refer to the explanation of `Math.cos` and `Math.sin` in [Chapter ?](dom#sin_cos), which describes how to get coordinates on a circle using these functions.
+Pentru a le desena pe ultimele două, ați putea avea nevoie să consultați explicația pentru `Math.cos` și `Math.sin` în [capitolul ?](dom#sin_cos), care descrie cum puteți obține coordonatele pe un cerc folosind aceste funcții.
 
 {{index readability, "hard-coding"}}
 
-I recommend creating a function for each shape. Pass the position, and optionally other properties such as the size or the number of points, as parameters. The alternative, which is to hard-code numbers all over your code, tends to make the code needlessly hard to read and modify. 
+Vă recomand să creați câte o funcție pentru fiecare figură geometrică. Transmiteți ca parametri poziția și, opțional, alte proprietăți, cum ar fi dimensiunea și numărul de puncte. Alternativa, care înseamnă hard-codarea numerelor peste tot prin cod, tinde să transforme codul în ceva inutil de dificil în a fi citit și modificat.
 
 {{if interactive
 
@@ -941,35 +941,35 @@ if}}
 
 {{index [path, canvas], "shapes (exercise)"}}
 
-The ((trapezoid)) (1) is easiest to draw using a path. Pick suitable center coordinates and add each of the four corners around the center.
+Trapezul (1) este cel mai ușor de desenat folosind o cale. Alegeți un centru corespunzător de coordonate și apoi plasați cele patru colțuri în jurul centrului.
 
 {{index "flipHorizontally function", rotation}}
 
-The ((diamond)) (2) can be drawn the straightforward way, with a path, or the interesting way, with a `rotate` ((transformation)). To use rotation, you will have to apply a trick similar to what we did in the `flipHorizontally` function. Because you want to rotate around the center of your rectangle and not around the point (0,0), you must first `translate` to there, then rotate, and then translate back.
+Diamantul (2) poate fi desenat direct, cu o cale, sau într-un mod interesant, folosind transformarea `rotate`. Pentru a utiliza rotația, va trebui să aplicați o tehnică similară cu cea pe care am utilizat-o în funcția `flipHorizontally`. Deoarece vreți să rotiți în jurul centrului pătratului și nu în jurul punctului (0,0), trebuie mai întâi să tranaslatați centrul de coordonate în punctul ales, folsind funcția `translate`, apoi să aplicați cele patru rotații și apoi să translatați înapoi centrul de coordonate.
 
-Make sure you reset the transformation after drawing any shape that creates one.
+Asigurați-vă că resetați transformarea după desenarea fiecărei figuri geometrice care o folosește.
 
 {{index "remainder operator", "% operator"}}
 
-For the ((zigzag)) (3) it becomes impractical to write a new call to `lineTo` for each line segment. Instead, you should use a ((loop)). You can have each iteration draw either two ((line)) segments (right and then left again) or one, in which case you must use the evenness (`% 2`) of the loop index to determine whether to go left or right.
+Pentru linia în zxig-zag (3) este nepractic să apelați `lineTo` pentru fiecare segment de dreaptă. Ați putea utiliza o buclă. Pe fiecare iterație ați putea desena două segmente de dreaptă (dreapta și apoi stânga), sau doar unul, caz în care va trebui să folosiți paritatea contorului buclei pentru a determina dacă trebuie să vă deplasați spre stânga sau spre dreapta.
 
-You'll also need a loop for the ((spiral)) (4). If you draw a series of points, with each point moving further along a circle around the spiral's center, you get a circle. If, during the loop, you vary the radius of the circle on which you are putting the current point and go around more than once, the result is a spiral.
+Veți avea nevoie de o buclă și pentru spirală (4). Dacă desenați o serie de puncte, cu fiecare punct deplasându-se mai departe pe un cerc în jurul centrului spiralei, veți obține un cerc. Dacă însă modificați raza cercului pe care plasați punctul curent și vă rotiți de mai multe ori în jurul centrului, rezultatul va fi o spirală.
 
 {{index "quadraticCurveTo method"}}
 
-The ((star)) (5) depicted is built out of `quadraticCurveTo` lines. You could also draw one with straight lines. Divide a circle into eight pieces for a star with eight points, or however many pieces you want. Draw lines between these points, making them curve toward the center of the star. With `quadraticCurveTo`, you can use the center as the control point.
+Steaua (5) ilustrată este construită folosind linii `quadraticCurveTo`. Puteți să o desenați și folosind linii drepte. Împărțiți cercul în 8 felii pentru a desena o stea cu 8 colțuri, apoi desenați linii între aceste puncte care se curbează spre centrul stelei. Cu ajutorul `quadraticCurveTo`, veți putea utiliza centrul ca și punct de control.
 
 hint}}
 
 {{id exercise_pie_chart}}
 
-### The pie chart
+### Diagrama plăcintă
 
 {{index label, text, "pie chart example"}}
 
-[Earlier](canvas#pie_chart) in the chapter, we saw an example program that drew a pie chart. Modify this program so that the name of each category is shown next to the slice that represents it. Try to find a pleasing-looking way to automatically position this text that would work for other data sets as well. You may assume that categories are big enough to leave ample room for their labels.
+[Anterior](canvas#pie_chart) în acest capitol, am văzut un exemplu în care am desenat o diagrama "pie". Modificați acest program astfel încât numele fiecărei categorii este afișat lângă felia care o reprezintă. Încercați să găsiți o modalitate plăcută de a poziționa automat acest text, care să funcționeze și pentru alte seturi de date. Puteți presupune că felia corespunzătoare fiecărei categorii este suficient de mare pentru a permite loc suficient pentru eticheta categoriei.
 
-You might need `Math.sin` and `Math.cos` again, which are described in [Chapter ?](dom#sin_cos).
+Ați putea avea nevoie din nou de `Math.sin` și `Math.cos`, care sunt descrise în [capitolul ?](dom#sin_cos).
 
 {{if interactive
 
@@ -1002,11 +1002,11 @@ if}}
 
 {{index "fillText method", "textAlign property", "textBaseline property", "pie chart example"}}
 
-You will need to call `fillText` and set the context's `textAlign` and `textBaseline` properties in such a way that the text ends up where you want it.
+Va trebui să apelați `fillText` și să setați pentru proprietățile contextului `textAlign` și `textBaseline` valori adecvate pentru a plasa textul unde doriți.
 
-A sensible way to position the labels would be to put the text on the line going from the center of the pie through the middle of the slice. You don't want to put the text directly against the side of the pie but rather move the text out to the side of the pie by a given number of pixels.
+O modalitate de poziționare a etichetelor ar fi să plasați textul pe dreapta care trece prin centrul diagramei și mijlocul feliei. Nu cred că ar arăta foarte bine să plasați textul direct pe conturul diagramei ci să îl mutați cu un anumit număr de pixeli spre exterior.
 
-The ((angle)) of this line is `currentAngle + 0.5 * sliceAngle`. The following code finds a position on this line 120 pixels from the center:
+Unghiul corespunzător respectivei linii este `currentAngle + 0.5 * sliceAngle`. Codul de mai jos determină o poziție pe linia anterioară la 120 de pixeli de centrul diagramei:
 
 ```{test: no}
 let middleAngle = currentAngle + 0.5 * sliceAngle;
@@ -1014,19 +1014,19 @@ let textX = Math.cos(middleAngle) * 120 + centerX;
 let textY = Math.sin(middleAngle) * 120 + centerY;
 ```
 
-For `textBaseline`, the value `"middle"` is probably appropriate when using this approach. What to use for `textAlign` depends on which side of the circle we are on. On the left, it should be `"right"`, and on the right, it should be `"left"`, so that the text is positioned away from the pie.
+Pentru `textBaseline`, valoarea `"middle"` este probabil adecvată când folosiți această abordare. Valoarea pentru `textAlign` depinde de care parte a cercului vă aflați. În stânga, ar trebui să fie `"right"`, iar în dreapta ar trebui să fie `"left"`, astfel încât textul să fie în exteriorul diagramei.
 
 {{index "Math.cos function"}}
 
-If you are not sure how to find out which side of the circle a given angle is on, look to the explanation of `Math.cos` in [Chapter ?](dom#sin_cos). The cosine of an angle tells us which x-coordinate it corresponds to, which in turn tells us exactly which side of the circle we are on.
+Dacă nu sunteți siguri de care parte a cercului este un anume unghi, consultați din nou explicația din [capitolul ?](dom#sin_cos). Cosinusul unui unghi ne spune de fapt de care parte a cercului ne aflăm, în raport cu linia verticală ce trece prin centrul său.
 
 hint}}
 
-### A bouncing ball
+### O minge care sare
 
 {{index [animation, "bouncing ball"], "requestAnimationFrame function", bouncing}}
 
-Use the `requestAnimationFrame` technique that we saw in [Chapter ?](dom#animationFrame) and [Chapter ?](game#runAnimation) to draw a ((box)) with a bouncing ((ball)) in it. The ball moves at a constant ((speed)) and bounces off the box's sides when it hits them. 
+Utilizați tehnica `requestAnimationFrame` din [capitolul ?](dom#animationFrame) și [capitolul ?](game#runAnimation) pentru a desena o cutie cu o minge care sare în interiorul ei. Mingea se va mișca la o viteză constantă și se va reflecta de pe laturile cutiei când le lovește.
 
 {{if interactive
 
@@ -1057,37 +1057,37 @@ if}}
 
 {{index "strokeRect method", animation, "arc method"}}
 
-A ((box)) is easy to draw with `strokeRect`. Define a binding that holds its size or define two bindings if your box's width and height differ. To create a round ((ball)), start a path and call `arc(x, y, radius, 0, 7)`, which creates an arc going from zero to more than a whole circle. Then fill the path.
+O cutie este ușor de desenat folosind `strokeRect`. Definiți un binding sau două pentru latura cutiei, după cum doriți, pentru a memora dimensiunile ei. Pentru a defini o minge rotundă, definiți o cale și apelați `arc(x, y, radius, 0, 7)`, care va crea un arc ce va depăși un cerc complet și apoi umpleți acea cale.
 
 {{index "collision detection", "Vec class"}}
 
-To model the ball's position and ((speed)), you can use the `Vec` class from [Chapter ?](game#vector)[ (which is available on this page)]{if interactive}. Give it a starting speed, preferably one that is not purely vertical or horizontal, and for every ((frame)) multiply that speed by the amount of time that elapsed. When the ball gets too close to a vertical wall, invert the x component in its speed. Likewise, invert the y component when it hits a horizontal wall.
+Pentru a modela poziția și viteza mingii, puteți utiliza clasa `Vec` din [capitolul ?](game#vector)[ (care ete disponibilă pe această pagină]{if interactive}. Dați mingii o viteză inițialăși pentru fiecare cadru, multiplicați acea viteză cu durata de timp scursă. Când mingea se apropie prea mult de un perete vertical, inversați componenta x a vitezei. Similar, inversați componenta y când bila se lovește de un perete orizontal.
 
 {{index "clearRect method", clearing}}
 
-After finding the ball's new position and speed, use `clearRect` to delete the scene and redraw it using the new position.
+După ce determinați noua poziție și viteză a bilei, utilizați `clearRect` pentru a curăța scena și a o redesena utilizând noua poziție.
 
 hint}}
 
-### Precomputed mirroring
+### Oglindire precalculată
 
 {{index optimization, "bitmap graphics", mirror}}
 
-One unfortunate thing about ((transformation))s is that they slow down the drawing of bitmaps. The position and size of each ((pixel)) has to be transformed, and though it is possible that ((browser))s will get cleverer about transformation in the ((future)), they currently cause a measurable increase in the time it takes to draw a bitmap.
+Un aspect nedorit al transformărilor este acela că ele încetinesc desenarea hărților de pixeli. Poziția și dimensiunea fiecărui pixel trebuie să fie transformată și, deși este posibil ca browserele să devină mai inteligente în viitor relativ la transformări, în prezent ele cauzează o creștere măsurabilă în timpul necesar pentru desenarea pixelilor.
 
-In a game like ours, where we are drawing only a single transformed sprite, this is a nonissue. But imagine that we need to draw hundreds of characters or thousands of rotating particles from an explosion. 
+Într-un joc ca al nostru, în care desenăm un singur personaj care se transform, aceasta nu este o problemă. Dar imaginați-vă că trebuie să desenăm sute de personaje sau mii de particule rezultate dintr-o explozie.
 
-Think of a way to allow us to draw an inverted character without loading additional image files and without having to make transformed `drawImage` calls every frame.
+Gândiți-vă la o modalitate de a desena caracterul oglindit fără să mai încărcați o imagine și fără să faceți apeluri `drawImage` pentru fiecare cadru.
 
 {{hint
 
 {{index mirror, scaling, "drawImage method"}}
 
-The key to the solution is the fact that we can use a ((canvas)) element as a source image when using `drawImage`. It is possible to „create an extra `<canvas>` element, without adding it to the document, and draw our inverted sprites to it, once. When drawing an actual frame, we just copy the already inverted sprites to the main canvas.
+Cheia soluției este faptul că putem utiliza un element canvas ca și imagine sursă când utilizăm `drawImage`. Putem crea un element suplimentar `<canvas>`, fără să îl adăugăm la document și să desenăm imaginea oglindită în el, o singură dată. Când desenăm un cadru, doar copiem imaginea deja inversată în canvasul principal.
 
 {{index "load event"}}
 
-Some care would be required because images do not load instantly. We do the inverted drawing only once, and if we do it before the image loads, it won't draw anything. A `"load"` handler on the image can be used to draw the inverted images to the extra canvas. This canvas can be used as a drawing source immediately (it'll simply be blank until we draw the character onto it).
+Trebuie să aveți grijă deoarece imaginile nu se încarcă instantaneu. Desenăm imaginea oglindită o singură dată, dar dacă o desenăm înainte ca imaginea să fie încărcată, nu va fi desenat nimic. Un handler pentru evenimentul `"load"` ar fi util în acest caz, pe extra canvas. Astfel, canvasul va putea fi utilizat ca și sursă de desenare imediat (doar că va fi gol până când desenăm personajul pe el).
 
 hint}}
 
