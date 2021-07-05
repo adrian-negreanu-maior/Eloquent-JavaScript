@@ -1,10 +1,10 @@
 {{meta {load_files: ["code/chapter/18_http.js"]}}}
 
-# HTTP and Forms
+# HTTP ;i formulare
 
 {{quote {author: "Roy Fielding", title: "Architectural Styles and the Design of Network-based Software Architectures", chapter: true}
 
-Communication must be stateless in nature [...] such that each request from client to server must contain all of the information necessary to understand the request, and cannot take advantage of any stored context on the server.
+Comunicația trebuie să fie "stateless" (fără stare) în natură [...] astfel încât fiecare cerere de la client către server trebuie să conțină toată informația necesară pentru a înțege cererea și nu poate profita de orice context stocat pe server.
 
 quote}}
 
@@ -14,13 +14,13 @@ quote}}
 
 {{index [browser, environment]}}
 
-The _Hypertext Transfer Protocol_, already mentioned in [Chapter ?](browser#web), is the mechanism through which data is requested and provided on the ((World Wide Web)). This chapter describes the ((protocol)) in more detail and explains the way browser JavaScript has access to it.
+_Hypertext Transfer Protocol_, menționat deja în [capitolul ?](browser#web), este mecanismul prin care datele sunt solicitate și furnizate în ((World Wide Web)). Acest capitol desrie protocolul mai în detaliu și explică modul în care JavaScript în browser are acces la el.
 
-## The protocol
+## Protocolul
 
 {{index "IP address"}}
 
-If you type _eloquentjavascript.net/18_http.html_ into your browser's ((address bar)), the ((browser)) first looks up the ((address)) of the server associated with _eloquentjavascript.net_ and tries to open a ((TCP)) ((connection)) to it on ((port)) 80, the default port for ((HTTP)) traffic. If the ((server)) exists and accepts the connection, the browser might send something like this:
+Dacă tastați `_eloquentjavascript.net/18_http.html_` în bara de adrese a browserului, browserul va căuta mai întâi adresa serverului asociat cu `_eloquentjavascript.net_` și va încerca să deschidă o conexiune TCP pe portul 80, portul implicit pentru traficul HTTP. Dacă serverul există și acceptă conexiunea, browserul ar putea trimite o cerere cam așa:
 
 ```{lang: http}
 GET /18_http.html HTTP/1.1
@@ -28,7 +28,7 @@ Host: eloquentjavascript.net
 User-Agent: Your browser's name
 ```
 
-Then the server responds, through that same connection.
+Apoi serverul răspunde, prin aceeași conexiune.
 
 ```{lang: http}
 HTTP/1.1 200 OK
@@ -40,11 +40,11 @@ Last-Modified: Mon, 08 Jan 2018 10:29:45 GMT
 ... the rest of the document
 ```
 
-The browser takes the part of the ((response)) after the blank line, its _body_ (not to be confused with the HTML `<body>` tag), and displays it as an ((HTML)) document.
+Browserul preia apoi partea din răspuns după linia goală, _corpul răspunsului_ (a nu se confunda cu tagul `<body>`) și o afișează sub forma unui document HTML.
 
 {{index HTTP}}
 
-The information sent by the client is called the _((request))_. It starts with this line:
+Informația trimisă de către client se numește _cerere_. Ea începe cu această linie:
 
 ```{lang: http}
 GET /18_http.html HTTP/1.1
@@ -52,19 +52,19 @@ GET /18_http.html HTTP/1.1
 
 {{index "DELETE method", "PUT method", "GET method", [method, HTTP]}}
 
-The first word is the _method_ of the ((request)). `GET` means that we want to _get_ the specified resource. Other common methods are `DELETE` to delete a resource, `PUT` to create or replace it, and `POST` to send information to it. Note that the ((server)) is not obliged to carry out every request it gets. If you walk up to a random website and tell it to `DELETE` its main page, it'll probably refuse.
+Primul cuvânt reprezintă _metoda_ cererii. `GET` înseamnă că vrem să _obținem_ resursa specificată. Alte metode obișnuite sunt `DELETE` pentru a șterge o resursă, `PUT` pentru a crea sau înlocui și `POST` pentru a transmite informație. Menționez că serverul nu este obligat să îndeplinească fiecare cerere pe care o primește. Dacă alegeți un server la întrebare și îi cereți să își șteargă (`DELETE`) pagina principală, probabil va refuza.
 
 {{index [path, URL], GitHub, [file, resource]}}
 
-The part after the method name is the path of the _((resource))_ the request applies to. In the simplest case, a resource is simply a file on the ((server)), but the protocol doesn't require it to be. A resource may be anything that can be transferred _as if_ it is a file. Many servers generate the responses they produce on the fly. For example, if you open [_https://github.com/marijnh_](https://github.com/marijnh), the server looks in its database for a user named "marijnh", and if it finds one, it will generate a profile page for that user.
+Partea după numele metodei este calea către _resursa_ căreia i se aplică cererea. În cel mai simplu caz, o resursă este un fișier pe server, dar protocolul nu solicită asta. O resursă poate orice care poate fi transferat _ca și cum_ ar fi un fișier. Multe servere generează răspunsul "on-the-fly". De exemplu, dacă deschideți [_https://github.com/marijnh_](https://github.com/marijnh), serverul își va consulta baza de date pentru un utilizator numit "marijnh" și, dacă găsește unul, va genera o pagină de profil pentru acel utilizator.
 
-After the resource path, the first line of the request mentions `HTTP/1.1` to indicate the ((version)) of the ((HTTP)) ((protocol)) it is using.
+După calea către resursă, prima linie a cererii menționează `HTTP/1.1` pentru a indica versiunea protocolului HTTP ce este utilizată.
 
-In practice, many sites use HTTP version 2, which supports the same concepts as version 1.1 but is a lot more complicated so that it can be faster. Browsers will automatically switch to the appropriate protocol version when talking to a given server, and the outcome of a request is the same regardless of which version is used. Because version 1.1 is more straightforward and easier to play around with, we'll focus on that.
+În practică, multe site-uri folosesc HTTP versiunea 2, care suportă aceleași concepte ca și versiunea 1.1 dar este mult mai complicat, astfel încât poate fi mai rapid. Browserele vor comuta automat la versiunea adecvată a protocolului atunci când discută cu un server dat, iar rezultatul unei cereri este același indiferent de versiunea utilizată. Deoarece versiunea 1.1 este mai directă și mai ușor de utilizat, ne vom concentra pe aceasta.
 
 {{index "status code"}}
 
-The server's ((response)) will start with a version as well, followed by the status of the response, first as a three-digit status code and then as a human-readable string.
+Răspunsul serverului va începe tot cu o versiune, urmată de statusul răspunsului, mai întâi ca un cod de trei cifre și apoi un string lizibil.
 
 ```{lang: http}
 HTTP/1.1 200 OK
@@ -72,13 +72,13 @@ HTTP/1.1 200 OK
 
 {{index "200 (HTTP status code)", "error response", "404 (HTTP status code)"}}
 
-Status codes starting with a 2 indicate that the request succeeded. Codes starting with 4 mean there was something wrong with the ((request)). 404 is probably the most famous HTTP status code—it means that the resource could not be found. Codes that start with 5 mean an error happened on the ((server)) and the request is not to blame.
+Codurile de stare ce încep cu 2 indică reușita cererii. Codurile care încep cu 4 înseamnă că ceva a fost greșit cu cererea. 404 este probabil cel mai faimos cod de stare HTTP - înseamnă că resursa nu a fost găsită. Codurile care încep cu 5 înseamnă că a avut loc o eroare pe server și cererea nu trebuie blamată.
 
 {{index HTTP}}
 
 {{id headers}}
 
-The first line of a request or response may be followed by any number of _((header))s_. These are lines in the form `name: value` that specify extra information about the request or response. These headers were part of the example ((response)):
+Prima linie a cererii sau a răspunsului poate fi urmată de oricâte _headere_. Acestea sunt linii sub forma `name: value` care specifică informații suplimentare despre cerere sau răspuns. Aceste headere au fost parte din răspunsul la exemplu: 
 
 ```{lang: null}
 Content-Length: 65585
@@ -88,27 +88,27 @@ Last-Modified: Thu, 04 Jan 2018 14:05:30 GMT
 
 {{index "Content-Length header", "Content-Type header", "Last-Modified header"}}
 
-This tells us the size and type of the response document. In this case, it is an HTML document of 65,585 bytes. It also tells us when that document was last modified.
+Acestea ne comunică dimensiunea și tipul documentului de răspuns. În cazul nostru, este un document HTML de 65,585 bytes. De asemenea, ni se spune când a fost modificat documentul pentru ultima oară.
 
 {{index "Host header", domain}}
 
-For most ((header))s, the client and server are free to decide whether to include them in a ((request)) or ((response)). But a few are required. For example, the `Host` header, which specifies the hostname, should be included in a request because a ((server)) might be serving multiple hostnames on a single ((IP address)), and without that header, the server won't know which hostname the client is trying to talk to.
+Pentru majoritatea headere-lor, clientul și serverul au libertatea de a decide dacă să le includă sau nu în cerere sau în răspuns. Dar câteva sunt obligatorii. De exemplu, header-ul `Host`, care specifică numele gazdei, trebuie inclus în cerere, deoarece serverul ar putea deservi gazde cu mai multe nume pe o singură adresă IP, și fără acest header serverul nu poate știi cu care dintre gazde încearcă să discute clientul.
 
 {{index "GET method", "DELETE method", "PUT method", "POST method", "body (HTTP)"}}
 
-After the headers, both requests and responses may include a blank line followed by a body, which contains the data being sent. `GET` and `DELETE` requests don't send along any data, but `PUT` and `POST` requests do. Similarly, some response types, such as error responses, do not require a body.
+După headere, atât cererea cât și răspunsul pot include o linie goalp, urmată de un corp, care conține datele care se vor transmite. Cererile `GET` și `DELETE` nu trimit nici un fel de date, dar `PUT` și `POST` vor trimite. Similar, unele tipuri de răspunsuri, cum ar fi cele de eroare, nu necesită un corp.
 
-## Browsers and HTTP
+## Browserele și HTTP
 
 {{index HTTP, [file, resource]}}
 
-As we saw in the example, a ((browser)) will make a request when we enter a ((URL)) in its ((address bar)). When the resulting HTML page references other files, such as ((image))s and JavaScript files, those are also retrieved.
+După cum am văzut în exemplu, un browser va efectua o cerere când introducem un URL în bara sa de adrese. Când pagina HTML rezultată va referi și alte fișiere, cum ar fi imagini sau fișiere JavaScript, acestea vor fi la rândul lor returnate.
 
 {{index parallelism, "GET method"}}
 
-A moderately complicated ((website)) can easily include anywhere from 10 to 200 ((resource))s. To be able to fetch those quickly, browsers will make several `GET` requests simultaneously, rather than waiting for the responses one at a time.
+Un website de complexitate moderată poate include ușor între 10 și 200 resurse. Pentru a le putea aduce rapid, browserele vor face mai multe cereri `GET` simultan, în loc să aștepte secvențial răspunsul la fiecare cerere.
 
-HTML pages may include _((form))s_, which allow the user to fill out information and send it to the server. This is an example of a form: 
+Paginile HTML pot include _formulare_ care permit utilizatorului să completeze informația și să o trimită la server. Acesta este un exemplu de formular:
 
 ```{lang: "text/html"}
 <form method="GET" action="example/message.html">
@@ -120,9 +120,9 @@ HTML pages may include _((form))s_, which allow the user to fill out information
 
 {{index form, "method attribute", "GET method"}}
 
-This code describes a form with two ((field))s: a small one asking for a name and a larger one to write a message in. When you click the Send ((button)), the form is _submitted_, meaning that the content of its field is packed into an HTTP request and the browser navigates to the result of that request.
+Codul de mai sus descrie un formular cu două câmpuri: unul mai mic pentru nume și unul mai mare pentru a scrie un mesaj în el. Când apăsați butonul "Send", formularul este _trimis_, ceea ce înseamnă că va fi împachetat conținutul câmpurilor sale într-o cerere HTTP și browserul va naviga la rezultatul acelei cereri.
 
-When the `<form>` element's `method` attribute is `GET` (or is omitted), the information in the form is added to the end of the `action` URL as a _((query string))_. The browser might make a request to this URL:
+Când atributul `method` al elementului `<form>` are valoarea `GET` (sau este omis), informația din formular este adăugată la sfârșitul URL-ului `action` ca și un _query string_. Browserul ar putea face o cerere la acest URL:
 
 ```{lang: null}
 GET /example/message.html?name=Jean&message=Yes%3F HTTP/1.1
@@ -130,11 +130,11 @@ GET /example/message.html?name=Jean&message=Yes%3F HTTP/1.1
 
 {{index "ampersand character"}}
 
-The ((question mark)) indicates the end of the path part of the URL and the start of the query. It is followed by pairs of names and values, corresponding to the `name` attribute on the form field elements and the content of those elements, respectively. An ampersand character (`&`) is used to separate the pairs.
+Semnul de întrebare marchează sfârșitul părții despre calea URL-ului și începutul interogării. Apoi urmează o succesiune de nume și valori, corespunzătoare atributelor `name` de pe câmpurile formularului și conținutului acelor elemente. Un caracter ampersand (`&`) este utilizat pentru a separa perechile.
 
 {{index [escaping, "in URLs"], "hexadecimal number", "encodeURIComponent function", "decodeURIComponent function"}}
 
-The actual message encoded in the URL is "Yes?", but the question mark is replaced by a strange code. Some characters in query strings must be escaped. The question mark, represented as `%3F`, is one of those. There seems to be an unwritten rule that every format needs its own way of escaping characters. This one, called _((URL encoding))_, uses a ((percent sign)) followed by two hexadecimal (base 16) digits that encode the character code. In this case, 3F, which is 63 in decimal notation, is the code of a question mark character. JavaScript provides the `encodeURIComponent` and `decodeURIComponent` functions to encode and decode this format.
+Mesajul codificat în URL este "Yes?", dar semnul de întrebare este înlocuit de un cod straniu. Unele caractere din query string trebuie să fie înlocuite. Semnul de întrebare, reprezentat ca `%3F`, este unul dintre ele. Pare să fie o regulă nescrisă că fiecare format necesită propriul său mod de "escaping". În acest caz, 3F, care reprezintă 63 în notație zecimală este codul caracterului  `?`. JavaScript vă pune la dispoziție funcțiile `encodeURIComponent` și `decodeURIComponent` pentru a codifica și decodifica acest format.
 
 ```
 console.log(encodeURIComponent("Yes?"));
@@ -145,7 +145,7 @@ console.log(decodeURIComponent("Yes%3F"));
 
 {{index "body (HTTP)", "POST method"}}
 
-If we change the `method` attribute of the HTML form in the example we saw earlier to `POST`, the ((HTTP)) request made to submit the ((form)) will use the `POST` method and put the ((query string)) in the body of the request, rather than adding it to the URL.
+Dacă schimbăm atributul `method` al formularului din exemplul anterior la `POST`, cererea HTTP pentru trimiterea formularului va utiliza metoda `POST` și va plasa stringul de cerere în corpul cererii, în loc să îl adauge la URL.
 
 ```{lang: http}
 POST /example/message.html HTTP/1.1
@@ -155,17 +155,17 @@ Content-type: application/x-www-form-urlencoded
 name=Jean&message=Yes%3F
 ```
 
-`GET` requests should be used for requests that do not have ((side effect))s but simply ask for information. Requests that change something on the server, for example creating a new account or posting a message, should be expressed with other methods, such as `POST`. Client-side software such as a browser knows that it shouldn't blindly make `POST` requests but will often implicitly make `GET` requests—for example to prefetch a resource it believes the user will soon need.
+Cererile `GET` trebuie utilizate pentru cereri care nu au efecte secundare ci doar solicită informație. Cererile care modifică o resursă pe server, cum ar fi crearea unui nou cont sau postarea unui mesaj, trebuie exprimate cu alte metode, cum ar fi `POST`. Software-ul client cum ar fi un browser știe că nu trebuie să facă orbește cereri `POST` dar adesea va efectua implicit cereri `GET` - de exemplu, preîncărcarea unei resurse despre care crede că utilizatorul va avea nevoie în curând.
 
-We'll come back to forms and how to interact with them from JavaScript [later in the chapter](http#forms).
+Vom reveni asupra formularelor și a modului în care putem interacționa cu ele în JavaScript [mai târziu în acest capitol](http#forms).
 
 {{id fetch}}
 
-## Fetch
+## `fetch`
 
 {{index "fetch function", "Promise class", [interface, module]}}
 
-The interface through which browser JavaScript can make HTTP requests is called `fetch`. Since it is relatively new, it conveniently uses promises (which is rare for browser interfaces).
+Interfața prin care JavaScript în browser poate efectua cereri HTTP se numește `fetch`. Deoarece este relativ nouă, ea utilizează în mod convenabil promisiunile (ceea ce este rar pentru interfețele browserului).
 
 ```{test: no}
 fetch("example/data.txt").then(response => {
@@ -178,17 +178,17 @@ fetch("example/data.txt").then(response => {
 
 {{index "Response class", "status property", "headers property"}}
 
-Calling `fetch` returns a promise that resolves to a `Response` object holding information about the server's response, such as its status code and its headers. The headers are wrapped in a `Map`-like object that treats its keys (the header names) as case insensitive because header names are not supposed to be case sensitive. This means  `headers.get("Content-Type")` and `headers.get("content-TYPE")` will return the same value.
+Apelarea `fetch` returnează o promisiune care se rezolvă la un obiect `Response` ce reține informația despre răspunsul serverului, cum ar fi codul de stare și header-ele. Header-ele sunt împachetate într-un obiect asemănător unui `Map` care tratează cheile (numele headerelor) fără diferența între litere mari și mici deoarece se presupune că această diferență nu trebuie să se facă pentru numele headere-lor. Aceasta înseamnă că `headers.get("Content-Type")` și `headers.get("content-TYPE")` vor returna aceeași valoare.
 
-Note that the promise returned by `fetch` resolves successfully even if the server responded with an error code. It _might_ also be rejected if there is a network error or if the ((server)) that the request is addressed to can't be found.
+De menționat că promisiunea returnată de `fetch` se rezolvă cu succes chiar dacă serverul răspunde cu un cod de eroare. Dar poate fi _respinsă_ dacă există o eroare de rețea sau serverul căruia îi este adresată cererea nu poate fi găsit.
 
 {{index [path, URL], "relative URL"}}
 
-The first argument to `fetch` is the URL that should be requested. When that ((URL)) doesn't start with a protocol name (such as _http:_), it is treated as _relative_, which means it is interpreted relative to the current document. When it starts with a slash (/), it replaces the current path, which is the part after the server name. When it does not, the part of the current path up to and including its last ((slash character)) is put in front of the relative URL.
+Primul argument al `fetch` este URL-ul ce trebuie solicitat. Când acel URL nu începe cu numele unui protocol (cum ar fi _http:_), cererea este tratată ca fiind _relativă_, adică este interpretată relativ la documentul curent. Când începe cu `/` este înlocuită calea curentă, care este partea de după numele serverului. Dacă nu , calea curentă, până la ultimul caracter `/` este plasată în fața URL-ului relativ.
 
 {{index "text method", "body (HTTP)", "Promise class"}}
 
-To get at the actual content of a response, you can use its `text` method. Because the initial promise is resolved as soon as the response's headers have been received and because reading the response body might take a while longer, this again returns a promise.
+Pentru a obține conținutul propri-zis al unui răspuns, puteți utiliza metoda `text`. Deoarece promisiunea inițială este rezolvată imediat ce headerele de răspuns au fost primite și deoarece citirea corpului răspunsului ar putea necesita mai mult timp, din nou este returnată o promisiune.
 
 ```{test: no}
 fetch("example/data.txt")
@@ -199,11 +199,11 @@ fetch("example/data.txt")
 
 {{index "json method"}}
 
-A similar method, called `json`, returns a promise that resolves to the value you get when parsing the body as ((JSON)) or rejects if it's not valid JSON.
+O metodă similară, numită `json`, returnează o promisiune care see rezolvă la valoarea pe care o obțineți parsând corpul ca JSON sau este respinsă dacă nu avem de a face cu JSON valid.
 
 {{index "GET method", "body (HTTP)", "DELETE method", "method property"}}
 
-By default, `fetch` uses the `GET` method to make its request and does not include a request body. You can configure it differently by passing an object with extra options as a second argument. For example, this request tries to delete `example/data.txt`:
+Implicit, `fetch` utilizează metoda `GET` pentru cerere și nu include un corp al cererii. O puteți configura diferit prin transmiterea unui obiect cu opțiuni suplimentare ca al doilea argument. De exemplu, cererea de mai jos încearcă să șteargă `example/data.txt`:
 
 ```{test: no}
 fetch("example/data.txt", {method: "DELETE"}).then(resp => {
@@ -214,11 +214,11 @@ fetch("example/data.txt", {method: "DELETE"}).then(resp => {
 
 {{index "405 (HTTP status code)"}}
 
-The 405 status code means "method not allowed", an HTTP server's way of saying "I can't do that".
+Codul de stare 405 înseamnă "method not allowed", modul HTTP de a răspunde "Nu pot face asta".
 
 {{index "Range header", "body property", "headers property"}}
 
-To add a request body, you can include a `body` option. To set headers, there's the `headers` option. For example, this request includes a `Range` header, which instructs the server to return only part of a response.
+Pentru a adăuga un corp al cererii, puteți include o opțiune `body`. Pentru a seta headerele aveți opțiunea `headers`. De exemplu, cererea de mai jos include un header `Range`, care instruiește serverul să returneze doar o parte din răspuns.
 
 ```{test: no}
 fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
@@ -227,7 +227,7 @@ fetch("example/data.txt", {headers: {Range: "bytes=8-19"}})
 // → the content
 ```
 
-The browser will automatically add some request ((header))s, such as "Host" and those needed for the server to figure out the size of the body. But adding your own headers is often useful to include things such as authentication information or to tell the server which file format you'd like to receive.
+Browserul va adăuga automat câteva headere, cum ar fi "Host" și cele necesare pentru server ca să își dea seama de dimensiunea corpului. Dar adăugarea propriilor headere este adesea utilă pentru a include lucruri cum ar informația de autentificare sau pentru a informa serverul ce format de fișier am dori să primim.
 
 {{id http_sandbox}}
 
@@ -235,86 +235,85 @@ The browser will automatically add some request ((header))s, such as "Host" and 
 
 {{index sandbox, [browser, security]}}
 
-Making ((HTTP)) requests in web page scripts once again raises concerns about ((security)). The person who controls the script might not have the same interests as the person on whose computer it is running. More specifically, if I visit _themafia.org_, I do not want its scripts to be able to make a request to _mybank.com_, using identifying information from my browser, with instructions to transfer all my money to some random account.
+Efectuarea cererilor HTTP în scripturile din paginile web ridică din nou preocupări legate de securitate. Persoana care controlează scriptul ar putea să nu aibă aceleași interese ca și persoana pe al cărei computer rulează scriptul. Mai specific, dacă vizitez _themafia.org_, nu vreau ca scripturile sale să poată face cereri către _mybank.com_, utilizând informație de identificare din browserul meu, cu instrucțiuni de transfer al banilor mei spre un cont la întâmplare. 
 
-For this reason, browsers protect us by disallowing scripts to make HTTP requests to other ((domain))s (names such as _themafia.org_ and _mybank.com_).
+Din acest motiv, browserele ne protejează prin interzicerea scripturilor ca să efectueze cereri HTTP spre alte domenii.
 
 {{index "Access-Control-Allow-Origin header", "cross-domain request"}}
 
-This can be an annoying problem when building systems that want to access several domains for legitimate reasons. Fortunately, ((server))s can include a ((header)) like this in their ((response)) to explicitly indicate to the browser that it is okay for the request to come from another domain:
+Aceasta poate fi o problemă deranjantă când construim sisteme care trebuie să acceseze câteva domenii din motive legitime. Din fericire, serverele pot include un header în răspuns pentru a indica explicit că browserul este în regulă cu o cerere care provine dintr-un alt domeniu:
 
 ```{lang: null}
 Access-Control-Allow-Origin: *
 ```
 
-## Appreciating HTTP
+## Aprecierea HTTP
 
 {{index client, HTTP, [interface, HTTP]}}
 
-When building a system that requires ((communication)) between a JavaScript program running in the ((browser)) (client-side) and a program on a ((server)) (server-side), there are several different ways to model this communication.
+Când construim un sistem care necesită comunicare între un program JavaScript ce rulează în browser (client) și un program de pe server, există mai multe moduri de a modela această comunicare.
 
 {{index [network, abstraction], abstraction}}
 
-A commonly used model is that of _((remote procedure call))s_. In this model, communication follows the patterns of normal function calls, except that the function is actually running on another machine. Calling it involves making a request to the server that includes the function's name and arguments. The response to that request contains the returned value.
+Un model utilizat frecvent este _remote procedure call_. În acest model, comunicarea urmează șabloanele unui apel normal de funcție, cu excepția faptului că funncția este executată pe o altă mașină. Apelul presupune realizarea unei cereri către server care include numele funcției și argumentele. Răspunsul la acea cerere conține valoarea returnată.
 
-When thinking in terms of remote procedure calls, HTTP is just a vehicle for communication, and you will most likely write an abstraction layer that hides it entirely.
+Când gândim în termeni de apeluri procedurale la distanță, HTTP este doar vehiculul pentru comunicare și probabil veți scrie un strat de abstractizare care îl ascunde complet.
 
 {{index "media type", "document format", [method, HTTP]}}
 
-Another approach is to build your communication around the concept of ((resource))s and ((HTTP)) methods. Instead of a remote procedure called `addUser`, you use a `PUT` request to `/users/larry`. Instead of encoding that user's properties in function arguments, you define a JSON document format (or use an existing format) that represents a user. The body of the `PUT` request to create a new resource is then such a document. A resource is fetched by making a `GET` request to the resource's URL (for example, `/user/larry`), which again returns the document representing the resource.
+O altă abordare ar fi să construiți comunicația în jurul conceptului de _resurse_ și metode HTTP. În locul unui apel la distanță către procedura `addUser`, ați putea utiliza o cerere `PUT` către `/users/larry`. În loc să codificați proprietățile utilizatorului ca argumente ale funcției, definiți un document în format JSON (sau utilizați un format existent) ce reprezintă utilizatorul. Corpul cererii `PUT` pentru a crea o nouă resursă este apoi tocmai un astfel de document. O resursă este adusă printr-o cerere `GET` către URL-ul resursei (de exemplu, `/user/larry`), care va returna din nou un document ce reprezintă resursa.
 
-This second approach makes it easier to use some of the features that HTTP provides, such as support for caching resources (keeping a copy on the client for fast access). The concepts used in HTTP, which are well designed, can provide a helpful set of principles to design your server interface around.
+Această abordare ușurează utilizarea caracteristicilor care sunt puse la dispoziție de HTTP, cum ar fi suport pentru stocarea în cache a resurselor (păstrarea unei copii la client pentru acces rapid). Conceptele folosite în HTTP, care sutn bine concepute, oferă un set util de principii pentru a defini interfața serverului.
 
-## Security and HTTPS
+## Securitatea și HTTPS
 
 {{index "man-in-the-middle", security, HTTPS, [network, security]}}
 
-Data traveling over the Internet tends to follow a long, dangerous road. To get to its destination, it must hop through anything from coffee shop Wi-Fi hotspots to networks controlled by various companies and states. At any point along its route it may be inspected or even modified.
+Datele ce călătoresc prin Internet tind să urmeze un drum lung și periculos. Pentru a ajunge la destinație, trebuie să treacă prin orice, de la hotspoturi WiFi din cafenele până la rețele controlate de diferite companii și state. În orice punct de-a lungul rutei, ele pot fi inspectate și chiar modificate.
 
 {{index tampering}}
 
-If it is important that something remain secret, such as the ((password)) to your ((email)) account, or that it arrive at its destination unmodified, such as the account number you transfer money to via your bank's website, plain HTTP is not good enough. 
+Dacă este important secretul informațiilor, cum ar fi parole sau conturi de email, sau ca datele să ajungă la destinație nemodificate, cum ar fi numărul de cont în care transferați banii prin site-ul web al unei bănci, HTTP nu este suficient de bun.
 
 {{index cryptography, encryption}}
 
 {{indexsee "Secure HTTP", HTTPS, [browser, security]}}
 
-The secure ((HTTP)) protocol, used for ((URL))s starting with _https://_, wraps HTTP traffic in a way that makes it harder to read and tamper with. Before exchanging data, the client verifies that the server is who it claims to be by asking it to prove that it has a cryptographic ((certificate)) issued by a certificate authority that the browser recognizes. Next, all data going over the ((connection)) is encrypted in a way that should prevent eavesdropping and tampering.
+Protocolul HTTP securizat, utilizat pentru URL-uri care încep cu _https://_, împachetează traficul HTTP într-un mod care îngreunează citirea și modificarea datelor. Înainte de a schimba datele, clientul verifică identitatea serverului prin a îi cere să demonstreze că deține un certificat criptografic eliberat de către o autoritate certificată pe care browserul o recunoaște. Apoi, toate datele ce parcurg conexiunea vor fi criptate într-un mod care ar trebui să prevină citirea sau modificarea neautorizată.
 
-Thus, when it works right, ((HTTPS)) prevents other people from impersonating the website you are trying to talk to and from snooping on your communication. It is not perfect, and there have been various incidents where HTTPS failed because of forged or stolen certificates and broken software, but it is a _lot_ safer than plain HTTP.
+Astfel, când funcționează corect, HTTPS interzice altor persoane să impersoneze site-ul web cu care încercăm să comunicăm și să spioneze comunicația noastră. Nu este perfect, și au existat incidente în care HTTPS a eșuat din cauza unor certificate furate sau "fabricate" și a unui software defect, dar este _mult_ mai sigur decât HTTP.
 
 {{id forms}}
 
-## Form fields
+## Câmpuri în formulare
 
-Forms were originally designed for the pre-JavaScript Web to allow web sites to send user-submitted information in an HTTP request. This design assumes that interaction with the server always happens by navigating to a new page.
+Formularele au fost original concepute înaintea Web-ului cu JavaScript pentru a permite web siteurilor să trimită informație de la utilizator într-o cerere HTTP. Conceptul presupune că interacțiunea cu serverul are loc întotdeauna prin navigarea la o pagină nouă.
 
 {{index [DOM, fields]}}
 
-But their elements are part of the DOM like the rest of the page, and the DOM elements that represent form ((field))s support a number of properties and events that are not present on other elements. These make it possible to inspect and control such input fields with JavaScript programs and do things such as adding new functionality to a form or using forms and fields as building blocks in a JavaScript application.
+Dar elementele formularelor sunt parte din DOM, ca și restul paginii, iar elementele DOM care reprezintă câmpuri din formulare suportă câteva proprietăți și evenimente care nu sunt prezente pentru alte elemente. Acestea fac posibilă inspectarea și controlul unor asemenea câmpuri de intrare cu programe JavaScript și operații cum ar fi adăugarea de funcționalitate nouă la un formular sau utilizarea formularelor și a câmpurilor ca și blocuri de construcție a aplicațiilor JavaScript.
 
 {{index "form (HTML tag)"}}
 
-A web form consists of any number of input ((field))s grouped in a `<form>` tag. HTML allows several different styles of fields, ranging from simple on/off checkboxes to drop-down menus and fields for text input. This book won't try to comprehensively discuss all field types, but we'll start with a rough overview.
+Un formular web constă din mai multe câmpuri de intrare, grupate într-un tag `<form>`. HTML permite mai multe tipuri de câmpuri, de la simple cutii de bifare on/off până la meniuri drop-down și câmpuri pentru introducere textelor. În această carte nu vom încerca să discutăm extensiv despre toate tipurile de câmpuri, doar vom face o introducere.
 
 {{index "input (HTML tag)", "type attribute"}}
 
-A lot of field types use the
-`<input>` tag. This tag's `type` attribute is used to select the field's style. These are some commonly used `<input>` types: 
+Multe tipuri de câmpuri folosesc tag-ul `<input>`. Atributul `type` al acestui tag este utilizat pentru a selecta stilul câmpului. Iată câteva tipuri de `<input>` utilizate frecvent: 
 
 {{index "password field", checkbox, "radio button", "file field"}}
 
 {{table {cols: [1,5]}}}
 
-| `text`     | A single-line ((text field))
-| `password` | Same as `text` but hides the text that is typed
-| `checkbox` | An on/off switch
-| `radio`    | (Part of) a ((multiple-choice)) field
-| `file`     | Allows the user to choose a file from their computer
+| `text`     | Un câmp de text pe un singură linie
+| `password` | Identic cu `text` dar ascunde textul care a fost introdus
+| `checkbox` | Un comutator on/off
+| `radio`    | Parte a unui câmp cu alegeri multiple
+| `file`     | Permite utilizatorului să aleagă un fișier din computerul său
 
 {{index "value attribute", "checked attribute", "form (HTML tag)"}}
 
-Form fields do not necessarily have to appear in a `<form>` tag. You can put them anywhere in a page. Such form-less fields cannot be ((submit))ted (only a form as a whole can), but when responding to input with JavaScript, we often don't want to submit our fields normally anyway.
+Câmpurile nu trebuie să apară obligatoriu într-un tag `<form>`. Le puteți plasa oriunde în pagină. Asemenea câmpuri fără formular nu pot fi trimise (doar formularele pot fi trimise), dar atunci când răspundem la datele de intrare cu JavaScript, de cele mai multe ori nu vrem să trimitem datele din câmpuri în mod obișnuit.
 
 ```{lang: "text/html"}
 <p><input type="text" value="abc"> (text)</p>
@@ -328,17 +327,17 @@ Form fields do not necessarily have to appear in a `<form>` tag. You can put the
 
 {{if book
 
-The fields created with this HTML code look like this:
+Câmpurile create de codul HTML de mai sus arată cam așa:
 
 {{figure {url: "img/form_fields.png", alt: "Various types of input tags",width: "4cm"}}}
 
 if}}
 
-The JavaScript interface for such elements differs with the type of the element.
+Interfața JavaScript pentru asemenea elemente depinde de tipul de element.
 
 {{index "textarea (HTML tag)", "text field"}}
 
-Multiline text fields have their own tag, `<textarea>`, mostly because using an attribute to specify a multiline starting value would be awkward. The `<textarea>` tag requires a matching `</textarea>` closing tag and uses the text between those two, instead of the `value` attribute, as starting text.
+Câmpurile text pe mai multe linii au propriul lor tag, `<textarea>`, în principal din cauză că utilizarea unui atribut pentru a preciza o valoare pe mai multe linii ar fi ciudată. Tagul `<textarea>` are nevoie de perechea `</textarea>` pentru închidere și utilizează textul din interiorul perechii de marcaje în locul atributului `value`, ca și text inițial.
 
 ```{lang: "text/html"}
 <textarea>
@@ -350,7 +349,7 @@ three
 
 {{index "select (HTML tag)", "option (HTML tag)", "multiple choice", "drop-down menu"}}
 
-Finally, the `<select>` tag is used to create a field that allows the user to select from a number of predefined options.
+În final, tagul `<select>` este utilizat pentru a crea un câmp care permite utilizatorului să selecteze dintre mai multe opțiuni predefinite.
 
 ```{lang: "text/html"}
 <select>
@@ -362,7 +361,7 @@ Finally, the `<select>` tag is used to create a field that allows the user to se
 
 {{if book
 
-Such a field looks like this:
+Un asemenea câmp arată astfel:
 
 {{figure {url: "img/form_select.png", alt: "A select field", width: "4cm"}}}
 
@@ -370,7 +369,7 @@ if}}
 
 {{index "change event"}}
 
-Whenever the value of a form field changes, it will fire a `"change"` event.
+La fiecare modificare a valorii unui câmp, va fi declanșat un eveniment `"change"`.
 
 ## Focus
 
@@ -378,15 +377,15 @@ Whenever the value of a form field changes, it will fire a `"change"` event.
 
 {{indexsee "keyboard focus", focus}}
 
-Unlike most elements in HTML documents, form fields can get _keyboard ((focus))_. When clicked or activated in some other way, they become the currently active element and the recipient of keyboard ((input)).
+Spre deosebire de majoritatea elementelor din documentele HTML, pcâmpurile formularelor pot recepționa _focus de la tastatură_. Când executăm click sau când le activăm într-un alt mod, ele devin elementul activ curent și cel care va recepționa intrarea de la tastatură.
 
 {{index "option (HTML tag)", "select (HTML tag)"}}
 
-Thus, you can type into a ((text field)) only when it is focused. Other fields respond differently to keyboard events. For example, a `<select>` menu tries to move to the option that contains the text the user typed and responds to the arrow keys by moving its selection up and down.
+Prin urmare, puteți tasta într-un câmp text doar când el deține focusul. De exemplu, un meniu `<select>` încearcă să se mute la opțiunea care conține textul pe care utilizatorul la tastat și răspunde la tastele săgeți prin mutarea sus-jos a selecției.
 
 {{index "focus method", "blur method", "activeElement property"}}
 
-We can control ((focus)) from JavaScript with the `focus` and `blur` methods. The first moves focus to the DOM element it is called on, and the second removes focus. The value in `document.activeElement` corresponds to the currently focused element.
+Putem controla focusul din JavaScript, prin metodele `focus` și `blur`. Prima mută focusul pe elementul DOM asupra căruia a fost apelată iar cea de a doua îndepărtează focusul. Valoarea din `document.activeElement` corespunde elementului curent ce deține focusul.
 
 ```{lang: "text/html"}
 <input type="text">
@@ -402,11 +401,12 @@ We can control ((focus)) from JavaScript with the `focus` and `blur` methods. Th
 
 {{index "autofocus attribute"}}
 
-For some pages, the user is expected to want to interact with a form field immediately. JavaScript can be used to ((focus)) this field when the document is loaded, but HTML also provides the `autofocus` attribute, which produces the same effect while letting the browser know what we are trying to achieve. This gives the browser the option to disable the behavior when it is not appropriate, such as when the user has put the focus on something else.
+Pentru unele pagini, se așteaptă ca utilizatorul să dorească să interacționeze cu câmpul din formular imediat. JavaScript poate fi utilizat  pentru a focaliza acest câmp când documentul este încărcat, dar HTML definește atributul `autofocus`, care produce același efect în timp ce browserul cunoaște ce încercăm să realizăm. Aceasta dă browserului opțiunea de a dezactiva comportamentul dacă nu este adecvat, cum ar fi atunci când utilizatorul a mutat focusul pe un alt element.
 
 {{index "tab key", keyboard, "tabindex attribute", "a (HTML tag)"}}
 
-Browsers traditionally also allow the user to move the focus through the document by pressing the [tab]{keyname} key. We can influence the order in which elements receive focus with the `tabindex` attribute. The following example document will let the focus jump from the text input to the OK button, rather than going through the help link first:
+Tradițional, browserele permit utilizatorului să mute focusul prin document prin apăsarea tastei [tab]{keyname}. Putem 
+influența ordinea în care elementele recepționează focusul prin utilizarea atributului `tabindex`. Exemplul următor ne permite să sărim la butonul OK fără a trece mai întâi prin linkul de ajutor:
 
 ```{lang: "text/html", focus: true}
 <input type="text" tabindex=1> <a href=".">(help)</a>
@@ -415,20 +415,20 @@ Browsers traditionally also allow the user to move the focus through the documen
 
 {{index "tabindex attribute"}}
 
-By default, most types of HTML elements cannot be focused. But you can add a `tabindex` attribute to any element that will make it focusable. A `tabindex` of -1 makes tabbing skip over an element, even if it is normally focusable.
+Implicit, cele mai multe tipuri de elemente HTML nu pot recepționa focusul. Dar puteți adăuga un atribut `tabindex` oricărui element, astfel încât acesta va putea primi focusul. Un `tabindex` de -1 va forța saltul peste un element, chiar dacă în mod normal acesta poate recepționa focusul (la apăsarea tastei tab).
 
-## Disabled fields
+## Câmpuri dezactivate
 
 {{index "disabled attribute"}}
 
-All ((form)) ((field))s can be _disabled_ through their `disabled` attribute. It is an ((attribute)) that can be specified without value—the fact that it is present at all disables the element.
+Orice câmp al unui formular poate fi dezactivat prin atributul `disabled`. Acesta este un atribut care poate fi specificat fără valoare - doar simpla sa prezență dezactivează elementul.
 
 ```{lang: "text/html"}
 <button>I'm all right</button>
 <button disabled>I'm out</button>
 ```
 
-Disabled fields cannot be ((focus))ed or changed, and browsers make them look gray and faded.
+Câmpurile dezactivate nu pot primi focusul și nici nu pot fi modificate, iar browserele le afișează gri și estompate.
 
 {{if book
 
@@ -438,17 +438,17 @@ if}}
 
 {{index "user experience"}}
 
-When a program is in the process of handling an action caused by some ((button)) or other control that might require communication with the server and thus take a while, it can be a good idea to disable the control until the action finishes. That way, when the user gets impatient and clicks it again, they don't accidentally repeat their action.
+Când programul este în procesul de gestionare a unei acțiuni cauzate de vreun buton sau alt control care ar putea necesita comunicația cu serverul și deci, să dureze, ar putea fi o bună idee să dezactivăm control până când acțiunea se termină. Astfel, când utilizatorul devine nerăbdător și mai execută un click, el nu repetă accidental acțiunea.
 
-## The form as a whole
+## Formularul ca întreg
 
 {{index "array-like object", "form (HTML tag)", "form property", "elements property"}}
 
-When a ((field)) is contained in a `<form>` element, its DOM element will have a `form` property linking back to the form's DOM element. The `<form>` element, in turn, has a property called `elements` that contains an array-like collection of the fields inside it.
+Când un câmp este conținut în interiorul unui element `<form>`, elementul său DOM va avea o proprietate `form` ce îl leagă de elementul DOM al formularului. Elementul `<form>`, pe de altă parte, are o proprietate numită `elements` care conține o colecție de câmpuri aflate în interiorul său, asemănătoare unui array.
 
 {{index "elements property", "name attribute"}}
 
-The `name` attribute of a form field determines the way its value will be identified when the form is ((submit))ted. It can also be used as a property name when accessing the form's `elements` property, which acts both as an array-like object (accessible by number) and a ((map)) (accessible by name).
+Atributul `name` al unui câmp determină modul în care acesta este identificat atunci când formularul este trimis. El poate fi utilizat și ca nume de proprietate atunci când se accesează proprietatea `elements` a formularului, care funcționează atât ca un obiect similar unui array (accesibil prin index numeric) cât și ca un map (accesibil prin nume).
 
 ```{lang: "text/html"}
 <form action="example/submit.html">
@@ -469,11 +469,11 @@ The `name` attribute of a form field determines the way its value will be identi
 
 {{index "button (HTML tag)", "type attribute", submit, "enter key"}}
 
-A button with a `type` attribute of `submit` will, when pressed, cause the form to be submitted. Pressing [enter]{keyname} when a form field is focused has the same effect.
+Atunci când se va apăsa un buton al cărui atribut `type` are valoarea `submit`, formularul va fi trimis. Apăsarea [enter]{keyname} când un câmp al formularului are focusul va avea același efect.
 
 {{index "submit event", "event handling", "preventDefault method", "page reload", "GET method", "POST method"}}
 
-Submitting a ((form)) normally means that the ((browser)) navigates to the page indicated by the form's `action` attribute, using either a `GET` or a `POST` ((request)). But before that happens, a `"submit"` event is fired. You can handle this event with JavaScript and prevent this default behavior by calling `preventDefault` on the event object.
+Trimiterea unui formular înseamnă de regulă că browserul va naviga la pagina indicată de atributul `action` al formularului, utilizând o cerere `GET` sau `POST`. Dar, înainte de aceasta, este declanșat un eveniment `"submit"`. Putem intercepta acest eveniment în JavaScript și să prevenim acest comportament implicit prin apelarea `preventDefault` asupra obiectului evenimentului.
 
 ```{lang: "text/html"}
 <form action="example/submit.html">
@@ -491,22 +491,21 @@ Submitting a ((form)) normally means that the ((browser)) navigates to the page 
 
 {{index "submit event", validation}}
 
-Intercepting `"submit"` events in JavaScript has various uses. We can write code to verify that the values the user entered make sense and immediately show an error message instead of submitting the form. Or we can disable the regular way of submitting the form entirely, as in the example, and have our program handle the input, possibly using `fetch` to send it to a server without reloading the page.
+Interceptarea evenimentelor `"submit"` în JavaScript are mai multe utilități. Putem scrie cod care verifică dacă valorile introduse de utilizator au sens și să afișăm imediat un mesaj de eroare, în loc să trimitem formularul. Sau putem dezactiva modul regulat de transmitere, ca și în exemplu, și programul nostru să gestioneze intrarea, și de exemplu să utilizăm `fetch` pentru a transmite datele la server fără a reîncărca pagina.
 
-## Text fields
+## Câmpuri text
 
 {{index "value attribute", "input (HTML tag)", "text field", "textarea (HTML tag)", [DOM, fields], [interface, object]}}
 
-Fields created by `<textarea>` tags, or `<input>` tags with a type of `text` or `password`, share a common interface. Their DOM elements have a `value` property that holds their current content as a string value. Setting this property to another string changes the field's content.
+Câmpurile create de tagurile `<textarea>` sau tagurile `<input>` cu tipul `text` sau `password`, împart o interfață comună. Elementele lor DOM au o proprietate `value` care reține conținutul lor curent sub forma unei valori de tip string. Setarea acestei proprietăți la o altă valoare de tip string schimbă conținutul câmpului.
 
 {{index "selectionStart property", "selectionEnd property"}}
 
-The
-`selectionStart` and `selectionEnd` properties of ((text field))s give us information about the ((cursor)) and ((selection)) in the ((text)). When nothing is selected, these two properties hold the same number, indicating the position of the cursor. For example, 0 indicates the start of the text, and 10 indicates the cursor is after the 10^th^ ((character)). When part of the field is selected, the two properties will differ, giving us the start and end of the selected text. Like `value`, these properties may also be written to.
+Proprietățile `selectionStart` și `selectionEnd` ale câmpurilor de tip text ne dau informații despre cursorul și selecția din text. Când nu este selectat nimic, aceste două proprietăți rețin același număr, ce indică poziția cursorului. De exemplu, 0 indică începutul textului iar 10 indică poziționarea cursorului după al 10-lea caracter. Când o parte din text este selectată, cele două proprietăți diferă și rețin începutul și sfârșitul porțiunii de text selectate. Ca și în cazul `value`, în aceste proprietăți putem scrie.
 
 {{index Khasekhemwy, "textarea (HTML tag)", keyboard, "event handling"}}
 
-Imagine you are writing an article about Khasekhemwy but have some trouble spelling his name. The following code wires up a `<textarea>` „tag with an event handler that, when you press F2, inserts the string "Khasekhemwy" for you.
+Imaginați-vă ca scrieți un articol despre Khasekhemwy dar aveți probleme în a-i scrie corect numele. Codul care urmează leagă un tag `<textarea>` cu un handler de eveniment astfel încât, de fiecare dată când apăsați F2, va fi inserat stringul "Khasekhemwy".
 
 ```{lang: "text/html"}
 <textarea></textarea>
@@ -532,13 +531,13 @@ Imagine you are writing an article about Khasekhemwy but have some trouble spell
 
 {{index "replaceSelection function", "text field"}}
 
-The `replaceSelection` function replaces the currently selected part of a text field's content with the given word and then moves the ((cursor)) after that word so that the user can continue typing.
+Funcția `replaceSelection` va înlocui partea selectată a conținutului din câmpul text cu cuvîntul dat și apoi va muta cursorul după acel cuvânt astfel că utilizatorul va putea continua să scrie.
 
 {{index "change event", "input event"}}
 
-The `"change"` event for a ((text field)) does not fire every time something is typed. Rather, it fires when the field loses ((focus)) after its content was changed. To respond immediately to changes in a text field, you should register a handler for the `"input"` event instead, which fires for every time the user types a character, deletes text, or otherwise manipulates the field's content.
+Evenimentul `"change"` pentru un câmd de tip text nu se declanșează de fiecare dată când se tastează ceva. Acest eveniment este declanșat atunci când câmpul își pierde focusul după ce conținutul său a fost modificat. Pentru a răspunde imediat la modificările dintr-un câmp text ar trebui să înregistrați un handler pentru evenimentul `"input"`, care se declanșează pentru fieecare caracter introdus de către utilizator, sau când utilizatorul șterge text sau manipulează în orice alt mod conținutul câmpului.
 
-The following example shows a text field and a counter displaying the current length of the text in the field:
+Exemplul de mai jos vă prezintă un câmp de tip text și un contor pentru lungimea curentă a textului din acel câmp:
 
 ```{lang: "text/html"}
 <input type="text"> length: <span id="length">0</span>
@@ -551,11 +550,11 @@ The following example shows a text field and a counter displaying the current le
 </script>
 ```
 
-## Checkboxes and radio buttons
+## Câmpuri de bifare și butoane radio
 
 {{index "input (HTML tag)", "checked attribute"}}
 
-A ((checkbox)) field is a binary toggle. Its value can be extracted or changed through its `checked` property, which holds a Boolean value. 
+Un câmp de bifare este un comutator binar. Valoarea lui poate fi obținută sau modificată din proprietatea `checked`, care reține o valoare booleană.
 
 ```{lang: "text/html"}
 <label>
@@ -572,11 +571,11 @@ A ((checkbox)) field is a binary toggle. Its value can be extracted or changed t
 
 {{index "for attribute", "id attribute", focus, "label (HTML tag)", labeling}}
 
-The `<label>` tag associates a piece of document with an input ((field)). Clicking anywhere on the label will activate the field, which focuses it and toggles its value when it is a checkbox or radio button.
+Tagul `<label>` asociază o porțiune din document cu un câmp de introducere a datelor. Executând click oriunde pe etichetă se va activa câmpul, care primește focusul și va fi schimbată valoarea sa când un câmp de bifare sau un buton radio.
 
 {{index "input (HTML tag)", "multiple-choice"}}
 
-A ((radio button)) is similar to a checkbox, but it's implicitly linked to other radio buttons with the same `name` attribute so that only one of them can be active at any time.
+Un buton radio este similar cu un câmp de bifă, dar este implicit legat la alte butoane radio ce au același atribut `name` astfel încât doar unul dintre ele este activ în orice moment.
 
 ```{lang: "text/html"}
 Color:
@@ -601,29 +600,29 @@ Color:
 
 {{index "name attribute", "querySelectorAll method"}}
 
-The ((square brackets)) in the CSS query given to `querySelectorAll` are used to match attributes. It selects elements whose `name` attribute is `"color"`.
+Parantezele pătrate din interogarea CSS transmisă către `querySelectorAll` sunt utilizate pentru a potrivi atribute. Selectează elementele al căror atribute `name` are valoarea `"color"`.
 
-## Select fields
+## Câmpuri de selectare
 
 {{index "select (HTML tag)", "multiple-choice", "option (HTML tag)"}}
 
-Select fields are conceptually similar to radio buttons—they also allow the user to choose from a set of options. But where a radio button puts the layout of the options under our control, the appearance of a `<select>` tag is determined by the browser.
+Câmpurile de selectare sunt conceptual similare cu butoanele radio - și ele permit utilizatorului să aleagă dintr-un set de opțiuni. Dar în timp ce butoanele radio ne permit controlul aspectului opțiunilor, aspectul unui tag `<select>` este determinat de către browser.
 
 {{index "multiple attribute", "drop-down menu"}}
 
-Select fields also have a variant that is more akin to a list of checkboxes, rather than radio boxes. When given the `multiple` attribute, a `<select>` tag will allow the user to select any number of options, rather than just a single option. This will, in most browsers, show up differently than a normal select field, which is typically drawn as a _drop-down_ control that shows the options only when you open it.
+Câmpurile de seletare au și o variantă care seamănă mai mult cu o listă de câmpuri de bifare. Când îi setăm atributul `multiple`, un tag `<select>` va permite utilizatorului să selecteze oricâte opțiuni, nu doar una. În majoritatea browserelor, asemenea câmpuri sunt afișate diferit față de un selector normal, care de regulă este afișat ca un control  _drop-down_ care afișează opțiunile doar când îl deschideți.
 
 {{index "option (HTML tag)", "value attribute"}}
 
-Each `<option>` tag has a value. This value can be defined with a `value` attribute. When that is not given, the ((text)) inside the option will count as its value. The `value` property of a `<select>` element reflects the currently selected option. For a `multiple` field, though, this property doesn't mean much since it will give the value of only _one_ of the currently selected options. 
+Fiecare tag `<option>` are o valoare. Această valoare poate fi definită cu atributul `value`. Atunci când acesta nu este setat, textul din interiorul opțiunii va fi considerat ca valoarea asociată. Proprietatea `value` a unui element `<select>` reflectă opțiunea selectată curent. Totuși, pentru un câmp `multiple` această proprietate nu are prea multă semnificație pentru că va conține doar valoarea _uneia_ dintre opțiunile selectate.
 
 {{index "select (HTML tag)", "options property", "selected attribute"}}
 
-The `<option>` tags for a `<select>` field can be accessed as an array-like object through the field's `options` property. Each option has a property called `selected`, which indicates whether that option is currently selected. The property can also be written to select or deselect an option.
+Tagurile `<option>` ale unui câmp select `<select>` pot fi accesate ca un obiect de tip array, prin proprietatea `options` a câmpului. Fiecare opțiune are o proprietate numită `selected`, care indicăă dacă opțiunea este selectată sau nu. Proprietatea poate fi și setată pentru a selecta sau deselecta o opțiune.
 
 {{index "multiple attribute", "binary number"}}
 
-This example extracts the selected values from a `multiple` select field and uses them to compose a binary number from individual bits. Hold [control]{keyname} (or [command]{keyname} on a Mac) to select multiple options.
+Exemplul de mai jos extrage valorile selectate dintr-un câmp de selectare `multiple` și le utilizează pentru a compune un număr binar din biții individuali. Mențineți apăsată tasta [control]{keyname} (sau [command]{keyname} pe Mac) pentru a selecta mai multe opțiuni.
 
 ```{lang: "text/html"}
 <select multiple>
@@ -647,13 +646,13 @@ This example extracts the selected values from a `multiple` select field and use
 </script>
 ```
 
-## File fields
+## Câmpuri pentru fișiere
 
 {{index file, "hard drive", "file system", security, "file field", "input (HTML tag)"}}
 
-File fields were originally designed as a way to ((upload)) files from the user's machine through a form. In modern browsers, they also provide a way to read such files from JavaScript programs. The field acts as a kind of gatekeeper. The script cannot simply start reading private files from the user's computer, but if the user selects a file in such a field, the browser interprets that action to mean that the script may read the file.
+Câmpurile pentru fișiere au fost inițial concepute ca o modalitate pentru încărcarea fișierelor din computerul utilizatorului prin intermediul unui formular. În browserele moderne, ele ne dau și posibilitatea de a citi asemenea fișiere în programele JavaScript. Câmpul acționează și ca un paznic. Scriptul nu poate pur și simplu să citească fișiere private din computerul utilizatorului, dar dacă utilizatorul selectează un fișier pentru un asemenea câmp, browserul interpretează acțiunea ca o permisiune pentru a citi acel fișier.
 
-A file field usually looks like a button labeled with something like "choose file" or "browse", with information about the chosen file next to it.
+Un câmp pentru fișiere arată de obicei ca un buton etichetat cu "choose file" sau "browse", și informația despre fișierul ales afișată lângă buton.
 
 ```{lang: "text/html"}
 <input type="file">
@@ -671,17 +670,17 @@ A file field usually looks like a button labeled with something like "choose fil
 
 {{index "multiple attribute", "files property"}}
 
-The `files` property of a ((file field)) element is an ((array-like object)) (again, not a real array) containing the files chosen in the field. It is initially empty. The reason there isn't simply a `file` property is that file fields also support a `multiple` attribute, which makes it possible to select multiple files at the same time.
+Proprietatea `files` a unui câmp pentru fișiere este un obiect asemănător unui array (din nou, nu un array real) ce conține toate fișierele alese în câmp. Aceasta este inițial goală. Motivul pentru care nu există doar o proprietate `file` este legat de faptul că acest tip de câmp permite și atributul `multiple`, care face posibilă încărcarea mai multor fișiere în același timp.
 
 {{index "File type"}}
 
-Objects in the `files` object have properties such as `name` (the filename), `size` (the file's size in bytes, which are chunks of 8 bits), and `type` (the media type of the file, such as `text/plain` or `image/jpeg`).
+Obiectele componente ale obiectului `files` au proprietăți cum ar fi `name` (numele fișierului), `size` (dimensiunea fișierului în bytes - bucăți de câte 8 biți) și `type` (tipul media al fișierului, cum ar fi `text/plain` sau `image/jpeg`).
 
 {{index ["asynchronous programming", "reading files"], "file reading", "FileReader class"}}
 
 {{id filereader}}
 
-What it does not have is a property that contains the content of the file. Getting at that is a little more involved. Since reading a file from disk can take time, the interface must be asynchronous to avoid freezing the document.
+Ceea ce lipsește este o proprietate care să rețină conținutul fișierului. Obținerea acestui conținut este puțin mai complicată. Deoarece citirea unui fișier de pe disc poate cere timp, interfața este asincornă pentru a evita înghețarea documentului.
 
 ```{lang: "text/html"}
 <input type="file" multiple>
@@ -702,11 +701,11 @@ What it does not have is a property that contains the content of the file. Getti
 
 {{index "FileReader class", "load event", "readAsText method", "result property"}}
 
-Reading a file is done by creating a `FileReader` object, registering a `"load"` event handler for it, and calling its `readAsText` method, giving it the file we want to read. Once loading finishes, the reader's `result` property contains the file's content.
+Citirea unui fișier se realizează prin crearea unui obiect `FileReader`, înregistrarea unui handler pentru evenimentul `"load"` și apelarea metodei `readAsText`, care primește ca și argument fișierul pe care vrem să îl citim. Odată încheiată încărcarea, proprietatea `result` a reader-ului stochează conținutul fișierului.
 
 {{index "error event", "FileReader class", "Promise class"}}
 
-`FileReader`s also fire an `"error"` event when reading the file fails for any reason. The error object itself will end up in the reader's `error` property. This interface was designed before promises became part of the language. You could wrap it in a promise like this:
+`FileReader` declanșează și un eveniment `"error"` dacă citirea fișierului eșuează din orice motiv. Obiectul asociat erorii va fi asociat cu proprietatea `error` a reader-ului. Această interfață a fost proiectată înainte ca promisiunile să devină parte din limbaj. Puteți împacheta codul într-o promisiune astfel:
 
 ```
 function readFileText(file) {
@@ -721,19 +720,19 @@ function readFileText(file) {
 }
 ```
 
-## Storing data client-side
+## Stocarea datelor în partea clientului
 
 {{index "web application"}}
 
-Simple ((HTML)) pages with a bit of JavaScript can be a great format for "((mini application))s"—small helper programs that automate basic tasks. By connecting a few form ((field))s with event handlers, you can do anything from converting between centimeters and inches to computing passwords from a master password and a website name.
+Paginile HTML simple, cu puțin JavaScript sunt un format extraordinar pentru "mini-aplicații" - mici programe ajutătoare care automatizează sarcini de bază. Prin conectarea mai multor câmpuri de formular cu handlere de evenimente, puteți realiza orice, de la o conversie între centimetri și inchi până la calcularea unei parole pornind de la o parolă principală și numele unui website.
 
 {{index persistence, [binding, "as state"], [browser, storage]}}
 
-When such an application needs to remember something between sessions, you cannot use JavaScript bindings—those are thrown away every time the page is closed. You could set up a server, connect it to the Internet, and have your application store something there. We will see how to do that in [Chapter ?](node). But that's a lot of extra work and complexity. Sometimes it is enough to just keep the data in the ((browser)).
+Când asemenea aplicații trebuie să își amintească ceva între sesiuni, nu puteți utiliza doar bindinguri JavaScript - acestea sunt volatile și vor fi distruse de fiecare dată când se închide pagina. Ați putea seta un server, să îl conectați la Internet și aplicația voastră să stocheze date acolo. Vom vedea cum putem face asta în [capitolul ?](node). Dar aceasta este multă muncă suplimentară și complexitate adăugată. Uneori este suficient să păstrați datele în browser.
 
 {{index "localStorage object", "setItem method", "getItem method", "removeItem method"}}
 
-The `localStorage` object can be used to store data in a way that survives ((page reload))s. This object allows you to file string values under names.
+Obiectul `localStorage` poate fi folosit pentru a stoca datele într-un mod care supraviețuiește reîncărcărilor paginii. Acest obiect vă permite să stocați valori de tip string și să le asociați nume.
 
 ```
 localStorage.setItem("username", "marijn");
@@ -744,19 +743,19 @@ localStorage.removeItem("username");
 
 {{index "localStorage object"}}
 
-A value in `localStorage` sticks around until it is overwritten, it is removed with `removeItem`, or the user clears their local data.
+O valoare din `localStorage` este persistentă până când este suprascrisă, este eliminată cu `removeItem` sau prin acțiunea utilizatorului de a curăța datele locale.
 
 {{index security}}
 
-Sites from different ((domain))s get different storage compartments. That means data stored in `localStorage` by a given website can, in principle, be read (and overwritten) only by scripts on that same site.
+Siteurile cu domenii diferite primesc compoartimente diferite de stocare. Ceea ce înseamnă că datele stocate în `localStorage` de către un anume website pot, în principiu, să fie citite și suprascrise doar de către scripturile de pe acel site.
 
 {{index "localStorage object"}}
 
-Browsers do enforce a limit on the size of the data a site can store in `localStorage`. That restriction, along with the fact that filling up people's ((hard drive))s with junk is not really profitable, prevents the feature from eating up too much space.
+Browserele impun o limită cu privire la dimensiunea datelor care se pot stoca în `localStorage` de către un site. Această restricție, împreună cu faptul că umplerea hard diskului altora cu "gunoi" nu este profitabilă, previne această funcționalitate ca să consume prea mult spațiu.
 
 {{index "localStorage object", "note-taking example", "select (HTML tag)", "button (HTML tag)", "textarea (HTML tag)"}}
 
-The following code implements a crude note-taking application. It keeps a set of named notes and allows the user to edit notes and create new ones.
+Codul de mai jos implementează o aplicație brută de luare a notițelor. Ea va menține un set de note și va permite utilizatorului să editeze notele sau să creeze altele noi.
 
 ```{lang: "text/html", startCode: true}
 Notes: <select></select> <button>Add</button><br>
@@ -808,23 +807,23 @@ Notes: <select></select> <button>Add</button><br>
 
 {{index "getItem method", JSON, "|| operator", "default value"}}
 
-The script gets its starting state from the `"Notes"` value stored in `localStorage` or, if that is missing, creates an example state that has only a shopping list in it. Reading a field that does not exist from `localStorage` will yield `null`. Passing `null` to `JSON.parse` will make it parse the string `"null"` and return `null`. Thus, the `||` operator can be used to provide a default value in a situation like this.
+Scriptul își setează starea inițială din valoarea `"Notes"` stocată în `localStorage` sau, dacă nu există, crează o stare exemplu care are doar o listă de cumpărături în ea. Citirea unui câmp care nu există în `localStorage` va produce `null`. Transmiterea `null` către `JSON.parse` va determina parsarea stringului `"null"` și va returna `null`. Astfel, operatorul `||` poate fi utilizat pentru a furniza o valoare implicită în această situație.
 
-The `setState` method makes sure the DOM is showing a given state and stores the new state to `localStorage`. Event handlers call this function to move to a new state.
+Metoda `setState` ne asigură că DOM afișează o stare dată și stochează noua stare în `localStorage`. Handlerele pentru evenimente apelează această funcție pentru a comuta la o nouă stare.
 
 {{index "Object.assign function", [object, creation], property, "computed property"}}
 
-The use of `Object.assign` in the example is intended to create a new object that is a clone of the old `state.notes`, but with one property added or overwritten. `Object.assign` takes its first argument and adds all properties from any further arguments to it. Thus, giving it an empty object will cause it to fill a fresh object. The ((square brackets)) notation in the third argument is used to create a property whose name is based on some dynamic value.
+Utilizarea `Object.assign` în exemplu are intenția de a crea un nou obiect care este o clonă a `state.notes`, dar cu o proprietate adăugată sau suprascrisă. `Object.assign` preia primul său argument și îi adaugă toate proprietățile din celelalte argumente pasate. Astfel, dacă primește un obiect gol, aceasta va însemna construirea unui obiect nou. Notația cu paranteze pătrate din cel de-al treilea argument este folosită pentru a crea o proprietate al cărei nume este bazat pe o valoare dinamică.
 
 {{index "sessionStorage object", [browser, storage]}}
 
-There is another object, similar to `localStorage`, called `sessionStorage`. The difference between the two is that the content of `sessionStorage` is forgotten at the end of each _((session))_, which for most browsers means whenever the browser is closed.
+Există încă un obiect, similar cu `localStorage`, numit `sessionStorage`. Diferența dintre cele două este legată de volatilitatea conținutului: `sessionStorage` este curățat la sfărșitul fiecărei _sesiuni_, ceea ce pentru majoritatea browserelor este momentul în care browserul este închis.
 
-## Summary
+## Rezumat
 
-In this chapter, we discussed how the HTTP protocol works. A _client_ sends a request, which contains a method (usually `GET`) and a path that identifies a resource. The _server_ then decides what to do with the request and responds with a status code and a response body. Both requests and responses may contain headers that provide additional information.
+În acest capitol am discutat despre modul de funcționare a protocolului HTTP. Un _client_ trimite o cerere, care conține o metodă (de regulă, `GET`) și o cale care identifică o resursă. _Serverul_ decide apoi ce să facă cu cererea și răspunde cu un cod de stare și un corp al răspunsului. Atât cererea cât și răspunsul pot conține headere care adaugă extra informație.
 
-The interface through which browser JavaScript can make HTTP requests is called `fetch`. Making a request looks like this:
+Interfața prin care JavaScript în browser poate executa cereri HTTP se numește `fetch`. Efectuarea unei cereri arată cam așa:
 
 ```
 fetch("/18_http.html").then(r => r.text()).then(text => {
@@ -832,35 +831,35 @@ fetch("/18_http.html").then(r => r.text()).then(text => {
 });
 ```
 
-Browsers make `GET` requests to fetch the resources needed to display a web page. A page may also contain forms, which allow information entered by the user to be sent as a request for a new page when the form is submitted.
+Browserele efectuează cereri `GET` pentru a aduce resursele de care au nevoie pentru a afișa pagina. O pagină poate conține și formulare, care permit introducerea informației de către utilizator și transmiterea ei ca o cerere pentru o nouă pagină, attunci când formularul este trimis.
 
-HTML can represent various types of form fields, such as text fields, checkboxes, multiple-choice fields, and file pickers. 
+HTML poate reprezenta diferite tipuri de câmpuri, cum ar fi text, câmpuri de bifare, câmpuri cu alegere multiplă și cîmpuri pentru fișiere.
 
-Such fields can be inspected and manipulated with JavaScript. They fire the `"change"` event when changed, fire the `"input"` event when text is typed, and receive keyboard events when they have keyboard focus. Properties like `value` (for text and select fields) or `checked` (for checkboxes and radio buttons) are used to read or set the field's content.
+Asemenea câmpuri pot fi inspectate și manipulate cu JavaScript. Ele declanșează evenimentul `"change"` când sunt modificate, evenimentul `"input"` când se introduce text și primesc evenimente de la tastatură atunci când dețin focusul. Proprietățile cum ar fi `value` (pentru câmpurile de text și de selectare) sau `checked` (pentru câmpuri de bifă și butoane radio) sunt utilizate pentru a citi sau seta conținutul câmpului.
 
-When a form is submitted, a `"submit"` event is fired on it. A JavaScript handler can call `preventDefault` on that event to disable the browser's default behavior. Form field elements may also occur outside of a form tag.
+Când un formular este transmis, se declanșează un eveniment `"submit"` pentru el. Un handler JavaScript ar putea apela `preventDefault` pentru acel eveniment cu scopul de a dezactiva comportamentul implicit al browserului. Câmpurile de formular pot fi folosite și în afara unui tag pentru formular.
 
-When the user has selected a file from their local file system in a file picker field, the `FileReader` interface can be used to access the content of this file from a JavaScript program.
+Când un utilizator a selectat un fișier din sistemul local de fișiere pentru un câmp de alegere a fișierelor, interfața `FileReader` potae fi utilizată pentru a accesa conținutul acestui fișier dintr-un program JavaScript.
 
-The `localStorage` and `sessionStorage` objects can be used to save information in a way that survives page reloads. The first object saves the data forever (or until the user decides to clear it), and the second saves it until the browser is closed.
+Obiectele `localStorage` și `sessionStorage` pot fi utilizate pentru a salva informație într-un mod care supraviețuiește reîncărcărilor paginii. Primul obiect salvează datele permanent (sau până când utilizatorul decide să le elimine) iar cel de-al doilea le salvează până la închiderea browserului.
 
-## Exercises
+## Exerciții
 
-### Content negotiation
+### Negocierea conținutului
 
 {{index "Accept header", "media type", "document format", "content negotiation (exercise)"}}
 
-One of the things HTTP can do is called _content negotiation_. The `Accept` request header is used to tell the server what type of document the client would like to get. Many servers ignore this header, but when a server knows of various ways to encode a resource, it can look at this header and send the one that the client prefers.
+Unul dintre lucrurile pe care HTTP le poate face se numește _negocierea conținutului_. Header-ul pentru cereri `Accept` este utilizat pentru a preciza serverului ce fel the document ar dori clientul să primească. Multe servere ignoră acest header, dar atunci când serverul cunoaște mai multe moduri de a codifica o resursă, poate consulta acest header pentru a trimite clientului resursa în formatul pe care acesta o preferă.
 
 {{index "MIME type"}}
 
-The URL [_https://eloquentjavascript.net/author_](https://eloquentjavascript.net/author) is configured to respond with either plaintext, HTML, or JSON, depending on what the client asks for. These formats are identified by the standardized _((media type))s_ `text/plain`, `text/html`, and `application/json`.
+URL-ul [_https://eloquentjavascript.net/author_](https://eloquentjavascript.net/author) este configurat să răspundă fie cu text simplu, fie cu HTML fie cu JSON, în funcție de ce cere clientul. Aceste formate sunt identificate prin _media type_ standard `text/plain`, `text/html` și `application/json`.
 
 {{index "headers property", "fetch function"}}
 
-Send requests to fetch all three formats of this resource. Use the `headers` property in the options object passed to `fetch` to set the header named `Accept` to the desired media type.
+Trimiteți cereri pentru a aduce cele trei formate ale acestei resurse. Utilizați proprietatea `headers` a obiectului cu opțiunile transmis către `fetch` pentru a seta header-ul numit `Accept` la tipul media dorit.
 
-Finally, try asking for the media type `application/rainbows+unicorns` and see which status code that produces.
+Apoi, încercați să setați tipul media la `application/rainbows+unicorns` și vedeți ce cod de stare produce.
 
 {{if interactive
 
@@ -874,15 +873,15 @@ if}}
 
 {{index "content negotiation (exercise)"}}
 
-Base your code on the `fetch` examples [earlier in the chapter](http#fetch).
+Bazați-vă în cod pe exemplele pentru `fetch` prezentate [anterior în acest capitol](http#fetch).
 
 {{index "406 (HTTP status code)", "Accept header"}}
 
-Asking for a bogus media type will return a response with code 406, "Not acceptable", which is the code a server should return when it can't fulfill the `Accept` header.
+Cererea unui media type fals va returna un cod de răspuns 406, "Not acceptable", care este codul pe care serverul ar trebui să îl returneze dacă nu poate satisface headerul `Accept`.
 
 hint}}
 
-### A JavaScript workbench
+### Un banc de lucru JavaScript
 
 {{index "JavaScript console", "workbench (exercise)"}}
 
