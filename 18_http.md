@@ -885,11 +885,11 @@ hint}}
 
 {{index "JavaScript console", "workbench (exercise)"}}
 
-Build an interface that allows people to type and run pieces of JavaScript code.
+Construiți o interfață care permite utilizatorului să introducă și apoi să ruleze bucăți de cod JavaScript.
 
 {{index "textarea (HTML tag)", "button (HTML tag)", "Function constructor", "error message"}}
 
-Put a button next to a `<textarea>` field that, when pressed, uses the `Function` constructor we saw in [Chapter ?](modules#eval) to wrap the text in a function and call it. Convert the return value of the function, or any error it raises, to a string and display it below the text field.
+Plasați un buton lângă un câmp `<textarea>` iar când butonul este apăsat, utilizați constructorul  `Function` pe care l-am prezentat în [capitolul ?](modules#eval) pentru a împacheta textul într-o funcție pe care apoi o apelați. Convertiți valoarea returnată de funcție sau orice eroare pe care o ridică într-un string pe care îl afișați sub câmpul de text.
 
 {{if interactive
 
@@ -909,15 +909,15 @@ if}}
 
 {{index "click event", "mousedown event", "Function constructor", "workbench (exercise)"}}
 
-Use `document.querySelector` or `document.getElementById` to get access to the elements defined in your HTML. An event handler for `"click"` or `"mousedown"` events on the button can get the `value` property of the text field and call `Function` on it.
+Utilizați `document.querySelector` sau `document.getElementById` pentru a accesa elementele definite în codul HTML. Un handler de eveniment pentru evenimentele `"click"` sau `"mousedown"` de pe buton poate prelua proprietatea `value` a câmpului text și apoi să apeleze `Function` cu ea ca și parametru.
 
 {{index "try keyword", "exception handling"}}
 
-Make sure you wrap both the call to `Function` and the call to its result in a `try` block so you can catch the exceptions it produces. In this case, we really don't know what type of exception we are looking for, so catch everything.
+Împachetați atât apelul către `Function` cât și apelul către rezultatul său într-un bloc `try`, pentru a putea prinde eventualele excepții pe care le produce. În acest caz, cu adevărat nu avem nici o idee ce tip de excepție ar putea apărea, așa că trebuie să le prindeți pe toate.
 
 {{index "textContent property", output, text, "createTextNode method", "newline character"}}
 
-The `textContent` property of the output element can be used to fill it with a string message. Or, if you want to keep the old content around, create a new text node using `document.createTextNode` and append it to the element. Remember to add a newline character to the end so that not all output appears on a single line.
+Proprietatea `textContent` a elementului de afișsare a rezultatului poate fi utilizată pentru a afișa un mesaj string. Sau, dacă vreți să păstrați conținutul, creați un nou nod text folosind `document.createTextNode` pe care îl adăugați la element. Nu uitați să adăugați o linie nouă, ca să nu afișați totul pe o singură linie.
 
 hint}}
 
@@ -925,23 +925,23 @@ hint}}
 
 {{index "game of life (exercise)", "artificial life", "Conway's Game of Life"}}
 
-Conway's Game of Life is a simple ((simulation)) that creates artificial "life" on a ((grid)), each cell of which is either alive or not. Each ((generation)) (turn), the following rules are applied: 
+Conway's Game of Life este o simulare simplă care crează "viață" artificială pe o grilă, fiecare celulă a acestei fiind vie sau nu. La fiecare generație (mutare), se aplică următoarele reguli: 
 
-* Any live ((cell)) with fewer than two or more than three live ((neighbor))s dies.
+* Orice celulă vie cu mai puțin de 2 sau mai mult de 3 vecini vii, moare.
 
-* Any live cell with two or three live neighbors lives on to the next generation.
+* Orice celulă vie cu 2 sau 3 vecini vii supraviețuiește în generația următoare.
 
-* Any dead cell with exactly three live neighbors becomes a live cell.
+* Orice celulă moartă cu exact 3 vecini vii devine o celulă vie.
 
-A _neighbor_ is defined as any adjacent cell, including diagonally adjacent ones.
+Un _vecin_ este definit ca orice celulă adiacentă, inclusiv cele adiacente pe diagonală.
 
 {{index "pure function"}}
 
-Note that these rules are applied to the whole grid at once, not one square at a time. That means the counting of neighbors is based on the situation at the start of the generation, and changes happening to neighbor cells during this generation should not influence the new state of a given cell.
+Aceste regulile de tranziție se aplică pe tot gridul simultan, nu pe rând pe fiecare pătrat. Înseamnă că numărul de vecini trebuie calculat pe baza situației de la începutul generării și modificarea numărului de celule vecine pe parcursul generație curente trebuie să nu influențeze noua stare a unei celule date.
 
 {{index "Math.random function"}}
 
-Implement this game using whichever ((data structure)) you find appropriate. Use `Math.random` to populate the grid with a random pattern initially. Display it as a grid of ((checkbox)) ((field))s, with a ((button)) next to it to advance to the next ((generation)). When the user checks or unchecks the checkboxes, their changes should be included when computing the next generation.
+Implementați acest joc folosind orice structură de date considerați potrivită. Utilizați `Math.random` pentru a popula inițial grila cu un șablon aleator. Afișați grila ca un tabel de câmpuri de bifare și plasați un buton pentru avansare la geenrația următoare. Dacă utilizatorul bifează sau debifează cîmpurile grilei, modificarea trebuie să fie inclusă în calculul noii generații.
 
 {{if interactive
 
@@ -960,18 +960,18 @@ if}}
 
 {{index "game of life (exercise)"}}
 
-To solve the problem of having the changes conceptually happen at the same time, try to see the computation of a ((generation)) as a ((pure function)), which takes one ((grid)) and produces a new grid that represents the next turn.
+Pentru a rezolva problema de a declanșa conceptual simultan toate modificările, modelați calculul unei generații ca o funcție pură, care primește un grid și produce un nou grid ce reprezintă următoarea mutare.
 
-Representing the matrix can be done in the way shown in [Chapter ?](object#matrix). You can count live ((neighbor))s with two nested loops, looping over adjacent coordinates in both dimensions. Take care not to count cells outside of the field and to ignore the cell in the center, whose neighbors we are counting.
+Reprezentarea matricii se poate realiza similar cu exemplul din [capitolul ?](object#matrix). Puteți număra vecinii vii cu două bucle imbricate și repetiție pe coordonatele adiacente în două dimensiuni. Aveți grijă să nu numărați celule din afara gridului și să ignorați celula centrală atunci când numărați vecinii.
 
 {{index "event handling", "change event"}}
 
-Ensuring that changes to ((checkbox))es take effect on the next generation can be done in two ways. An event handler could notice these changes and update the current grid to reflect them, or you could generate a fresh grid from the values in the checkboxes before computing the next turn.
+Vă puteți asigura că modificările câmpurilor de bifare sunt considerate pentru următoarea generație în două moduri. Un handler de eveniment ar putea reacționa la aceste modificări și să actualizeze gridul curent, sau ați putea genera un grid nou cu valorile din câmpurile de bifare înainte de a calcula următoarea mutare.
 
-If you choose to go with event handlers, you might want to attach ((attribute))s that identify the position that each checkbox corresponds to so that it is easy to find out which cell to change.
+Dacă alegeți să lucrați cu handlere de evenimente, ar fi o idee bună să adăugați atribute care identifică poziția fiecărui câmp de bifare astfel încât să fie simplu să determinați care celulă să fie modificată.
 
 {{index drawing, "table (HTML tag)", "br (HTML tag)"}}
 
-To draw the grid of checkboxes, you can either use a `<table>` element (see [Chapter ?](dom#exercise_table)) or simply put them all in the same element and put `<br>` (line break) elements between the rows.
+Pentru a afișa gridul, puteți folosi un element `<table>` (consultați [capitolul ?](dom#exercise_table)) sau să le afișați pe toate în interiorul aceluiași element și să plasați elemente `<br>` (line break) între rânduri.
 
 hint}}
