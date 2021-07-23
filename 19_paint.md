@@ -1,10 +1,10 @@
 {{meta {load_files: ["code/chapter/19_paint.js"], zip: "html include=[\"css/paint.css\"]"}}}
 
-# Project: A Pixel Art Editor
+# Proiect: Un editor Pixel Art
 
 {{quote {author: "Joan Miro", chapter: true}
 
-I look at the many colors before me. I look at my blank canvas. Then, I try to apply colors like words that shape poems, like notes that shape music.
+Mă uit la multele culori din fața mea. Mă uit la canvasul gol. Apoi, încerc să aplic culorile cum se aplică cuvintele pentru a forma poeme sau notele pentru a forma muzica.
 
 quote}}
 
@@ -12,69 +12,69 @@ quote}}
 
 {{figure {url: "img/chapter_picture_19.jpg", alt: "Picture of a tiled mosaic", chapter: "framed"}}}
 
-The material from the previous chapters gives you all the elements you need to build a basic ((web application)). In this chapter, we will do just that.
+Materialul din capitolul anterior vă pune la dispoziție toate elementele de care aveți nevoie pentru a construi o aplicație simplă. In acest capitol vom construi această aplicație.
 
 {{index [file, image]}}
 
-Our ((application)) will be a ((pixel)) ((drawing)) program, where you can modify a picture pixel by pixel by manipulating a zoomed-in view of it, shown as a grid of colored squares. You can use the program to open image files, scribble on them with your mouse or other pointer device, and save them. This is what it will look like:
+Aplicația noastră va fi un program de desenare pe pixeli, în care veți putea modifica o imagine pixel cu pixel prin manipularea unei vizualizări mărite a imaginii, afișsată pe un grid de pătrate. Veți putea utiliza programul pentru a deschide fișiere, pe care să le modificați apoi cu mouseul sau alt dispozitiv și, în final, să le salvați. Aplicația va arătă la sfârșit cam așa:
 
 {{figure {url: "img/pixel_editor.png", alt: "The pixel editor interface, with colored pixels at the top and a number of controls below that", width: "8cm"}}}
 
-Painting on a computer is great. You don't need to worry about materials, ((skill)), or talent. You just start smearing.
+Pictura pe computer este extraordinară. Nu trebuie să vă îngrijorați în privința materialelor, îdemânării sau a talentului. Doar începeți să pictați.
 
-## Components
+## Componente
 
 {{index drawing, "select (HTML tag)", "canvas (HTML tag)", component}}
 
-The interface for the application shows a big `<canvas>` element on top, with a number of form ((field))s below it. The user draws on the ((picture)) by selecting a tool from a `<select>` field and then clicking, ((touch))ing, or ((dragging)) across the canvas. There are ((tool))s for drawing single pixels or rectangles, for filling an area, and for picking a ((color)) from the picture.
+Interfața pentru aplicație afișează un element `<canvas>` în partea de sus și mai multe câmpuri sub el. Utilizatorul desenează pe imagine prin selectarea unui instrument dintr-un câmp `<select>` urmată de click-uri, atingeri sau trageri peste canvas. Vom construi instrumente pentru desenarea unui singur pixel sau a unui dreptunghi, pentru umplerea unei zone și pentru selectarea unei culori din imagine.
 
 {{index [DOM, components]}}
 
-We will structure the editor interface as a number of _((component))s_, objects that are responsible for a piece of the DOM and that may contain other components inside them.
+Vom structura interfața editorului ca un număr de _componente_, obiecte care vor fi responsabile pentru o parte din DOM și care vor putea conține alte componente în interiorul lor.
 
 {{index [state, "of application"]}}
 
-The state of the application consists of the current picture, the selected tool, and the selected color. We'll set things up so that the state lives in a single value, and the interface components always base the way they look on the current state.
+Starea aplicației constă din imaginea curentă, instrumentul selectat și culoarea selectată. Vom seta lucrurile astfel încât starea curentă să fie tocată într-o singură valoare iar componentele interfeței să fie afișate conform stării curente.
 
-To see why this is important, let's consider the alternative—distributing pieces of state throughout the interface. Up to a certain point, this is easier to program. We can just put in a ((color field)) and read its value when we need to know the current color.
+Pentru a înțelege de ce este important să procedăm astfel, haideți să considerăm varianta alternativă - distribuim părți ale stării peste tot în interfață. Până la un punct, va fi mai ușor să programăm astfel. Am putea să utilizăm un câmp pentru culoare și să îi citim valoarea atunci când vrem să determinăm culoarea curentă.
 
-But then we add the ((color picker))—a tool that lets you click the picture to select the color of a given pixel. To keep the color field showing the correct color, that tool would have to know that it exists and update it whenever it picks a new color. If you ever add another place that makes the color visible (maybe the mouse cursor could show it), you have to update your color-changing code to keep that synchronized.
+Dar apoi adăugăm instrumentul pentru selectarea culorii - un instrument care vă permite să efectuați click pe imagine pentru a selecta culoarea unui pixel dat. Pentru a afișa culoarea corectă în câmpul de culoare, acel tool ar trebui să știe de existența acelui câmp și să îl actualizeze la selectarea unei alte culori. Dacă veți adăuga un element care afișează culoarea, va trebui să actualizați din nou codul de modificare a culorii pentru a sincroniza și acel element.
 
 {{index modularity}}
 
-In effect, this creates a problem where each part of the interface needs to know about all other parts, which is not very modular. For small applications like the one in this chapter, that may not be a problem. For bigger projects, it can turn into a real nightmare.
+Prin urmare, se crează astfel o problema legată de faptul că fiecare parte a interfeței trebuie să fie conștientă de prezența tuturor celorlalte părți, ceea ce nu este foarte bine din punct de vedere al modularității. Pentru aplicații mici, cum este cea din acest capitol, nu este o problemă. Dar pentru proiecte mai mari, aceasta poate deveni repede un coșmar.
 
-To avoid this nightmare on principle, we're going to be strict about _((data flow))_. There is a state, and the interface is drawn based on that state. An interface component may respond to user actions by updating the state, at which point the components get a chance to synchronize themselves with this new state.
+Pentru a evita problema, în principiu, vom fi stricți în privința _fluxului de date_. Există o stare și interfața este desenată pe baza acelei stări. O componentă a interfeței poate răspunde la acțiunile utilizatorului prin actualizarea stării, moment în care componentele au ocazia să se sincronizeze cu noua stare.
 
 {{index library, framework}}
 
-In practice, each ((component)) is set up so that when it is given a new state, it also notifies its child components, insofar as those need to be updated. Setting this up is a bit of a hassle. Making this more convenient is the main selling point of many browser programming libraries. But for a small application like this, we can do it without such infrastructure.
+În practică, fiecare componentă este setată astfel încât, atunci când primește o nouă stare, va notifica componentele-copil pentru a fi actualizate. Setarea acestui mod de interacțiune între componente este o oarecare bătaie de cap. Micșorarea efortului în această direcție este principalul aspect de vânzare al multor librării pentru programarea în browser. Dar pentru o aplicație de mici dimensiuni, putem realiza acest lucru fără o asemenea infrastructură.
 
 {{index [state, transitions]}}
 
-Updates to the state are represented as objects, which we'll call _((action))s_. Components may create such actions and _((dispatch))_ them—give them to a central state management function. That function computes the next state, after which the interface components update themselves to this new state.
+Actualizările stării sunt reprezentate de către obiecte, pe care le vom numi _acțiuni_. Componentele pot crea asemenea acțiuni și să le _expedieze_ - să le transmită unei funcții centrale de gestionare. Acea funcție calculează noua stare, după care componentele interfeței se actualizează la noua stare.
 
 {{index [DOM, components]}}
 
-We're taking the messy task of running a ((user interface)) and applying some ((structure)) to it. Though the DOM-related pieces are still full of ((side effect))s, they are held up by a conceptually simple backbone: the state update cycle. The state determines what the DOM looks like, and the only way DOM events can change the state is by dispatching actions to the state.
+Vom lua sarcina încâlcită de a rula o interfață utilizator și să îi aplicăm o structură. Deși bucățile legate de DOM sunt pline de efecte secundare, ele sunt susținute de o coloană vertebrală conceptual simplă: ciclul de actualizare a stării. Starea determină aspectul DOM-ului și singurul mod în care evenimentele DOM pot modifica starea este expedierea acșiunilor către stare.
 
 {{index "data flow"}}
 
-There are _many_ variants of this approach, each with its own benefits and problems, but their central idea is the same: state changes should go through a single well-defined channel, not happen all over the place.
+Sunt _multe_ variante ale acestei abordări, fiecare cu propriile beneficii și probleme, dar ideea centrală este aceeași: modificările stării trebuie să treacă printr-un canal unic și bine definit, nu să aibă loc peste tot în aplicație.
 
 {{index "dom property", [interface, object]}}
 
-Our ((component))s will be ((class))es conforming to an interface. Their constructor is given a state—which may be the whole application state or some smaller value if it doesn't need access to everything—and uses that to build up a `dom` property. This is the DOM element that represents the component. Most constructors will also take some other values that won't change over time, such as the function they can use to ((dispatch)) an action.
+Componentele noastre vor fi clase ce se conformează unei interfețe. Constructorul lor va primi o stare - și o va utiliza pentru a construi o proprietate `dom`. Acesta este elementul DOM care reprezintă componenta. Majoritatea constructorilor vor primi și alte valori care nu se vor modifica în timp, cum ar fi funcția pe care o pot utiliza pentru a expedia o acțiune.
 
 {{index "syncState method"}}
 
-Each component has a `syncState` method that is used to synchronize it to a new state value. The method takes one argument, the state, which is of the same type as the first argument to its constructor. 
+Fiecare componentă are o metodă `syncState` care este utilizată pentru a se sincroniza la o nouă valoare a stării. Metoda primește un singur argument, starea, care este de același tip ca și primul său argument al constructorului.
 
-## The state
+## Starea aplicației
 
 {{index "Picture class", "picture property", "tool property", "color property", "Matrix class"}}
 
-The application state will be an object with `picture`, `tool`, and `color` properties. The picture is itself an object that stores the width, height, and pixel content of the picture. The ((pixel))s are stored in an array, in the same way as the matrix class from [Chapter ?](object)—row by row, from top to bottom.
+Starea aplicației va fi un obiect cu proprietățile `picture`, `tool` și `color`. Imaginea va fi și ea un obiect care va stoca lungimea, lățimea și conținutul pixelilor din imagine. Pixelii sunt memorați într-un array, similar cu clasa pentru matrice din [capitolul ?](object) - rând cu rând, de sus în jos.
 
 ```{includeCode: true}
 class Picture {
@@ -102,23 +102,23 @@ class Picture {
 
 {{index "side effect", "persistent data structure"}}
 
-We want to be able to treat a picture as an ((immutable)) value, for reasons that we'll get back to later in the chapter. But we also sometimes need to update a whole bunch of pixels at a time. To be able to do that, the class has a `draw` method that expects an array of updated pixels—objects with `x`, `y`, and `color` properties—and creates a new picture with those pixels overwritten. This method uses `slice` without arguments to copy the entire pixel array—the start of the slice defaults to 0, and the end defaults to the array's length.
+Vrem să putem trata o imagine ca o valoare imutabilă, din motive asupra cărora vom reveni mai târziu în acest capitol. Dar, de asemenea, uneori vom dori să actualizăm un întreg set de pixeli deodată. Pentru aceasta, clasa va avea o metodă `draw` care primește un array de pixeli actualizați - obiecte cu proprietăți `x`, `y` și `color` - și crează o nouă imagine cu acei pixeli suprascriși. Această metodă utilizează `slice` fără argumente pentru a copia întregul array de pixeli - începutul tăierii este implicit 0 iar sfârșitul, lungimea array-ului.
 
 {{index "Array constructor", "fill method", ["length property", "for array"], [array, creation]}}
 
-The `empty` method uses two pieces of array functionality that we haven't seen before. The `Array` constructor can be called with a number to create an empty array of the given length. The `fill` method can then be used to fill this array with a given value. These are used to create an array in which all pixels have the same color.
+Metoda `empty` utilizează două funcționalități pentru array-uri pe care nu le-am mai întâlnit. Constructorul `Array` poate fi apelat cu un număr ca argument, pentru a crea un array de lungime dată. Metoda `fill` poate fi apoi utlizată pentru a umple acest array cu o valoare dată. Acestea sunt utilizate pentru a crea un array în care toți pixelii au aceeași culoare.
 
 {{index "hexadecimal number", "color component", "color field", "fillStyle property"}}
 
-Colors are stored as strings containing traditional ((CSS)) ((color code))s made up of a ((hash sign)) (`#`) followed by six hexadecimal (base-16) digits—two for the ((red)) component, two for the ((green)) component, and two for the ((blue)) component. This is a somewhat cryptic and inconvenient way to write colors, but it is the format the HTML color input field uses, and it can be used in the `fillStyle` property of a canvas drawing context, so for the ways we'll use colors in this program, it is practical enough.
+Culorile sunt memorate ca și stringuri ce conțin coduri tradiționale CSS, construite cu un symbol `#` și apoi 6 cifre hexazecimale (baza 16), câte două pentru fiecare componentă de culoare RGB. Aceasta este o modalitate destul de criptică și neconvenabilă de a scrie culorile, dar este formatul pe care îl folosește și câmpul HTML pentru culori, și poate fi utilizată în proprietatea `fillStyle` a contextului de desenare al canvasului, așa că este practic suficientă pentru modurile în care vom utiliza culorile în acest program.
 
 {{index black}}
 
-Black, where all components are zero, is written `"#000000"`, and bright ((pink)) looks like `"#ff00ff"`, where the red and blue components have the maximum value of 255, written `ff` in hexadecimal ((digit))s (which use _a_ to _f_ to represent digits 10 to 15).
+Negrul, pentru care toate componentele au valoarea zero, se scrie `"#000000"`, iar magenta s-ar scrie cam așa: `"#ff00ff"`, cu componentele roșu și albastru setate la valoarea maximă de 255, scrisă `ff` cu cifre hexazecimale (unde folosim literele _a_ - _f_ pentru a reprezenta cifrele de la 10 la 15).
 
 {{index [state, transitions]}}
 
-We'll allow the interface to ((dispatch)) ((action))s as objects whose properties overwrite the properties of the previous state. The color field, when the user changes it, could dispatch an object like `{color: field.value}`, from which this update function can compute a new state.
+Vom permite interfeței să expedieze acșiuni ca și obiecte ale căror proprietăți suprascriu propreitățile stării anterioare. Câmpul de culoare, atunci când este modificat de către utilizator, ar putea expedia un obiect `{color: field.value}`, cu ajutorul căruia funcția de actualizare ar putea calcula o nouă stare.
 
 {{index "updateState function"}}
 
@@ -130,13 +130,13 @@ function updateState(state, action) {
 
 {{index "period character", spread, "Object.assign function"}}
 
-This rather cumbersome pattern, in which `Object.assign` is used to first add the properties of `state` to an empty object and then overwrite some of those with the properties from `action`, is common in JavaScript code that uses ((immutable)) objects. A more convenient notation for this, in which the triple-dot operator is used to include all properties from another object in an object expression, is in the final stages of being standardized. With that addition, you could write `{...state, ...action}` instead. At the time of writing, this doesn't yet work in all browsers.
+Acest șablon oarecum greoi, în care `Object.assign` este utilizat mai întâi pentru a adăuga proprietățile stării unui obiect gol, urmând apoi să suprascriem unele dintre ele cu cele din obiectul `action`, este frecvent întâlnit în codul JavaScript care utilizează obiecte imutabile. O notație mai convenabilă ar fi operatorul `...` pentru a include toate proprietățile dintr-un alt obiect într-o expresie de tip obiect, dar aceasta este în curs de standardizare. Cu o astfel de abordare, ați putea scrie `{...state, ...action}`.
 
-## DOM building
+## Construirea DOM-ului
 
 {{index "createElement method", "elt function", [DOM, construction]}}
 
-One of the main things that interface components do is creating DOM structure. We again don't want to directly use the verbose DOM methods for that, so here's a slightly expanded version of the `elt` function:
+Unul dintre principalele lucruri pe care le realizează componentele interfeței este crearea unei structuri DOM. Din nou, nu vrem să utilizăm metodele DOM detaliate pentru aceasta, astfel că mai jos este o versiune mai extinsă a funcției `elt`:
 
 ```{includeCode: true}
 function elt(type, props, ...children) {
@@ -152,11 +152,11 @@ function elt(type, props, ...children) {
 
 {{index "setAttribute method", "attribute", "onclick property", "click event", "event handling"}}
 
-The main difference between this version and the one we used in [Chapter ?](game#domdisplay) is that it assigns _properties_ to DOM nodes, not _attributes_. This means we can't use it to set arbitrary attributes, but we _can_ use it to set properties whose value isn't a string, such as `onclick`, which can be set to a function to register a click event handler.
+Principala diferență dintre această versiune și cea pe care am utilizat-o în [capitolul ?](game#domdisplay) este că se asignează _proprietăți_ către nodurile DOM, nu către _atribute_. Aceasta înseamnă că nu o putem utiliza pentru a seta atribute dar o _putem_ utiliza pentru a seta proprietăți ale căror valori nu sunt stringuri, cum ar fi `onclick` care poate fi setat la o funcție pentru a înregistra un handler pentru evenimentul click.
 
 {{index "button (HTML tag)"}}
 
-This allows the following style of registering event handlers:
+Astfel, este permis următorul stil de a înregistra handlere de evenimente:
 
 ```{lang: "text/html"}
 <body>
@@ -168,13 +168,13 @@ This allows the following style of registering event handlers:
 </body>
 ```
 
-## The canvas
+## Canvasul
 
-The first component we'll define is the part of the interface that displays the picture as a grid of colored boxes. This component is responsible for two things: showing a picture and communicating ((pointer event))s on that picture to the rest of the application.
+Prima componentă pe care o vom defini este partea din interfață care afișează imaginea ca un grid de pătrate colorate. Această componentă este responsabilă pentru două lucruri: afișarea unei imagini și comunicarea evenimentelor asociate cu pointerul mouseului către restul aplicației.
 
 {{index "PictureCanvas class", "callback function", "scale constant", "canvas (HTML tag)", "mousedown event", "touchstart event", [state, "of application"]}}
 
-As such, we can define it as a component that knows about only the current picture, not the whole application state. Because it doesn't know how the application as a whole works, it cannot directly dispatch ((action))s. Rather, when responding to pointer events, it calls a callback function provided by the code that created it, which will handle the application-specific parts.
+Astfel, îl putem defini ca o componentă care este conștientă doar despre imaginea curentă, nu întreaga stare a aplicației. Deoarece nu cunoaște cum funcționează aplicația ca și întreg, nu poate expedia direct acțiunile. Mai degrabă, când răspunde la evenimente ale pointerului mouseului, va apela o funcție de callback furnizată de către codul care l-a creat, care va gestiona părțile specifice aplicației.
 
 ```{includeCode: true}
 const scale = 10;
@@ -197,11 +197,11 @@ class PictureCanvas {
 
 {{index "syncState method", efficiency}}
 
-We draw each pixel as a 10-by-10 square, as determined by the `scale` constant. To avoid unnecessary work, the component keeps track of its current picture and does a redraw only when `syncState` is given a new picture.
+Desenăm fiecare pixel ca un pătrat 10x10, fapt determinat de către constanta `scale`. Pentru a evita efortul inutil, componenta urmărește imaginea curentă și redesenează doar atunci când `syncState` primește o nouă imagine.
 
 {{index "drawPicture function"}}
 
-The actual drawing function sets the size of the canvas based on the scale and picture size and fills it with a series of squares, one for each pixel.
+Funcția propriu-zisă de desenare setează dimensiunea canvasului pe baza scalei și a dimensiunii imaginii și apoi o umple cu o serie de pătrate, câte unul pentru fiecare pixel.
 
 ```{includeCode: true}
 function drawPicture(picture, canvas, scale) {
@@ -220,7 +220,7 @@ function drawPicture(picture, canvas, scale) {
 
 {{index "mousedown event", "mousemove event", "button property", "buttons property", "pointerPosition function"}}
 
-When the left mouse button is pressed while the mouse is over the picture canvas, the component calls the `pointerDown` callback, giving it the position of the pixel that was clicked—in picture coordinates. This will be used to implement mouse interaction with the picture. The callback may return another callback function to be notified when the pointer is moved to a different pixel while the button is held down.
+Când se apasă butonul stânga al mouseului cu mouseul plasat peste canvas, componenta apelează callback-ul `pointerDown`, transmițându-i poziția pixelului pe care s-a executat click - în coordonate imagine. Aceasta va fi utilizată pentru a implementa interacțiunea cu imaginea folosind mouse-ul. Callback-ul ar putea returna o altă funcție de callback pentru a fi notificat când pointerul a fost mutat pe un alt pixel în timp ce butonul mouse-ului era apăsat.
 
 ```{includeCode: true}
 PictureCanvas.prototype.mouse = function(downEvent, onDown) {
@@ -250,11 +250,11 @@ function pointerPosition(pos, domNode) {
 
 {{index "getBoundingClientRect method", "clientX property", "clientY property"}}
 
-Since we know the size of the ((pixel))s and we can use `getBoundingClientRect` to find the position of the canvas on the screen, it is possible to go from mouse event coordinates (`clientX` and `clientY`) to picture coordinates. These are always rounded down so that they refer to a specific pixel.
+Deoarece știm dimensiunea pixelilor și putem apela `getBoundingClientRect` pentru a determina poziția canvasului pe ecran, putem trece din coordonatele evenimentului de mouse (`clientX` și `clientY`) în coordonatele imaginii. Acestea sunt întotdeauna rotunjite în jos pentru a ne referi la un anume pixel.
 
 {{index "touchstart event", "touchmove event", "preventDefault method"}}
 
-With touch events, we have to do something similar, but using different events and making sure we call `preventDefault` on the `"touchstart"` event to prevent ((panning)).
+Cu evenimentele pentru atingeri trebuie să facem ceva similar, dar utilizând alte evenimente și asigurându-ne că utilizăm `preventDefault` pentru evenimentul `"touchstart"` pentru a preveni panoramarea.
 
 ```{includeCode: true}
 PictureCanvas.prototype.touch = function(startEvent,
@@ -281,18 +281,17 @@ PictureCanvas.prototype.touch = function(startEvent,
 
 {{index "touches property", "clientX property", "clientY property"}}
 
-For touch events, `clientX` and `clientY` aren't available directly on the event object, but we can use the coordinates of the first touch object in the `touches` property.
+Pentru evenimentele de atingere, `clientX` și `clientY` nu sunt disponibile direct în obiectul evenimentului, dar putem utiliza coordonatele primului obiect din proprietatea `touches`.
 
-## The application
+## Aplicația
 
-To make it possible to build the application piece by piece, we'll implement the main component as a shell around a picture canvas and a dynamic set of ((tool))s and ((control))s that we pass to its constructor.
+Pentru a putea construi aplicația bucată cu bucată, vom implementa componenta principală ca o carcasă în jurul canvasului și un set dinamic de instrumente și controale pe care le transmitem constructorului său.
 
-The _controls_ are the interface elements that appear below the picture. They'll be provided as an array of ((component)) constructors.
+_Controalele_ sunt elementele interfeței care apar sub imagine. Ele vor fi livrate ca un array de constructori pentru componente.
 
 {{index "br (HTML tag)", "flood fill", "select (HTML tag)", "PixelEditor class", dispatch}} 
 
-The _tools_ do things like drawing pixels or filling in an area. The application shows the set of available tools as a `<select>` field. The currently selected tool determines what happens when the user interacts with the picture with a pointer device. The set of available tools is provided as an object that maps the names that appear in the drop-down field to functions that implement the tools. Such functions get a picture
-position, a current application state, and a `dispatch` function as arguments. They may return a move handler function that gets called with a new position and a current state when the pointer moves to a different pixel.
+_Instrumentele_ vor executa operații cum ar fi desenarea pixelilor sau umplerea unei arii. Aplicația afișează setul de instrumente disponibile sub forma unui câmp `<select>`.  Instrumentul curent selectat determină ce se întâmplă când utilizatorul interacționează cu imaginea cu ajutorul unui dispozitiv de tipul mouse-ului. Setul de instrumente disponibile este furnizat ca un obiect care mapează numele care apar în câmpul drop-down cu funcții care implementează instrumentele. Asemenea funcții preiau poziția imaginii, o stare curentă a aplicației, și o funcție `dispatch`, ca și argumente. Ele ar putea returna un handler pentru mișcare care va fi apelat cu o nouă poziție și starea curentă atunci când indicatorul mouseului sau altui dispozitiv de indicare se mută la un alt pixel.
 
 ```{includeCode: true}
 class PixelEditor {
@@ -319,15 +318,15 @@ class PixelEditor {
 }
 ```
 
-The pointer handler given to `PictureCanvas` calls the currently selected tool with the appropriate arguments and, if that returns a move handler, adapts it to also receive the state.
+Handlerul pentru pointer transmis către `PictureCanvas` apelează instrumentul selectat cu argumentele corespunzătoare și, dacă acesta returnează un handler petnru mișcare, se adaptează pentru a recepționa și starea.
 
 {{index "reduce method", "map method", [whitespace, "in HTML"], "syncState method"}}
 
-All controls are constructed and stored in `this.controls` so that they can be updated when the application state changes. The call to `reduce` introduces spaces between the controls' DOM elements. That way they don't look so pressed together.
+Toate controalele sunt construite și stocate în `this.controls` astfel încât for putea fi actualizate când starea aplicației se modifică. Apelul către `reduce` introduce spații între elementele DOM asociate controalelor. În acest fel, elementele nu vor mai părea atât de înghesuite.
 
 {{index "select (HTML tag)", "change event", "ToolSelect class", "syncState method"}}
 
-The first control is the ((tool)) selection menu. It creates a `<select>` element with an option for each tool and sets up a `"change"` event handler that updates the application state when the user selects a different tool.
+Primul control este meniul pentru selectarea instrumentului. El crează un element `<select>` cu câte o opțiune pentru fiecare instrument și setează un handler de eveniment `"change"`, care actualizează starea aplicație de fiecare dată când utilizatorul selectează un instrument diferit.
 
 ```{includeCode: true}
 class ToolSelect {
@@ -345,7 +344,7 @@ class ToolSelect {
 
 {{index "label (HTML tag)"}}
 
-By wrapping the label text and the field in a `<label>` element, we tell the browser that the label belongs to that field so that you can, for example, click the label to focus the field.
+Prin împachetarea textului etichetei și a câmpului într-un element `<label>`, instruim browserul că eticheta aparține unui câmp, astfel încât, de exemplu, puteți efectua click pe etichetă pentru a transfera focusul în acel câmp.
 
 {{index "color field", "input (HTML tag)"}}
 
@@ -353,7 +352,7 @@ We also need to be able to change the color, so let's add a control for that. An
 
 {{if book
 
-Depending on the browser, the color picker might look like this:
+În funcție de browser, selectorul pentru culoare ar putea arăta cam așa:
 
 {{figure {url: "img/color-field.png", alt: "A color field", width: "6cm"}}}
 
@@ -361,7 +360,7 @@ if}}
 
 {{index "ColorSelect class", "syncState method"}}
 
-This ((control)) creates such a field and wires it up to stay synchronized with the application state's `color` property.
+Acest control crează un asemenea câmp și îl leagă pentru a-l sincroniza cu proprietatea `color` a stării aplicației:
 
 ```{includeCode: true}
 class ColorSelect {
@@ -377,13 +376,13 @@ class ColorSelect {
 }
 ```
 
-## Drawing tools
+## Instrumente de desenare
 
-Before we can draw anything, we need to implement the ((tool))s that will control the functionality of mouse or touch events on the canvas.
+Înainte de a putea desena, trebuie să implementăm instrumentele care vor controla funcționalitatea pentru evenimentele de mouse sau de atingere a canvasului.
 
 {{index "draw function"}}
 
-The most basic tool is the draw tool, which changes any ((pixel)) you click or tap to the currently selected color. It dispatches an action that updates the picture to a version in which the pointed-at pixel is given the currently selected color.
+Cel mai elementar instrument este instrumentul de desenare, care modifică orice pixel pe care efectuați click sau tap la culoarea selectată curent. El expediază o acțiune care actualizează imaginea la o versiune în care pixelul indicat primește culoarea selectată curent.
 
 ```{includeCode: true}
 function draw(pos, state, dispatch) {
@@ -396,11 +395,11 @@ function draw(pos, state, dispatch) {
 }
 ```
 
-The function immediately calls the `drawPixel` function but then also returns it so that it is called again for newly touched pixels when the user drags or ((swipe))s over the picture.
+Funcția apelează imediat funcția `drawPixel` dar o și returnează, pentru a fi apelată din nou pentru noi pixeli sau când utilizatorul trage sau glisează peste imagine.
 
 {{index "rectangle function"}}
 
-To draw larger shapes, it can be useful to quickly create ((rectangle))s. The `rectangle` ((tool)) draws a rectangle between the point where you start ((dragging)) and the point that you drag to.
+Pentru a desena figuri mai mari, poate fi util să putem crea rapid dreptunghiuri. Instrumentul `rectangle` va desena un dreptunghi din punctul de început al tragerii până în punctul în care terminați tragerea.
 
 ```{includeCode: true}
 function rectangle(start, state, dispatch) {
@@ -424,15 +423,15 @@ function rectangle(start, state, dispatch) {
 
 {{index "persistent data structure", [state, persistence]}}
 
-An important detail in this implementation is that when dragging, the rectangle is redrawn on the picture from the _original_ state. That way, you can make the rectangle larger and smaller again while creating it, without the intermediate rectangles sticking around in the final picture. This is one of the reasons why ((immutable)) picture objects are useful—we'll see another reason later.
+Un detaliu important în această implementare este că, atunci când tragem, dreptunghiul este redesenat pe imagine, din starea _originală_. In acest fel, puteți să măriți sau să micșorați dreptunghiul în timp ce îl creați, fără ca dreptunghiurile intermediare să rămână pe imaginea finală. Acesta este unul dintre motivele pentru care obiectele imutabile sunt utile - vom vedea un altul puțin mai târziu.
 
-Implementing ((flood fill)) is somewhat more involved. This is a ((tool)) that fills the pixel under the pointer and all adjacent pixels that have the same color. "Adjacent" means directly horizontally or vertically adjacent, not diagonally. This picture illustrates the set of ((pixel))s colored when the flood fill tool is used at the marked pixel:
+Implementarea umplerii este mai complexă. Acesta este un instrument care umple pixelul de sub pointer și toți pixelii adiacenți ce au aceeași culoare. "Adiacent" înseamnă adiacent pe orizontală sau verticală, nu și direcția diagonală. Imaginea de mai jos ilustrează setul de pixeli colorați când instrumentul de umplere este utilizat pentru pixelul marcat:
 
 {{figure {url: "img/flood-grid.svg", alt: "A pixel grid showing the area filled by a flood fill operation", width: "6cm"}}}
 
 {{index "fill function"}}
 
-Interestingly, the way we'll do this looks a bit like the ((pathfinding)) code from [Chapter ?](robot). Whereas that code searched through a graph to find a route, this code searches through a grid to find all "connected" pixels. The problem of keeping track of a branching set of possible routes is similar.
+Interesant, modul în care realizăm operația seamănă cu codul pentru determinarea rutei din [capitolul ?](robot). În timp ce acel cod căuta o rută într-un graf, acest cod caută într-un grid pentru a determina toți pixelii "conectați". Problema urmăririi unui set ce se poate ramifica de rute posibile este similară.
 
 ```{includeCode: true}
 const around = [{dx: -1, dy: 0}, {dx: 1, dy: 0},
@@ -456,11 +455,11 @@ function fill({x, y}, state, dispatch) {
 }
 ```
 
-The array of drawn pixels doubles as the function's ((work list)). For each pixel reached, we have to see whether any adjacent pixels have the same color and haven't already been painted over. The loop counter lags behind the length of the `drawn` array as new pixels are added. Any pixels ahead of it still need to be explored. When it catches up with the length, no unexplored pixels remain, and the function is done.
+Array-ul de pixeli desenați se dublează pe măsură ce se execută funcția. Pentru fiecare pixel atins, trebuie să verificăm dacă unul dintre pixelii adiacenți are aceeați culoare și nu a fost redesenat deja. Contorul buclei rămâne în urma lungimii array-ului `drawn` pe măsură ce se adaugă noi pixeli. Orice pixeli anteriori trebuie să fie explorați. Când ajunge să fie egal cu lungimea, nu mai există pixeli care trebuie explorați și funcția se încheie.
 
 {{index "pick function"}}
 
-The final ((tool)) is a ((color picker)), which allows you to point at a color in the picture to use it as the current drawing color.
+Ultimul instrument este un selector pentru culori, care permite selecția unei culori din imagine pentru a o utiliza ca și culoare curentă de desenare.
 
 ```{includeCode: true}
 function pick(pos, state, dispatch) {
@@ -470,7 +469,7 @@ function pick(pos, state, dispatch) {
 
 {{if interactive
 
-We can now test our application!
+Acum ne putem testa apicația!
 
 ```{lang: "text/html"}
 <div></div>
@@ -494,11 +493,11 @@ We can now test our application!
 
 if}}
 
-## Saving and loading
+## Salvarea și încărcarea
 
 {{index "SaveButton class", "drawPicture function", [file, image]}}
 
-When we've drawn our masterpiece, we'll want to save it for later. We should add a button for ((download))ing the current picture as an image file. This ((control)) provides that button:
+După ce ne-am desenat capodopera, o să vrem să o salvăm. Trebuie să adăugăm un buton pentru descărcarea imaginii curente ca și fișier-imagine. Controlul de mai jos crează acest buton:
 
 ```{includeCode: true}
 class SaveButton {
@@ -525,21 +524,21 @@ class SaveButton {
 
 {{index "canvas (HTML tag)"}}
 
-The component keeps track of the current picture so that it can access it when saving. To create the image file, it uses a `<canvas>` element that it draws the picture on (at a scale of one pixel per pixel). 
+Componenta urmărește imaginea curentă astfel încât o poate accesa pentru salvare. Pentru a crea fișierul imagine, utilizează un element `<canvas>` pe care desenează imaginea la scară 1:1 (pixel-la-pixel). 
 
 {{index "toDataURL method", "data URL"}}
 
-The `toDataURL` method on a canvas element creates a URL that starts with `data:`. Unlike `http:` and `https:` URLs, data URLs contain the whole resource in the URL. They are usually very long, but they allow us to create working links to arbitrary pictures, right here in the browser.
+Metoda `toDataURL` a elementului canvas crează un URL care începe cu `data:`. Spre deosebire de URL-urile `http:` și `https:`, URL-urile `data` conțin toată resursa în URL. Ele sunt de regulă foarte lungi, dar ne permit să construim legături funcționale către imagini, chiar în browser.
 
 {{index "a (HTML tag)", "download attribute"}}
 
-To actually get the browser to download the picture, we then create a ((link)) element that points at this URL and has a `download` attribute. Such links, when clicked, make the browser show a file save dialog. We add that link to the document, simulate a click on it, and remove it again.
+Pentru descărcarea propriu-zisă a imaginii, creem o legătură care indică spre acel URL și are un atribut `download`. Asemenea legături, când sunt activate prin click, determină browserul să afișeze un dialog pentru salvarea fișierului. Adăugăm acea legătură în document, simulăm un click și apoi o eliminăm.
 
-You can do a lot with ((browser)) technology, but sometimes the way to do it is rather odd.
+Puteți realiza o mulțime de lucruri cu tehnologia browserelor dar, uneori, modul în care trebuie să o folosiți este ciudat.
 
 {{index "LoadButton class", control, [file, image]}}
 
-And it gets worse. We'll also want to be able to load existing image files into our application. To do that, we again define a button component.
+Dar devine și mai ciudat. Vrem să putem să încărcăm o imagine existentă în aplicație. Pentru aceasta, definim încă o componentă pentru un buton.
 
 ```{includeCode: true}
 class LoadButton {
@@ -564,11 +563,11 @@ function startLoad(dispatch) {
 
 {{index [file, access], "input (HTML tag)"}}
 
-To get access to a file on the user's computer, we need the user to select the file through a file input field. But I don't want the load button to look like a file input field, so we create the file input when the button is clicked and then pretend that this file input itself was clicked.
+Pentru a avea acces la un fișier din computerul utilizatorului, trebuie ca utilizatorul să selecteze mai întâi fișierul cu ajutorul unui câmp pentru fișiere. Dar nu vreau ca butonul de încărcare să arate ca un câmp de încărcare a fișierelor, astfel că voi crea câmpul de încărcare atunci când se execută click pe buton și apopi voi pretinde că acest câmp nou creat a recepționat click-ul.
 
 {{index "FileReader class", "img (HTML tag)", "readAsDataURL method", "Picture class"}}
 
-When the user has selected a file, we can use `FileReader` to get access to its contents, again as a ((data URL)). That URL can be used to create an `<img>` element, but because we can't get direct access to the pixels in such an image, we can't create a `Picture` object from that.
+Când utilizatorul a selectat un fișier, putem utiliza `FileReader` pentru a-i accesa conținutul, din nou ca un URL `data`. Apoi acel URL va putea fi folosit pentru a crea un element `<img>` dar, deoarece nu putem avea acces direc tla pixelii dintr-o asemenea imagine, nu putem crea un obiect `Picture` din aceasta.
 
 ```{includeCode: true}
 function finishLoad(file, dispatch) {
@@ -588,7 +587,7 @@ function finishLoad(file, dispatch) {
 
 {{index "canvas (HTML tag)", "getImageData method", "pictureFromImage function"}}
 
-To get access to the pixels, we must first draw the picture to a `<canvas>` element. The canvas context has a `getImageData` method that allows a script to read its ((pixel))s. So, once the picture is on the canvas, we can access it and construct a `Picture` object.
+Pentru a avea acces la pixeli, mai întâi trebuie să desenăm imaginea pe un element `<canvas>`. Contextul canvasului are o metodă `getImageData` care permite scriptului să citească pixelii. Prin urmare, după ce pictura apare pe canvas, o putem accesa și să construim un obiect `Picture`.
 
 ```{includeCode: true}
 function pictureFromImage(image) {
@@ -611,33 +610,33 @@ function pictureFromImage(image) {
 }
 ```
 
-We'll limit the size of images to 100 by 100 pixels since anything bigger will look _huge_ on our display and might slow down the interface.
+Vom limita dimensiunea imaginilor la 100 x 100 pixeli deoarece mai mult de atât va fi _imens_ pentru afișajul nostru și ar putea încetini interfața.
 
 {{index "getImageData method", color, transparency}}
 
-The `data` property of the object returned by `getImageData` is an array of color components. For each pixel in the rectangle specified by the arguments, it contains four values, which represent the red, green, blue, and _((alpha))_ components of the pixel's color, as numbers between 0 and 255. The alpha part represents opacity—when it is zero, the pixel is fully transparent, and when it is 255, it is fully opaque. For our purpose, we can ignore it.
+Proprietatea `data` a obiectului returnat de către `getImageData` este un array de componente de culoare. Pentru fiecare pixel din dreptunghiul specificat prin argumente, vor exista 4 valori, care reprezintă componentele roșu, verde, albastru și _alpha_ ale culorii pixelului, ca numere între 0 și 255. Partea _alpha_ reprezintă opacitatea/transparența - valoarea 0 înseamnă că pixelul este complet transparent iar 255 se referă la opacitate completă. Pentru scopul nostru, puttem să o ignorăm.
 
 {{index "hexadecimal number", "toString method"}}
 
-The two hexadecimal digits per component, as used in our color notation, correspond precisely to the 0 to 255 range—two base-16 digits can express 16^2^ = 256 different numbers. The `toString` method of numbers can be given a base as argument, so `n.toString(16)` will produce a string representation in base 16. We have to make sure that each number takes up two digits, so the `hex` helper function calls `padStart` to add a leading zero when necessary.
+Cele două cifre hexazecimale pe componentă, așa cum le utilizăm în notația noastră pentru culori, corespund exact domeniului 0-255 - două cifre în baza 16 ne permit să reprezentăm 16^2^ = 256 numere diferite. Metoda `toString` pentru numere poate primi o bază ca și argument, astfel încât `n.toString(16)` va produce o reprezentare de tip string în baza 16. Trebuie să ne asigurăm că fiecare număr conține exact două cifre, astfel încât funcția helper `hex` apelează `padStart` pentru a adăuga un zero nesemnfiicativ dacă este nevoie.
 
-We can load and save now! That leaves one more feature before we're done.
+Acum putem încărca și salva! Astfel că ne mai rămâne o singură funcționalitate înainte de a termina.
 
-## Undo history
+## Istoricul "undo"
 
-Half of the process of editing is making little mistakes and correcting them. So an important feature in a drawing program is an ((undo history)).
+Jumătate din procesul de editare înseamnă mici greșeli care apoi trebuie corectate. Astfel că o funcționalitate importantă într-un program de desenare este istoricul "undo".
 
 {{index "persistent data structure", [state, "of application"]}}
 
-To be able to undo changes, we need to store previous versions of the picture. Since it's an ((immutable)) value, that is easy. But it does require an additional field in the application state.
+Pentru a putea să inversăm modificările, trebuie să stocăm versiunile anterioare ale imaginii. Deoarece aceasta este o valoare imutabilă, este destul de ușor. Dar este necesar un câmp adițional în starea aplicației.
 
 {{index "done property"}}
 
-We'll add a `done` array to keep previous versions of the ((picture)). Maintaining this property requires a more complicated state update function that adds pictures to the array.
+Vom adăuga un array `done` pentru a stoca versiunile anterioare ale imaginii. Menținerea acestei proprietăți necesită o funcție mai complicată de actualizare a stării care adaugă imaginii în array.
 
 {{index "doneAt property", "historyUpdateState function", "Date.now function"}}
 
-But we don't want to store _every_ change, only changes a certain amount of ((time)) apart. To be able to do that, we'll need a second property, `doneAt`, tracking the time at which we last stored a picture in the history.
+Dar nu vrem să memorăm orice modificare, doar modificările de la anumite momente de timp. Pentru a putea realiza acest lucru, avem nevoie de o a doua proprietate, `doneAt`, care urmărește momentul de timp la care am stocat pentru ultima oară o imagine în istoric.
 
 ```{includeCode: true}
 function historyUpdateState(state, action) {
@@ -662,13 +661,13 @@ function historyUpdateState(state, action) {
 
 {{index "undo history"}}
 
-When the action is an undo action, the function takes the most recent picture from the history and makes that the current picture. It sets `doneAt` to zero so that the next change is guaranteed to store the picture back in the history, allowing you to revert to it another time if you want.
+Atunci când acțiunea este o acțiune "undo", funcția preia cea mai recentă imagine din istoric și construiește imaginea curentă pe baza ei. Setează `doneAt` la zero astfel încât se garantează că va stoca imaginea în istoric si se poate reveni la ea la un moment ulterior.
 
-Otherwise, if the action contains a new picture and the last time we stored something is more than a second (1000 milliseconds) ago, the `done` and `doneAt` properties are updated to store the previous picture.
+Altfel, dacă acțiunea conține o nouă imagine și ultima dată când am stocat ceva este cu mai mult de o seecundă în urmă (1000 milisecunde), proprietățile `done` și `doneAt` sunt actualizate pentru a memora imaginea anterioară.
 
 {{index "UndoButton class", control}}
 
-The undo button ((component)) doesn't do much. It dispatches undo actions when clicked and disables itself when there is nothing to undo.
+Butonul "undo" nu face mare lucru. Doar expediază acțiuni "undo" când se realizează un click și se dezactivează dacă nu există nimic de refăcut.
 
 ```{includeCode: true}
 class UndoButton {
@@ -684,11 +683,11 @@ class UndoButton {
 }
 ```
 
-## Let's draw
+## Hai să desenăm
 
 {{index "PixelEditor class", "startState constant", "baseTools constant", "baseControls constant", "startPixelEditor function"}}
 
-To set up the application, we need to create a state, a set of ((tool))s, a set of ((control))s, and a ((dispatch)) function. We can pass them to the `PixelEditor` constructor to create the main component. Since we'll need to create several editors in the exercises, we first define some bindings.
+Pentru a seta aplicația, trebuie să creăm o stare, un set de instrumente, un set de controale și o funcție pentru expedierea acțiunilor. Le putem transmite constructorului `PixelEditor` pentru a crea componenta principală. Deoarece va trebui să creem mai multe editoare în exerciții, vom începe prin a defini câteva bindinguri.
 
 ```{includeCode: true}
 const startState = {
