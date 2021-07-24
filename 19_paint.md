@@ -20,7 +20,7 @@ Aplicația noastră va fi un program de desenare pe pixeli, în care veți putea
 
 {{figure {url: "img/pixel_editor.png", alt: "The pixel editor interface, with colored pixels at the top and a number of controls below that", width: "8cm"}}}
 
-Pictura pe computer este extraordinară. Nu trebuie să vă îngrijorați în privința materialelor, îdemânării sau a talentului. Doar începeți să pictați.
+Pictura pe computer este extraordinară. Nu trebuie să vă îngrijorați în privința materialelor, îndemânării sau a talentului. Doar începeți să pictați.
 
 ## Componente
 
@@ -721,9 +721,9 @@ function startPixelEditor({state = startState,
 
 {{index "destructuring binding", "= operator", [property, access]}}
 
-When destructuring an object or array, you can use `=` after a binding name to give the binding a ((default value)), which is used when the property is missing or holds `undefined`. The `startPixelEditor` function makes use of this to accept an object with a number of optional properties as an argument. If you don't provide a `tools` property, for example, `tools` will be bound to `baseTools`.
+Când destructurăm un obiect sau un array, putem utiliza `=` după numele bindingului pentru a atribui bindingului o valoare implicită, care este utilizată atunci când proprietatea lipsește sau memorează `undefined`. Funcția `startPixelEditor` utilizează această tehnică pentru a accepta un obiect cu câteva proprietăți adiționale ca și argument. Dacă nu transmiteți o proprietate `tools`, de exemplu, `tools` va fi legat de `baseTools`.
 
-This is how we get an actual editor on the screen:
+Așa putem afișa editorul propriu-zis pe ecran:
 
 ```{lang: "text/html", startCode: true}
 <div></div>
@@ -733,45 +733,39 @@ This is how we get an actual editor on the screen:
 </script>
 ```
 
-{{if interactive
+## De ce este atat de greu?
 
-Go ahead and draw something. I'll wait.
+Tehnologia browserelor este uimitoare. Ea ne oferă un set puternic de blocuri pentru construcția interfeței, modalități de stilizare și manipulare a acestora, și instrumente pentru a inspecta și repara aplicațiile. Software-ul pe care îl scrieți pentru browser poate fi rulat pe aproape orice computer și smartphone de pe planetă.
 
-if}}
-
-## Why is this so hard?
-
-Browser technology is amazing. It provides a powerful set of interface building blocks, ways to style and manipulate them, and tools to inspect and debug your applications. The software you write for the ((browser)) can be run on almost every computer and phone on the planet.
-
-At the same time, browser technology is ridiculous. You have to learn a large number of silly tricks and obscure facts to master it, and the default programming model it provides is so problematic that most programmers prefer to cover it in several layers of ((abstraction)) rather than deal with it directly.
+În același timp, tehnologia browserelor este ridicolă. Trebuie să învățați un mare număr de trick-uri stupide și fapte obscure pentru a o stăpâni, iar modelul de programare implicit pe care îl expune este atât de problematic încât majoritatea programatorilor preferă să îl împacheteze ăn mai multe straturi de abstractizări, decât să se confrunte cu el direct.
 
 {{index standard, evolution}}
 
-And though the situation is definitely improving, it mostly does so in the form of more elements being added to address shortcomings—creating even more ((complexity)). A feature used by a million websites can't really be replaced. Even if it could, it would be hard to decide what it should be replaced with.
+Deși situația se îmbunătățește evident, progresul are loc în principal sub forma adăugării și mai multor elemente pentru a adresa deficiențele - ceea ce crează și mai multă complexitate. O funcționalitate utilizată de un milion de website-uri nu e ușor de înlocuit. Chiar dacă ar fi posibil, ar fi greu de decis cu ce să fie înlocuită.
 
 {{index "social factors", "economic factors", history}}
 
-Technology never exists in a vacuum—we're constrained by our tools and the social, economic, and historical factors that produced them. This can be annoying, but it is generally more productive to try to build a good understanding of how the _existing_ technical reality works—and why it is the way it is—than to rage against it or hold out for another reality.
+Tehnologia nu există în vid - suntem constrânși de către instrumentele noastre și de către factorii sociali, economici și istorici care le-au produs. Această situație poate fi deranjantă, dar în general este mai productiv să încercăm să construim o înțelegere bună a modului în care funcționează realitatea tehnică _existentă_ - și de ce lucrurile sunt așa cum sunt - decât să fim vehemenți împotriva ei și săîncercăm să construim o altă realitate.
 
-New ((abstraction))s _can_ be helpful. The component model and ((data flow)) convention I used in this chapter is a crude form of that. As mentioned, there are libraries that try to make user interface programming more pleasant. At the time of writing, [React](https://reactjs.org/) and [Angular](https://angular.io/) are popular choices, but there's a whole cottage industry of such frameworks. If you're interested in programming web applications, I recommend investigating a few of them to understand how they work and what benefits they provide.
+Noile abstracții _pot_ fi utile. Modelul de componentă și convenția pentru fluxul datelor utilizată în acest capitol sunt o forma brută a acestei abordări. Așa cum am menționat, există librării care încearcă să facă mai plăcută activitatea de programare a interfeței cu utilizatorul. La momentul în care am scris această carte, [React](https://reactjs.org/) și [Angular](https://angular.io/) sunt alegeri populare, dar există o întreagă industrie pentru asemenea frameworkuri. Dacă sunteți interesați în programarea apălicațiilor web, vă recomand să investigați câteva opțiuni pentru a le înțelege cum funcționează și ce beneficii oferă.
 
-## Exercises
+## Exerciții
 
-There is still room for improvement in our program. Let's add a few more features as exercises.
+Mai există loc pentru îmbunătățiri în programul nostru. Haideți să mai adăugăm câteva funcționalități ca și exercițiu.
 
-### Keyboard bindings
+### Legături cu tastatura
 
 {{index "keyboard bindings (exercise)"}}
 
-Add ((keyboard)) shortcuts to the application. The first letter of a tool's name selects the tool, and [control]{keyname}-Z or [command]{keyname}-Z activates undo.
+Adăugați taste de accelerare pentru aplicație. Prima literă a numelui unui instrument selectează instrumentul, iar [control]{keyname}-Z sau [command]{keyname}-Z activează "undo".
 
 {{index "PixelEditor class", "tabindex attribute", "elt function", "keydown event"}}
 
-Do this by modifying the `PixelEditor` component. Add a `tabIndex` property of 0 to the wrapping `<div>` element so that it can receive keyboard ((focus)). Note that the _property_ corresponding to the `tabindex` _attribute_ is called `tabIndex`, with a capital I, and our `elt` function expects property names. Register the key event handlers directly on that element. This means you have to click, touch, or tab to the application before you can interact with it with the keyboard.
+Pentru aceasta, modificați componenta `PixelEditor`. Adăugați proprietatea `tabIndex` cu valoarea 0 pentru elementul `<div>` astfel încât acesta să poată recepționa focusul de la tastatură. Observați că proprietatea corespunzătoare _atributului_ `tabindex` se numește `tabIndex`, cu I mare, iar funcția noastră `elt` așteaptă nume de proprietăți. Înregistrați handlerele pentru evenimente de tastatură direct pe acest element. Aceasta înseamnă că trebuie să efectuați click, touch sau tab în aplicație înainte de a putea interacționa cu ea prin intermediul tastaturii.
 
 {{index "ctrlKey property", "metaKey property", "control key", "command key"}}
 
-Remember that keyboard events have `ctrlKey` and `metaKey` (for the [command]{keyname} key on Mac) properties that you can use to see whether those keys are held down.
+Vă reamintesc că evenimentele de la tastatură au proprietățile `ctrlKey` și `metaKey` (pentru tasta [command]{keyname} pentru Mac) pe care le puteți utiliza pentru a verifica dacă aceste taste sunt apăsate.
 
 {{if interactive
 
@@ -815,35 +809,35 @@ if}}
 
 {{index "keyboard bindings (exercise)", "key property", "shift key"}}
 
-The `key` property of events for letter keys will be the lowercase letter itself, if [shift]{keyname} isn't being held. We're not interested in key events with [shift]{keyname} here.
+Proprietatea `key` a evenimentelor pentru taste-literă este litera mică însăși, daca tasta [shift]{keyname} nu este apăsată. Nu ne interesează evenimentele de tastatură cu tasta [shift]{keyname} în acest caz.
 
 {{index "keydown event"}}
 
-A `"keydown"` handler can inspect its event object to see whether it matches any of the shortcuts. You can automatically get the list of first letters from the `tools` object so that you don't have to write them out.
+Un handler `"keydown"` își poate inspecta obiectul de eveniment pentru a vedea dacă se potrivește peste vreuna din tastele de accelerare. Puteți obține lista primelor litere din obiectul `tools`, deci nu trebuie să le stocați separat.
 
 {{index "preventDefault method"}}
 
-When the key event matches a shortcut, call `preventDefault` on it and ((dispatch)) the appropriate action.
+Când evenimentul de tastatură potrivește o tastă de accelerare, apelați `preventDefault` și apoi expediați acțiunea adecvată.
 
 hint}}
 
-### Efficient drawing
+### Desenare eficientă
 
 {{index "efficient drawing (exercise)", "canvas (HTML tag)", efficiency}}
 
-During drawing, the majority of work that our application does happens in `drawPicture`. Creating a new state and updating the rest of the DOM isn't very expensive, but repainting all the pixels on the canvas is quite a bit of work.
+În timp ce desenăm, majoritatea operațiilor din aplicația noastră au loc în `drawPicture`. Crearea unei noi stări și actualizarea DOM nu este foarte costisitoare, dar redesenarea tuturor pixelilor de pe canvas este un efort semnificativ.
 
 {{index "syncState method", "PictureCanvas class"}}
 
-Find a way to make the `syncState` method of `PictureCanvas` faster by redrawing only the pixels that actually changed.
+Găsiți o modalitate de a rapidiza metoda `syncState` a `PictureCanvas` prin redesenarea doar a acelor pixeli care s-au modificat.
 
 {{index "drawPicture function", compatibility}}
 
-Remember that `drawPicture` is also used by the save button, so if you change it, either make sure the changes don't break the old use or create a new version with a different name.
+Atenție, `drawPicture` este utilizată și de către butonul de salvare. Dacă o modificați, fie asigurați-vă că modificările nu strică vechea utilizare fie creați o nouă versiune cu un alt nume.
 
 {{index "width property", "height property"}}
 
-Also note that changing the size of a `<canvas>` element, by setting its `width` or `height` properties, clears it, making it entirely transparent again.
+De asemenea, remarcați că schimbarea dimensiunilor elementului `<canvas>` prin setarea proprietăților `width` sau `height` conduce la curățarea acestuia (redevine complet transparent).
 
 {{if interactive
 
@@ -882,23 +876,23 @@ if}}
 
 {{index "efficient drawing (exercise)"}}
 
-This exercise is a good example of how ((immutable)) data structures can make code _faster_. Because we have both the old and the new picture, we can compare them and redraw only the pixels that changed color, saving more than 99 percent of the drawing work in most cases.
+Acest exercițiu este un bun exemplu pentru cum poate deveni codul mai rapid cu ajutorul structurilor de date imutabile. Deoarece avem la dispoziția atât imaginea veche cât și cea nouă, le putem compara și să redesenăm doar pixelii care șia-u modificat culoarea, ceea ce ne va permite în majoritatea cazurilor să nu redesenăm mai mult de 99% din imagine.
 
 {{index "drawPicture function"}}
 
-You can either write a new function `updatePicture` or have `drawPicture` take an extra argument, which may be undefined or the previous picture. For each ((pixel)), the function checks whether a previous picture was passed with the same color at this position and skips the pixel when that is the case.
+Puteți fie să scrieți o funcție nouă, `updatePicture`, fie să transmiteți un argument suplimentar către `drawPicture` , care poate fi undefined sau imaginea anterioară. Pentru fiecare pixel, funcția verifică dacă o imagine anterioară a fost transmisă și dacă da, iar pixelul are aceeași culoare, atunci nu îl redesenăm.
 
 {{index "width property", "height property", "canvas (HTML tag)"}}
 
-Because the canvas gets cleared when we change its size, you should also avoid touching its `width` and `height` properties when the old picture and the new picture have the same size. If they are different, which will happen when a new picture has been loaded, you can set the binding holding the old picture to null after changing the canvas size because you shouldn't skip any pixels after you've changed the canvas size.
+Deoarece canvas va fi curățat când își schimbă dimensiunile, ar fi bine să evitați să îi modificați proprietățile `width` și `height` când vechea imagine și cea nouă au aceeași dimensiune. Dacă sunt diferite, ceea ce se poate întâmpla atunci când se încarcă o nouă imagine, puteți seta bindingul ce reprezintă vechea imagine la valoarea null, după ce ați setat dimensiunea canvasului, deoarece în acest caz totți pixelii vor fi redesenați.
 
 hint}}
 
-### Circles
+### Cercuri
 
 {{index "circles (exercise)", dragging}}
 
-Define a ((tool)) called `circle` that draws a filled circle when you drag. The center of the circle lies at the point where the drag or touch gesture starts, and its ((radius)) is determined by the distance dragged.
+Definiți un tool numit `circle` care desenează un cerc umplut. Centrul cercului va fi plasat în punctul în care începe drag sau touch iar raza va fi determinată de distanța de tragere.
 
 {{if interactive
 
@@ -922,11 +916,11 @@ if}}
 
 {{index "circles (exercise)", "rectangle function"}}
 
-You can take some inspiration from the `rectangle` tool. Like that tool, you'll want to keep drawing on the _starting_ picture, rather than the current picture, when the pointer moves. 
+Vă puteți inspira din instrumentul `rectangle`. Ca și acel instrument, o să doriți să desenați pe imaginea de start, nu pe imaginea curentă, atunci când pointerul se deplasează.
 
-To figure out which pixels to color, you can use the ((Pythagorean theorem)). First figure out the distance between the current pointer position and the start position by taking the square root (`Math.sqrt`) of the sum of the square (`Math.pow(x, 2)`) of the difference in x-coordinates and the square of the difference in y-coordinates. Then loop over a square of pixels around the start position, whose sides are at least twice the ((radius)), and color those that are within the circle's radius, again using the Pythagorean formula to figure out their ((distance)) from the center.
+Pentru a determina ce pixeli să colorați, puteți folosi teorama lui Pitagora. Mai întâi determinați distanța dintre poziția curentă a pointerului și poziția de start, apoi alegeți un pătrat cu dimensiunea cel puțin dublă față de raza cercului, centrat în același punct ca și cercul și colorați pixelii aflați în interiorul cercului.
 
-Make sure you don't try to color pixels that are outside of the picture's boundaries.
+Asigurați-vă că nu colorați pixeli în afara limitelor imaginii.
 
 hint}}
 
