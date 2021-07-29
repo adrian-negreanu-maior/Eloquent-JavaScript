@@ -924,25 +924,25 @@ Asigurați-vă că nu colorați pixeli în afara limitelor imaginii.
 
 hint}}
 
-### Proper lines
+### Linii corespunzătoare
 
 {{index "proper lines (exercise)", "line drawing"}}
 
-This is a more advanced exercise than the preceding two, and it will require you to design a solution to a nontrivial problem. Make sure you have plenty of time and ((patience)) before starting to work on this exercise, and do not get discouraged by initial failures. 
+Acesta este un exercițiu mai avansat decât cele două anterioare și va trebui să concepeți o soluție pentru o problemă netrivială. Asigurați-vă că dispuneți de suficient timp și de multă răbdare înainte de a începe să lucrați la acest exercițiu și nu vă lăsați descurajați de eșecurile inițiale.
 
 {{index "draw function", "mousemove event", "touchmove event"}}
 
-On most browsers, when you select the `draw` ((tool)) and quickly drag across the picture, you don't get a closed line. Rather, you get dots with gaps between them because the `"mousemove"` or `"touchmove"` events did not fire quickly enough to hit every ((pixel)).
+În majoritatea browserelor, când selectați instrumentul `draw` și desenați rapid peste imagine, nu veți obține o linie continuă. Mai degrabă veți avea puncte cu spații între ele, deoarece evenimentele `"mousemove"` sau `"touchmove"` nu se declanșează suficient de repede pentru a atinge fiecare pixel.
 
-Improve the `draw` tool to make it draw a full line. This means you have to make the motion handler function remember the previous position and connect that to the current one.
+Îmbunătățiți instrumentul `draw` pentru a desena o linie completă. Aceasta înseamnă că funcția ce gestionează mișcarea ar trebui să rețină poziția anterioară și să o conecteze cu poziția curentă.
 
-To do this, since the pixels can be an arbitrary distance apart, you'll have to write a general line drawing function.
+Pentru a reuși, deoarece pixelii pot fi la o distanță arbitrară unul de altul, trebuie să scrieți o funcție generală de desenare a unei linii.
 
-A line between two pixels is a connected chain of pixels, as straight as possible, going from the start to the end. Diagonally adjacent pixels count as a connected. So a slanted line should look like the picture on the left, not the picture on the right.
+O linie între doi pixeli este un lanț conectat de pixeli, cât mai drept posibil, de la început până la sfârșit. Pixelii adiacenți diagonal se consideră conectați. Astfel că o linie oblică ar trebui să arate ca în imaginea din stânga, nu ca în cea din dreapta.
 
 {{figure {url: "img/line-grid.svg", alt: "Two pixelated lines, one light, skipping across pixels diagonally, and one heavy, with all pixels connected horizontally or vertically", width: "6cm"}}}
 
-Finally, if we have code that draws a line between two arbitrary points, we might as well use it to also define a `line` tool, which draws a straight line between the start and end of a drag.
+În final, dacă avem cod care desenează o linie între două puncte oarecare, putem să îl utilizăm pentru a defini un instrument `line`, care desenează o linie între începutul și sfârșitul unei operații de "drag".
 
 {{if interactive
 
@@ -976,21 +976,21 @@ if}}
 
 {{index "proper lines (exercise)", "line drawing"}}
 
-The thing about the problem of drawing a pixelated line is that it is really four similar but slightly different problems. Drawing a horizontal line from the left to the right is easy—you loop over the x-coordinates and color a pixel at every step. If the line has a slight slope (less than 45 degrees or ¼π radians), you can interpolate the y-coordinate along the slope. You still need one pixel per _x_ position, with the _y_ position of those pixels determined by the slope.
+Problema desenării unei linii din pixeli este că ea ascunde de fapt patru probleme similare dar ușor diferite. Desenarea unei linii orizontale de la stânga la dreapta este ușoară - iterați coordonata x și desenați câte un pixel la fiecare pas. Dacă linia are o pantă ușoară (mai mică de 45 grade), puteți interpola coordonata y cu ajutorul pantei. Aveți nevoie tot de un pixel pe direcția x, iar poziția y a pixelului poate fi determinată cu ajutorul pantei.
 
-But as soon as your slope goes across 45 degrees, you need to switch the way you treat the coordinates. You now need one pixel per _y_ position since the line goes up more than it goes left. And then, when you cross 135 degrees, you have to go back to looping over the x-coordinates, but from right to left.
+Dar dacă panta depășește 45 de grade, trebuie să inversați modul în care folosiți coordonatele. Acum va trebui să alegeți câte un pixel pe direcția y, deoarece linia merge pe verticală mai mult decât pe orizontală. Iar cînd depășiți 135 grade, va trebui să reveniți la iterarea după coordonata x, dar de la dreapta la stânga.
 
-You don't actually have to write four loops. Since drawing a line from _A_ to _B_ is the same as drawing a line from _B_ to _A_, you can swap the start and end positions for lines going from right to left and treat them as going left to right.
+De fapt nu va trebui să scrieți patru bucle. Deoarece desenarea unei linii din punctul _A_ în punctul _B_ este tot una cu desenarea ei din punctul _B_ în punctul _A_, puteți interschimba popzițiile de început și de sfârșit pentru liniile care merg de la dreapta la stânga și să le tratați ca și cum ar merge de la stânga la dreapta.
 
-So you need two different loops. The first thing your line drawing function should do is check whether the difference between the x-coordinates is larger than the difference between the y-coordinates. If it is, this is a horizontal-ish line, and if not, a vertical-ish one.
+Înseamnă că aveți nevoie de două bucle diferite. Primul lucru pe care ar trebui să îl facă funcția voastră de desenare a ueni linii ar fi să verifice dacă diferența dintre coordonatele xx este mai mare decât diferența dintre coordonatele y. Dacă da, linia este mai orizontală, dacă nu, linia este mai verticală.
 
 {{index "Math.abs function", "absolute value"}}
 
-Make sure you compare the _absolute_ values of the _x_ and _y_ difference, which you can get with `Math.abs`.
+Comparați valorile absolute ale diferentelor dintre coordonate, folosind `Math.abs`.
 
 {{index "swapping bindings"}}
 
-Once you know along which ((axis)) you will be looping, you can check whether the start point has a higher coordinate along that axis than the endpoint and swap them if necessary. A succinct way to swap the values of two bindings in JavaScript uses ((destructuring assignment)) like this:
+După ce ați identificat după care axa trebuie să iterați, puteți verifica dacă punctul de start are o coordonată mai mare pe acea axă decât cel de stop și să le interschimbași dacă este necesar. O modalitate rapidă de interschimbare a valorilor din două bindinguri JavaScript este utilizarea destructurării în atribuire, astfel:
 
 ```{test: no}
 [start, end] = [end, start];
@@ -998,6 +998,6 @@ Once you know along which ((axis)) you will be looping, you can check whether th
 
 {{index rounding}}
 
-Then you can compute the ((slope)) of the line, which determines the amount the coordinate on the other axis changes for each step you take along your main axis. With that, you can run a loop along the main axis while also tracking the corresponding position on the other axis, and you can draw pixels on every iteration. Make sure you round the non-main axis coordinates since they are likely to be fractional and the `draw` method doesn't respond well to fractional coordinates.
+Apoi puteți calcula panta liniei și cu ajutorul ei veți putea calcula poziția corectă pe cealaltă axă, pentru fiecare pas pe care îl faceți pe axa principală. Veți putea rula o buclă de-a lungul axei principale și să calculați poziția pe axa secundară și să desenați pixelii la fiecare iterație. Dar nu uitați să rotunjiți coordonatele deoarece metoda `draw` nu răspunde bine pentru coordonate fracționare.
 
 hint}}
